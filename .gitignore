@@ -1,0 +1,64 @@
+# Environment & Secrets
+.env
+.env.local
+.env.*.local
+*.key
+*.pem
+*.cert
+*.p12
+*.pfx
+secrets/
+credentials/
+tokens/
+
+# Logs & Runtime
+logs/
+*.log
+log/*
+runtime/
+runtime-*/
+state/
+*.state
+
+# Cache & Build
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+node_modules/
+.npm/
+.yarn/
+.cache/
+*.cache
+
+# OS Artifacts
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Database & State Files
+*.db
+*.sqlite
+*.sqlite3
+*.mdb
+*.accdb
+
+# Temp & Swap
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+.fuse_hidden*
+.Directory*
+
+# Debug & Crash Dumps
+*.core
+core.*
+*.dump
+*.crash
+
+# Local Config (not for sharing)
+.local/
+.localrc
+*.local.yaml
