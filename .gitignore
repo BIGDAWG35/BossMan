@@ -62,3 +62,6 @@ core.*
 .local/
 .localrc
 *.local.yaml
+
+# Hermes default persona template (auto-generated, not our config)
+hermes/SOUL.md
