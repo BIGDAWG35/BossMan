@@ -1,21 +1,21 @@
-# Agent OS — SETUP
+# Real Estate — SETUP
 **Hermes Space — MiniMax 2.7 primary**
-**Sub-agent:** BossMan
+**Sub-agent:** Real Estate Analyst
 **Last updated:** 2026-05-07
 
 ---
 
 ## Overview
-System hub for Hermes — routing, profiles, services, and system architecture.
+Property targets, market research, rental strategy, and Airbnb analysis for MX, DR, ES, CR, FL.
 
 ## Decisions This Space Owns
-- Routing: which sub-agent / Space handles this task
-- Profile decisions: which Hermes profile is active
-- Service health: which ports and processes are running
-- System architecture: how Hermes is structured
+- Market targets: which cities and neighborhoods
+- Property criteria: price range, yield,签证 requirements
+- Rental strategy: short-term vs. long-term, platform selection
+- Deal analysis: ROI, cap rate, cash-on-cash return
 
 ## Sub-Agent
-**BossMan** — Primary operator of this Space.
+**Real Estate Analyst** — Primary operator of this Space.
 
 ## MODEL_STACK
 - **Primary:** MiniMax 2.7 (use first — this is Hermes's brain)

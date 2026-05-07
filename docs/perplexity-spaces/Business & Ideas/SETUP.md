@@ -1,21 +1,21 @@
-# Agent OS — SETUP
+# Business & Ideas — SETUP
 **Hermes Space — MiniMax 2.7 primary**
-**Sub-agent:** BossMan
+**Sub-agent:** Biz Architect
 **Last updated:** 2026-05-07
 
 ---
 
 ## Overview
-System hub for Hermes — routing, profiles, services, and system architecture.
+Business opportunities, revenue pipeline, passive income research, and strategic decisions.
 
 ## Decisions This Space Owns
-- Routing: which sub-agent / Space handles this task
-- Profile decisions: which Hermes profile is active
-- Service health: which ports and processes are running
-- System architecture: how Hermes is structured
+- Opportunity evaluation: is this worth Marcelo's time?
+- Revenue pipeline: what's working, what's not
+- Business rules: cash flow priorities, risk tolerance
+- New ventures: should we build / buy / partner?
 
 ## Sub-Agent
-**BossMan** — Primary operator of this Space.
+**Biz Architect** — Primary operator of this Space.
 
 ## MODEL_STACK
 - **Primary:** MiniMax 2.7 (use first — this is Hermes's brain)

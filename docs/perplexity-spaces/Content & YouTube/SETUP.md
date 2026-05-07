@@ -1,21 +1,21 @@
-# Agent OS — SETUP
+# Content & YouTube — SETUP
 **Hermes Space — MiniMax 2.7 primary**
-**Sub-agent:** BossMan
+**Sub-agent:** Content Architect
 **Last updated:** 2026-05-07
 
 ---
 
 ## Overview
-System hub for Hermes — routing, profiles, services, and system architecture.
+YouTube content strategy, video ideas, scripts, SEO research, and thumbnail approach.
 
 ## Decisions This Space Owns
-- Routing: which sub-agent / Space handles this task
-- Profile decisions: which Hermes profile is active
-- Service health: which ports and processes are running
-- System architecture: how Hermes is structured
+- Content strategy: what topics to cover and why
+- Video pipeline: ideas, outlines, scripting priorities
+- SEO: which keywords and topics have search demand
+- Thumbnail strategy: hook, clarity, brand consistency
 
 ## Sub-Agent
-**BossMan** — Primary operator of this Space.
+**Content Architect** — Primary operator of this Space.
 
 ## MODEL_STACK
 - **Primary:** MiniMax 2.7 (use first — this is Hermes's brain)

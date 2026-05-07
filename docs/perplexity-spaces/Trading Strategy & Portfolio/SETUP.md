@@ -1,21 +1,21 @@
-# Agent OS — SETUP
+# Trading Strategy & Portfolio — SETUP
 **Hermes Space — MiniMax 2.7 primary**
-**Sub-agent:** BossMan
+**Sub-agent:** Hermes – Trading Strategist
 **Last updated:** 2026-05-07
 
 ---
 
 ## Overview
-System hub for Hermes — routing, profiles, services, and system architecture.
+Portfolio construction, strategy framework, pair universe, and position sizing methodology.
 
 ## Decisions This Space Owns
-- Routing: which sub-agent / Space handles this task
-- Profile decisions: which Hermes profile is active
-- Service health: which ports and processes are running
-- System architecture: how Hermes is structured
+- Portfolio construction: which pairs and asset classes
+- Strategy framework: entry/exit rules, RR ratios, position sizing
+- Pair universe: which exchanges and pairs are in scope
+- Position sizing: risk allocation per trade and per day
 
 ## Sub-Agent
-**BossMan** — Primary operator of this Space.
+**Hermes – Trading Strategist** — Primary operator of this Space.
 
 ## MODEL_STACK
 - **Primary:** MiniMax 2.7 (use first — this is Hermes's brain)

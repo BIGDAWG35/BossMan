@@ -1,21 +1,21 @@
-# Agent OS — SETUP
+# Ops Processes — SETUP
 **Hermes Space — MiniMax 2.7 primary**
-**Sub-agent:** BossMan
+**Sub-agent:** Ops Manager
 **Last updated:** 2026-05-07
 
 ---
 
 ## Overview
-System hub for Hermes — routing, profiles, services, and system architecture.
+Service health, PM2 management, daily runbooks, and operational checklists.
 
 ## Decisions This Space Owns
-- Routing: which sub-agent / Space handles this task
-- Profile decisions: which Hermes profile is active
-- Service health: which ports and processes are running
-- System architecture: how Hermes is structured
+- Service health: which services are up or down
+- PM2: process management, restarts, logs
+- Daily checks: ports, bot status, disk space, alerts
+- Runbooks: step-by-step for common operational tasks
 
 ## Sub-Agent
-**BossMan** — Primary operator of this Space.
+**Ops Manager** — Primary operator of this Space.
 
 ## MODEL_STACK
 - **Primary:** MiniMax 2.7 (use first — this is Hermes's brain)

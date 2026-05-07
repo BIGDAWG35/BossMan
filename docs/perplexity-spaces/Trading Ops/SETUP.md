@@ -1,75 +1,40 @@
-# Trading Ops — Binance Bot & Market Analysis
-**Updated: 2026-05-07**
+# Trading Ops — SETUP
+**Hermes Space — MiniMax 2.7 primary**
+**Sub-agent:** Hermes – Trading Operator
+**Last updated:** 2026-05-07
+
+---
 
 ## Overview
-This space covers crypto and stock trading — Binance bot strategy, portfolio holdings, trade history, market research, and financial dashboards.
+Live Binance bot management — signals, risk rules, bot status, and daily trade workflow.
 
-**Critical:** Hermes's `trading` profile owns analysis and recommendations only. No live trades are executed without Marcelo's explicit approval.
+## Decisions This Space Owns
+- Bot status: balance, cycle, open positions
+- Signal decisions: which pairs to act on
+- Risk rules: 3% per trade, 6% daily loss limit, MAX 3 open positions
+- Service health: bot API (port 8104), tracker API (port 8020)
 
----
+## Sub-Agent
+**Hermes – Trading Operator** — Primary operator of this Space.
 
-## Primary Use Cases
-- "What is the current Binance bot config and is it performing well?"
-- "Show me my crypto portfolio breakdown"
-- "What's the status of BTC and HBAR positions?"
-- "Analyze today's trading signals — what pairs are in uptrend?"
-- "How much of my portfolio is in stablecoins vs alts?"
-- "Should I adjust RSI_HIGH based on recent performance?"
-- "Check if there are any divergence alerts on my holdings"
+## MODEL_STACK
+- **Primary:** MiniMax 2.7 (use first — this is Hermes's brain)
+- **Backup 1:** DeepSeek — for deeper analytical reasoning when MiniMax isn't enough
+- **Backup 2:** OpenAI — for high-stakes production text, code, configs
+- **Backup 3:** Claude — for complex long-form reasoning when all else conflicts or stalls
 
----
 
-## Key Data Sources
 
-| Source | Location | Notes |
-|--------|----------|-------|
-| Binance bot | `localhost:8104` | Trading engine, balance, positions |
-| Crypto tracker | `localhost:8020` | Portfolio tracker |
-| Hermes trading profile | `~/.hermes/` | Analysis and recommendations |
+## HERMES_NOT_OPENCLAW
+> ⚠️ This Space is for Hermes only.
+> Do not reuse OpenClaw prompts or instructions unless they have been rewritten for Hermes.
+> OpenClaw is a separate system. Never mix the two.
+> Docs: `/Users/bigdawg/Desktop/perplexity-spaces Hermes/`
+> Model policy: `HERMES_MODEL_POLICY.md`
 
----
+## Policy Reference
+See `HERMES_MODEL_POLICY.md` for full model escalation rules.
 
-## Claude Helper Rules (This Space)
-
-- Manager: bossman orchestrates
-- Default coder: builder (for scripts, not live trading)
-- Ops/deploy: ops (for service health)
-- Trading analysis: trading (this Space's owner)
-- Claude: helper-only and opt-in — for strategy docs and reports ONLY
-- Never use Claude for live trading logic
-- For full details, see: `architect_01-claude-usage-policy.md` in this Space
-
----
-
-## Files in This Space
-
-| File | Purpose |
-|------|---------|
-| `SETUP.md` | This file — overview, data sources, navigation |
-| `trading-rules.md` | Non-negotiable trading rules, risk parameters, pair universe |
-| `trading-overview.md` | System architecture, dashboards, health checks |
-| `binance-bot-status.md` | Current bot state, balance, cycle, positions |
-| `architect_01-claude-usage-policy.md` | How Hermes uses Claude/AI in this Space |
-
----
-
-## Non-Negotiable Rules (Quick Reference)
-
-| Rule | Value |
-|------|-------|
-| Risk per trade | 3% |
-| Daily loss limit | 6% |
-| Max open positions | 3 |
-| MIN_RR | 2:1 |
-| Uptrend required | 1H EMA50 > EMA200 |
-
----
-
-## Perplexity Spaces
-
-| Space | Status | Purpose |
-|-------|--------|---------|
-| Agent OS | ✅ Built | Hermes profiles, routing, services |
-| Business Ideas | ✅ Built | Opportunities, research, money pipeline |
-| Trading Ops | ✅ Built | This space — Binance bot, signals, strategy |
-| Toolchain Dev | ✅ Built | IDEs, coding tools, debugging |
+## Key Files in This Space
+- `SETUP.md` — This file
+- _(Additional docs added as needed)_

@@ -1,21 +1,21 @@
-# Agent OS — SETUP
+# Toolchain & Dev — SETUP
 **Hermes Space — MiniMax 2.7 primary**
-**Sub-agent:** BossMan
+**Sub-agent:** Builder
 **Last updated:** 2026-05-07
 
 ---
 
 ## Overview
-System hub for Hermes — routing, profiles, services, and system architecture.
+Development environment, Hermes config, skills, scripts, and automation tooling.
 
 ## Decisions This Space Owns
-- Routing: which sub-agent / Space handles this task
-- Profile decisions: which Hermes profile is active
-- Service health: which ports and processes are running
-- System architecture: how Hermes is structured
+- Dev environment: which tools, languages, and versions are active
+- Hermes config: profiles, services, routing table updates
+- Skills: which skills are available and when to use them
+- Scripts: automation, runbooks, deployment
 
 ## Sub-Agent
-**BossMan** — Primary operator of this Space.
+**Builder** — Primary operator of this Space.
 
 ## MODEL_STACK
 - **Primary:** MiniMax 2.7 (use first — this is Hermes's brain)
