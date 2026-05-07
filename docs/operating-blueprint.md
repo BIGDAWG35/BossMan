@@ -131,7 +131,7 @@ When BossMan assigns work to OpenClaw/LBC35:
 
 | Phase | Title | Status |
 |-------|-------|--------|
-| Phase 0 | Save blueprint and freeze architecture | 🔄 In Progress |
+| Phase 0 | Save blueprint and freeze architecture | ✅ Done |
 | Phase 1 | Audit OpenClaw assets, PM2, cron, bots, dashboards, ports | 🔜 Next |
 | Phase 2 | Define Hermes as primary control plane | 🔜 Next |
 | Phase 3 | Demote LBC35 to delegated execution coordinator | 🔜 Next |
