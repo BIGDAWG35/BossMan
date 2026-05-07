@@ -32,19 +32,21 @@ Add a short note with date and initials when updating an entry.
 
 ## Service Map
 
-| Service | Port | Purpose | Owner | Health Check / Access | Notes |
-|---------|------|---------|-------|------------------------|-------|
-| ASSUMED: Hermes gateway | 3001 | Hermes agent gateway / TUI support service | bossman | `curl localhost:3001/health` | VERIFY NEEDED |
-| ASSUMED: OpenHue | 3100 | Philips Hue or home automation control service | ops | `curl localhost:3100/api/health` | VERIFY NEEDED |
-| ASSUMED: Hermes dashboard | 5050 | Monitoring or dashboard UI | ops | `http://localhost:5050` | VERIFY NEEDED |
-| ASSUMED: App service 8100 | 8100 | General Hermes app/service instance | ops | `curl localhost:8100/health` | VERIFY NEEDED |
-| ASSUMED: App service 8102 | 8102 | General Hermes app/service instance | ops | `curl localhost:8102/health` | VERIFY NEEDED |
-| ASSUMED: Binance monitor | 8104 | Binance bot dashboard / trading monitor | trading | `http://localhost:8104` | VERIFY NEEDED |
-| ASSUMED: App service 8110 | 8110 | General Hermes app/service instance | ops | `curl localhost:8110/health` | VERIFY NEEDED |
-| ASSUMED: App service 8130 | 8130 | General Hermes app/service instance | ops | `curl localhost:8130/health` | VERIFY NEEDED |
-| ASSUMED: App service 8140 | 8140 | General Hermes app/service instance | ops | `curl localhost:8140/health` | VERIFY NEEDED |
-| ASSUMED: Crypto tracker | 8020 | Crypto portfolio / price tracker dashboard | trading | `http://localhost:8020` | VERIFY NEEDED |
-| ASSUMED: Web service | 8090 | General web service or local UI | builder | `curl localhost:8090/health` | VERIFY NEEDED |
+| Service | Port | Purpose | Owner | Health Check / Access | Tailscale | Notes |
+|---------|------|---------|-------|------------------------|-----------|-------|
+| Hermes gateway | 3001 | Hermes agent gateway / TUI support service | bossman | `curl localhost:3001/health` | localhost only | redwood-broker |
+| OpenHue | 3100 | Home automation control service | ops | `curl localhost:3100/api/health` | localhost only | opcon-xps |
+| Hermes dashboard | 9119 | Hermes web dashboard (Host header = bound hostname enforced) | bossman | `http://localhost:9119` | **localhost only — NOT via Tailscale Serve** | mmcc |
+| Web service | 8090 | General web service or local UI | builder | `curl localhost:8090/health` | **tailnet-only (serve active)** | accessible at https://bigdawgs-mac-mini.tailed3212.ts.net/ |
+| XPrint server | 8100 | Print service | ops | `curl localhost:8100/health` | localhost only | xprint-server |
+| App service | 8102 | General Hermes app/service instance | ops | `curl localhost:8102/health` | localhost only | - |
+| Binance monitor | 8104 | Binance bot dashboard / trading monitor | trading | `http://localhost:8104` | localhost only | - |
+| App service | 8110 | General Hermes app/service instance | ops | `curl localhost:8110/health` | localhost only | - |
+| Indigo VRMI | 8130 | VR/hardware interface | ops | `curl localhost:8130/health` | localhost only | indigo-vrmi |
+| App service | 8140 | General Hermes app/service instance | ops | `curl localhost:8140/health` | localhost only | - |
+| Crypto tracker | 8020 | Crypto portfolio / price tracker dashboard | trading | `http://localhost:8020` | localhost only | intu-ec-svcdisc |
+
+> **Last verified:** 2026-05-07. Verified via `lsof -i :PORT`. All ports confirmed LISTENING.
 
 ---
 
@@ -65,17 +67,17 @@ If a row is marked `VERIFY NEEDED`:
 
 ## Quick Port Lookup
 
-| Port | Owner | Service |
-|------|-------|---------|
-| 3001 | bossman | ASSUMED: Hermes gateway |
-| 3100 | ops | ASSUMED: OpenHue |
-| 5050 | ops | ASSUMED: Hermes dashboard |
-| 8020 | trading | ASSUMED: Crypto tracker |
-| 8090 | builder | ASSUMED: Web service |
-| 8100 | ops | ASSUMED: App service 8100 |
-| 8102 | ops | ASSUMED: App service 8102 |
-| 8104 | trading | ASSUMED: Binance monitor |
-| 8110 | ops | ASSUMED: App service 8110 |
-| 8130 | ops | ASSUMED: App service 8130 |
-| 8140 | ops | ASSUMED: App service 8140 |
+| Port | Owner | Service | Tailscale |
+|------|-------|---------|-----------|
+| 3001 | bossman | Hermes gateway | localhost only |
+| 3100 | ops | OpenHue | localhost only |
+| 9119 | bossman | Hermes dashboard | localhost only — NOT via Tailscale Serve |
+| 8020 | trading | Crypto tracker | localhost only |
+| 8090 | builder | Web service | **tailnet-only (serve active)** |
+| 8100 | ops | XPrint server | localhost only |
+| 8102 | ops | App service 8102 | localhost only |
+| 8104 | trading | Binance monitor | localhost only |
+| 8110 | ops | App service 8110 | localhost only |
+| 8130 | ops | Indigo VRMI | localhost only |
+| 8140 | ops | App service 8140 | localhost only |
 

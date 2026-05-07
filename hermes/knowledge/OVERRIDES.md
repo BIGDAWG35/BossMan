@@ -128,3 +128,28 @@ Update this file when:
 
 If a value is sensitive, do not put it here.
 
+---
+
+## Operational Access Patterns
+
+> Remote access constraints and patterns for this stack. Safe to reference during incidents.
+
+### Hermes Dashboard
+- **Port:** 9119
+- **Access:** Local only (`http://localhost:9119`)
+- **Remote access:** Not available via Tailscale Serve — Host header validation blocks it
+- **Remote workaround:** SSH into Mac Mini, use `hermes chat`, or use `/kanban` commands
+
+### User-Facing Dashboards (Tailscale Serve)
+- **Web service (8090):** Accessible at `https://bigdawgs-mac-mini.tailed3212.ts.net/` — tailnet-only
+- **Access model:** Clients/testers (Cello, Cisco, Marcus) use Tailscale to reach this URL
+- **Hermes chat:** Available remotely via `hermes chat` over SSH
+
+### Remote Access Stack
+| Tool | Use |
+|------|-----|
+| SSH + hermes chat | Remote command and control |
+| `/kanban` commands | Remote task management |
+| Tailscale Serve | User-facing dashboards only (not Hermes dashboard) |
+| VNC / Screen Sharing | View Mac Mini desktop remotely if needed |
+
