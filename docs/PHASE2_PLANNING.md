@@ -356,13 +356,15 @@ This cron is Hermes-owned. The underlying scripts are OpenClaw-owned but Hermes 
 | B — Retire | Remove broken cron job entirely | Low — `crontab -r` the line |
 | C — Defer | Leave broken job in place, investigate in Phase 6 (money pipeline rebuild) | Medium |
 
-**Recommended: Option C — Defer to Phase 6**
+### Recommended: Option C — Defer to Phase 6
 
 Rationale: The trading monitor is related to the Binance bot ecosystem. Since the bot is now stopped pending Phase 2 hook restoration, it makes sense to address the poller as part of the broader trading system rebuild in Phase 6 (money pipeline rebuild). Removing it now without understanding its full purpose could cause issues when the bot is re-enabled.
 
-**Temporary mitigation:** Add a comment to the Kanban card noting the broken job, and suppress it by changing the schedule to an invalid value or removing execute permission temporarily.
+**Marcelo Approved:** 2026-05-07 — Decision: defer to Phase 6. Do not fix this cron until the trading system is properly redesigned.
 
-**Draft Hermes cron job (for when trading monitor is rebuilt):**
+**Phase 6 card created:** `t_faa6d371` — "Phase 6 — Rebuild or retire trading-monitor + poller cron job"
+
+**Draft Hermes cron job (for when trading monitor is rebuilt in Phase 6):**
 ```bash
 # To be created in Phase 6
 # Schedule: */5 * * * * (every 5 minutes — same as current)
