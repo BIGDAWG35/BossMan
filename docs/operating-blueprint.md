@@ -1,5 +1,5 @@
 # Hermes First Operating Blueprint
-**Version:** 1.1
+**Version:** 1.2
 **Date:** 2026-05-08
 **Owner:** BossMan (Marcelo's Hermes orchestrator)
 **Status:** Canonical — governs all work routing
@@ -249,3 +249,60 @@ LBC35 **may** without asking:
 |---------|------|--------|
 | 1.0 | 2026-05-07 | Initial — Hermes-first, BossMan orchestrator, OpenClaw demoted |
 | 1.1 | 2026-05-08 | Phase 4 — handoff packet format, routing checklist, LBC35 constraints, production workflow diagram, 3 test handoffs verified |
+
+---
+
+## Telegram Mobile Controls
+
+BossMan is already connected to Telegram. Send commands directly from your phone — BossMan interprets them and routes to the Kanban board.
+
+### Quick Commands
+
+| Action | Telegram message |
+|--------|-----------------|
+| Create card | `new card [title]` |
+| List my cards | `list my cards` |
+| List blocked | `list blocked cards` |
+| Show card | `show [card id]` |
+| Move card | `move [id] to [status]` |
+| Add comment | `comment on [id]: [message]` |
+| Assign | `assign [id] to [profile]` |
+| Block | `block [id] because [reason]` |
+| Unblock | `unblock [id]` |
+| Request approval | `move [id] to awaiting approval` |
+
+**Valid statuses:** `todo` | `planned` | `running` | `blocked` | `done` | `awaiting_approval`
+
+**Profiles:** `bossman` | `builder` | `ops` | `trading` | `content` | `lbc35`
+
+> Full command reference: `~/.hermes/knowledge/TELEGRAM_COMMANDS.md`
+
+### Example Workflows
+
+**New task from anywhere:**
+```
+"new card Add Binance trading pause — assign to builder — priority 1"
+→ BossMan creates card, assigns to builder, replies with card ID
+```
+
+**Quick board check:**
+```
+"what's blocked"
+→ BossMan replies with all blocked cards and reasons
+```
+
+**Approve and close:**
+```
+"move t_1a4193ba to done"
+→ BossMan marks done, replies confirmation
+```
+
+### What NOT to Do via Telegram
+
+Still requires explicit BossMan approval:
+- Stop/start PM2 services
+- Change cron jobs
+- Retire dashboards
+- Modify Perplexity Spaces
+- Delete cards
+
