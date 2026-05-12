@@ -190,6 +190,25 @@ All issues go into **Card Table → Triage**. Use this format. Every card is rev
 - If uncertain: escalate to Marcelo before replying
 - Scheduling/reminders/follow-ups via Hermes workflow
 
+### Basecamp Automation — Failure Modes & Fallback
+
+**Routine Basecamp finishing work is automated by default. Marcelo is NOT the default UI operator.**
+
+Known failure modes:
+- `messages update --body @<filepath>` writes literal path → **archive + recreate with positional body arg**
+- `messages pin` CLI reports success but doesn't persist → **retry 2x, then UI fallback**
+- OAuth token expired → **read-only mode + completion queue + auto-retry**
+
+Fallback workflow for pinned guides:
+1. Detect failure mode after any message create/update
+2. Attempt automated recovery (archive/recreate or retry pin)
+3. If auth expired: log blocker, set 4h retry, prepare fallback HTML file
+4. Only escalate to Marcelo if: system-affecting change, approval-required decision, 24h+ auth failure
+
+Daily digest includes unresolved Basecamp blockers until closed.
+
+See `openclaw-imports/basecamp/references/basecamp-automation-failure-modes.md` for full technical guide.
+
 ---
 
-_Updated: 2026-05-11 — standardized across all client projects_
+_Updated: 2026-05-11 — standardized across all client projects_"""
