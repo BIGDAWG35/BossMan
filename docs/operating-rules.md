@@ -124,3 +124,72 @@ Use `terminal` tool when:
 | `.env.example`     | BossMan    | Monthly           |
 | `.gitignore`       | BossMan    | Monthly           |
 | GitHub repo config | BossMan    | As needed        |
+
+---
+
+## Basecamp Client Project Standard
+
+Applies to: BakeryOps, SquaresPayouts, and any future client-facing Basecamp projects.
+
+### Standard Project Layout
+
+| Component | Standard | Notes |
+|-----------|----------|-------|
+| Message Board | ONE pinned `[ProjectName] — How to Test (Pinned Guide)` | No duplicate guides |
+| Card Table | Single board, Triage column only | Real bugs/suggestions only — no demo cards |
+| To-dos | Only lists with active client purpose | Archive placeholder lists |
+
+### Pinned Guide Format
+
+Title: `[ProjectName] — How to Test (Pinned Guide)`
+
+Required sections:
+1. What is [ProjectName]?
+2. Test URL
+3. How to Report Issues
+4. Routing Rule
+5. What We're Looking For
+
+### How to Report Issues (standard format)
+
+All issues go into **Card Table → Triage**. Use this format. Every card is reviewed daily.
+
+**BUG report format:**
+- Title: `[BUG] short description`
+- Assign card: blank
+- Due on: blank
+- Describe your card here: full details (what broke, steps to reproduce, expected vs actual)
+- Add screenshots using the paper clip if possible
+
+**Required examples (standard):**
+- `[BUG] Login link does nothing`
+- `[BUG] my company name is missing`
+- `[SUGGESTION] Make dashboard text easier to read on mobile`
+
+**SUGGESTION report format:**
+- Title: `[SUGGESTION] short description`
+- Describe your card here: what to change and why
+
+### Routing Rule
+
+- Real bug or improvement request → **Card Table**
+- Task, checklist item, or decision pending → **To-dos**
+- General discussion or update → **Message Board**
+
+### Automation Policy
+
+- New client bug cards: auto-acknowledged
+- Internal work items: auto-created/updated
+- Status/progress replies: auto-posted when appropriate
+- Daily digest to Marcelo
+- **Escalate to Marcelo for:** system-affecting changes, approval-required decisions, questions the system cannot answer confidently
+
+### Chat / Schedule Handling
+
+- Client messages auto-handled when answer is supported by project context + docs
+- If uncertain: escalate to Marcelo before replying
+- Scheduling/reminders/follow-ups via Hermes workflow
+
+---
+
+_Updated: 2026-05-11 — standardized across all client projects_
