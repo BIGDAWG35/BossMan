@@ -295,6 +295,35 @@ When to use each tool:
 
 > Full Perplexity workflow: `~/.hermes/SOUL.md` — "Perplexity & Spaces Coordination"
 
+### Perplexity + Spaces + Hermes Computer Use — Permanent Workflow
+
+**BossMan owns all Perplexity/Spaces coordination.** This is not optional — it is the core research and external intelligence layer for Hermes.
+
+**Marcelo's role:** Review final verified outcomes only. He does NOT copy/paste between Perplexity and BossMan. He is the approval gate, not an information shuttle.
+
+**Tool Selection Policy (Permanent):**
+
+| Task | Preferred Tool |
+|---|---|
+| Perplexity app/web UI on Mac mini | Hermes Computer Use |
+| Installed PWAs (Basecamp, etc.) | Hermes Computer Use |
+| Native Mac app UI (Finder, Messages, etc.) | Hermes Computer Use |
+| Web research, Deep Research, Space content | Perplexity Pro → integrate results |
+| macOS System Settings, permissions | Hermes Computer Use |
+| Localhost web app QA | Browser QA |
+| Local code/CLI/DB inspection | Terminal + tools |
+
+**Spaces Access Priority:**
+1. **File-first via local mirrors** — `~/.hermes/spaces/[folder]/` is canonical. All Spaces maintenance uses local files.
+2. **Mac-app-assisted** — Hermes Computer Use on Perplexity Mac app for visual verification and Cloudflare challenges.
+3. **Browser automation is best-effort only** — blocked by Cloudflare. Not guaranteed.
+
+**Verification rule (all agents):** Any Space update must be confirmed: right Space updated, content correct, metadata correct, obsolete content removed, result matches blueprint and current system state.
+
+**Preview/Approval Loop (Permanent):** When Marcelo sends Perplexity context, BossMan may research and plan — but MUST NOT apply changes until Marcelo approves. Send preview → wait for `approve`/`change`/`ask again` → apply → verify.
+
+**Cross-Device Bridge:** Marcelo may initiate from any device. When he provides a Space name + answer snippet, BossMan picks up the context on the Mac mini, opens the named Space via Hermes Computer Use, and owns all follow-up through to final verified result.
+
 ### Example Workflows
 
 **New task from anywhere:**
