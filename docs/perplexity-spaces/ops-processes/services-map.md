@@ -1,8 +1,19 @@
-# Services Map — Full Port and Service Reference
+# SERVICES_MAP.md
+**Location:** `~/.hermes/knowledge/SERVICES_MAP.md`
+**Updated:** 2026-05-18 (security hardening — both revenue apps secured)
+**Purpose:** Local source of truth for services, ports, owners, and health checks.
 
-**Source:** `~/.hermes/knowledge/SERVICES_MAP.md`
-**Version:** Updated 2026-05-07
-**Status:** Canonical source of truth for services
+---
+
+## Update Rule
+
+Update this file whenever:
+- A new service is added or removed
+- A port number changes
+- A service owner changes
+- A health endpoint or access path changes
+
+Add a short note with date and initials when updating an entry.
 
 ---
 
@@ -10,9 +21,9 @@
 
 | Service | Port | Type | PM2 Name | Owner | Health Check | Status |
 |---------|------|------|----------|-------|--------------|--------|
-| Bakery (home bakery business) | 3001 | Next.js web | `bakery` | Marcelo | `curl localhost:3001` | ✅ Active — 6D uptime |
+| Bakery (home bakery business) | 3001 | Express.js | `bakery` | Marcelo | `curl localhost:3001` | ✅ Active — Security Hardened (2026-05-18) |
 | Hermes messaging gateway | — | LaunchAgent | — | BossMan | Telegram DM connected | ✅ Active — Telegram |
-| SquarePayouts (sports betting pool) | 3100 | Next.js web | `squarepayouts` | Marcelo | `curl localhost:3100` | ✅ Active — 6D uptime |
+| SquarePayouts (sports betting pool) | 8030 | Next.js web | `squarepayouts` | Marcelo | `curl localhost:8030` | ✅ Healthy — Security Hardened (2026-05-18) |
 | Fresh dashboard | 5050 | Node web | `fresh-dashboard` | Marcelo | `curl localhost:5050` | ✅ Active — 6D uptime |
 | OpenClaw hub | 8090 | Node web | `hub` | Marcelo | `curl localhost:8090` | ✅ Active — 6D uptime |
 | Overview dashboard | 8100 | Node web | `overview` | Marcelo | `curl localhost:8100` | ✅ Active — 6D uptime |
@@ -30,8 +41,8 @@
 | Port | Owner | Service | Status |
 |------|-------|---------|--------|
 | 18789 | OpenClaw | OpenClaw gateway | ✅ Active |
-| 3001 | Marcelo | Bakery (home bakery) | ✅ Active |
-| 3100 | Marcelo | SquarePayouts (sports betting pool) | ✅ Active |
+| 3001 | Marcelo | BakeryOps (Express.js) | ✅ Security Hardened |
+| 8030 | Marcelo | SquarePayouts (Next.js) | ✅ Security Hardened |
 | 5050 | Marcelo | Fresh dashboard | ✅ Active |
 | 8090 | Marcelo | OpenClaw hub | ✅ Active |
 | 8100 | Marcelo | Overview dashboard | ✅ Active |
@@ -60,21 +71,9 @@ The Hermes messaging gateway (BossMan) runs as a **macOS LaunchAgent**, NOT as a
 
 ---
 
-## Update Rule
-
-Update this file whenever:
-- A new service is added or removed
-- A port number changes
-- A service owner changes
-- A health endpoint or access path changes
-
-Add a short note with date and initials when updating an entry.
-
----
-
 ## Notes
 
-- Port 3001 and Hermes gateway: No conflict. Bakery owns 3001 as a Next.js web app. Hermes gateway is a messaging-only LaunchAgent — it does not use a web port.
-- Port 3100 and OpenHue: No conflict. SquarePayouts owns 3100. OpenHue is not installed.
+- Port 3001: BakeryOps (Express.js) — secured with session + bcrypt auth + rate limiting as of 2026-05-18. Tech stack changed from Next.js to Express.js.
+- Port 8030: SquarePayouts (Next.js) — secured with NextAuth + PII filtering + rate limiting as of 2026-05-18. Port changed from 3100 to 8030 to avoid conflict.
 - Binance bot (8104): **STOPPED** 2026-05-07 — pre-trade-hook module missing, awaiting Phase 2 restoration.
 - Money pipeline (8020): Monitor closely — 8 PM2 restarts as of 2026-05-07 audit.

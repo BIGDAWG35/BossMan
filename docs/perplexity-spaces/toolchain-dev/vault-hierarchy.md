@@ -1,6 +1,6 @@
 # Vault Hierarchy — Hermes vs OpenClaw Brain
 **Source:** OpenClaw TOOLS.md
-**Updated:** 2026-05-17
+**Updated:** 2026-05-18
 
 ## Hierarchy
 1. LOCAL → 2. OBSIDIAN → 3. GITHUB → 4. PERPLEXITY SPACES

@@ -52,7 +52,7 @@
 
 This is separate from:
 - Bakery revenue (home bakery business — port 3001)
-- SquarePayouts (sports betting pool — port 3100)
+- SquarePayouts (sports betting pool — port 8030, external reviewer: https://bigdawg-squares.loca.lt/squares)
 - YouTube automation (port 8140)
 
 ---
