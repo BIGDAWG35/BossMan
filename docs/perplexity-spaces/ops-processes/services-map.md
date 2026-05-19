@@ -31,6 +31,7 @@ Add a short note with date and initials when updating an entry.
 | Binance bot dashboard | 8104 | Node web | `binance-bot` | Marcelo | `curl localhost:8104` | 🔴 STOPPED — pre-trade-hook missing |
 | Trading control | 8130 | Node web | `trading-control` | Marcelo | `curl localhost:8130` | ✅ Active — 6D uptime |
 | YouTube dashboard | 8140 | Node web | `youtube-dashboard` | Marcelo | `curl localhost:8140` | ✅ Active — 6D uptime |
+| Quick Stats ops dashboard | 8102 | Node web | Not PM2 (bare node) | ops | `curl localhost:8102/api/health` | ✅ Active — ops aggregate view, cron-dependent |
 | Crypto tracker / Money pipeline | 8020 | Node web | `money-pipeline` | Marcelo | `curl localhost:8020` | ⚠️ Active — 8 restarts, monitor |
 | OpenClaw gateway | 18789 | Node web | — | OpenClaw | `curl localhost:18789/health` | ✅ Active |
 
@@ -47,6 +48,7 @@ Add a short note with date and initials when updating an entry.
 | 8090 | Marcelo | OpenClaw hub | ✅ Active |
 | 8100 | Marcelo | Overview dashboard | ✅ Active |
 | 8104 | Marcelo | Binance bot dashboard | 🔴 STOPPED |
+| 8102 | ops | Quick Stats ops dashboard | ✅ Active |
 | 8110 | Marcelo | Health dashboard | ✅ Active |
 | 8130 | Marcelo | Trading control | ✅ Active |
 | 8140 | Marcelo | YouTube dashboard | ✅ Active |
@@ -77,3 +79,4 @@ The Hermes messaging gateway (BossMan) runs as a **macOS LaunchAgent**, NOT as a
 - Port 8030: SquarePayouts (Next.js) — secured with NextAuth + PII filtering + rate limiting as of 2026-05-18. Port changed from 3100 to 8030 to avoid conflict.
 - Binance bot (8104): **STOPPED** 2026-05-07 — pre-trade-hook module missing, awaiting Phase 2 restoration.
 - Money pipeline (8020): Monitor closely — 8 PM2 restarts as of 2026-05-07 audit.
+- Quick Stats (8102): Runs as bare node (not PM2-managed). Active, used by morning-obsidian-briefing and daily-automation-digest-telegram cron jobs. Health scan shows most upstream services offline — needs port verification.
