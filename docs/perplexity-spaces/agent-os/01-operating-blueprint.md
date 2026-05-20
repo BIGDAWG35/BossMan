@@ -62,12 +62,21 @@ Hermes — BossMan profile (primary orchestrator, MiniMax 2.7)
 
 ## Model Stack Policy
 
-| Model | Role | When to Use |
+|| Model | Role | When to Use |
 |-------|------|------------|
-| **MiniMax 2.7** | Primary brain | Everything, all day |
-| **DeepSeek** | Analysis backup | MiniMax hits ceiling on complexity |
-| **OpenAI** | Production text backup | Need clean production code/docs |
-| **Claude** | Long-form reasoning backup | All models conflict or stall |
+| **MiniMax 2.7** | Primary brain — orchestrator, routing, creative expansion, second-pass ideas | Everything except SquarePayouts |
+| **DeepSeek** | Deep reasoning, technical validation, edge-case analysis, crypto logic, cycle comparison | Low-cost backup, all projects |
+| **OpenAI** | Synthesis, product framing, operational writing, summarization | Clean production output, all projects |
+| **Claude** | Architecture planning, workflow design, structured kanban planning, prompt/agent design | High-stakes review, all models conflict |
+| **Perplexity** | Research, Deep Research, web reasoning, process analysis, crypto research, verification | Browser/Brave QA path |
+
+### SquarePayouts Model Restriction (Permanent — 2026-05-20)
+
+**MiniMax 2.7 is BLOCKED for all SquarePayouts work.** Use Claude, DeepSeek, or OpenAI only. Applies to all subagents and delegated executors.
+
+### Detailed Tool Strategy → AGENTS.md
+
+Tool-by-task strategy (Perplexity desktop app vs Hermes Computer Use vs Browser QA vs Terminal) is documented permanently in `AGENTS.md` under **Tool Strategy by Task Type**.
 
 ---
 
@@ -246,10 +255,139 @@ LBC35 **may** without asking:
 
 ## Version History
 
-| Version | Date | Change |
+|| Version | Date | Change ||
 |---------|------|--------|
-| 1.0 | 2026-05-07 | Initial — Hermes-first, BossMan orchestrator, OpenClaw demoted |
-| 1.1 | 2026-05-08 | Phase 4 — handoff packet format, routing checklist, LBC35 constraints, production workflow diagram, 3 test handoffs verified |
+|| 1.0 | 2026-05-07 | Initial — Hermes-first, BossMan orchestrator, OpenClaw demoted ||
+|| 1.1 | 2026-05-08 | Phase 4 — handoff packet format, routing checklist, LBC35 constraints, production workflow diagram, 3 test handoffs verified ||
+|| 1.2 | 2026-05-20 | Track 1 additions — self-improvement rules, self-audit rules, verified sub-agent roster, memory capture policy ||
+
+---
+
+## Self-Audit Rules (Permanent)
+
+BossMan performs a self-audit after every Kanban card completion:
+
+| Question | Action if Uncomfortable Answer |
+|----------|--------------------------------|
+| Was the deliverable actually achieved? | Create follow-up card, don't close loose ends |
+| Was Marcelo's time used well? | If no, write memory entry + improve routing |
+| Did BossMan know enough at the start? | If no, add pre-flight check to the skill or workflow |
+| Should this create a follow-up? | Create card immediately — don't drift |
+| Is the documentation still accurate? | If stale, update before marking done |
+
+### PM2 Health Monitor (Permanent — 2026-05-15, updated 2026-05-20)
+
+**Job ID:** `d4f07e0c180f` — Hermes cron, `no_agent` mode, every 5 minutes
+**Script:** `~/.hermes/scripts/pm2-health-monitor.sh`
+**Monitored:** `binance-bot` | `squarepayouts` | `money-pipeline` | `bakery`
+
+**Alert Rules (Marcelo's standing policy — 2026-05-16):**
+1. **Silent when healthy** — zero messages if all services are online.
+2. **Auto-fix silently** — restart down service with NO alert during fix attempt.
+3. **Alert ONLY on two conditions:**
+   - `SUCCESS`: service was down + auto-recovered → ONE message: "✅ FIXED: [service] was down, auto-restarted at [time]. Now stable."
+   - `ESCALATION`: service is down + auto-restart FAILED → ONE message: "🚨 NEEDS ATTENTION: [service] is down and could not be auto-recovered. Manual fix required."
+4. **No duplicate alerts** — lockfile per service (`/tmp/pm2-alert-[service].lock`) prevents repeated alerts.
+**Log:** `~/logs/pm2-health.log`
+
+### Weekly Systems Review (Permanent)
+
+BossMan runs a weekly review every Monday morning covering:
+- PM2 health log — any restarts or failures
+- Kanban board — open cards, blocked items, aging tasks
+- Cron jobs — any missed runs or errors
+- Service ports — any anomalies from baseline
+- Memory files — any stale entries to clean up
+- Security audit schedule — confirm quarterly pentests are current
+
+### Sub-Agent Performance Tracking (Permanent)
+
+BossMan tracks per sub-agent:
+- Completion rate (did work get done or blocked/failed?)
+- Quality of handoffs (were summaries clear enough to act on?)
+- Marcelo's satisfaction (any direct feedback?)
+- Patterns — which profile works best for which task type
+
+Findings update the routing rules in SOUL.md and this blueprint.
+
+---
+
+## Verified Sub-Agent Roster (Permanent — 2026-05-20)
+
+All profiles exist and are operational on this machine:
+
+| Profile | Role | Authority | Status |
+|---------|------|----------|--------|
+| `bossman` | Orchestrator, router, planner, approver | PRIMARY — routes all work | ✅ Active |
+| `builder` | Code, dashboards, scripts, repos | Executes what bossman assigns | ✅ Active |
+| `ops` | PM2, runtime, ports, infra | Executes what bossman assigns | ✅ Active |
+| `trading` | Market research, signals | Executes what bossman assigns | ✅ Active |
+| `content` | YouTube, scripts, docs | Executes what bossman assigns | ✅ Active |
+
+LBC35/OpenClaw is a **delegated executor** — receives work exclusively via BossMan handoff packet. No autonomous actions.
+
+---
+
+## Memory Capture Policy (Permanent — 2026-05-20)
+
+### Structured Tags
+
+All memory entries use these tags for searchability:
+
+| Tag | Use For |
+|-----|---------|
+| `[DECISION]` | Architectural choices, routing decisions, trade-offs |
+| `[ARCHITECTURE]` | System design, service topology, data flows |
+| `[SECURITY]` | Patches, vulnerabilities, hardening actions |
+| `[PRICING]` | Product pricing, cost analysis, revenue decisions |
+| `[PRODUCT]` | Feature planning, UX decisions, user feedback |
+| `[ROUTING]` | Model selection, agent assignment, tool choice |
+| `[WORKFLOW]` | Process improvements, automation patterns |
+| `[TRADING]` | Binance signals, market analysis, bot config |
+| `[PERFORMANCE]` | Speed improvements, resource optimization |
+| `[PREFERENCE]` | Marcelo's stated likes/dislikes/tastes |
+
+### Capture Triggers
+
+- **Correction:** Marcelo corrects BossMan → immediately save what was wrong + correct approach
+- **Preference:** Marcelo expresses a preference → immediately save to `memory` (user profile)
+- **Workflow win:** BossMan discovers a better approach → save as skill within session
+- **Tool quirk:** Tool behaves unexpectedly → save to `LEARNED_*.md` within session
+- **Repeated failure:** Same error twice → save root cause + fix
+- **Decision made:** Nontrivial choice → save to `memory/YYYY-MM-DD.md` same day
+- **Delegation success:** Sub-agent outperforms expectations → note routing pattern
+
+### Memory Files
+
+| File | Contents | Update Frequency |
+|------|----------|-----------------|
+| `~/.hermes/memory/` | Marcelo's preferences, user profile facts | On expression |
+| `~/.hermes/profiles/bossman/skills/` | Reusable workflows, proven approaches | On discovery |
+| `~/.hermes/knowledge/LEARNED_*.md` | Tool workarounds, system quirks | Within session |
+| `~/.hermes/knowledge/memory/YYYY-MM-DD.md` | Daily decisions, context | Same day |
+| `~/.hermes/knowledge/LEARNED_CORE_ARCHITECTURE.md` | System design insights | On change |
+
+### Retrieval Before Action
+
+Before creating a Kanban card, spawning a sub-agent, or starting a deep-dive:
+1. Check `memory` for Marcelo's preferences
+2. Check relevant `LEARNED_*.md` for prior context
+3. Run `session_search` for recent patterns
+
+No "fresh start" assumption — continuity is the default.
+
+### Trusted Learning Rules (Permanent)
+
+- **Verified sources only** — don't trust a claim just because it's popular or repeated; verify before acting
+- **Evidence-backed findings** — if you can't verify it, explicitly flag the confidence level as low
+- **Compare when uncertain** — when confidence is low, run the same query through multiple models/sources and compare
+- **Refine based on outcomes** — after every workflow, note what worked and what didn't; update patterns accordingly
+- **No speculation as fact** — always label hypothesis vs. confirmed finding; don't let assumptions compound
+- **Known vs. assumed** — known facts are durable; assumptions change; store them in separate sections so they can be updated independently
+
+---
+
+## Telegram Mobile Controls
 
 ---
 
@@ -294,35 +432,6 @@ When to use each tool:
 **Verification rule (all agents):** Any Space update (title, description, prompt, docs, deletions) must be confirmed after execution. Update is not complete until right Space was updated, content is correct, metadata is correct, obsolete content removed, result matches blueprint.
 
 > Full Perplexity workflow: `~/.hermes/SOUL.md` — "Perplexity & Spaces Coordination"
-
-### Perplexity + Spaces + Hermes Computer Use — Permanent Workflow
-
-**BossMan owns all Perplexity/Spaces coordination.** This is not optional — it is the core research and external intelligence layer for Hermes.
-
-**Marcelo's role:** Review final verified outcomes only. He does NOT copy/paste between Perplexity and BossMan. He is the approval gate, not an information shuttle.
-
-**Tool Selection Policy (Permanent):**
-
-| Task | Preferred Tool |
-|---|---|
-| Perplexity app/web UI on Mac mini | Hermes Computer Use |
-| Installed PWAs (Basecamp, etc.) | Hermes Computer Use |
-| Native Mac app UI (Finder, Messages, etc.) | Hermes Computer Use |
-| Web research, Deep Research, Space content | Perplexity Pro → integrate results |
-| macOS System Settings, permissions | Hermes Computer Use |
-| Localhost web app QA | Browser QA |
-| Local code/CLI/DB inspection | Terminal + tools |
-
-**Spaces Access Priority:**
-1. **File-first via local mirrors** — `~/.hermes/spaces/[folder]/` is canonical. All Spaces maintenance uses local files.
-2. **Mac-app-assisted** — Hermes Computer Use on Perplexity Mac app for visual verification and Cloudflare challenges.
-3. **Browser automation is best-effort only** — blocked by Cloudflare. Not guaranteed.
-
-**Verification rule (all agents):** Any Space update must be confirmed: right Space updated, content correct, metadata correct, obsolete content removed, result matches blueprint and current system state.
-
-**Preview/Approval Loop (Permanent):** When Marcelo sends Perplexity context, BossMan may research and plan — but MUST NOT apply changes until Marcelo approves. Send preview → wait for `approve`/`change`/`ask again` → apply → verify.
-
-**Cross-Device Bridge:** Marcelo may initiate from any device. When he provides a Space name + answer snippet, BossMan picks up the context on the Mac mini, opens the named Space via Hermes Computer Use, and owns all follow-up through to final verified result.
 
 ### Example Workflows
 

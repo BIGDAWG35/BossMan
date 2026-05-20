@@ -1,82 +1,77 @@
-# SERVICES_MAP.md
-**Location:** `~/.hermes/knowledge/SERVICES_MAP.md`
-**Updated:** 2026-05-18 (security hardening — both revenue apps secured)
-**Purpose:** Local source of truth for services, ports, owners, and health checks.
+# Services Map — Verified 2026-05-20
 
----
+## PM2 Managed Services
 
-## Update Rule
+| PM2 Name | Port | Service | Status | Notes |
+|----------|------|---------|--------|-------|
+| quick-stats | 8102 | QuickStats | ⚠️ RESTART LOOP | 43k+ restarts, uptime ~3s, online but unstable |
 
-Update this file whenever:
-- A new service is added or removed
-- A port number changes
-- A service owner changes
-- A health endpoint or access path changes
+## LaunchAgent Managed Services
 
-Add a short note with date and initials when updating an entry.
+| Label | Port | Service | Status |
+|-------|------|---------|--------|
+| com.local.quickstats | 8102 | QuickStats | stopped (-15) |
+| com.local.teamstandup | 8003 | TeamStandup | stopped (-15) |
+| ai.hermes.gateway | — | Hermes Gateway | running (PID 73036) |
+| ai.openclaw.gateway | — | OpenClaw Gateway | disabled |
 
----
+## Port Audit (Live)
 
-## Service Map (Confirmed 2026-05-07)
+| Port | Service | HTTP | Response |
+|------|---------|------|---------|
+| 3001 | bakery | 200 | 1.8ms ✅ |
+| 8020 | money-pipeline | 200 | 2.8ms ✅ |
+| 8030 | squarepayouts | 200 | 2.2ms ✅ |
+| 8104 | binance-bot | 200 | 1.7ms ✅ |
+| 8102 | quick-stats | 200 | 1.3ms ✅ |
+| 9119 | hermes dashboard | 200 | 2.9ms ✅ |
+| 8100 | overview | — | offline |
+| 8110 | health-dashboard | — | offline |
+| 8130 | trading-control | — | offline |
+| 8140 | youtube-dashboard | — | offline |
+| 8106 | kraken-bot | — | offline |
+| 8003 | teamstandup | — | offline |
 
-| Service | Port | Type | PM2 Name | Owner | Health Check | Status |
-|---------|------|------|----------|-------|--------------|--------|
-| Bakery (home bakery business) | 3001 | Express.js | `bakery` | Marcelo | `curl localhost:3001` | ✅ Active — Security Hardened (2026-05-18) |
-| Hermes messaging gateway | — | LaunchAgent | — | BossMan | Telegram DM connected | ✅ Active — Telegram |
-| SquarePayouts (sports betting pool) | 8030 | Next.js web | `squarepayouts` | Marcelo | `curl localhost:8030` | ✅ Healthy — Security Hardened (2026-05-18) |
-| Fresh dashboard | 5050 | Node web | `fresh-dashboard` | Marcelo | `curl localhost:5050` | ✅ Active — 6D uptime |
-| OpenClaw hub | 8090 | Node web | `hub` | Marcelo | `curl localhost:8090` | ✅ Active — 6D uptime |
-| Overview dashboard | 8100 | Node web | `overview` | Marcelo | `curl localhost:8100` | ✅ Active — 6D uptime |
-| Health dashboard | 8110 | Node web | `health-dashboard` | Marcelo | `curl localhost:8110` | ✅ Active — 6D uptime |
-| Binance bot dashboard | 8104 | Node web | `binance-bot` | Marcelo | `curl localhost:8104` | 🔴 STOPPED — pre-trade-hook missing |
-| Trading control | 8130 | Node web | `trading-control` | Marcelo | `curl localhost:8130` | ✅ Active — 6D uptime |
-| YouTube dashboard | 8140 | Node web | `youtube-dashboard` | Marcelo | `curl localhost:8140` | ✅ Active — 6D uptime |
-| Quick Stats ops dashboard | 8102 | Node web | Not PM2 (bare node) | ops | `curl localhost:8102/api/health` | ✅ Active — ops aggregate view, cron-dependent |
-| Crypto tracker / Money pipeline | 8020 | Node web | `money-pipeline` | Marcelo | `curl localhost:8020` | ⚠️ Active — 8 restarts, monitor |
-| OpenClaw gateway | 18789 | Node web | — | OpenClaw | `curl localhost:18789/health` | ✅ Active |
+## Unknown Ports — Resolved
 
----
+| Port | Process | Identity |
+|------|---------|----------|
+| 9119 | python3.1 (PID 38075) | `hermes dashboard` CLI, localhost only |
+| 8003 | node (PID 83551) | teamstandup, LaunchAgent present but stopped |
 
-## Quick Port Lookup
+## Cron Jobs
 
-| Port | Owner | Service | Status |
-|------|-------|---------|--------|
-| 18789 | OpenClaw | OpenClaw gateway | ✅ Active |
-| 3001 | Marcelo | BakeryOps (Express.js) | ✅ Security Hardened |
-| 8030 | Marcelo | SquarePayouts (Next.js) | ✅ Security Hardened |
-| 5050 | Marcelo | Fresh dashboard | ✅ Active |
-| 8090 | Marcelo | OpenClaw hub | ✅ Active |
-| 8100 | Marcelo | Overview dashboard | ✅ Active |
-| 8104 | Marcelo | Binance bot dashboard | 🔴 STOPPED |
-| 8102 | ops | Quick Stats ops dashboard | ✅ Active |
-| 8110 | Marcelo | Health dashboard | ✅ Active |
-| 8130 | Marcelo | Trading control | ✅ Active |
-| 8140 | Marcelo | YouTube dashboard | ✅ Active |
-| 8020 | Marcelo | Crypto tracker / Money pipeline | ⚠️ Monitor |
+| Schedule | Job | Last Run | Status |
+|----------|-----|----------|--------|
+| 0 9 * * * | squarespayouts-status-exporter | 2026-05-19 | ✅ working |
 
----
+## Issues
 
-## Hermes Gateway — Not a Web Port Service
+### 🚨 CRITICAL: quick-stats PM2 restart loop
+- 43,767 restarts, uptime ~3s → crashes and restarts immediately
+- Root cause: unknown (check `~/.hermes/profiles/ops/home/.pm2/logs/quick-stats-error.log`)
+- Both PM2 `quick-stats` AND LaunchAgent `com.local.quickstats` registered — possible port conflict
+- **Action needed:** Investigate crash logs, determine if PM2 instance should be stopped in favor of LaunchAgent version, or vice versa
 
-The Hermes messaging gateway (BossMan) runs as a **macOS LaunchAgent**, NOT as a PM2 web service. It connects to Telegram and handles messaging — it does not bind a web port. Do NOT add it to the port map as a web service.
+### 📋 PM2 save
+- Run `pm2 save` after any PM2 change to persist current state
 
-**Health check for Hermes gateway:** Check `hermes gateway status` or verify Telegram connection in `~/.hermes/gateway_state.json`.
+### 📋 No health monitor cron found
+- No ~/.hermes/health-monitor.log or health monitoring cron configured
+- Recommendation: set up weekly cron running `hermes-service-verification.sh`
 
----
+## System LaunchAgents (benign)
 
-## Services NOT on this Machine
+| Label | Purpose |
+|-------|---------|
+| com.google.keystone.* | Google Update |
+| com.philandro.anydesk.Frontend.plist | AnyDesk |
+| application.com.brave.Browser.* | Brave Browser |
+| application.ai.perplexity.* | Perplexity |
+| application.io.tailscale.* | Tailscale |
 
-| Service | Reason Not Present |
-|---------|-------------------|
-| OpenHue (port 3100) | Not installed — SquarePayouts is the confirmed owner of 3100 |
-| Hermes web gateway (port 3001) | Hermes runs as LaunchAgent messaging gateway, not web |
+## Files
 
----
-
-## Notes
-
-- Port 3001: BakeryOps (Express.js) — secured with session + bcrypt auth + rate limiting as of 2026-05-18. Tech stack changed from Next.js to Express.js.
-- Port 8030: SquarePayouts (Next.js) — secured with NextAuth + PII filtering + rate limiting as of 2026-05-18. Port changed from 3100 to 8030 to avoid conflict.
-- Binance bot (8104): **STOPPED** 2026-05-07 — pre-trade-hook module missing, awaiting Phase 2 restoration.
-- Money pipeline (8020): Monitor closely — 8 PM2 restarts as of 2026-05-07 audit.
-- Quick Stats (8102): Runs as bare node (not PM2-managed). Active, used by morning-obsidian-briefing and daily-automation-digest-telegram cron jobs. Health scan shows most upstream services offline — needs port verification.
+- Verification script: `~/.hermes/profiles/ops/scripts/hermes-service-verification.sh`
+- PM2 home: `~/.hermes/profiles/ops/home/.pm2/`
+- Quick Stats: `/Users/bigdawg/Projects/quick-stats/`
