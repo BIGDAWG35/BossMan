@@ -1,0 +1,368 @@
+{
+  "report_date": "2026-05-20",
+  "generated_at": "2026-05-20T20:01:59.465Z",
+  "regime": "MID_CYCLE",
+  "regime_confidence": 0.45,
+  "regime_signal_date": "2026-05-20",
+  "btc_200d_sma": 81156.21910000002,
+  "btc_50d_vs_200d": "death_cross",
+  "btc_current_price": 77577,
+  "drawdown_from_ath_pct": 38.47001903553299,
+  "momentum_90d_pct": 0,
+  "volatility_regime": "LOW",
+  "indicators_agreeing": [
+    "death_cross"
+  ],
+  "btc_7d_pct": -2.1766876495577874,
+  "coin_rankings": [
+    {
+      "symbol": "OCEANUSDT",
+      "band": "HOT",
+      "band_score": 1.13,
+      "price_7d_pct": 29.4,
+      "price": 0.11,
+      "volume_7d_trend": 50.4,
+      "relative_to_btc_pct": 31.6,
+      "sector": "AI",
+      "reason": "29.4% 7d | +31.6% vs BTC | vol +50% | AI sector"
+    },
+    {
+      "symbol": "PEPEUSDT",
+      "band": "COLD",
+      "band_score": 0.76,
+      "price_7d_pct": -7.9,
+      "price": 0.00000374,
+      "volume_7d_trend": -75.6,
+      "relative_to_btc_pct": -5.7,
+      "sector": "Memecoins",
+      "reason": "Memecoins sector"
+    },
+    {
+      "symbol": "FETUSDT",
+      "band": "COLD",
+      "band_score": 0.76,
+      "price_7d_pct": -10.2,
+      "price": 0.193,
+      "volume_7d_trend": -6.8,
+      "relative_to_btc_pct": -8,
+      "sector": "AI",
+      "reason": "AI sector"
+    },
+    {
+      "symbol": "MKRUSDT",
+      "band": "WARM",
+      "band_score": 0.74,
+      "price_7d_pct": 4.9,
+      "price": 1750,
+      "volume_7d_trend": 48.1,
+      "relative_to_btc_pct": 7.1,
+      "sector": "DeFi",
+      "reason": "+7.1% vs BTC | vol +48% | DeFi sector"
+    },
+    {
+      "symbol": "AAVEUSDT",
+      "band": "COLD",
+      "band_score": 0.72,
+      "price_7d_pct": -7.1,
+      "price": 88.64,
+      "volume_7d_trend": -26.9,
+      "relative_to_btc_pct": -4.9,
+      "sector": "DeFi",
+      "reason": "DeFi sector"
+    },
+    {
+      "symbol": "CRVUSDT",
+      "band": "COLD",
+      "band_score": 0.72,
+      "price_7d_pct": -7.8,
+      "price": 0.2409,
+      "volume_7d_trend": -24.6,
+      "relative_to_btc_pct": -5.6,
+      "sector": "DeFi",
+      "reason": "DeFi sector"
+    },
+    {
+      "symbol": "UNIUSDT",
+      "band": "COLD",
+      "band_score": 0.71,
+      "price_7d_pct": -5.3,
+      "price": 3.429,
+      "volume_7d_trend": -34.9,
+      "relative_to_btc_pct": -3.1,
+      "sector": "DeFi",
+      "reason": "DeFi sector"
+    },
+    {
+      "symbol": "MATICUSDT",
+      "band": "COLD",
+      "band_score": 0.7,
+      "price_7d_pct": -13.6,
+      "price": 0.4492,
+      "volume_7d_trend": -5.5,
+      "relative_to_btc_pct": -11.4,
+      "sector": "L1",
+      "reason": "L1 sector"
+    },
+    {
+      "symbol": "FLOKIUSDT",
+      "band": "COLD",
+      "band_score": 0.69,
+      "price_7d_pct": -10.8,
+      "price": 0.00003036,
+      "volume_7d_trend": -35,
+      "relative_to_btc_pct": -8.6,
+      "sector": "Memecoins",
+      "reason": "Memecoins sector"
+    },
+    {
+      "symbol": "WIFUSDT",
+      "band": "COLD",
+      "band_score": 0.67,
+      "price_7d_pct": -8.8,
+      "price": 0.196,
+      "volume_7d_trend": -39.6,
+      "relative_to_btc_pct": -6.7,
+      "sector": "Memecoins",
+      "reason": "Memecoins sector"
+    },
+    {
+      "symbol": "LINKUSDT",
+      "band": "COLD",
+      "band_score": 0.65,
+      "price_7d_pct": -5.5,
+      "price": 9.663,
+      "volume_7d_trend": -9.8,
+      "relative_to_btc_pct": -3.3,
+      "sector": "DeFi",
+      "reason": "DeFi sector"
+    },
+    {
+      "symbol": "SOLUSDT",
+      "band": "COLD",
+      "band_score": 0.64,
+      "price_7d_pct": -5.6,
+      "price": 86.05,
+      "volume_7d_trend": -22.4,
+      "relative_to_btc_pct": -3.4,
+      "sector": "L1",
+      "reason": "L1 sector"
+    },
+    {
+      "symbol": "AVAXUSDT",
+      "band": "WARM",
+      "band_score": 0.64,
+      "price_7d_pct": -4.5,
+      "price": 9.31,
+      "volume_7d_trend": -30.3,
+      "relative_to_btc_pct": -2.3,
+      "sector": "L1",
+      "reason": "L1 sector"
+    },
+    {
+      "symbol": "ATOMUSDT",
+      "band": "WARM",
+      "band_score": 0.63,
+      "price_7d_pct": -2.7,
+      "price": 2.002,
+      "volume_7d_trend": -35.8,
+      "relative_to_btc_pct": -0.5,
+      "sector": "L1",
+      "reason": "L1 sector"
+    },
+    {
+      "symbol": "AXSUSDT",
+      "band": "COLD",
+      "band_score": 0.63,
+      "price_7d_pct": -13.9,
+      "price": 1.073,
+      "volume_7d_trend": -16.9,
+      "relative_to_btc_pct": -11.7,
+      "sector": "Gaming",
+      "reason": "Gaming sector"
+    },
+    {
+      "symbol": "SHIBUSDT",
+      "band": "COLD",
+      "band_score": 0.62,
+      "price_7d_pct": -7.2,
+      "price": 0.00000582,
+      "volume_7d_trend": -26.1,
+      "relative_to_btc_pct": -5,
+      "sector": "Memecoins",
+      "reason": "Memecoins sector"
+    },
+    {
+      "symbol": "DOTUSDT",
+      "band": "COLD",
+      "band_score": 0.61,
+      "price_7d_pct": -5.4,
+      "price": 1.255,
+      "volume_7d_trend": -12.8,
+      "relative_to_btc_pct": -3.2,
+      "sector": "L1",
+      "reason": "L1 sector"
+    },
+    {
+      "symbol": "ETHUSDT",
+      "band": "COLD",
+      "band_score": 0.6,
+      "price_7d_pct": -5.4,
+      "price": 2137.01,
+      "volume_7d_trend": 8.3,
+      "relative_to_btc_pct": -3.2,
+      "sector": "L1",
+      "reason": "L1 sector"
+    },
+    {
+      "symbol": "ADAUSDT",
+      "band": "COLD",
+      "band_score": 0.58,
+      "price_7d_pct": -5.6,
+      "price": 0.25023,
+      "volume_7d_trend": 0.3,
+      "relative_to_btc_pct": -3.5,
+      "sector": "L1",
+      "reason": "L1 sector"
+    },
+    {
+      "symbol": "SANDUSDT",
+      "band": "COLD",
+      "band_score": 0.58,
+      "price_7d_pct": -10.3,
+      "price": 0.0706,
+      "volume_7d_trend": 15.3,
+      "relative_to_btc_pct": -8.1,
+      "sector": "Gaming",
+      "reason": "vol +15% | Gaming sector"
+    },
+    {
+      "symbol": "BTCUSDT",
+      "band": "WARM",
+      "band_score": 0.56,
+      "price_7d_pct": -2.2,
+      "price": 77602.95,
+      "volume_7d_trend": 12.7,
+      "relative_to_btc_pct": 0,
+      "sector": "L1",
+      "reason": "L1 sector"
+    },
+    {
+      "symbol": "DOGEUSDT",
+      "band": "COLD",
+      "band_score": 0.56,
+      "price_7d_pct": -7.8,
+      "price": 0.10404,
+      "volume_7d_trend": 0.4,
+      "relative_to_btc_pct": -5.6,
+      "sector": "Memecoins",
+      "reason": "Memecoins sector"
+    },
+    {
+      "symbol": "MANAUSDT",
+      "band": "COLD",
+      "band_score": 0.54,
+      "price_7d_pct": -5.4,
+      "price": 0.0876,
+      "volume_7d_trend": -25,
+      "relative_to_btc_pct": -3.2,
+      "sector": "Gaming",
+      "reason": "Gaming sector"
+    }
+  ],
+  "hot_count": 1,
+  "warm_count": 4,
+  "watch_count": 0,
+  "cold_count": 18,
+  "sectors": [
+    {
+      "name": "L1",
+      "avg_7d_return": -5.62977630857081,
+      "vs_btc": -3.453088659013023,
+      "signal": "NEUTRAL",
+      "coin_count": 8
+    },
+    {
+      "name": "DeFi",
+      "avg_7d_return": -4.137876180215139,
+      "vs_btc": -1.9611885306573518,
+      "signal": "NEUTRAL",
+      "coin_count": 5
+    },
+    {
+      "name": "Memecoins",
+      "avg_7d_return": -8.49060931583014,
+      "vs_btc": -6.3139216662723525,
+      "signal": "LAGGING",
+      "coin_count": 5
+    },
+    {
+      "name": "AI",
+      "avg_7d_return": 9.61048914679878,
+      "vs_btc": 11.787176796356569,
+      "signal": "LEADING",
+      "coin_count": 2
+    },
+    {
+      "name": "Gaming",
+      "avg_7d_return": -9.858749086045414,
+      "vs_btc": -7.6820614364876265,
+      "signal": "LAGGING",
+      "coin_count": 3
+    }
+  ],
+  "sector_rank": [
+    "AI",
+    "DeFi",
+    "L1",
+    "Memecoins",
+    "Gaming"
+  ],
+  "signals": [
+    {
+      "signal_id": "SIG-20260520-001",
+      "signal_type": "BAND_DEMOTION",
+      "symbol": "SOLUSDT",
+      "band_from": "WATCH",
+      "band_to": "COLD",
+      "trigger": "band_score WATCH→COLD",
+      "confidence": 0.64
+    },
+    {
+      "signal_id": "SIG-20260520-002",
+      "signal_type": "BAND_DEMOTION",
+      "symbol": "ETHUSDT",
+      "band_from": "WARM",
+      "band_to": "COLD",
+      "trigger": "band_score WARM→COLD",
+      "confidence": 0.6
+    },
+    {
+      "signal_id": "SIG-20260520-003",
+      "signal_type": "BAND_DEMOTION",
+      "symbol": "ADAUSDT",
+      "band_from": "WATCH",
+      "band_to": "COLD",
+      "trigger": "band_score WATCH→COLD",
+      "confidence": 0.58
+    },
+    {
+      "signal_id": "SIG-20260520-004",
+      "signal_type": "BAND_DEMOTION",
+      "symbol": "DOGEUSDT",
+      "band_from": "WARM",
+      "band_to": "COLD",
+      "trigger": "band_score WARM→COLD",
+      "confidence": 0.56
+    }
+  ],
+  "risk_flags": [
+    {
+      "flag": "REGIME_UNCERTAINTY",
+      "status": "ACTIVE",
+      "severity": "MEDIUM",
+      "action": "Lower confidence in band assignments — verify manually"
+    }
+  ],
+  "source": "CSDAWG 2.0",
+  "version": "1.0"
+}
