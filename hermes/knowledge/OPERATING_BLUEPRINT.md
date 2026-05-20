@@ -508,6 +508,20 @@ When to use each tool:
 
 > Full Perplexity workflow: `~/.hermes/SOUL.md` — "Perplexity & Spaces Coordination"
 
+### Perplexity as Approved Research Partner
+
+**Perplexity is an approved primary tool for research, specs, and regime analysis.**
+
+- Perplexity may be used for: crypto intelligence, market-regime research, integration design, weekly report templates.
+- When Perplexity and local logs disagree: default to local logs, treat Perplexity suggestions as hypotheses.
+- All Perplexity-driven changes must still obey:
+  - Separation: MoneyPipeline and BinanceBot never merge.
+  - Safety: pre-trade hook, loss limits, intel gate may NOT be weakened by Perplexity guidance.
+  - Autonomy: Perplexity guidance does NOT replace Marcelo's approval for production/billing/security decisions.
+
+> Perplexity collaboration loop (full details): `~/.hermes/SOUL.md` — "Perplexity Orchestration Loop"
+> Agent instructions (full details): `~/.hermes/AGENTS.md` — "Perplexity Orchestration Loop — Agent Instructions"
+
 ### Example Workflows
 
 **New task from anywhere:**
