@@ -29,3 +29,23 @@ Updated: 2026-05-21T06:06:35Z
 **Pattern verified:** Only PM2 env vars and `.env.production` are loaded at runtime
 **Action:** Always check PM2 env explicitly for production Next.js apps
 
+
+
+---
+
+## [PROJECT:Hermes][WORKFLOW][PERFORMANCE][2026-05-21]
+**Action:** Phase 20 — Hermes Team-Standup & PM2 Cleanup
+**Findings:**
+- PM2 list: 5 revenue processes all healthy + cloudflare-tunnel
+- hermes-gateway: running via LaunchAgent, stable (PID 31271, 0 restarts)
+- teamstandup-bot (port 8003): retired cleanly (LaunchAgent unloaded, code kept on disk)
+- quickstats (port 8102): running via LaunchAgent, healthy (exit -15 is SIGTERM status, not error)
+- pm2-health-monitor.sh: re-enabled, monitors 5 PM2 services
+- gateway-health-monitor.sh: retired (superseded by safe gateway-health-check.sh)
+- money-pipeline: 8 restarts, `fs is not defined` bug at line 1780 — currently stable but needs fix
+**Decision P20:** Retire teamstandup-bot — Marcelo solo, team standup not needed
+**Finding:** Exit -15 from launchctl list is SIGTERM status, NOT an error — no issue with running services
+
+## [WORKFLOW][PM2][HERMES][P20]
+**Cleanup:** Retired gateway-health-monitor.sh, re-enabled pm2-health-monitor.sh, updated SERVICES_MAP.md
+**Pattern:** One-shot scripts > daemon loops for health monitoring
