@@ -357,15 +357,37 @@ All memory entries use these tags for searchability:
 - **Decision made:** Nontrivial choice → save to `memory/YYYY-MM-DD.md` same day
 - **Delegation success:** Sub-agent outperforms expectations → note routing pattern
 
-### Memory Files
+### 4-Tier Memory Storage (Phase 2 — Active)
 
-| File | Contents | Update Frequency |
-|------|----------|-----------------|
-| `~/.hermes/memory/` | Marcelo's preferences, user profile facts | On expression |
-| `~/.hermes/profiles/bossman/skills/` | Reusable workflows, proven approaches | On discovery |
-| `~/.hermes/knowledge/LEARNED_*.md` | Tool workarounds, system quirks | Within session |
-| `~/.hermes/knowledge/memory/YYYY-MM-DD.md` | Daily decisions, context | Same day |
-| `~/.hermes/knowledge/LEARNED_CORE_ARCHITECTURE.md` | System design insights | On change |
+| Tier | Storage | Use For | Limit |
+|------|---------|---------|-------|
+| **1** | `memory` tool | Marcelo's preferences, corrections, environment facts | ~2200 chars |
+| **2** | `~/.hermes/knowledge/` | Durable docs, project context, system insights | Unlimited |
+| **3** | `~/Desktop/CLAW-Backup/` | Obsidian reference blueprints | Unlimited |
+| **4** | `BIGDAWG35/BossMan/` | GitHub durable blueprints | Unlimited |
+
+**Policy file:** `~/.hermes/knowledge/memory/MEMORY_POLICY.md`
+**Master index:** `~/.hermes/knowledge/memory/MEMORY_CAPTURE_LOG.md`
+**Trading intelligence:** `~/.hermes/knowledge/memory/memory-trading-intelligence.md` (ISOLATED — no execution logic)
+**Daily log:** `~/.hermes/knowledge/memory/YYYY-MM-DD.md`
+
+### Save Triggers (9 — Phase 2 Active)
+1. User corrections → immediate (memory tool + log)
+2. User preferences → immediate (memory tool)
+3. Workflow wins → before next similar task (skill file)
+4. Tool quirks → within session (LEARNED_*.md)
+5. Repeated failures → before continuing (LEARNED_*.md)
+6. Major decisions → same day (memory/YYYY-MM-DD.md)
+7. Delegation outcomes → end of session (log)
+8. Performance findings → before next session (LEARNED_*.md)
+9. Trading intelligence → after verification, isolated (memory-trading-intelligence.md)
+
+### Exclusion Rules (5 — Phase 2 Active)
+1. Ephemeral task progress — NOT saved
+2. Speculation/unverified guesses — NOT saved (mark `[NEEDS VERIFICATION]`)
+3. Anything stale within 7 days — NOT saved
+4. Raw data dumps — NOT saved
+5. Info existing in source files — NOT saved
 
 ### Retrieval Before Action
 
@@ -387,7 +409,60 @@ No "fresh start" assumption — continuity is the default.
 
 ---
 
-## Telegram Mobile Controls
+## Self-Audit & Performance (Phase 3 — Active)
+
+**Policy file:** `~/.hermes/knowledge/memory/SELF_AUDIT_CHECKLIST.md`
+**Findings log:** `~/.hermes/knowledge/memory/PERFORMANCE_FINDINGS.md`
+**Health monitor:** `~/.hermes/scripts/pm2-health-monitor.sh` (cron job `d4f07e0c180f`, every 5 min)
+
+### 5-Tier Audit Cadence
+
+| Tier | Cadence | Duration | Owner |
+|------|---------|----------|-------|
+| T1 Health Pulse | 5 min | <30 sec | Hermes cron (no_agent) |
+| T2 Daily Scan | Daily | 2-5 min | BossMan |
+| T3 Weekly Review | Monday 8 AM | 15-20 min | BossMan via cron |
+| T4 Monthly Deep Audit | 1st of month | 45-60 min | BossMan + sub-agents |
+| T5 Event-Driven | On error | Varies | BossMan |
+
+### T1 — Health Pulse (Automated, Every 5 Min)
+
+**Script:** `~/.hermes/scripts/pm2-health-monitor.sh`
+**Services:** binance-bot, squarepayouts, money-pipeline, bakery, cloudflare-tunnel
+**Rules:** Silent when healthy | Auto-restart on down | ✅ FIXED on recovery | 🚨 NEEDS ATTENTION on fail | 🚨 CRASH LOOP at ≥5 restarts | Dedup via lockfile
+
+### T2 — Daily Scan
+
+```bash
+pm2 jlist | python3 -c "import json,sys; [print(f\"{p['name']}: {p['pm2_env']['restart_time']} restarts\") for p in json.load(sys.stdin) if p['pm2_env']['restart_time']>0]"
+grep -h "Error\|WARN" ~/.pm2/logs/*-error*.log | tail -50
+pm2 save && echo "PM2 synced"
+```
+
+### T3 — Weekly Review (Monday 8 AM)
+
+Template: `~/.hermes/knowledge/WEEKLY_REVIEW_TEMPLATE.md` — PM2 health, logs, Kanban backlog, memory quality, project status, strategic.
+
+### T4 — Monthly Deep Audit (1st of Month)
+
+Service map, PM2 sync, architecture, security, memory audit, cron/LaunchAgent audit, backup verification.
+
+### [PERFORMANCE] Memory Entry Format
+
+```
+[YYYY-MM-DD] [PERFORMANCE] [PROJECT:Name]
+Finding: <what>
+Severity: LOW/MEDIUM/HIGH
+Commands: <what was run>
+Fix: <what was done>
+Prevention: <what to do differently>
+```
+
+### Key Findings (2026-05-22)
+- **BinanceBot:** SQLITE_ERROR + ReferenceError — Phase 10 fixes
+- **MoneyPipeline:** research broken since ~2026-04-07 — Phase 8 fixes
+- **Bakery:** EADDRINUSE port 3001 resolved
+- **Hermes:** Health monitor extended to 5 services
 
 ---
 
@@ -432,6 +507,20 @@ When to use each tool:
 **Verification rule (all agents):** Any Space update (title, description, prompt, docs, deletions) must be confirmed after execution. Update is not complete until right Space was updated, content is correct, metadata is correct, obsolete content removed, result matches blueprint.
 
 > Full Perplexity workflow: `~/.hermes/SOUL.md` — "Perplexity & Spaces Coordination"
+
+### Perplexity as Approved Research Partner
+
+**Perplexity is an approved primary tool for research, specs, and regime analysis.**
+
+- Perplexity may be used for: crypto intelligence, market-regime research, integration design, weekly report templates.
+- When Perplexity and local logs disagree: default to local logs, treat Perplexity suggestions as hypotheses.
+- All Perplexity-driven changes must still obey:
+  - Separation: MoneyPipeline and BinanceBot never merge.
+  - Safety: pre-trade hook, loss limits, intel gate may NOT be weakened by Perplexity guidance.
+  - Autonomy: Perplexity guidance does NOT replace Marcelo's approval for production/billing/security decisions.
+
+> Perplexity collaboration loop (full details): `~/.hermes/SOUL.md` — "Perplexity Orchestration Loop"
+> Agent instructions (full details): `~/.hermes/AGENTS.md` — "Perplexity Orchestration Loop — Agent Instructions"
 
 ### Example Workflows
 
