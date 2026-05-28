@@ -159,15 +159,17 @@ Only relevant `INTEL*` references are:
 | Ollama | 11434 | ✅ responding | API responsive |
 | LBC35 (SearXNG) | 8080 | ✅ running | Via Docker |
 
-### Perplexity Bridge (Brave)
+### Perplexity Bridge (Brave) — Updated 2026-05-28
 
 | Component | Status |
 |---|---|
-| Brave Browser | ⚠️ Intel build, Rosetta 2 (works) |
+| Brave Browser | ✅ Homebrew-managed, version 148.1.90.124 |
+| Brave Architecture | x86_64 (single macOS build — runs via Rosetta 2, no separate ARM64 build exists) |
 | CDP port 9222 | ✅ Listening |
-| Perplexity.ai | ✅ Loads and functions |
+| Perplexity.ai | ✅ Loads with Marcelo's profile (cello35 account, history visible) |
 | Perplexity Search | ✅ Working |
 | Perplexity Computer button | ✅ Visible and accessible |
+| Brave profile data | ✅ Bookmarks, Wallet, AIChat, Account Web Data — all preserved |
 
 ### Hermes Computer Use
 
