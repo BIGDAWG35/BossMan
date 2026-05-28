@@ -1,50 +1,68 @@
-# LEARNED: Ollama on Mac Mini Intel
+# LEARNED: Ollama on Mac Studio (Apple M4 Max)
 
-## Status: DEGRADED (2026-05-27)
+## Status: ✅ OPERATIONAL (2026-05-28)
 
-## Issue
+## Hardware Context
 
-Ollama v0.20.2 is installed and the daemon is **running** (PID 1421, `ollama serve` active, port 11434 listening).
+**Primary host:** Mac Studio (Apple M4 Max, 16 cores, 64 GB RAM)
+**Prior host:** Intel Mac mini (historical — see History note at bottom)
 
-However, the **Ollama REST API is unresponsive** — requests to `http://localhost:11434/api/generate` hang and time out. This is an environmental issue specific to this Intel Mac mini.
+Ollama runs natively on Apple Silicon with **Metal GPU acceleration** — no compatibility layer needed, no GGML/AVX2 issues. This is the expected stable configuration for Tier 2 local inference.
 
-## Symptoms
+## Current Status (2026-05-28)
 
-- `ollama serve` daemon: running ✅
-- Port 11434: listening ✅
-- `curl -X POST http://localhost:11434/api/generate` — hangs, no response
-- `nc localhost 11434` — hangs (not a port connectivity issue, it's Ollama's API layer)
-- `/usr/local/bin/ollama list` — exit code 127 (ollama CLI can't reach the daemon)
+| Check | Result |
+|---|---|
+| Daemon running | ✅ PID 1421, `/Applications/Ollama.app/Contents/Resources/ollama serve` |
+| Port 11434 | ✅ Listening |
+| REST API | ✅ Responsive — `curl` to `/api/generate` returns in ~1–5s |
+| Models available | ✅ `qwen2.5:3b` (1.9 GB), `qwen2.5:14b` (9.0 GB) |
+| Metal acceleration | ✅ Native on M4 Max |
 
-## Impact
+## Installed Models
 
-- **Tier 2 (Local) is currently unavailable** for inference tasks
-- Fallback path: use Tier 3 (MiniMax 2.7) or Tier 4 (DeepSeek/OpenAI) for tasks that would have used Ollama
-- This does NOT affect: Ollama model files stored locally, `ollama pull` operations, or Ollama app UI
+```
+NAME           ID              SIZE      MODIFIED
+qwen2.5:3b     357c53fb659c    1.9 GB    4 days ago
+qwen2.5:14b    7cdf5a0187d5    9.0 GB    5 days ago
+```
 
-## Possible Causes
+## API Usage
 
-- Intel Mac mini CPU architecture — Ollama's GGML/llama.cpp backend may have issues with this specific Intel CPU
-- Network stack on this Mac mini (Intel vs ARM)
-- Ollama version 0.20.2 may have a regression for Intel
+```bash
+# Test a model (non-streaming)
+curl -s -X POST http://localhost:11434/api/generate \
+  -d '{"model":"qwen2.5:3b","prompt":"say hello in 3 words","stream":false}'
 
-## Actions Taken
+# Check available models
+ollama list
 
-- Ollama daemon confirmed running
-- Failover confirmed: MiniMax 2.7 (Tier 3) is operational as the fallback
-- Router now knows: Ollama Tier 2 is DEGRADED on this machine
+# Pull a model
+ollama pull qwen2.5:14b
 
-## Resolution
+# Run interactively
+ollama run qwen2.5:3b "summarize this: ..."
+```
 
-TBD — needs investigation when:
-- A new Ollama version is released
-- Or use `OPENAI_API_KEY` with OpenAI as the fallback for Tier 2-equivalent tasks
-- Or try a different local model serving approach
+## Tier 2 Routing — When to Use Ollama
 
-## Routing Implication
+Use Ollama (Tier 2) for:
+- **Summaries** — zero cost, acceptable quality, data stays local
+- **Drafts** — repeatability, no external exposure
+- **Extraction** — JSON structuring from local data
+- **Cleanup / formatting** — formatting, rephrasing, local files
+- **First-pass code** — acceptable for well-defined functions
+- **Private tasks** — any data that should not leave the machine
 
-Until Ollama is fixed, upgrade Tier 2 tasks directly to Tier 3 (MiniMax) or Tier 4 (DeepSeek):
-- Summaries → MiniMax 2.7
-- Drafts → MiniMax 2.7
-- First-pass code → DeepSeek (low-cost)
-- Extraction → MiniMax 2.7
+Escalate to Tier 3 (MiniMax) or Tier 4 (DeepSeek/Claude) if:
+- Local model output is not acceptable quality
+- Task requires live internet data
+- Reasoning beyond local model capability is needed
+
+## Historical Note (Intel Mac mini — DEPRECATED)
+
+> ⚠️ **This section is historical only.** The following describes the environment on the prior Intel Mac mini (before 2026-05-28), where Ollama's REST API was unresponsive due to environmental/compatibility issues. This is no longer relevant.
+
+On the Intel Mac mini, Ollama v0.20.2 daemon was running but the REST API layer hung — `curl` requests to `/api/generate` timed out, `ollama list` returned exit code 127, and `nc localhost 11434` hung. Root cause was suspected to be GGML/llama.cpp compatibility with the Intel CPU architecture. Tier 2 tasks were routed to MiniMax (Tier 3) as a workaround.
+
+**This workaround is no longer needed on the Mac Studio.**

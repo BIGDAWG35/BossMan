@@ -1,4 +1,8 @@
-# Services Map — Updated 2026-05-21 (P20)
+# Services Map — Updated 2026-05-28 (Mac Studio Migration)
+
+## Hardware Context
+- **Primary host:** Mac Studio (Apple M4 Max, 16 cores, 64 GB RAM)
+- **Prior host:** Intel Mac mini — archived; Ollama Tier 2 workaround no longer applies
 
 ## PM2 Managed Services
 
@@ -7,7 +11,7 @@
 | money-pipeline | 8020 | MoneyPipeline | ✅ online | 8 | Stable, revenue app |
 | bakery | 8040 | BakeryOps | ✅ online | 1 | Stable, revenue app |
 | cloudflare-tunnel | — | CF Quick Tunnel | ✅ online | 5 | Unstable URL (changes on restart) |
-| binance-bot | 8104 | Binance Bot | ✅ online | 7 | PAPER_MODE=true, INTEL_GATE=true |
+| binance-bot | 8104 | Binance Bot | ✅ online | 7 | PAPER_MODE=true, INTEL_GATE=true (legacy flag — verify before next deployment) |
 | squarepayouts | 8030 | SquarePayouts | ✅ online | 0 | NEXTAUTH_SECRET in PM2 env |
 
 ## LaunchAgent Managed Services

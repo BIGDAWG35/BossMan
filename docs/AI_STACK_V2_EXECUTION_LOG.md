@@ -1,7 +1,7 @@
-# AI Stack v2 — Execution Log (Phase 5)
+# AI Stack v2 — Execution Log (Phase 5 + Migration)
 
-**Date:** 2026-05-27
 **Stack version:** AI Stack v2
+**Current hardware:** Mac Studio (Apple M4 Max, 16 cores, 64 GB RAM)
 
 ---
 
@@ -63,25 +63,40 @@ Step 5: Perplexity Computer (AX mode) — Safari window inspected; dashboard req
 
 ---
 
-## Ollama Status (Failover Confirmed)
+## Ollama Status Update (2026-05-28)
 
-**Finding:** Ollama daemon running but API unresponsive. Route: Ollama (Tier 2) → MiniMax (Tier 3).
+**Hardware migration:** Intel Mac mini → Mac Studio (Apple M4 Max)
 
-**Action:** Created `LEARNED_OLLAMA.md` documenting DEGRADED status.
+On the Intel Mac mini (prior host), Ollama v0.20.2 daemon was running but the REST API layer was unresponsive — `curl` to `/api/generate` hung, `ollama list` returned exit code 127. Root cause was suspected GGML/AVX2 incompatibility with Intel CPU.
 
-**Routing update:** Until Ollama is fixed, upgrade Tier 2 tasks to Tier 3 (MiniMax) or Tier 4 (DeepSeek).
+On the Mac Studio M4 Max, Ollama runs with **native Metal GPU acceleration** — no compatibility issues. API is fully responsive on localhost:11434. Tier 2 is now fully operational.
+
+**Routing impact:** The Tier 2 → Tier 3 fallback workaround (routing to MiniMax) is no longer needed. Ollama is the preferred first choice for all Tier 2 tasks.
 
 ---
 
-## Provider Health Summary (2026-05-27)
+## Provider Health Summary (Updated 2026-05-28)
 
-| Provider | Status | Notes |
-|---|---|---|
-| MiniMax 2.7 | ✅ OPERATIONAL | Default cloud model |
-| DeepSeek | ✅ OPERATIONAL | Available as Tier 4 |
-| OpenAI | ✅ OPERATIONAL | Available as Tier 4 |
-| Claude | ✅ OPERATIONAL | Available as Tier 4 |
-| Ollama (Local) | ⚠️ DEGRADED | API unresponsive, daemon running |
-| Perplexity Search | ✅ OPERATIONAL | Via Browser QA |
-| Perplexity Computer | ✅ OPERATIONAL | Via CuaDriver |
-| LBC35 | ✅ OPERATIONAL | Delegated executor only |
+|| Provider | Status | Notes ||
+|---|---|---|---|
+| MiniMax 2.7 | ✅ OPERATIONAL | Default cloud model ||
+| DeepSeek | ✅ OPERATIONAL | Tier 4 specialist ||
+| OpenAI | ✅ OPERATIONAL | Tier 4 specialist ||
+| Claude | ✅ OPERATIONAL | Tier 4 specialist ||
+| Ollama (Local) | ✅ OPERATIONAL | **Mac Studio M4 Max — Metal GPU, API responsive** ||
+| Perplexity Search | ✅ OPERATIONAL | Via Browser QA ||
+| Perplexity Computer | ✅ OPERATIONAL | Via CuaDriver ||
+| LBC35 | ✅ OPERATIONAL | Delegated executor only ||
+
+---
+
+## Migration Summary (2026-05-28)
+
+**From:** Intel Mac mini (Ollama API unresponsive, Tier 2 degraded)
+**To:** Mac Studio (Apple M4 Max, 16 cores, 64 GB RAM) — Ollama fully operational
+
+**Changes made:**
+1. `LEARNED_OLLAMA.md` — rewritten from DEGRADED to OPERATIONAL; Intel Mac mini context archived as historical note
+2. `HERMES_MASTER_BLUEPRINT.md` — hardware context updated, version 1.2 added, M4 Max noted in routing section, Intel context archived as Legacy Context
+3. `AGENTS.md` — Tier 2 routing updated with Mac Studio M4 Max context; qwen2.5 models documented; Intel-specific workaround language removed
+4. `AI_STACK_V2_EXECUTION_LOG.md` — migration summary added, Ollama status corrected, provider health table updated
