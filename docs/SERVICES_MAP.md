@@ -1,4 +1,8 @@
-# Services Map — Updated 2026-05-21 (P20)
+# Services Map — Updated 2026-05-28 (Mac Studio Migration)
+
+## Hardware Context
+- **Primary host:** Mac Studio (Apple M4 Max, 16 cores, 64 GB RAM)
+- **Prior host:** Intel Mac mini — archived; Ollama Tier 2 workaround no longer applies
 
 ## PM2 Managed Services
 
@@ -7,8 +11,19 @@
 | money-pipeline | 8020 | MoneyPipeline | ✅ online | 8 | Stable, revenue app |
 | bakery | 8040 | BakeryOps | ✅ online | 1 | Stable, revenue app |
 | cloudflare-tunnel | — | CF Quick Tunnel | ✅ online | 5 | Unstable URL (changes on restart) |
-| binance-bot | 8104 | Binance Bot | ✅ online | 7 | PAPER_MODE=true, INTEL_GATE=true |
-| squarepayouts | 8030 | SquarePayouts | ✅ online | 0 | NEXTAUTH_SECRET in PM2 env |
+| binance-bot | 8104 | Binance Bot | ✅ online | 7 | PAPER_MODE=false, TRADING_REVIEW_MODE=log-only, INTEL_GATE_ENABLED=true (regime filter — correct) |
+
+## Docker Desktop
+
+| Container | Image | Port | Status | Notes |
+|---|---|---|---|---|
+| searxng-core | searxng/searxng:latest | 127.0.0.1:8080 | ✅ running | LBC35 SearXNG search |
+| searxng-valkey | valkey/valkey:9-alpine | 6379/tcp | ✅ running | Cache for SearXNG |
+
+- Docker Desktop 4.67.0 — Linux VM architecture (x86_64, standard for Docker Desktop on Mac)
+- Containers are amd64/linux — run inside the Linux VM transparently
+- No ARM64/AMD64 conflict — this is the correct architecture
+- See: `LEARNED_DOCKER_M4.md`
 
 ## LaunchAgent Managed Services
 

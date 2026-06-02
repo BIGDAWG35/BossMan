@@ -1,426 +1,543 @@
-# HERMES MASTER IMPLEMENTATION BLUEPRINT
-
-**Created:** 2026-05-20
-**Author:** BossMan (Hermes Agent)
-**Status:** Verified — Awaiting Marcelo Approval
-**Phase:** Phase 1 (Foundation)
-
----
-
-## MASTER OBJECTIVE
-
-Build Hermes/BossMan into a self-learning, self-improving autonomous manager/orchestrator that gets smarter over time through trusted memory, verified audits, measured outcomes, workflow reviews, high-quality research, and continuous system performance checks.
+# Hermes Master Implementation Plan
+**Version:** 1.0
+**Date:** 2026-05-20
+**Owner:** BossMan (Marcelo's Hermes orchestrator)
+**Status:** Phase 1 Foundation Complete — Active Implementation
+**Phase:** Phase 1.11 (Blueprint Save — this document)
 
 ---
 
-## VERIFIED ENVIRONMENT (2026-05-20)
+## Master Objective
 
-Source of truth: Current verified reality, not historical assumptions.
+Transform Hermes into the **primary control plane** for Marcelo's operations — orchestrating all work, routing to the right sub-agents, maintaining memory and audit trails, and delivering reliable autonomous operation with zero surprises for Marcelo.
 
-### PM2 Services
+> **Core principle:** BossMan routes. Sub-agents execute. Marcelo decides.
 
-| Service | Port | PM2 Name | Status | Uptime | Restarts | Notes |
-|---------|------|----------|--------|--------|----------|-------|
-| Bakery | 3001 | bakery | ✅ online | 2D | 1 | Clean, no errors |
-| Money Pipeline | 8020 | money-pipeline | ✅ online | 3D | 1 | Stream errors (degraded) |
-| SquarePayouts | 8030 | squarepayouts | ✅ online | 67m | 0 | Migration 006 ROLLBACK (harmless) |
-| Binance Bot | 8104 | binance-bot | ✅ online | 36h | 6 | RSI extreme block active, no_signal |
-| Cloudflare Tunnel | — | cloudflare-tunnel | ✅ online | 34h | 0 | Tunnels public URLs |
-| Node | — | node | ✅ online | 3h | 0 | Unknown purpose — investigate |
+---
 
-### Inactive DM2 Services (Offline)
+## Verified Host/Service Context (2026-05-20)
 
-| Service | Port | PM2 Name | Status |
-|---------|------|----------|--------|
-| Overview Dashboard | 8100 | overview | ❌ offline |
-| Health Dashboard | 8110 | health-dashboard | ❌ offline |
-| Trading Control | 8130 | trading-control | ❌ offline |
-| YouTube Dashboard | 8140 | youtube-dashboard | ❌ offline |
-| Kraken Bot | 8106 | kraken-bot | ❌ offline |
+### Active Services
+| Port | Service | PM2 Name | Status |
+|------|---------|----------|--------|
+| 3001 | bakery | bakery | ✅ online |
+| 8020 | money-pipeline | money-pipeline | ⚠️ degraded |
+| 8030 | squarepayouts | squarepayouts | ✅ online |
+| 8104 | binance-bot | binance-bot | ✅ online |
+
+### Offline/Unmanaged Services
+| Port | Service | Status |
+|------|---------|--------|
+| 8100 | overview | offline |
+| 8110 | health-dashboard | offline |
+| 8130 | trading-control | offline |
+| 8140 | youtube-dashboard | offline |
+| 8106 | kraken-bot | offline |
 
 ### Unknown Ports (Needs Investigation)
+- **8102** — unknown
+- **8003** — unknown
+- **9119** — unknown
 
-| Port | Status |
-|------|--------|
-| 8102 | unverified |
-| 8003 | unverified |
-| 9119 | unverified |
-
-### Git Repositories
-
-All active projects in `~/Projects/`:
-- **squarepayouts** — Sports squares marketplace (BIGDAWG35/Squares)
-- **binance-bot** — Binance US trading bot
-- **money-making-dashboard** — Money Pipeline SPA (port 8020)
-- **health-dashboard** — Health monitoring dashboard
-- **bakery** — BakeryOps order management
-- **BossMan** — This blueprint repo
-- Plus ~20 other projects (see full list in Phase 1 environment card)
-
-### Logs
-
-- `~/.pm2/logs/` — All PM2 service logs
-- `~/logs/pm2-health.log` — Health monitor output
-- Per-service: `pm2 logs <service-name>`
-
-### PM2 Warning
-
-Current process list NOT synchronized with saved list. `pm2 save` needed.
+### Infrastructure Notes
+- PM2: 4 managed services, 6 unmanaged (PM2 list is unsynced — `pm2 save` not run recently)
+- Cron: 2 active jobs (OpenClaw-era, need migration review)
+- LaunchAgents: 1 active (`ai.openclaw.gateway` — disabled autonomous Telegram routing)
+- Unknown ports must be identified before Phase 7
 
 ---
 
-## SELF-IMPROVEMENT POLICY
+## Verified Performance/Log Context (2026-05-20)
 
-### Automatic Capture Rule (Permanent)
+### PM2 Health Monitor
+- **Job ID:** `d4f07e0c180f`
+- **Schedule:** Every 5 minutes (no_agent cron)
+- **Script:** `~/.hermes/scripts/pm2-health-monitor.sh`
+- **Monitored:** binance-bot | squarepayouts | money-pipeline | bakery
 
-Whenever BossMan learns something important about:
-- Marcelo's preferences, corrections, or behavior patterns
-- Recurring system quirks or workflow patterns
-- Project context, wins, failures, or bottlenecks
-- Strategic decisions (architecture, security, pricing, routing)
-- Performance optimization opportunities
+### Alert Rules (Marcelo's Policy — 2026-05-16)
+1. Silent when healthy — zero messages if all services online
+2. Auto-fix silently — restart down service with NO alert during fix attempt
+3. Alert ONLY on:
+   - `SUCCESS`: service was down + auto-recovered → ONE message: "✅ FIXED: [service] was down, auto-restarted at [time]. Now stable."
+   - `ESCALATION`: service is down + auto-restart FAILED → ONE message: "🚨 NEEDS ATTENTION: [service] is down and could not be auto-recovered. Manual fix required."
+4. No duplicate alerts — lockfile per service (`/tmp/pm2-alert-[service].lock`)
 
-→ Proactively save a compact, searchable memory entry WITHOUT waiting to be asked.
+### Known Issues
+- money-pipeline: stream errors, research broken since 2026-04-07
+- binance-bot: pre-trade-hook missing at `~/Projects/trading-review/pre-trade-hook`
+- PM2 unsynced: `pm2 save` not run — changes not persisted across reboot
 
-### Structured Memory Tags
+---
 
-| Tag | Usage |
-|-----|-------|
-| `[DECISION]` | Strategic choices, approvals, direction changes |
-| `[ARCHITECTURE]` | System design, integration decisions |
-| `[SECURITY]` | Auth findings, hardening, vulnerabilities |
-| `[PRICING]` | Product pricing, monetization decisions |
-| `[PRODUCT]` | Product direction, feature decisions |
-| `[ROUTING]` | Agent routing, task assignment patterns |
+## Self-Improvement Rules (Permanent — Phase 1.3)
+
+1. **After every Kanban card:** review what worked, what didn't, what to refine
+2. **On error twice:** save root cause + fix to `LEARNED_*.md` before continuing
+3. **On workflow win:** save as skill so it persists across sessions
+4. **On model failure:** log which model failed and why, update tool strategy
+5. **Never stop on iteration limit:** checkpoint → resume → continue until done
+6. **Never repeat the same investigation:** save findings, don't re-research
+
+---
+
+## Self-Audit/Performance Rules (Permanent — Phase 1.4)
+
+BossMan performs a self-audit after every Kanban card completion:
+
+| Question | Action if Uncomfortable Answer |
+|----------|-------------------------------|
+| Was the deliverable actually achieved? | Create follow-up card, don't close loose ends |
+| Was Marcelo's time used well? | If no, write memory entry + improve routing |
+| Did BossMan know enough at the start? | If no, add pre-flight check to skill/workflow |
+| Should this create a follow-up? | Create card immediately — don't drift |
+| Is the documentation still accurate? | If stale, update before marking done |
+
+---
+
+## Memory Rules (Permanent — Phase 1.5)
+
+### Structured Tags
+| Tag | Use For |
+|-----|---------|
+| `[DECISION]` | Architectural choices, routing decisions, trade-offs |
+| `[ARCHITECTURE]` | System design, service topology, data flows |
+| `[SECURITY]` | Patches, vulnerabilities, hardening actions |
+| `[PRICING]` | Product pricing, cost analysis, revenue decisions |
+| `[PRODUCT]` | Feature planning, UX decisions, user feedback |
+| `[ROUTING]` | Model selection, agent assignment, tool choice |
 | `[WORKFLOW]` | Process improvements, automation patterns |
-| `[TRADING]` | Crypto/trading insights, strategy |
-| `[PERFORMANCE]` | System speed, optimization, bottlenecks |
+| `[TRADING]` | Binance signals, market analysis, bot config |
+| `[PERFORMANCE]` | Speed improvements, resource optimization |
+| `[PREFERENCE]` | Marcelo's stated likes/dislikes/tastes |
 
-Each tag + relevant project name (e.g., `[ARCHITECTURE] squarepayouts`).
+### Capture Triggers
+- **Correction:** Marcelo corrects BossMan → immediately save what was wrong + correct approach
+- **Preference:** Marcelo expresses a preference → immediately save to `memory` (user profile)
+- **Workflow win:** BossMan discovers a better approach → save as skill within session
+- **Tool quirk:** Tool behaves unexpectedly → save to `LEARNED_*.md` within session
+- **Repeated failure:** Same error twice → save root cause + fix
+- **Decision made:** Nontrivial choice → save to `memory/YYYY-MM-DD.md` same day
+- **Delegation success:** Sub-agent outperforms expectations → note routing pattern
 
-### What NOT to Save
-
-- Task progress, session outcomes, completed-work logs
-- Temporary TODO state
-- Data that will be stale within 7 days
-- Speculation without evidence
-- Trivial/obvious information
-
-### Storage Hierarchy
-
-1. **memory tool** — Compact durable facts, injected per session
-2. **`~/.hermes/knowledge/`** — Durable docs, project records
-3. **Obsidian CLAW-Backup** — Reference docs, blueprints
-4. **GitHub BossMan** — Durable blueprints, versioned
-5. **Kanban board** — Active work tracking
-
----
-
-## SELF-AUDIT AND PERFORMANCE POLICY
-
-### Continuous Monitoring (Permanent)
-
-BossMan must continuously monitor its own performance and system health. Performance degradation is a first-class issue, not an afterthought.
-
-### What to Monitor
-
-- PM2 status and restart patterns
-- Service logs and error patterns
-- Slow routes, response delays, timeouts
-- Memory leaks or abnormal growth
-- CPU spikes or saturation
-- Unhealthy dependency behavior
-- Blocked jobs, stuck queues, failed automations
-- Repetitive exceptions and warning patterns
-- Dashboard sluggishness
-- Stale, broken, or unverified hosts/services
-
-### Audit Frequencies
-
-| Frequency | Scope |
-|-----------|-------|
-| Every 5 min | PM2 health monitor (cron, auto-fix, silent when healthy) |
-| Daily | Log review (automated scan for new error patterns) |
-| Weekly | Systems review (full Kanban + performance + memory review) |
-| Monthly | Deep audit (dependencies, schema drift, API contracts) |
-
-### Alert Rules
-
-- ✅ Silent when healthy — zero messages if all OK
-- ✅ Auto-fix silently — restart on failure, no alert during attempt
-- ✅ Alert ONLY on: recovery success (✅ FIXED) or escalation (🚨 NEEDS ATTENTION)
-- ✅ No duplicate alerts — lockfile per service/per incident
-
-### Known Performance Issues (2026-05-20)
-
-1. **PM2 unsynced list** — `pm2 save` not done
-2. **Money Pipeline** — Stream errors, research broken (degraded since 2026-04-07)
-3. **SquarePayouts** — `url.parse()` deprecation warnings (dependency-level)
-4. **Unknown ports** 8102, 8003, 9119 — unverified services
-5. **SquarePayouts** — Migration 006 ROLLBACK (harmless, applied, skipped)
+### Memory Files
+| File | Contents | Update Frequency |
+|------|----------|-----------------|
+| `~/.hermes/memory/` | Marcelo's preferences, user profile facts | On expression |
+| `~/.hermes/profiles/bossman/skills/` | Reusable workflows, proven approaches | On discovery |
+| `~/.hermes/knowledge/LEARNED_*.md` | Tool workarounds, system quirks | Within session |
+| `~/.hermes/knowledge/memory/YYYY-MM-DD.md` | Daily decisions, context | Same day |
+| `~/.hermes/knowledge/LEARNED_CORE_ARCHITECTURE.md` | System design insights | On change |
 
 ---
 
-## KANBAN ROADMAP — 11 TRACKS
+## Kanban Roadmap — 11 Tracks
 
-### Board: bossman (active)
+### Phase 1 Foundation ✅ (In Final Phase)
+**Owner:** bossman | **Status:** 12/14 sub-cards done | **Date:** 2026-05-20
 
-### Phase 0 — Environment Verification (COMPLETE ✅)
-- Verified from current reality (2026-05-20)
-- 16 PM2 services checked, 6 active confirmed
-- Ports, logs, repos, performance all documented
+### Track 2: Memory Automation — t_9d56ef5a
+**Phase 2 | Owner:** bossman | **Depends on:** Phase 1
+Automated memory capture, deduplication, and retrieval workflows.
 
-### Phase 1 — Foundation Setup (IN PROGRESS — THIS BLUEPRINT)
-- 14 sub-deliverables (all cards created)
-- Awaiting Marcelo approval to proceed to Phase 2
+### Track 3: Self-Audit + Performance — t_ca987fa4
+**Phase 3 | Owner:** bossman | **Depends on:** Phase 1
+Permanent self-audit rules, weekly review automation, performance tracking.
 
-### Tracks (Phase 2+)
+### Track 4: Weekly Systems Review — t_38404d95
+**Phase 4 | Owner:** bossman | **Depends on:** Phase 2
+Monday morning automated review: PM2, logs, Kanban, memory, ports, cron.
 
-| # | Track | Card | Phase | Owner |
-|---|-------|------|-------|-------|
-| 1 | 🏗 Hermes Foundation | t_a57158e5 | P1+continuous | bossman |
-| 2 | 🧠 Memory Automation | t_9d56ef5a | P2 | bossman |
-| 3 | 🔍 Self-Audit & Performance | t_14cae830 | P3 | bossman+ops |
-| 4 | 📅 Weekly Review | t_38404d95 | P4 | bossman |
-| 5 | 🔬 Deep Audit & Breakage | t_260136ce | P5 | bossman+ops |
-| 6 | 🛠 Localhost Improvement | t_405e079a | P6 | builder |
-| 7 | 🗺 Service Map Cleanup | t_9354a573 | P7 | ops |
-| 8 | 📊 Money Pipeline Research | t_ec6978a2 | P8 | trading |
-| 9 | ₿ Crypto Intelligence | t_9715ac57 | P9 | trading |
-| 10 | 📈 Binance US Intelligence | t_e752ea85 | P10 | trading |
-| 11 | ⏳ Controlled Execution | t_ec89434d | P11 | trading |
+### Track 5: Deep Audit + Breakage Detection — t_260136ce
+**Phase 5 | Owner:** ops | **Depends on:** Phase 1
+Comprehensive health dashboard, unknown port identification, cron validation.
 
----
+### Track 6: Localhost Project Improvement — t_405e079a
+**Phase 6 | Owner:** builder | **Depends on:** Phase 4
+Audit and improvement of all localhost services.
 
-### Full Card List (bossman board)
+### Track 7: Service Map Verification — t_9354a573
+**Phase 7 | Owner:** ops | **Depends on:** Phase 5
+Full port map, PM2 sync, unknown service identification.
 
-| Card ID | Status | Description |
-|---------|--------|-------------|
-| t_b22005be | awaiting_approval | Master Blueprint — overall plan |
-| t_b7ec1ff7 | ready | Phase 1 Foundation — 14 sub-cards |
-| t_a57158e5 | ready | Track 1: Hermes Foundation |
-| t_9d56ef5a | ready | Track 2: Memory Automation |
-| t_14cae830 | ready | Track 3: Self-Audit & Performance |
-| t_38404d95 | ready | Track 4: Weekly Review |
-| t_260136ce | ready | Track 5: Deep Audit |
-| t_405e079a | ready | Track 6: Localhost Projects |
-| t_9354a573 | ready | Track 7: Service Map Cleanup |
-| t_ec6978a2 | ready | Track 8: Money Pipeline |
-| t_9715ac57 | ready | Track 9: Crypto Intel |
-| t_e752ea85 | ready | Track 10: Binance Intel |
-| t_ec89434d | ready | Track 11: Controlled Execution |
+### Track 8: Money Pipeline Research — t_ec6978a2
+**Phase 8 | Owner:** builder | **Depends on:** Phase 7
+Research pipeline rebuild (currently broken since 2026-04-07).
 
-**Phase 1 Sub-cards (14 total):**
-| ID | Deliverable |
-|----|-------------|
-| t_887329a8 | Verified host/service summary |
-| t_4645b539 | Performance/log summary |
-| t_b7e8bcca | Sub-agent roster |
-| t_8ee5ba45 | Kanban roadmap |
-| t_192cee51 | Self-improvement policy |
-| t_ca987fa4 | Self-audit/performance policy |
-| t_b144cde1 | Memory policy |
-| t_deb8dabb | Weekly review template |
-| t_b59c4306 | Service verification framework |
-| t_52a07505 | Money Pipeline track summary |
-| t_04922dfa | Binance track summary |
-| t_bf521523 | AI/model strategy |
-| t_f5fd598e | Blueprint save verification |
-| t_8078a389 | Risks/blockers/next actions |
+### Track 9: Crypto Intelligence Foundation — t_9715ac57
+**Phase 9 | Owner:** trading | **Depends on:** Phase 8
+Market research, cycle analysis, signal framework.
+
+### Track 10: Binance US Intelligence — t_e752ea85
+**Phase 10 | Owner:** trading | **Depends on:** Phase 9
+Pre-trade hook restoration, RSI/signal logic, strategy framework.
+⚠️ Blocker: pre-trade-hook missing at `~/Projects/trading-review/pre-trade-hook`
+
+### Track 11: Controlled Execution Support — t_ec89434d
+**Phase 11 | Owner:** trading | **Depends on:** Phase 10
+Paper trading, backtesting evidence, Marcelo approval required for live execution.
 
 ---
 
-## SUB-AGENT ROSTER
+## All Phases (0–11)
 
-| Profile | Role | Uses |
-|---------|------|------|
-| **bossman** | Orchestrates, routes, approves, plans | Kanban, memory, delegation |
-| **builder** | Code, dashboards, scripts, Git, PM2 | Terminal, file, code editors |
-| **ops** | PM2, runtime, ports, health, deployments | Terminal, pm2, cron |
-| **trading** | Research-only: market analysis, crypto | Dashboards, APIs, web research |
-| **content** | YouTube content, social, docs | Terminal, scripts |
-
-### Sub-Agent Routing Rules
-
-| Task Type | Route To |
-|-----------|----------|
-| Code, features, scripts, Git, Cursor | builder |
-| Runtime, PM2, ports, health, infra | ops |
-| Market research, crypto, trading | trading |
-| Content, docs, videos, social | content |
-| Routing, approvals, decisions | bossman |
+| Phase | Title | Status | Card |
+|-------|-------|--------|------|
+| Phase 0 | Save blueprint and freeze architecture | ✅ Done | t_a6cec443 |
+| Phase 1 | Audit OpenClaw assets, PM2, cron, bots, dashboards, ports | ✅ Done | t_6b1a49f4 |
+| Phase 2 | Define Hermes as primary control plane | ✅ Done | t_c64ea8d3 |
+| Phase 3 | Demote LBC35 to delegated execution coordinator | ✅ Done | t_8bde67d0 |
+| Phase 4 | Implement Kanban schema + Hermes↔OpenClaw handoff model | ✅ Done | t_ba9edec2 |
+| Phase 5 | Add Telegram mobile controls for Kanban through BossMan | ✅ Done | t_43dec590 |
+| Phase 6 | Pilot the new workflow using the money pipeline rebuild | 🔜 Active | t_71fdab1a |
+| Phase 7 | Retire old PM dashboard and rebuild Perplexity Spaces | 🔜 Next | t_c4766e61 |
+| Phase 8 | Source-required intake gate (highest-leverage data quality fix) | 🔜 Next | — |
 
 ---
 
-## AI/MODEL STRATEGY
+## Sub-Agent Roles
 
-### Model Roles (Permanent)
+| Profile | Role | Authority | Status |
+|---------|------|----------|--------|
+| `bossman` | Orchestrator, router, planner, approver | PRIMARY — routes all work | ✅ Active |
+| `builder` | Code, dashboards, scripts, repos | Executes what bossman assigns | ✅ Active |
+| `ops` | PM2, runtime, ports, infra | Executes what bossman assigns | ✅ Active |
+| `trading` | Market research, signals | Executes what bossman assigns | ✅ Active |
+| `content` | YouTube, scripts, docs | Executes what bossman assigns | ✅ Active |
+| `lbc35` | Legacy executor | DEMOTED — delegated work only | ⚠️ Constrained |
 
-| Model | Role |
-|-------|------|
-| **Claude** | Architecture, workflow design, structured planning, prompt/agent design |
-| **DeepSeek** | Deep reasoning, technical validation, edge-case analysis, crypto logic |
-| **OpenAI** | Synthesis, product framing, operational writing, summarization |
-| **MiniMax 2.7** | Alternative layouts, workflow variations, idea expansion, creative |
-| **Perplexity** | Web research, Deep Research, process analysis, crypto research, verification |
-
-### Model Rules
-
-1. Do not use all models for every task
-2. Use the best model for the job
-3. When confidence is low or strategic — compare multiple models and synthesize
-4. Evidence-backed findings over hype
-5. Continuously refine decisions based on outcomes
-
-### SquarePayouts Restriction (Permanent)
-MiniMax 2.7 BLOCKED for all SquarePayouts work.
-Approved: Claude, DeepSeek, OpenAI, Perplexity Computer, Hermes Computer Use.
+**LBC35 Constraint Checklist (Non-Negotiable):**
+- Must NOT self-assign tasks — wait for BossMan handoff packet
+- Must NOT create new Kanban cards without BossMan approval
+- Must NOT modify PM2, cron, LaunchAgents, or system services
+- Must NOT access or modify Perplexity Spaces
+- Must NOT change routing rules or agent profiles
+- Receives work **exclusively** via BossMan handoff packet
 
 ---
 
-## CRYPTO INTELLIGENCE ROADMAP
+## AI/Model Strategy (Permanent — Phase 1.10)
 
-### Phased Approach (NO Execution in Phase 1)
+| Model | Role | Use Case |
+|-------|------|----------|
+| **MiniMax 2.7** | Primary brain | Everything, all day — BLOCKED for SquarePayouts |
+| **DeepSeek** | Analysis backup | Deep reasoning, technical validation, edge-case analysis |
+| **OpenAI** | Synthesis backup | Product framing, operational writing, summarization |
+| **Claude** | Architecture backup | Workflow design, prompt/agent design, structured planning |
+| **Perplexity** | Research | Live web research, Deep Research, Space content |
 
-| Phase | Focus | Status |
-|-------|-------|--------|
-| P8 | Money Pipeline research track expansion | Planned |
-| P9 | Crypto intelligence foundation | Planned |
-| P10 | Binance US intelligence and strategy rebuild | Planned |
-| P11 | Controlled execution support (requires approval) | Future |
+### SquarePayouts Model Restriction (Permanent — 2026-05-20)
+MiniMax 2.7 is **BLOCKED** for all SquarePayouts work. Use Claude/DeepSeek/OpenAI/Perplexity/Hermes Computer Use only.
 
-### Required Crypto Knowledge Areas
-
-1. Digital asset/crypto market fundamentals
-2. Last 4 major market cycles (2017, 2020-2021, 2022 bear, 2024-2025)
-3. Recurring historical patterns vs divergences
-4. Chart reading and structure analysis
-5. Signal interpretation and market regime ID
-6. When NOT to trade / when TO trade
-7. Strong vs weak setups
-8. Binance US USDT pair analysis
-9. Narrative shifts and sentiment gathering
-10. Social signal research
-11. Pre-listing awareness
-12. Post-analysis and strategy refinement
-
-### CRITICAL SAFETY RULES
-
-- ❌ NO live trading execution in Phase 1
-- ❌ Do not treat hype as evidence
-- ❌ Never merge Money Pipeline and Binance Bot into same project/phase/workflow
-- ✅ Keep research, intelligence, strategy, and execution in separate phases
-- ✅ Flag compliance, data quality, and risk concerns immediately
-- ✅ Paper trading before any real capital
-- ✅ Marcelo explicit approval required before Phase 10 or 11 execution
+### Tool Strategy
+| Task | Tool |
+|------|------|
+| Perplexity desktop app | Hermes Computer Use (BLOCKED — zero-bounds bug) |
+| Perplexity in Brave browser | Browser QA (WORKING) |
+| Installed PWAs (Basecamp) | Hermes Computer Use |
+| Native Mac app UI | Hermes Computer Use |
+| Web research, Deep Research | Perplexity Pro → Browser QA |
+| Localhost web app QA | Browser QA |
+| Local code/CLI/DB | Terminal + tools |
 
 ---
 
-## MONEY PIPELINE vs BINANCE BOT — CRITICAL SEPARATION
+## Audit Rules (Permanent)
 
-| Dimension | Money Pipeline | Binance Bot |
-|-----------|---------------|-------------|
-| **Purpose** | Crypto tracking, market research, intelligence, monitoring | Trading strategy, Binance US analysis, decision support |
-| **Port** | 8020 | 8104 |
-| **PM2** | money-pipeline | binance-bot |
-| **Status** | Online, degraded | Online, no_signal, missing pre-trade hook |
-| **Track** | Track 8 | Track 10 |
-| **Phase** | Phase 8 | Phase 10 |
-| **Owner** | trading | trading (ops for pre-trade hook fix) |
-| **Approval** | No | Yes (Marcelo for execution phases) |
+### Weekly Systems Review (Permanent)
+**Schedule:** Every Monday 8:00 AM PDT
+**Owner:** BossMan (automated via cron)
 
-**Thou shalt not merge these two.** They may inform each other only in later phases, after each is independently mature.
+Sections: PM2 health → Log review → Kanban backlog → Memory quality → Project status → Strategic
+
+Deliver to Marcelo via Telegram: brief weekly status (5–10 bullet points).
+
+### Sub-Agent Performance Tracking
+BossMan tracks per sub-agent: completion rate, quality of handoffs, Marcelo's satisfaction, routing patterns. Findings update SOUL.md and this blueprint.
 
 ---
 
-## PHASE ROADMAP
+## Weekly Review Framework
 
-| Phase | Name | Start After | Duration (est.) |
-|-------|------|------------|-----------------|
-| ✅ 0 | Environment Verification | Immediate | 1 session |
-| 🔲 1 | Foundation Setup | Phase 0 done | 1-2 sessions |
-| 🔲 2 | Memory Automation | Phase 1 approved | 2-3 sessions |
-| 🔲 3 | Self-Audit & Performance | Phase 2 complete | 2-3 sessions |
-| 🔲 4 | Weekly Systems Review | Phase 3 complete | 1-2 sessions |
-| 🔲 5 | Deep Audit & Breakage | Phase 4 complete | 2-3 sessions |
-| 🔲 6 | Localhost Improvement | Phase 5 complete | 5-10 sessions |
-| 🔲 7 | Service Map Cleanup | Phase 6 started | 2-3 sessions |
-| 🔲 8 | Money Pipeline Research | Phase 6-7 complete | 3-5 sessions |
-| 🔲 9 | Crypto Intelligence | Phase 8 started | 5-10 sessions |
-| 🔲 10 | Binance US Intelligence | Phase 9 substantial | requires Marcelo approval |
-| 🔲 11 | Controlled Execution | Phase 10 complete | requires Marcelo approval |
+**Cron Job:** `0 8 * * 1` (every Monday 8:00 AM PDT)
+**Command:** `hermes chat -q "work kanban task t_deb8dabb"`
+**Template:** `~/.hermes/knowledge/WEEKLY_REVIEW_TEMPLATE.md`
+
+Review covers: PM2 health log → Kanban backlog → Cron jobs → Service ports → Memory files → Security schedule
 
 ---
 
-## DEFINITION OF DONE (per Phase)
+## Money Pipeline Track Summary (Separate — t_52a07505)
 
-| Phase | Done When |
-|-------|-----------|
-| 0 | Environment verified from current reality, not assumptions |
-| 1 | Blueprint saved, Kanban created, environment verified, awaiting approval |
-| 2 | Memory automation running, captures auto-triggered without prompting |
-| 3 | Self-audit cron running, performance baseline documented |
-| 4 | Weekly review cron delivering summaries to Marcelo |
-| 5 | Monthly deep-audit framework operational |
-| 6 | All active projects have improvement roadmaps, builder assignments |
-| 7 | Services map is canonical, stale services retired, `pm2 save` done |
-| 8 | Money Pipeline research engine expanded, stream errors fixed |
-| 9 | Crypto education curriculum started, cycle study documented |
-| 10 | Binance bot pre-trade hook restored, strategy documented |
-| 11 | Paper trading system built, execution parameters defined |
+**Definition:** Opportunity research automation — finding, scoring, and routing deals.
+**Status:** Research broken since 2026-04-07 — Phase 8 addresses rebuild.
+**Key Rule:** Money Pipeline and Binance Bot are SEPARATE systems — never merge.
 
 ---
 
-## RISKS AND BLOCKERS
+## Binance Track Summary (Separate — t_04922dfa)
 
-| Risk | Phase | Status |
-|------|-------|--------|
-| PM2 unsynced list | P1 | Low — needs pm2 save |
-| Money Pipeline degraded (stream errors) | P6/P8 | Medium — research automation broken |
-| Binance Bot pre-trade hook missing | P10 | High — blocks strategy work |
-| Unknown ports 8102, 8003, 9119 | P7 | Low — investigate on demand |
-| SquarePayouts migration 006 ROLLBACK | P6 | Low — harmless, already applied |
-| Phase 10/11 require Marcelo approval | P10/P11 | Gate — cannot proceed without approval |
+**Definition:** Binance US USDT pair analysis, trading decision support, signal generation.
+**Status:** Dashboard online (port 8104), pre-trade-hook missing.
+**Safety Rules:** NO live execution in Phase 1. Paper trading before real capital. All strategy requires backtesting evidence.
+**Phase 10 blocker:** Pre-trade-hook must be restored before Phase 10.
 
 ---
 
-## FALLBACK AND RECOVERY
+## Crypto Intelligence Roadmap
 
-1. **Cron job fails** → PM2 health monitor auto-restarts; check pm2-health.log
-2. **Service crash loop** → Auto-restart 3x, then escalation to Marcelo
-3. **Kanban stuck card** → BossMan reopens or reassigns → escalate if stuck > 3 days
-4. **Memory corruption** → Restore from ~/.hermes/knowledge/ backups
-5. **PM2 crash** → `pm2 resurrect` or `pm2 start` from saved list
-6. **Migration failure** → ROLLBACK (harmless if additive columns)
-7. **Live trading failure** → KILL SWITCH (no execution without Phase 11 approval)
+1. Phase 9: Crypto Intelligence Foundation — market research, cycle analysis
+2. Phase 10: Binance US Intelligence — strategy framework, RSI logic
+3. Phase 11: Controlled Execution Support — paper trading, Marcelo approval for live
+
+**Critical:** NO live trading execution until Phase 11 with explicit Marcelo approval.
 
 ---
 
-## BLUEPRINT STORAGE
+## Risks/Blockers
 
-| Location | Path | Status |
-|----------|------|--------|
-| Obsidian (CLAW-Backup) | `~/Desktop/CLAW-Backup/HERMES-MASTER-BLUEPRINT.md` | ✅ Saved |
-| GitHub (BossMan repo) | `~/Projects/BossMan/docs/` | ✅ Saved |Pending commit+push|
-| Kanban (bossman board) | All 15+ cards | ✅ Created |
-| Knowledge | `~/.hermes/knowledge/` | Next Phase |
+| Risk | Severity | Mitigation |
+|------|----------|------------|
+| PM2 unsynced | HIGH | `pm2 save` — persist current process list |
+| money-pipeline degraded | HIGH | Phase 8 rebuild — research automation broken since 2026-04-07 |
+| Unknown ports 8102, 8003, 9119 | MEDIUM | Phase 7 — identify before service map is finalized |
+| Binance pre-trade-hook missing | HIGH | Phase 10 — must restore before Binance intelligence goes live |
+| Phase 1 planning only | INFO | No live execution of trading or system changes until Phase 2+ |
 
 ---
 
-## APPROVAL
+## Fallback and Recovery Notes
 
-**This blueprint has been verified from current reality (2026-05-20).**
-**Phase 1 is planned, documented, and on the board.**
-**Awaiting Marcelo approval before Phase 2 execution begins.**
+| Failure | First Restore Action |
+|---------|----------------------|
+| AGENTS.md lost | Restore from GitHub: `BIGDAWG35/BossMan` |
+| SOUL.md lost | Restore `~/.hermes/profiles/bossman/SOUL.md` from GitHub |
+| Skills lost | Restore `~/.hermes/skills/` from GitHub |
+| Knowledge lost | Restore `LEARNED_*.md` from Obsidian backup |
+| Kanban DB lost | Restore from backup — `~/.hermes/kanban/boards/bossman/` |
+| PM2 processes lost | `pm2 resurrect` or restore from `pm2-list-backup-20260414.txt` |
 
-## RECOMMENDED NEXT COMMAND
+**Backup Locations (Minimum 2 required):**
+- Primary: GitHub private repo `BIGDAWG35/BossMan`
+- Secondary: `~/Desktop/CLAW-Backup/`
 
-When Marcelo approves, run:
-```
-hermes kanban start --on-phase 1 "Execute Phase 2: Memory Automation. First actions:
-1. pm2 save (ops)
-2. Structured memory tags documented
-3. Memory capture triggers tested
-4. Investivate unknown ports 8102, 8003, 9119 (ops)
-5. Pre-trade hook investigation (ops, binance-bot)"
-```
+---
+
+## Definition of Done Per Phase
+
+| Phase | Definition of Done |
+|-------|--------------------|
+| Phase 0 | Blueprint saved to Obsidian + GitHub |
+| Phase 1 | All 14 sub-cards complete, all 11 tracks defined |
+| Phase 2 | BossMan SOUL.md updated, routing rules in AGENTS.md |
+| Phase 3 | LBC35 demoted to delegated-only in all docs |
+| Phase 4 | Kanban schema active, handoff packet format verified |
+| Phase 5 | Telegram commands working for Marcelo |
+| Phase 6 | Money Pipeline pilot running end-to-end |
+| Phase 7 | Old PM2 dashboard retired, Perplexity Spaces rebuilt |
+| Phase 8 | Research automation restored and verified |
+| Phase 9 | Crypto intelligence framework operational |
+| Phase 10 | Binance strategy framework with backtesting evidence |
+| Phase 11 | Paper trading running, Marcelo approval for live execution |
+
+---
+
+## Document Locations
+
+| Copy | Path |
+|------|------|
+| Obsidian | `/Users/bigdawg/Desktop/CLAW-Backup/HERMES-MASTER-BLUEPRINT.md` |
+| GitHub | `BIGDAWG35/BossMan/hermes/HERMES-MASTER-BLUEPRINT.md` |
+| Hermes knowledge | `~/.hermes/knowledge/HERMES_MASTER_BLUEPRINT.md` (this file) |
+
+---
+
+## Version History
+
+| Version | Date | Change |
+|---------|------|--------|
+| 1.0 | 2026-05-20 | Phase 1.11 — Initial master blueprint assembled from all Phase 1 sub-cards |
+
+---
+
+---
+
+## AI Stack v2 — Master Architecture (Updated 2026-05-27)
+
+> **Permanently supersedes all previous model stack descriptions.** This section is canonical.
+
+### Stack Layers
+
+| Layer | System | Role |
+|-------|--------|------|
+| **Control plane** | BossMan / Hermes | **ONLY** orchestration authority and routing layer |
+| **Search plane** | Perplexity Search | Live web research, current facts, citations |
+| **Action plane** | Perplexity Computer | High-value multi-step workflows, browser actions, connectors, file operations |
+| **Local execution plane** | Ollama + Llama | Private, repeatable, cost-sensitive tasks |
+| **General cloud plane** | MiniMax 2.7 | Default general cloud model within reset window |
+| **Specialist cloud plane** | DeepSeek / OpenAI / Claude | Chosen by specialty, not as generic backups |
+| **Delegated execution plane** | LBC35 + bot team | **ONLY** on explicitly assigned tasks — never a router or manager |
+| **Knowledge plane** | Hermes knowledge / Obsidian / GitHub | Durable artifacts, SOPs, code, templates |
+
+### Core Invariants (Never Violated)
+
+1. **BossMan / Hermes is the ONLY orchestration authority** — no sub-agent, no external AI, no automation chain routes work without BossMan as the decision layer
+2. **Kanban is the single source of truth** — no work off-board
+3. **LBC35 is a delegated executor ONLY** — never a router, never a manager, never self-assigns tasks
+4. **All model routing flows through BossMan** — no autonomous model calls outside BossMan's explicit assignment
+
+---
+
+### Routing Policy (AI Stack v2)
+
+**Perplexity Search** — default for:
+- Live web research, current facts, breaking news, citations
+- Anything requiring up-to-date information from the internet
+- Research on vendors, products, competitors
+
+**Perplexity Computer** — used only for:
+- High-value multi-step workflows requiring browser UI interaction
+- Connector integrations (Basecamp, Google Workspace, etc.)
+- File operations requiring GUI automation
+- **Credits are limited** — justify each use; default to Browser QA + Perplexity Search for simpler research tasks
+
+**Ollama / Llama (local)** — first choice when:
+- Task is private (no data leaving the machine)
+- Task is repeatable (summaries, drafts, extraction, cleanup, first-pass code)
+- Cost sensitivity is high (zero API cost)
+- Quality is acceptable for the use case
+- Available models: `llama3`, `qwen2.5`, `mistral` (verify with `ollama list`)
+
+**MiniMax 2.7** — default for:
+- General cloud work within its reset window
+- Orchestration, routing, routine operations
+- Standard task execution that doesn't require specialist capabilities
+- **BLOCKED for SquarePayouts** (see SquarePayouts Model Restriction below)
+
+**DeepSeek** — chosen for:
+- Low-cost deep reasoning
+- Technical validation
+- Edge-case analysis
+- Coding assistance where quality is acceptable at low cost
+
+**OpenAI** — chosen for:
+- Structured synthesis requiring high coherence
+- Product framing and marketing text
+- Operational writing requiring polished output
+
+**Claude** — chosen for:
+- High-stakes architecture review
+- Workflow design and prompt engineering
+- Long-form structured reasoning
+- Situations where output quality clearly justifies higher cost
+
+**LBC35** — activated only when:
+- BossMan explicitly assigns a scoped, defined task
+- Task is well-bounded (not open-ended research or strategy)
+- LBC35 confirms completion back to BossMan Kanban card
+- **Never:** self-routes, sets priorities, creates Kanban cards, modifies services
+
+---
+
+### Cost Policy (AI Stack v2)
+
+**Tier 1 — Cache & Reuse (zero cost)**
+> Reuse existing artifacts and notes before any new model calls.
+- Check: Obsidian vault, GitHub, Hermes knowledge files, session_search
+- If answer exists in a file → use it, don't re-call any model
+
+**Tier 2 — Local (zero cost)**
+> Ollama + Llama for anything acceptable with local quality.
+- Summaries, drafts, extraction, cleanup, first-pass code, formatting
+- If local model produces acceptable output → use it, don't escalate
+
+**Tier 3 — General Cloud (MiniMax budget)**
+> MiniMax 2.7 for general cloud work within reset window.
+- Routine orchestration, standard task execution, non-specialist work
+- Respect MiniMax's context and token limits
+
+**Tier 4 — Specialist Cloud (pay-per-call)**
+> DeepSeek / OpenAI / Claude only when required by quality or capability.
+- DeepSeek: low-cost reasoning, coding validation
+- OpenAI: structured synthesis, polished text
+- Claude: architecture, long-form planning, high-stakes review
+- **Rule:** Don't reach for Tier 4 when Tier 2 or 3 would do
+
+**Tier 5 — Perplexity Computer (credits)**
+> Only when workflow complexity genuinely justifies credit usage.
+- Multi-step browser workflows, connector actions, GUI automation
+- Not justified: simple searches, single lookups, routine QA
+- Track credit cost per use in Kanban card notes
+
+**Provider Degradation / Failover**
+> If any provider is out of funds, quota, or fails → mark degraded and automatically reroute.
+- MiniMax out of window → use DeepSeek or Ollama
+- DeepSeek rate-limited → use OpenAI or Ollama
+- Perplexity credits exhausted → use Browser QA + Search
+- Ollama model missing → pull with `ollama pull <model>` or route to MiniMax
+- **Never stop a project because one provider is unavailable** — always have a reroute path
+
+---
+
+### SquarePayouts Model Restriction (Permanent — Updated 2026-05-27)
+
+- MiniMax 2.7 is **BLOCKED** for all SquarePayouts work
+- Use: Ollama (local), DeepSeek, OpenAI, Claude, Perplexity Search
+- This restriction applies to all sub-agents and delegated executors
+
+---
+
+### Knowledge Reuse Policy (AI Stack v2)
+
+**Rule of Thumb:**
+> "If it changes *how we operate* → canonical (Hermes knowledge). If it explains *how we did* something → Obsidian. If it is *executable* → GitHub."
+
+| Content Type | Storage | Canonical? |
+|---|---|---|
+| Routing rules, model tiers, stack architecture | `~/.hermes/knowledge/HERMES_MASTER_BLUEPRINT.md` | ✅ YES |
+| Agent roles, delegation rules, coordination patterns | `~/.hermes/knowledge/AGENTS.md` | ✅ YES |
+| Tool quirks, CLI workarounds, system patterns | `~/.hermes/knowledge/LEARNED_*.md` | ✅ YES |
+| SOPs, troubleshooting guides, project lessons | `~/Desktop/CLAW-Backup/Obsidian/` | ✅ YES |
+| Code, templates, scripts, workflow files | GitHub repos (`BIGDAWG35/*`) | ✅ YES |
+| Kanban cards (current work) | `~/.hermes/kanban/boards/bossman/kanban.db` | ✅ YES |
+| Session history, past events | `session_search` (FTS5) | Searchable |
+| Marcelo's preferences | `memory` (user profile) | ✅ YES |
+
+**What goes into Hermes knowledge as canonical rules:**
+- Anything that defines how BossMan routes, decides, or operates
+- Stack architecture and layer definitions
+- Provider tiers and failover rules
+- Permanent project restrictions (e.g., SquarePayouts model block)
+- Agent roles and delegation constraints
+
+**What goes into Obsidian:**
+- Reusable SOPs and runbooks
+- Troubleshooting notes and fix patterns
+- Project post-mortems and lessons learned
+- Meeting notes and design decisions (non-architectural)
+
+**What goes into GitHub:**
+- All executable code
+- Templates that teams reuse
+- Workflow scripts (Shell, Python, JS)
+- Configuration files under version control
+
+**Save Pipeline (on every major project):**
+1. During: log model choices per step in Kanban card notes
+2. On completion: extract lessons → where do they fit? (Hermes knowledge / Obsidian / GitHub)
+3. Obsidian: create/update note with project name + date
+4. GitHub: commit code/templates with meaningful messages
+5. Hermes knowledge: update AGENTS.md or LEARNED_*.md if operating rules changed
+
+---
+
+### Version History
+
+| Version | Date | Change |
+|---------|------|--------|
+| 1.0 | 2026-05-20 | Phase 1.11 — Initial master blueprint |
+| 1.1 | 2026-05-27 | AI Stack v2 — full layer definition, routing policy, cost tiers, knowledge reuse policy, Ollama integration |
+
+---
+
+*This document is the single source of truth for Hermes Phase 1–11 implementation. All 11 tracks, phases, sub-agents, models, audit rules, and risk registers are consolidated here. Updated by BossMan at the end of each Phase 1 sub-card.*
