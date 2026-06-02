@@ -15,7 +15,12 @@ Transform Hermes into the **primary control plane** for Marcelo's operations —
 
 ---
 
-## Verified Host/Service Context (2026-05-20)
+## Verified Host/Service Context (Updated 2026-05-28)
+
+### Hardware
+- **Primary host:** Mac Studio (Apple M4 Max, 16 cores, 64 GB RAM)
+- **Prior host:** Intel Mac mini (historical — see Legacy Context note)
+- Ollama: native Metal GPU acceleration, REST API responsive on port 11434
 
 ### Active Services
 | Port | Service | PM2 Name | Status |
@@ -216,30 +221,15 @@ Paper trading, backtesting evidence, Marcelo approval required for live executio
 
 ---
 
-## AI/Model Strategy (Permanent — Phase 1.10, updated 2026-06-02)
+## AI/Model Strategy (Permanent — Phase 1.10)
 
-### Model Specialization Table
-
-| Model | Role | Specialization | Cost Tier |
-|-------|------|----------------|-----------|
-| **MiniMax 2.7** | Primary brain | Code, refactors, scripts, automation, general reasoning — DEFAULT | Tier 3 |
-| **Ollama / Llama / Qwen** | Local drafts | Summarization, preprocessing, offline tasks, patterns | Tier 2 |
-| **Perplexity Search** | Live web research | Market scans, citations, up-to-date facts | Tier 4 |
-| **Perplexity Computer** | Multi-step workflows | Complex Mac/browser workflows — credits when justified | Tier 5 |
-| **DeepSeek** | Analytical specialist | Deep reasoning, edge-case analysis, debugging | Tier 4 |
-| **OpenAI** | Structured output | JSON/specs, docs, production formatting | Tier 4 |
-| **Claude** | Long-form reasoning | Architecture, system design, high-stakes planning | Tier 4 |
-| **OpenClaw / LBC35** | Delegated executor | Execution under BossMan direction ONLY | N/A |
-
-### Cost Tier Map
-
-| Tier | Cost Level | Models | Rule |
-|------|-----------|--------|------|
-| Tier 1 | FREE | Hermes knowledge, Obsidian, GitHub | Always check first — reuse existing artifacts |
-| Tier 2 | FREE | Ollama / Llama / Qwen local | Use before escalating to Tier 3 |
-| Tier 3 | INCLUDED | MiniMax 2.7 | Default for routine work; blocked for SquarePayouts |
-| Tier 4 | PAID | DeepSeek, OpenAI, Claude | Use when Tier 1/2/3 insufficient; save all outputs for reuse |
-| Tier 5 | PAID HIGH | Perplexity Computer | Only when task complexity justifies credits |
+| Model | Role | Use Case |
+|-------|------|----------|
+| **MiniMax 2.7** | Primary brain | Everything, all day — BLOCKED for SquarePayouts |
+| **DeepSeek** | Analysis backup | Deep reasoning, technical validation, edge-case analysis |
+| **OpenAI** | Synthesis backup | Product framing, operational writing, summarization |
+| **Claude** | Architecture backup | Workflow design, prompt/agent design, structured planning |
+| **Perplexity** | Research | Live web research, Deep Research, Space content |
 
 ### SquarePayouts Model Restriction (Permanent — 2026-05-20)
 MiniMax 2.7 is **BLOCKED** for all SquarePayouts work. Use Claude/DeepSeek/OpenAI/Perplexity/Hermes Computer Use only.
@@ -375,4 +365,193 @@ Review covers: PM2 health log → Kanban backlog → Cron jobs → Service ports
 
 ---
 
+---
+
+## AI Stack v2 — Master Architecture (Updated 2026-05-27)
+
+> **Permanently supersedes all previous model stack descriptions.** This section is canonical.
+
+### Stack Layers
+
+| Layer | System | Role |
+|-------|--------|------|
+| **Control plane** | BossMan / Hermes | **ONLY** orchestration authority and routing layer |
+| **Search plane** | Perplexity Search | Live web research, current facts, citations |
+| **Action plane** | Perplexity Computer | High-value multi-step workflows, browser actions, connectors, file operations |
+| **Local execution plane** | Ollama + Llama | Private, repeatable, cost-sensitive tasks |
+| **General cloud plane** | MiniMax 2.7 | Default general cloud model within reset window |
+| **Specialist cloud plane** | DeepSeek / OpenAI / Claude | Chosen by specialty, not as generic backups |
+| **Delegated execution plane** | LBC35 + bot team | **ONLY** on explicitly assigned tasks — never a router or manager |
+| **Knowledge plane** | Hermes knowledge / Obsidian / GitHub | Durable artifacts, SOPs, code, templates |
+
+### Core Invariants (Never Violated)
+
+1. **BossMan / Hermes is the ONLY orchestration authority** — no sub-agent, no external AI, no automation chain routes work without BossMan as the decision layer
+2. **Kanban is the single source of truth** — no work off-board
+3. **LBC35 is a delegated executor ONLY** — never a router, never a manager, never self-assigns tasks
+4. **All model routing flows through BossMan** — no autonomous model calls outside BossMan's explicit assignment
+
+---
+
+### Routing Policy (AI Stack v2)
+
+**Perplexity Search** — default for:
+- Live web research, current facts, breaking news, citations
+- Anything requiring up-to-date information from the internet
+- Research on vendors, products, competitors
+
+**Perplexity Computer** — used only for:
+- High-value multi-step workflows requiring browser UI interaction
+- Connector integrations (Basecamp, Google Workspace, etc.)
+- File operations requiring GUI automation
+- **Credits are limited** — justify each use; default to Browser QA + Perplexity Search for simpler research tasks
+
+**Ollama / Llama (local)** — first choice when:
+- Task is private (no data leaving the machine)
+- Task is repeatable (summaries, drafts, extraction, cleanup, first-pass code)
+- Cost sensitivity is high (zero API cost)
+- Quality is acceptable for the use case
+- **Mac Studio M4 Max (64 GB):** Ollama runs with native Metal GPU acceleration — qwen2.5:3b and qwen2.5:14b available, API responsive on localhost:11434
+- Available models: verify with `ollama list`
+
+**MiniMax 2.7** — default for:
+- General cloud work within its reset window
+- Orchestration, routing, routine operations
+- Standard task execution that doesn't require specialist capabilities
+- **BLOCKED for SquarePayouts** (see SquarePayouts Model Restriction below)
+
+**DeepSeek** — chosen for:
+- Low-cost deep reasoning
+- Technical validation
+- Edge-case analysis
+- Coding assistance where quality is acceptable at low cost
+
+**OpenAI** — chosen for:
+- Structured synthesis requiring high coherence
+- Product framing and marketing text
+- Operational writing requiring polished output
+
+**Claude** — chosen for:
+- High-stakes architecture review
+- Workflow design and prompt engineering
+- Long-form structured reasoning
+- Situations where output quality clearly justifies higher cost
+
+**LBC35** — activated only when:
+- BossMan explicitly assigns a scoped, defined task
+- Task is well-bounded (not open-ended research or strategy)
+- LBC35 confirms completion back to BossMan Kanban card
+- **Never:** self-routes, sets priorities, creates Kanban cards, modifies services
+
+---
+
+### Cost Policy (AI Stack v2)
+
+**Tier 1 — Cache & Reuse (zero cost)**
+> Reuse existing artifacts and notes before any new model calls.
+- Check: Obsidian vault, GitHub, Hermes knowledge files, session_search
+- If answer exists in a file → use it, don't re-call any model
+
+**Tier 2 — Local (zero cost)**
+> Ollama + Llama for anything acceptable with local quality.
+- Summaries, drafts, extraction, cleanup, first-pass code, formatting
+- If local model produces acceptable output → use it, don't escalate
+
+**Tier 3 — General Cloud (MiniMax budget)**
+> MiniMax 2.7 for general cloud work within reset window.
+- Routine orchestration, standard task execution, non-specialist work
+- Respect MiniMax's context and token limits
+
+**Tier 4 — Specialist Cloud (pay-per-call)**
+> DeepSeek / OpenAI / Claude only when required by quality or capability.
+- DeepSeek: low-cost reasoning, coding validation
+- OpenAI: structured synthesis, polished text
+- Claude: architecture, long-form planning, high-stakes review
+- **Rule:** Don't reach for Tier 4 when Tier 2 or 3 would do
+
+**Tier 5 — Perplexity Computer (credits)**
+> Only when workflow complexity genuinely justifies credit usage.
+- Multi-step browser workflows, connector actions, GUI automation
+- Not justified: simple searches, single lookups, routine QA
+- Track credit cost per use in Kanban card notes
+
+**Provider Degradation / Failover**
+> If any provider is out of funds, quota, or fails → mark degraded and automatically reroute.
+- MiniMax out of window → use DeepSeek or Ollama
+- DeepSeek rate-limited → use OpenAI or Ollama
+- Perplexity credits exhausted → use Browser QA + Search
+- Ollama model missing → pull with `ollama pull <model>` or route to MiniMax
+- **Never stop a project because one provider is unavailable** — always have a reroute path
+
+---
+
+### SquarePayouts Model Restriction (Permanent — Updated 2026-05-27)
+
+- MiniMax 2.7 is **BLOCKED** for all SquarePayouts work
+- Use: Ollama (local), DeepSeek, OpenAI, Claude, Perplexity Search
+- This restriction applies to all sub-agents and delegated executors
+
+---
+
+### Knowledge Reuse Policy (AI Stack v2)
+
+**Rule of Thumb:**
+> "If it changes *how we operate* → canonical (Hermes knowledge). If it explains *how we did* something → Obsidian. If it is *executable* → GitHub."
+
+| Content Type | Storage | Canonical? |
+|---|---|---|
+| Routing rules, model tiers, stack architecture | `~/.hermes/knowledge/HERMES_MASTER_BLUEPRINT.md` | ✅ YES |
+| Agent roles, delegation rules, coordination patterns | `~/.hermes/knowledge/AGENTS.md` | ✅ YES |
+| Tool quirks, CLI workarounds, system patterns | `~/.hermes/knowledge/LEARNED_*.md` | ✅ YES |
+| SOPs, troubleshooting guides, project lessons | `~/Desktop/CLAW-Backup/Obsidian/` | ✅ YES |
+| Code, templates, scripts, workflow files | GitHub repos (`BIGDAWG35/*`) | ✅ YES |
+| Kanban cards (current work) | `~/.hermes/kanban/boards/bossman/kanban.db` | ✅ YES |
+| Session history, past events | `session_search` (FTS5) | Searchable |
+| Marcelo's preferences | `memory` (user profile) | ✅ YES |
+
+**What goes into Hermes knowledge as canonical rules:**
+- Anything that defines how BossMan routes, decides, or operates
+- Stack architecture and layer definitions
+- Provider tiers and failover rules
+- Permanent project restrictions (e.g., SquarePayouts model block)
+- Agent roles and delegation constraints
+
+**What goes into Obsidian:**
+- Reusable SOPs and runbooks
+- Troubleshooting notes and fix patterns
+- Project post-mortems and lessons learned
+- Meeting notes and design decisions (non-architectural)
+
+**What goes into GitHub:**
+- All executable code
+- Templates that teams reuse
+- Workflow scripts (Shell, Python, JS)
+- Configuration files under version control
+
+**Save Pipeline (on every major project):**
+1. During: log model choices per step in Kanban card notes
+2. On completion: extract lessons → where do they fit? (Hermes knowledge / Obsidian / GitHub)
+3. Obsidian: create/update note with project name + date
+4. GitHub: commit code/templates with meaningful messages
+5. Hermes knowledge: update AGENTS.md or LEARNED_*.md if operating rules changed
+
+---
+
+### Version History
+### Version History
+|| Version | Date | Change |
+| 1.0 | 2026-05-20 | Phase 1.11 — Initial master blueprint |
+| 1.1 | 2026-05-27 | AI Stack v2 — layer definitions, routing policy, cost tiers, knowledge reuse |
+| 1.2 | 2026-05-28 | Mac Studio M4 Max migration — Ollama now OPERATIONAL, Intel Mac mini context archived |
+
+---
+
 *This document is the single source of truth for Hermes Phase 1–11 implementation. All 11 tracks, phases, sub-agents, models, audit rules, and risk registers are consolidated here. Updated by BossMan at the end of each Phase 1 sub-card.*
+
+---
+
+### Legacy Context (Intel Mac mini — Archived 2026-05-28)
+
+The Intel Mac mini was the prior primary host. Its environment had a specific constraint: Ollama v0.20.2 daemon ran but the REST API layer was unresponsive due to GGML/AVX2 compatibility issues with the Intel CPU architecture. Tier 2 tasks were routed to MiniMax (Tier 3) as a workaround.
+
+**This constraint no longer applies.** The Mac Studio M4 Max runs Ollama natively with Metal GPU acceleration — API is responsive, Tier 2 is fully operational.

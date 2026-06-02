@@ -1,179 +1,143 @@
-# KNOWLEDGE_REUSE_PIPELINE.md
-**Version:** 1.1
-**Date:** 2026-06-02
-**Owner:** BossMan (Marcelo's Hermes orchestrator)
-**Status:** ACTIVE — governs knowledge reuse and paid model artifact policy
+# Knowledge Reuse Pipeline
+
+> **AI Stack v2 — Phase 4 (2026-05-27)**
+> Rule: "If it changes *how we operate* → canonical (Hermes knowledge). If it explains *how we did* something → Obsidian. If it is *executable* → GitHub."
 
 ---
 
-## Purpose
+## Where Knowledge Lives
 
-This document defines how BossMan captures, stores, reuses, and enforces knowledge reuse across all projects. It is the **single source of truth for knowledge management** and the **paid model artifact reuse policy**.
-
----
-
-## 1. Knowledge Tier Map
-
-| Tier | Storage | Use For | Cost |
-|------|---------|--------|------|
-| **Tier 1** | Hermes knowledge, Obsidian, GitHub | Existing artifacts, docs, blueprints, system state | FREE |
-| **Tier 2** | Ollama / Llama / Qwen local | Local drafts, summarization, pattern tasks | FREE |
-| **Tier 3** | MiniMax 2.7 | Default reasoning — routine work | INCLUDED |
-| **Tier 4** | DeepSeek / OpenAI / Claude | Advanced reasoning, structured output | PAID |
-| **Tier 5** | Perplexity Computer | Complex multi-step Mac workflows | PAID HIGH |
-
-**Default path:** Always check Tier 1 before any AI call. Escalate only when necessary. Save Tier 4/5 outputs for reuse.
+| Content Type | Storage | Canonical? |
+|---|---|---|
+| Routing rules, model tiers, stack architecture | `HERMES_MASTER_BLUEPRINT.md` | ✅ YES |
+| Agent roles, delegation rules, coordination patterns | `AGENTS.md` | ✅ YES |
+| Tool quirks, CLI workarounds, system patterns | `LEARNED_*.md` | ✅ YES |
+| SOPs, troubleshooting guides, project post-mortems | `~/Desktop/CLAW-Backup/Obsidian/` | ✅ YES |
+| Code, templates, scripts, workflow files | GitHub repos (`BIGDAWG35/*`) | ✅ YES |
+| Kanban cards (current work, blockers, decisions) | `~/.hermes/kanban/boards/bossman/kanban.db` | ✅ YES |
+| Session history, past events, error patterns | `session_search` (FTS5) | Searchable |
+| Marcelo's stated preferences | `memory` (user profile) | ✅ YES |
+| Reusable workflow patterns | `~/.hermes/skills/*.md` | ✅ YES |
 
 ---
 
-## 2. Knowledge Reuse Rules (Permanent)
+## Save Pipeline — On Every Major Project
 
-### Retrieval Before Action
+### Step 1: During Execution — Log Model Choices
 
-Before spawning a sub-agent or starting any AI-assisted task:
-
-1. Check `memory` for Marcelo's preferences
-2. Check `~/.hermes/knowledge/` for relevant docs, specs, or priors
-3. Run `session_search` for recent patterns
-4. Check GitHub/BossMan/docs/ for existing artifacts
-
-**No "fresh start" assumption — continuity is the default.**
-If the same research was already done, flagged with `[RESEARCH]`, or documented — reuse it, don't re-research.
-
-### Artifact Naming Standard
-
-Reusable artifacts saved to `~/.hermes/knowledge/` must be named to reflect their contents:
-
-| Pattern | Example |
-|---------|---------|
-| `SPEC-[PROJECT]-[FEATURE].md` | `SPEC-BINANCE-PRETRADE-HOOK.md` |
-| `ARCH-[PROJECT].md` | `ARCH-CLIENT-HUB.md` |
-| `LEARNED-[TOOL].md` | `LEARNED-PM2.md` |
-| `REPORT-[PROJECT]-[DATE].md` | `REPORT-BINANCE-AUDIT-2026-05.md` |
-| `MEMORY-[TOPIC].md` | `MEMORY-TRADING-INTELLIGENCE.md` |
-| `AI-[PROJECT]-[DATE].md` | `AI-MONEY-PIPELINE-ANALYSIS-2026-06.md` |
-
-### Exclusions (Never Save)
-
-- Ephemeral task progress — NOT saved
-- Raw data dumps — NOT saved
-- Stale info (< 7 days) — NOT saved
-- Unverified speculation — mark `[NEEDS VERIFICATION]` instead
-- Duplicate content — update existing, don't create new
-
----
-
-## 3. Paid Model Artifact Reuse Policy (New — 2026-06-02)
-
-**When a Tier 4 or Tier 5 model produces a reusable artifact:**
-
-1. **Save the artifact immediately** — save to `~/.hermes/knowledge/` with standard naming
-2. **Tag it** — mark clearly with model used, date, and scope
-3. **Update the Routing Ledger** — note the artifact path in `last_model_used`
-4. **Never pay again** for the same analysis — check `~/.hermes/knowledge/` before re-running
-
-**Reuse trigger checklist (before any Tier 4/5 call):**
+In the Kanban card notes, log which model/plane was used at each step:
 ```
-[ ] Check ~/.hermes/knowledge/ for [same topic] or [similar artifact]
-[ ] If found — reuse it and update last_model_used
-[ ] If not found — proceed with Tier 4/5 call
-[ ] After call — save output with standard naming
+[Model Log]
+- Step 1: Tier 1 (session_search) — found prior session with same bug
+- Step 2: Tier 2 (Ollama/Llama) — first-pass code for auth cleanup
+- Step 3: Tier 3 (MiniMax 2.7) — orchestration and routing
+- Step 4: Tier 4 (DeepSeek) — edge-case analysis for session token logic
+- Step 5: Tier 5 (Perplexity Computer) — NOT USED (Browser QA sufficient)
 ```
 
-**What to save from Tier 4/5 calls:**
-- Prompts and prompt templates
-- Architecture diagrams / system designs
-- Spec documents
-- Code modules or functions
-- Research summaries tagged `[RESEARCH]`
-- Analysis writeups tagged `[ANALYSIS]`
-- Structured outputs (JSON, YAML specs)
+### Step 2: On Completion — Extract Lessons
 
-**Where to save:**
-- Canonical: `~/.hermes/knowledge/`
-- Mirror to: `~/Desktop/CLAW-Backup/` (Obsidian vault)
-- GitHub: `BIGDAWG35/BossMan/docs/` (versioned)
+Ask: "What changed because of this project?"
 
----
+| Question | Answer Type | Destination |
+|---|---|---|
+| Did we learn how to route better? | Operating rule | `AGENTS.md` or `HERMES_MASTER_BLUEPRINT.md` |
+| Did we find a new tool pattern? | CLI/quirk | `LEARNED_*.md` |
+| Did we create reusable code? | Executable | GitHub repo |
+| Did we create a reusable template? | Template | GitHub repo |
+| Did we document a process? | SOP | `~/Desktop/CLAW-Backup/Obsidian/` |
+| Did we learn a project-specific lesson? | Post-mortem | `~/Desktop/CLAW-Backup/Obsidian/` |
+| Did Marcelo state a new preference? | Preference | `memory` (user profile) |
+| Did a skill/workflow improve? | Skill | `~/.hermes/skills/*.md` |
 
-## 4. Research Capture Protocol
+### Step 3: Save to Correct Destination
 
-**Trigger:** Any Perplexity Search, Deep Research, or web-based research task.
+**→ Hermes knowledge (`~/.hermes/knowledge/`):**
+- Update AGENTS.md for routing/delegation changes
+- Update HERMES_MASTER_BLUEPRINT.md for architecture changes
+- Update or create LEARNED_*.md for tool/system patterns
+- Update memory for new preferences
 
-**Required capture:**
-- Full prompt/question asked
-- Key findings (bullet points, not verbatim)
-- Source URLs
-- Date
-- Model used
-- File: `~/.hermes/knowledge/AI-[PROJECT]-[TOPIC]-[DATE].md`
+**→ Obsidian (`~/Desktop/CLAW-Backup/Obsidian/`):**
+- Create/update SOP note: `PROJECT_NAME_SOP.md`
+- Create post-mortem: `PROJECT_NAME_YYYY-MM-DD.md`
+- Update troubleshooting guide if new fix pattern found
 
-**Tag:** All research with `[RESEARCH]` in the filename and top of file.
+**→ GitHub (`BIGDAWG35/*`):**
+- Commit code with meaningful message: `feat(project): what changed`
+- Commit templates/scripts
+- Add project lessons to repo README if relevant
 
-**Reuse:** Before re-running the same research, check `session_search` for prior sessions on the topic.
+### Step 4: Verify
 
----
-
-## 5. Trusted Learning Rules (Permanent)
-
-- **Verified sources only** — don't trust a claim just because it's popular; verify before acting or flag `[NEEDS VERIFICATION]`
-- **Evidence-backed findings** — if you can't verify, explicitly flag confidence level
-- **Compare when uncertain** — run same query through multiple models/sources and compare
-- **Refine based on outcomes** — note what worked and what didn't; update patterns
-- **No speculation as fact** — always label hypothesis vs. confirmed finding
-- **Known vs. assumed** — store separately; update independently
+After saving:
+- [ ] Read back the saved content to confirm it was written
+- [ ] Confirm it's in the right location (check the table above)
+- [ ] For Hermes knowledge: confirm it will be picked up in next session
 
 ---
 
-## 6. Memory Capture Policy Summary
+## Prompt & Routing Pattern Save
 
-### Tags (for searchability)
+When a model routing decision works well — save the pattern:
 
-| Tag | Use For |
-|-----|---------|
-| `[DECISION]` | Architectural choices, routing decisions, trade-offs |
-| `[ARCHITECTURE]` | System design, service topology, data flows |
-| `[ROUTING]` | Model selection, agent assignment, tool choice |
-| `[WORKFLOW]` | Process improvements, automation patterns |
-| `[RESEARCH]` | Market research, intelligence findings |
-| `[ANALYSIS]` | Deep analytical work, specs, architectural reviews |
-| `[PERFORMANCE]` | Speed improvements, resource optimization |
-| `[SECURITY]` | Patches, vulnerabilities, hardening |
-| `[PREFERENCE]` | Marcelo's stated likes/dislikes/tastes |
+**Save format:** `~/.hermes/knowledge/ROUTING_PATTERNS.md`
 
-### Memory Storage Tiers
+```
+## [Pattern Name]
+Date: YYYY-MM-DD
+Task type: [what kind of task]
+Chosen route: [Tier → Model]
+Why it worked: [brief]
+When to use again: [condition]
+```
 
-| Tier | Storage | Use For | Limit |
-|------|---------|---------|-------|
-| **1** | `memory` tool | Marcelo's preferences, corrections, environment facts | ~2200 chars |
-| **2** | `~/.hermes/knowledge/` | Durable docs, project context, system insights | Unlimited |
-| **3** | `~/Desktop/CLAW-Backup/` | Obsidian reference blueprints | Unlimited |
-| **4** | `BIGDAWG35/BossMan/` | GitHub durable blueprints | Unlimited |
-
----
-
-## 7. Document Locations
-
-| Copy | Path |
-|------|------|
-| **Hermes knowledge (canonical)** | `~/.hermes/knowledge/KNOWLEDGE_REUSE_PIPELINE.md` |
-| **Obsidian** | `/Users/bigdawg/Desktop/CLAW-Backup/KNOWLEDGE_REUSE_PIPELINE.md` |
-| **GitHub** | `BIGDAWG35/BossMan/docs/KNOWLEDGE_REUSE_PIPELINE.md` |
-
-**Cross-references:**
-- `~/.hermes/knowledge/MODEL_ROUTING_WORKFLOW.md` — routing ledger, model tiers, cost policy
-- `~/.hermes/knowledge/HERMES_MASTER_BLUEPRINT.md` — AI/Model Strategy table
-- `~/.hermes/knowledge/OPERATING_BLUEPRINT.md` — routing rules, profiles
+Example:
+```
+## DeepSeek for Edge-Case Auth Analysis
+Date: 2026-05-27
+Task type: Session token edge case in NextAuth
+Chosen route: Tier 4 → DeepSeek (low-cost reasoning)
+Why it worked: Auth logic requires understanding token refresh edge cases; DeepSeek produced correct analysis at 1/10th Claude cost
+When to use again: Any NextAuth session/auth edge-case analysis
+```
 
 ---
 
-## 8. Change Log
+## Major Project Checklist
 
-| Version | Date | Change |
-|---------|------|--------|
-| 1.0 | 2026-05-27 | Initial — knowledge tier map, reuse rules, capture policy |
-| 1.1 | 2026-06-02 | Added Section 3: Paid Model Artifact Reuse Policy; updated Artifact Naming Standard |
+Use this checklist on every project that takes more than 3 tool calls:
+
+**During:**
+- [ ] Log model choices in Kanban card notes
+
+**On completion:**
+- [ ] Extract operating lessons → Hermes knowledge (AGENTS.md, LEARNED_*.md)
+- [ ] Extract SOP/troubleshooting → Obsidian
+- [ ] Extract code/templates → GitHub
+- [ ] Extract preferences → memory
+- [ ] Improve skill if workflow improved → `~/.hermes/skills/`
+- [ ] Read back all saved content to verify
+
+**Failover logging:**
+- [ ] Log any provider failures/reroutes in Kanban card notes
+- [ ] If reroute wasn't covered by existing policy → update routing tier doc
 
 ---
 
-*Updated by BossMan when knowledge reuse rules or tier policy change.*
+## Obsolete Content Retirement
+
+When a knowledge file becomes stale:
+1. Move to `~/.hermes/knowledge/ARCHIVED/` with date
+2. Add note: `ARCHIVED YYYY-MM-DD — superset replaced by [new file]`
+3. Never delete — archived content may be needed for audit
+
+---
+
+## Knowledge Quality Rules
+
+- **Canonical files are minimal** — don't blob, use pointers
+- **One topic per LEARNED_*.md** — `LEARNED_BINANCE.md`, `LEARNED_BAKERY.md`, etc.
+- **Obsidian notes are detailed** — these are the SOPs and post-mortems
+- **GitHub commits are atomic** — one logical change per commit
+- **Memory is lean** — preferences and corrections only, <2,000 chars
