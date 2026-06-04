@@ -25,7 +25,7 @@ This document defines Hermes as the **primary control plane** for Marcelo's oper
 ```
 Marcelo (human, decision authority)
     ↓
-Hermes — BossMan profile (primary orchestrator, MiniMax 2.7)
+Hermes — BossMan profile (primary orchestrator; M3 + model stack)
     ↓
 ┌──────────────────────────────────────────────────────┐
 │  Hermes Kanban (bossman board)                     │
@@ -60,19 +60,52 @@ Hermes — BossMan profile (primary orchestrator, MiniMax 2.7)
 
 ---
 
-## Model Stack Policy
+## Model Stack Policy (Permanent — 2026-06-03)
 
-|| Model | Role | When to Use |
-|-------|------|------------|
-| **MiniMax 2.7** | Primary brain — orchestrator, routing, creative expansion, second-pass ideas | Everything except SquarePayouts |
-| **DeepSeek** | Deep reasoning, technical validation, edge-case analysis, crypto logic, cycle comparison | Low-cost backup, all projects |
-| **OpenAI** | Synthesis, product framing, operational writing, summarization | Clean production output, all projects |
-| **Claude** | Architecture planning, workflow design, structured kanban planning, prompt/agent design | High-stakes review, all models conflict |
-| **Perplexity** | Research, Deep Research, web reasoning, process analysis, crypto research, verification | Browser/Brave QA path |
+BossMan is a single orchestrator running on a stack of specialized models. Each model has one sharp role; BossMan picks which one writes the artifact. This replaces all earlier "MiniMax 2.7 primary brain" framing. Full policy in `~/.hermes/AGENTS.md` under **Model Routing** and `~/.hermes/knowledge/ROUTING-RULES.md`.
+
+| Model | Role | When to use |
+|---|---|---|
+| **Perplexity Search (Pro)** | First-step research, current docs, gotchas | Step 1 of every non-trivial build or troubleshooting. |
+| **M3 (MiniMax M3)** | Thinking and planning brain, orchestrator, Kanban card author | Step 2 (design) + Step 3 routing/architecture. Default for routine work. |
+| **DeepSeek** | Heavy coding, complex logic, debugging, edge cases | Primary builder for complex or critical backend logic, data, or debugging. |
+| **Llama (Ollama local)** | Bulk transforms, scaffolding, refactors, test generation, cleanup | Step 4 harden and clean up. Preferred for high-token grinding. |
+| **OpenAI** | Production finisher, user-facing copy | Primary builder when output is user-facing or high-risk. Final polish only. |
+| **Claude** | Long-form docs, runbooks, multi-page explanations | Step 5 only — after code is stable. |
+
+### Default Build Flow (every new project or major feature)
+
+1. **Research** — Perplexity Search pulls current docs and gotchas. Link sources into the main project card.
+2. **Design** — M3 designs architecture, defines components, breaks work into Kanban cards with acceptance criteria. Saved in the main project card.
+3. **Build** — For each build card, pick exactly one primary builder (DeepSeek / Llama / OpenAI) and note it under a `model_plan:` line in the card body.
+4. **Harden and clean up** — Llama handles bulk cleanup and test generation. DeepSeek or OpenAI only as a final sanity pass on critical components, never rewriting large chunks that are already acceptable.
+5. **Docs and handoff** — Claude writes long-form docs and runbooks only after the code is stable. Claude reads the final code, M3's design notes, and the acceptance criteria, then produces concise but complete docs.
+
+### Multi-model per card — controlled
+
+- Do not use more than two models actively writing to the same card unless a handoff is explicitly documented.
+- Example: `model_plan: DeepSeek writes initial code → Llama refactors and adds tests → OpenAI only polishes comments and README`.
+- Avoid multiple models making large, overlapping edits to the same code in the same pass. Prefer a clear sequence of ownership.
+
+### Token and cost policy
+
+- Prefer **Llama** and **M3** for high-token grinding and planning.
+- Use **DeepSeek**, **OpenAI**, and **Claude** only when their strengths matter.
+- **Fallback chain** when a paid model fails on quota or billing:
+  - Planning / reasoning: **M3 → Llama → DeepSeek**
+  - Code / debugging: **DeepSeek → Llama → OpenAI**
+  - Docs / specs: **Claude → OpenAI → M3**
+- On every card that uses a paid model, log: which model(s) were used, rough usage, and the location of key outputs.
 
 ### SquarePayouts Model Restriction (Permanent — 2026-05-20)
 
-**MiniMax 2.7 is BLOCKED for all SquarePayouts work.** Use Claude, DeepSeek, or OpenAI only. Applies to all subagents and delegated executors.
+- SquarePayouts is restricted to **Claude, DeepSeek, and OpenAI only**.
+- **M3 is BLOCKED** for all SquarePayouts work. Perplexity Search, Llama, and Claude remain approved for SquarePayouts research and review.
+
+### Legacy framing (deprecated, kept only for traceback)
+
+- "MiniMax 2.7 primary brain" and "MiniMax 2.7 BLOCKED for SquarePayouts" — replaced by the M3 / DeepSeek / Llama / OpenAI / Claude / Perplexity roles above.
+- `model.default = MiniMax-M2.7` → migrated to `MiniMax-M3` on 2026-06-03 (commit `c2e703b`). Existing references to "M2.7" elsewhere in the canon are descriptive legacy and will be cleaned on the next routine doc-sync pass.
 
 ### Detailed Tool Strategy → AGENTS.md
 
