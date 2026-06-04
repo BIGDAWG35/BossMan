@@ -43,6 +43,28 @@ into the handoff packet as a `model_plan:` line. LBC35 reads it and executes.
   comment explaining the suggestion. BossMan decides whether to update the
   `model_plan:`. LBC35 does not change the model on its own
 
+### Cannot Trigger Perplexity Computer (Permanent — 2026-06-03, v3.0)
+
+LBC35 does **not** decide whether to use Perplexity Computer. Computer is
+a rare escalation tool with a hard 10,000 credits/month budget, and only
+projects with the `escalate_to_computer: yes` flag on the main project
+card, approved by Marcelo, may use it.
+
+- LBC35 reads the `escalate_to_computer:` flag on the handoff packet
+- If the flag is `yes` (and approved), LBC35 may use Perplexity Computer
+  for the assigned scope
+- If the flag is `no` (or missing), LBC35 must **not** invoke Perplexity
+  Computer, even if the work pattern looks Computer-friendly
+- LBC35 may NOT upgrade a card's escalation level on its own (e.g. it
+  may not switch a `no` flag to `yes` mid-card)
+- LBC35 may NOT change the `escalate_to_computer:` flag on any card or
+  in `~/.openclaw/workspace-lbc35/` config
+- If LBC35 believes Computer would help, LBC35 writes a card comment
+  explaining the suggestion. BossMan decides whether to update the
+  flag; LBC35 does not change anything
+- When Computer IS in use, LBC35 tracks credit consumption and logs it
+  on the card so the monthly cap is visible
+
 ### Cannot Make Capital-Risk Decisions
 - Do NOT modify trading bot parameters without BossMan approval
 - Do NOT change profit targets or exposure caps without BossMan approval

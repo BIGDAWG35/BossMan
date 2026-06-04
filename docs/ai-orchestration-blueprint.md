@@ -81,37 +81,37 @@ Use Hermes Computer Use on the Perplexity Mac app for visual verification when n
 
 ---
 
-## Model Pool Roles (Permanent — 2026-06-03)
+## Model Pool Roles (Permanent — 2026-06-03, v3.0 "10/10")
 
 | Model | Role | Notes |
 |-------|------|-------|
 | **Perplexity Search (Pro)** | First-step research | Step 1 of every non-trivial build. Current docs, API references, gotchas. |
 | **M3 (MiniMax M3)** | Primary thinking and planning brain | Step 2 design + Step 3 routing/architecture. Default for routine work. BLOCKED for SquarePayouts. |
-| **DeepSeek** | Heavy-duty coder and reasoning engine | Primary builder for complex or critical backend logic, data, or debugging. |
+| **DeepSeek** | Heavy-duty coder, reasoning engine, **and Step 5 QA (red-team)** | Primary builder for complex or critical backend logic, data, or debugging. **Default Step-5 QA model.** |
 | **Llama (Ollama local)** | Cheap grinder | Step 4 harden and clean up. Bulk transforms, scaffolding, refactors, tests, cleanup. |
-| **OpenAI** | Production finisher | Primary builder when output is user-facing or high-risk. Final polish only. |
-| **Claude** | Long-form documentation writer | Step 5 only — after the code is stable. Runbooks, handoff docs. |
+| **OpenAI** | Production finisher | Primary builder when output is user-facing or high-risk. Final polish only. **Step 5 QA fallback** (after DeepSeek). |
+| **Claude** | Long-form documentation writer | **Step 6 only** — after the code is stable AND QA passes. Runbooks, handoff docs. |
 | **Perplexity Deep Research** | Multi-source synthesis on complex topics | When Step 1 needs deeper research than a single search. |
-| **Perplexity Computer** | Multi-step Mac/browser workflows | Credits justified only — complex cross-app investigations. |
+| **Perplexity Computer** | Multi-step Mac/browser workflows | **Rare escalation only.** 10,000 credits/month cap. `escalate_to_computer: yes` flag, Marcelo approval. NOT part of the everyday default path. |
 
 ### SquarePayouts Model Restriction (Permanent)
 
-**M3 is BLOCKED for all SquarePayouts work.** Use Claude, DeepSeek, or OpenAI only. Perplexity Search, Llama, and Claude remain approved for SquarePayouts research and review.
+**M3 is BLOCKED for all SquarePayouts work.** Use Claude, DeepSeek, or OpenAI only. Perplexity Search, Llama, and Claude remain approved for SquarePayouts research and review. Perplexity Computer requires the same `escalate_to_computer: yes` approval as everywhere else.
 
 ### Full policy
 
-The Default Build Flow (Perplexity → M3 → primary builder → Llama cleanup → Claude docs) and the multi-model rules are in:
+The 6-step Default Build Flow (Perplexity → M3 → primary builder → Llama cleanup → DeepSeek QA → Claude docs) and the multi-model rules are in:
 
 - `~/.hermes/AGENTS.md` — Model Routing (parent policy)
-- `~/.hermes/knowledge/ROUTING-RULES.md` — Default Build Flow rules
-- `~/.hermes/knowledge/MODEL-STACK-WORKFLOWS.md` — End-to-end worked example
-- `~/.hermes/knowledge/MODEL_ROUTING_WORKFLOW.md` — Cost tiers + Routing Ledger
+- `~/.hermes/knowledge/ROUTING-RULES.md` — Default Build Flow rules (v3.0 canonical)
+- `~/.hermes/knowledge/MODEL-STACK-WORKFLOWS.md` — End-to-end worked examples (v3.0)
+- `~/.hermes/knowledge/MODEL_ROUTING_WORKFLOW.md` — Cost tiers + Routing Ledger (v3.0)
 
 ---
 
-## Project Kickoff Protocol — Default Build Flow (Permanent — 2026-06-03)
+## Project Kickoff Protocol — Default Build Flow v3.0 "10/10" (Permanent — 2026-06-03)
 
-For every new project or significant work item, BossMan follows the **Default Build Flow** from `~/.hermes/knowledge/ROUTING-RULES.md`:
+For every new project or significant work item, BossMan follows the **6-step Default Build Flow v3.0** from `~/.hermes/knowledge/ROUTING-RULES.md`:
 
 **Step 1 — Research (Perplexity Search):**
 - Perplexity Search pulls current docs, best practices, API references, and gotchas
@@ -136,20 +136,50 @@ For every new project or significant work item, BossMan follows the **Default Bu
 - DeepSeek or OpenAI only as a final sanity pass on critical components
 - Do NOT rewrite large chunks that are already acceptable
 
-**Step 5 — Docs and handoff (Claude):**
-- Claude writes long-form docs and runbooks only after the code is stable
-- Claude reads the final code, M3's design notes, and the acceptance criteria
+**Step 5 — QA PASS (DeepSeek red-team) — new in v3.0:**
+- **Mandatory for critical cards** (money, PII, infra, trading, auth, public APIs)
+- Marcelo's standing rule: include Step 5 for high-impact or sensitive work unless explicitly told to skip
+- DeepSeek uses red-team mindset: edge cases, security, performance, failure modes
+- Default QA model: **DeepSeek**. Fallback: OpenAI → M3
+- Findings logged as card comments and/or QA sub-cards
+- Card's `qa_status` updated: `pending` → `passed` / `failed` / `logged`
+
+**Step 6 — Docs and handoff (Claude):**
+- Claude writes long-form docs and runbooks only after the code is stable AND QA has passed (or every QA issue is logged as a sub-card and tracked)
+- Claude reads the final code, M3's design notes, the acceptance criteria, and the QA findings
 - Output: concise but complete docs, saved to `~/.hermes/knowledge/`, Obsidian, and GitHub
 
-**After the 5 steps:**
+**After the 6 steps:**
 - Card → `done`
-- Self-audit: Was deliverable achieved? Was Marcelo's time used well? Follow-up needed?
+- Set metrics fields on the card:
+  - `build_passes:` (`1` / `2` / `3+`)
+  - `rewrite_scope:` (`none` / `minor` / `major`)
 - Update Routing Ledger with which model produced what
+- Self-audit: Was deliverable achieved? Was Marcelo's time used well? Follow-up needed?
+
+**Per-card fields (v3.0):**
+```yaml
+model_plan: ...
+qa_required: yes | no
+qa_model: DeepSeek | OpenAI | M3
+qa_status: pending | passed | failed | logged
+escalate_to_computer: yes | no
+escalate_to_computer_reason: ...
+build_passes: 1 | 2 | 3+
+rewrite_scope: none | minor | major
+```
 
 **Approval gates:** Marcelo reviews and approves:
 - The architecture from Step 2 (before any build cards are assigned)
 - The `model_plan:` field for each build card (before Step 3 starts)
-- The final docs from Step 5 (before marking the card done)
+- The `escalate_to_computer: yes` flag, when proposed (before Step 3 starts)
+- The final docs from Step 6 (before marking the card done)
+
+**Perplexity Computer — escalation (v3.0):**
+- Allowed only on projects matching the §4 patterns: (1) greenfield full-stack SaaS builds, (2) large cross-service refactors/migrations, (3) complex multi-domain research
+- Requires `escalate_to_computer: yes` flag on the main project card, approved by Marcelo
+- Hard cap: **10,000 credits/month.** BossMan pre-warns if a project would consume more than ~3,000
+- LBC35 does NOT trigger Perplexity Computer; it only follows the flag in the handoff packet
 
 ---
 

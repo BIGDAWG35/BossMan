@@ -60,32 +60,45 @@ Hermes — BossMan profile (primary orchestrator; M3 + model stack)
 
 ---
 
-## Model Stack Policy (Permanent — 2026-06-03)
+## Model Stack Policy (Permanent — 2026-06-03, v3.0 "10/10")
 
-BossMan is a single orchestrator running on a stack of specialized models. Each model has one sharp role; BossMan picks which one writes the artifact. This replaces all earlier "MiniMax 2.7 primary brain" framing. Full policy in `~/.hermes/AGENTS.md` under **Model Routing** and `~/.hermes/knowledge/ROUTING-RULES.md`.
+BossMan is a single orchestrator running on a stack of specialized models. Each model has one sharp role; BossMan picks which one writes the artifact. This replaces all earlier "MiniMax 2.7 primary brain" framing. Full policy in `~/.hermes/AGENTS.md` under **Model Routing** and the canonical `~/.hermes/knowledge/ROUTING-RULES.md` v3.0.
 
 | Model | Role | When to use |
 |---|---|---|
 | **Perplexity Search (Pro)** | First-step research, current docs, gotchas | Step 1 of every non-trivial build or troubleshooting. |
 | **M3 (MiniMax M3)** | Thinking and planning brain, orchestrator, Kanban card author | Step 2 (design) + Step 3 routing/architecture. Default for routine work. |
-| **DeepSeek** | Heavy coding, complex logic, debugging, edge cases | Primary builder for complex or critical backend logic, data, or debugging. |
+| **DeepSeek** | Heavy coding, complex logic, debugging, edge cases, **and Step 5 QA (red-team)** | Primary builder for complex or critical backend logic, data, or debugging. **Default QA model** — red-team mindset. |
 | **Llama (Ollama local)** | Bulk transforms, scaffolding, refactors, test generation, cleanup | Step 4 harden and clean up. Preferred for high-token grinding. |
-| **OpenAI** | Production finisher, user-facing copy | Primary builder when output is user-facing or high-risk. Final polish only. |
-| **Claude** | Long-form docs, runbooks, multi-page explanations | Step 5 only — after code is stable. |
+| **OpenAI** | Production finisher, user-facing copy | Primary builder when output is user-facing or high-risk. Final polish only. **Step 5 QA fallback.** |
+| **Claude** | Long-form docs, runbooks, multi-page explanations | Step 6 only — after code is stable AND QA passes. |
+| **Perplexity Computer** | **Rare escalation tool** — multi-step Mac/browser workflows | Only on projects with `escalate_to_computer: yes` flag, approved by Marcelo. Budget: 10,000 credits/month. NOT part of the everyday default path. |
 
-### Default Build Flow (every new project or major feature)
+### Default Build Flow (every new project or major feature) — 6 steps "10/10"
 
 1. **Research** — Perplexity Search pulls current docs and gotchas. Link sources into the main project card.
 2. **Design** — M3 designs architecture, defines components, breaks work into Kanban cards with acceptance criteria. Saved in the main project card.
 3. **Build** — For each build card, pick exactly one primary builder (DeepSeek / Llama / OpenAI) and note it under a `model_plan:` line in the card body.
 4. **Harden and clean up** — Llama handles bulk cleanup and test generation. DeepSeek or OpenAI only as a final sanity pass on critical components, never rewriting large chunks that are already acceptable.
-5. **Docs and handoff** — Claude writes long-form docs and runbooks only after the code is stable. Claude reads the final code, M3's design notes, and the acceptance criteria, then produces concise but complete docs.
+5. **QA PASS (DeepSeek red-team)** — mandatory for critical cards (money, PII, infra, trading, auth, public APIs). DeepSeek uses red-team mindset: edge cases, security, performance, failure modes. Findings logged as card comments and/or QA sub-cards. Default model: DeepSeek. Fallback: OpenAI → M3.
+6. **Docs and handoff** — Claude writes long-form docs and runbooks only after the code is stable AND QA has passed (or every QA issue is logged as a sub-card and tracked).
 
 ### Multi-model per card — controlled
 
 - Do not use more than two models actively writing to the same card unless a handoff is explicitly documented.
 - Example: `model_plan: DeepSeek writes initial code → Llama refactors and adds tests → OpenAI only polishes comments and README`.
 - Avoid multiple models making large, overlapping edits to the same code in the same pass. Prefer a clear sequence of ownership.
+
+### Per-card fields (v3.0)
+
+- `model_plan:` — primary builder + cleanup pass
+- `qa_required:` — `yes` for critical cards (mandatory), `no` otherwise
+- `qa_model:` — DeepSeek default, OpenAI fallback, M3 last resort
+- `qa_status:` — `pending` / `passed` / `failed` / `logged`
+- `escalate_to_computer:` — `yes` only after Marcelo approval
+- `escalate_to_computer_reason:` — only set if the flag is `yes`
+- `build_passes:` — `1` / `2` / `3+`, set when the card is closed
+- `rewrite_scope:` — `none` / `minor` / `major`, set when the card is closed
 
 ### Token and cost policy
 
@@ -95,16 +108,31 @@ BossMan is a single orchestrator running on a stack of specialized models. Each 
   - Planning / reasoning: **M3 → Llama → DeepSeek**
   - Code / debugging: **DeepSeek → Llama → OpenAI**
   - Docs / specs: **Claude → OpenAI → M3**
+  - QA / red-team: **DeepSeek → OpenAI → M3**
 - On every card that uses a paid model, log: which model(s) were used, rough usage, and the location of key outputs.
+
+### Light build metrics (v3.0)
+
+- Every build card sets `build_passes:` and `rewrite_scope:` when closed.
+- Monthly review: one comment on the bossman board (or a small report at `~/.hermes/knowledge/BUILD_METRICS_<YYYY-MM>.md`) summarizing 1-pass vs 2/3+ pass counts, cleanest `model_plan:` patterns, noisiest patterns, and any canon-change proposals.
+- Metrics feed back into the flow — when a pattern is clear, BossMan proposes a flow change and updates the canon with Marcelo's approval.
+
+### Perplexity Computer — rare escalation (v3.0)
+
+- **NOT part of the everyday default path.** Used only on projects with `escalate_to_computer: yes` approved by Marcelo.
+- Allowed only on: (1) greenfield full-stack SaaS builds, (2) large cross-service refactors/migrations, (3) complex multi-domain research.
+- Hard cap: **10,000 credits/month.** BossMan pre-warns Marcelo if a project would consume more than ~3,000 credits.
+- When the cap is reached, BossMan stops using Computer and falls back to the local stack (or waits for Marcelo's override).
+- LBC35 does not trigger Perplexity Computer; it only follows the flag in the handoff packet.
 
 ### SquarePayouts Model Restriction (Permanent — 2026-05-20)
 
 - SquarePayouts is restricted to **Claude, DeepSeek, and OpenAI only**.
-- **M3 is BLOCKED** for all SquarePayouts work. Perplexity Search, Llama, and Claude remain approved for SquarePayouts research and review.
+- **M3 is BLOCKED** for all SquarePayouts work. Perplexity Search, Llama, and Claude remain approved for SquarePayouts research and review. Perplexity Computer requires the same `escalate_to_computer: yes` approval as everywhere else.
 
 ### Legacy framing (deprecated, kept only for traceback)
 
-- "MiniMax 2.7 primary brain" and "MiniMax 2.7 BLOCKED for SquarePayouts" — replaced by the M3 / DeepSeek / Llama / OpenAI / Claude / Perplexity roles above.
+- "MiniMax 2.7 primary brain" and "MiniMax 2.7 BLOCKED for SquarePayouts" — replaced by the M3 / DeepSeek / Llama / OpenAI / Claude / Perplexity / Perplexity Computer roles above.
 - `model.default = MiniMax-M2.7` → migrated to `MiniMax-M3` on 2026-06-03 (commit `c2e703b`). Existing references to "M2.7" elsewhere in the canon are descriptive legacy and will be cleaned on the next routine doc-sync pass.
 
 ### Detailed Tool Strategy → AGENTS.md
