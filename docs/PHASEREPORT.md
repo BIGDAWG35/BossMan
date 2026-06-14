@@ -220,3 +220,50 @@ Then:
 **Skill in effect:** `~/.hermes/skills/curriculum-auto-advance/SKILL.md`
 
 **Reference:** `~/.hermes/knowledge/LEARNED_CRYPTO_INTELLIGENCE.md` is the canonical destination for new lessons; weekly review template (in project folder) defines the threshold (would this still be true in 6 months?) for durable rule vs stage-section lesson.
+
+---
+
+## 2026-06-13 — Crypto weekly review workflow (on-demand) (G)
+
+**Scope:** Per Marcelo 2026-06-13 directive — drive weekly crypto learning reviews through CSDAWGBOT (DeepSeek + OpenAI) to improve Binance bot intel.
+
+**Decision:** Built **on-demand**, not cron. Reasoning: the Cron no-spam rule (2026-06-12) and 3-bucket escalation rule (2026-06-09) both require explicit approval for new crons + recurring Telegram pinging + paid model calls. Marcelo didn't respond to the choice prompt, so I took the lowest-risk path: build the artifacts and trigger manually.
+
+**What was built (no approval required, all on-demand artifacts):**
+
+1. **Skill:** `~/.hermes/skills/crypto-weekly-review/SKILL.md` (~6.3 KB) — defines the full workflow: read context, compose 3-5 questions for Marcelo, call DeepSeek + OpenAI for 3-5 CSDAWGBOT research proposals, create linked kanban tasks, branch on PAPER vs LIVE mode, write brief to `weekly-reviews/`, commit + push.
+
+2. **Question templates:** `~/.hermes/skills/crypto-weekly-review/references/question-templates.md` (~5.2 KB) — 6 sections (A-F) for Marcelo questions, prompt template for CSDAWGBOT, mode-aware branching table, kanban task creation rules.
+
+3. **Detector script:** `~/.hermes/scripts/crypto-review-detect.sh` (~900 B) — recognizes `/review`, `crypto review`, `stage N review`, `weekly review`, `stage-N review`, `1.1 review` as review commands. 7/7 test cases pass.
+
+4. **Intake gate update:** `~/.hermes/scripts/telegram-intake-gate.py` — added `command_kind: crypto-weekly-review` body tag for review commands. 6/6 review patterns match, 4/4 non-review patterns still classify correctly.
+
+5. **Project updates:**
+   - `~/Obsidian/Hermes/40_Projects/Active/PROJ-2026-06_crypto-trading-intelligence/PROJ-Overview.md` — references `crypto-weekly-review` and `curriculum-auto-advance` skills
+   - `~/Obsidian/Hermes/40_Projects/Active/PROJ-2026-06_crypto-trading-intelligence/weekly-reviews/crypto-review-2026-06-13.md` — example first-run brief (~6.1 KB)
+   - `weekly-reviews/` folder created
+
+6. **BossMan repo:** pushed 2 commits — `6126db9` (skill + overview) and `866b096` (example brief)
+
+**What was NOT built (awaits Marcelo approval):**
+
+- ❌ No new cron. Cron creation requires explicit approval per no-spam rule.
+- ❌ No automatic Telegram ping. Default `deliver: local` for any future cron.
+- ❌ No automatic model calls. Each `/review` triggers a single LLM call to DeepSeek + OpenAI for CSDAWGBOT proposals; this is what Marcelo requested.
+
+**Mode awareness built in:**
+- PAPER (current default): questions focus on learning, regime framework, intel layer improvements
+- LIVE (only after two-gate per L-CRYPTO-10): questions pivot to strategy refinement + risk rules
+- L-CRYPTO-03 (advisory-only) is enforced in both modes
+- L-CRYPTO-10 (two-gate) gates any exit from PAPER
+
+**Cost when models ARE called:**
+- DeepSeek: ~$0.001 per review (small model, 1-2k tokens)
+- OpenAI: ~$0.01 per review (medium, fallback)
+- ~$0.50/year total if used weekly
+
+**Open follow-up (when Marcelo is ready):**
+- Promote `/review` to a weekly cron? (Default schedule: Sunday 6pm PT)
+- Default `deliver: local` (writes brief) or `deliver: telegram` (pings summary)?
+- 3-month review: did Marcelo trigger `/review` consistently? If yes, cron promotion is justified per the no-spam rule's "narrow wall-clock" criterion.
