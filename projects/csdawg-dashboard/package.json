@@ -1,0 +1,12 @@
+{
+  "name": "csdawg-dashboard",
+  "version": "1.0.0",
+  "description": "CSDAWG Operator Dashboard — read-only intel cockpit",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}

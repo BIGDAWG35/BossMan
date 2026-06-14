@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trading Control</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0f1117; color: #e2e8f0; min-height: 100vh; padding: 24px; }
+    .container { max-width: 1100px; margin: 0 auto; }
+    header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; }
+    h1 { font-size: 24px; font-weight: 700; color: #f1f5f9; }
+    .updated { font-size: 12px; color: #64748b; }
+    .badge-count { display: inline-flex; gap: 8px; margin-bottom: 24px; }
+    .badge { padding: 4px 12px; border-radius: 12px; font-size: 13px; font-weight: 600; }
+    .badge-ok { background: #052e16; color: #4ade80; }
+    .badge-warn { background: #1c1400; color: #fbbf24; }
+    .badge-down { background: #2d0000; color: #f87171; }
+    h2 { font-size: 14px; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; margin: 28px 0 12px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
+    .card { background: #1a1d2e; border: 1px solid #2d2f45; border-radius: 10px; padding: 16px; }
+    .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+    .card-name { font-size: 13px; font-weight: 600; color: #e2e8f0; }
+    .card-port { font-size: 11px; color: #475569; font-family: monospace; }
+    .card-status { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 8px; }
+    .status-ok { background: #052e16; color: #4ade80; }
+    .status-warn { background: #1c1400; color: #fbbf24; }
+    .status-down { background: #2d0000; color: #f87171; }
+    .card-meta { font-size: 11px; color: #475569; line-height: 1.6; }
+    .card-meta span { color: #94a3b8; font-family: monospace; }
+    .card-note { font-size: 11px; color: #fbbf24; margin-top: 6px; font-style: italic; }
+    .portfolio-value { font-size: 36px; font-weight: 700; color: #f1f5f9; margin-bottom: 4px; }
+    .portfolio-sub { font-size: 12px; color: #64748b; margin-bottom: 20px; }
+    table { width: 100%; border-collapse: collapse; }
+    th { text-align: left; font-size: 11px; color: #475569; padding: 6px 12px; border-bottom: 1px solid #2d2f45; }
+    td { font-size: 13px; padding: 8px 12px; border-bottom: 1px solid #1a1d2e; }
+    tr:last-child td { border-bottom: none; }
+    .mono { font-family: monospace; }
+    .green { color: #4ade80; }
+    .red { color: #f87171; }
+    .yellow { color: #fbbf24; }
+    .alerts-list { display: flex; flex-direction: column; gap: 8px; }
+    .alert-item { background: #1a1d2e; border-left: 3px solid #fbbf24; border-radius: 0 6px 6px 0; padding: 10px 14px; font-size: 12px; }
+    .alert-severity { font-weight: 700; text-transform: uppercase; font-size: 10px; margin-bottom: 2px; }
+    .alert-sev-warn { color: #fbbf24; }
+    .alert-sev-error { color: #f87171; }
+    .alert-sev-critical { color: #f87171; }
+    .alert-sev-info { color: #60a5fa; }
+    .alert-service { color: #64748b; font-family: monospace; font-size: 11px; }
+    .no-data { color: #475569; font-size: 13px; font-style: italic; padding: 16px 0; }
+    .footer { margin-top: 40px; text-align: center; font-size: 11px; color: #334155; }
+  </style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>Trading Control</h1>
+    <span class="updated" id="updated">Loading...</span>
+  </header>
+
+  <div class="badge-count" id="summary-badges"></div>
+
+  <h2>Portfolio</h2>
+  <div class="card" style="max-width: 400px;">
+    <div class="portfolio-value" id="total-value">—</div>
+    <div class="portfolio-sub">Total across exchanges</div>
+    <table id="exchange-table">
+      <thead><tr><th>Exchange</th><th>Balance</th><th>Currency</th></tr></thead>
+      <tbody id="exchange-body"></tbody>
+    </table>
+  </div>
+
+  <h2>Services</h2>
+  <div class="grid-3" id="services-grid"></div>
+
+  <h2>Alerts</h2>
+  <div class="alerts-list" id="alerts-list"><div class="no-data">No alerts</div></div>
+
+  <h2>Trades</h2>
+  <div id="trades-section">
+    <table>
+      <thead><tr><th>Time</th><th>Pair</th><th>Side</th><th>Price</th><th>P&L</th><th>Exchange</th></tr></thead>
+      <tbody id="trades-body"><tr><td colspan="6" class="no-data">No recent trades</td></tr></tbody>
+    </table>
+  </div>
+
+  <div class="footer">Auto-refreshes every 30s &bull; trading-control v1.0</div>
+</div>
+
+<script>
+const POLL_INTERVAL = 30000;
+let healthCache = null;
+let summaryCache = null;
+let eventsCache = null;
+
+function statusClass(s) {
+  return s === 'ok' ? 'status-ok' : s === 'warn' ? 'status-warn' : 'status-down';
+}
+function badgeClass(s) {
+  return s === 'ok' ? 'badge-ok' : s === 'warn' ? 'badge-warn' : 'badge-down';
+}
+
+function renderSummaryBadges(summary) {
+  const el = document.getElementById('summary-badges');
+  el.innerHTML = `
+    <span class="badge badge-ok">${summary.ok} ok</span>
+    <span class="badge badge-warn">${summary.warn} warn</span>
+    <span class="badge badge-down">${summary.down} down</span>
+  `;
+}
+
+function renderPortfolio(summary) {
+  document.getElementById('total-value').textContent =
+    '$' + (summary.portfolio.total_value_usd || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  const tbody = document.getElementById('exchange-body');
+  tbody.innerHTML = summary.portfolio.exchanges.map(ex =>
+    `<tr><td>${ex.exchange}</td><td class="mono ${ex.balance_usd > 0 ? 'green' : ''}">$${ex.balance_usd.toFixed(2)}</td><td>${ex.currency}</td></tr>`
+  ).join('');
+}
+
+function renderServices(health) {
+  const grid = document.getElementById('services-grid');
+  grid.innerHTML = health.services.map(svc => `
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-name">${svc.service.replace(/_/g, ' ')}</div>
+          <div class="card-port">:${svc.port}</div>
+        </div>
+        <span class="card-status ${statusClass(svc.status)}">${svc.status}</span>
+      </div>
+      <div class="card-meta">
+        PID: <span>${svc.pid || '—'}</span><br>
+        Restarts: <span class="${svc.restarts > 10 ? 'yellow' : ''}">${svc.restarts ?? '—'}</span><br>
+        Uptime: <span>${svc.uptime_seconds ? fmtDur(svc.uptime_seconds) : '—'}</span>
+      </div>
+      ${svc.note ? `<div class="card-note">${svc.note}</div>` : ''}
+    </div>
+  `).join('');
+}
+
+function renderAlerts(events) {
+  const list = document.getElementById('alerts-list');
+  if (!events.alerts || events.alerts.length === 0) {
+    list.innerHTML = '<div class="no-data">No alerts</div>';
+    return;
+  }
+  list.innerHTML = events.alerts.map(a => `
+    <div class="alert-item">
+      <div class="alert-severity alert-sev-${a.severity}">${a.severity}</div>
+      <div class="alert-service">${a.service}</div>
+      <div>${a.message}</div>
+    </div>
+  `).join('');
+}
+
+function renderTrades(events) {
+  const tbody = document.getElementById('trades-body');
+  if (!events.trades || events.trades.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="6" class="no-data">No recent trades</td></tr>';
+    return;
+  }
+  tbody.innerHTML = events.trades.slice(0, 10).map(t => `
+    <tr>
+      <td class="mono">${fmtTime(t.time)}</td>
+      <td class="mono">${t.pair}</td>
+      <td class="${t.side === 'BUY' || t.side === 'OPEN' ? 'green' : t.side === 'SELL' || t.side === 'CLOSE' ? 'red' : ''}">${t.side}</td>
+      <td class="mono">${t.price ? '$' + t.price.toFixed(2) : '—'}</td>
+      <td class="mono ${t.pnl_usd > 0 ? 'green' : t.pnl_usd < 0 ? 'red' : ''}">${t.pnl_usd != null ? '$' + t.pnl_usd.toFixed(2) : '—'}</td>
+      <td>${t.exchange}</td>
+    </tr>
+  `).join('');
+}
+
+function fmtTime(iso) {
+  if (!iso) return '—';
+  const d = new Date(iso);
+  return d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
+}
+
+function fmtDur(seconds) {
+  if (!seconds) return '—';
+  const h = Math.floor(seconds / 3600);
+  const m = Math.floor((seconds % 3600) / 60);
+  return h > 0 ? `${h}h ${m}m` : `${m}m`;
+}
+
+async function poll() {
+  try {
+    const [healthRes, summaryRes, eventsRes] = await Promise.all([
+      fetch('/api/health').then(r => r.json()),
+      fetch('/api/summary').then(r => r.json()),
+      fetch('/api/events').then(r => r.json()),
+    ]);
+    healthCache = healthRes;
+    summaryCache = summaryRes;
+    eventsCache = eventsRes;
+
+    document.getElementById('updated').textContent = 'Updated ' + new Date().toLocaleTimeString();
+    renderSummaryBadges(healthRes.summary);
+    renderPortfolio(summaryRes);
+    renderServices(healthRes);
+    renderAlerts(eventsRes);
+    renderTrades(eventsRes);
+  } catch (e) {
+    document.getElementById('updated').textContent = 'Error: ' + e.message;
+  }
+}
+
+poll();
+setInterval(poll, POLL_INTERVAL);
+</script>
+</body>
+</html>
