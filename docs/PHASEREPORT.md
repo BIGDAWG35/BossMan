@@ -157,3 +157,19 @@ Then:
 **Open follow-up:** Marcelo to pick the planned synonym for `t_ec23a194` (recommended: `ready` — in queue, not started; or `scheduled` if there's a planned start time).
 
 **Reference:** `LEARNED_CRYPTO_INTELLIGENCE.md` (12 rules) + `weekly-review-template.md` (the review loop).
+
+---
+
+## 2026-06-13 — t_ec23a194 status resolved (D)
+
+**Scope:** Per Marcelo's clarified directive, the Market Regime Identification Framework card is now `ready` (in queue, not started) instead of `blocked`.
+
+**Change:** `t_ec23a194` status `blocked` → `ready`. Body updated with the new status note and the Stage 1 contribution context.
+
+**All other prior crypto-system state unchanged:**
+- /goal: running
+- Curriculum: running
+- 4 Stage 1 tasks: todo (awaiting start)
+- 4 other blocked cards: untouched (still blocked)
+- Weekly review template: already wired to LEARNED_CRYPTO_INTELLIGENCE.md
+- CLAW-Backup: still cold storage with harvest notice (no further move attempts)
