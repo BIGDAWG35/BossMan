@@ -74,3 +74,10 @@ Weekly cron (`crypto-intel-weekly.js`) pulls BTC + sector + funding + fear-greed
 - `csdawg-dashboard` (8150) — read-only intel API
 - `crypto-intel-weekly.js` cron — weekly intelligence generator
 - `csdawg-prediction-grader.js` — weekly prediction outcome tracker
+- `crypto-weekly-review` skill (`~/.hermes/skills/crypto-weekly-review/`) — on-demand weekly Learning & Intel Review (trigger: `/review` or "crypto review" via Telegram)
+
+## Workflow skills
+
+- `crypto-weekly-review` (on-demand) — reads L-CRYPTO + latest intel, drafts 3-5 questions for Marcelo + 3-5 for CSDAWGBOT, creates linked kanban tasks, branches on PAPER vs LIVE
+- `curriculum-auto-advance` — when a Stage sub-task is done, move to done, harvest lessons, auto-advance next sibling
+- `pm2-health-check` — 5-min PM2 self-healing (separate, not crypto-specific)
