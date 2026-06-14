@@ -8,6 +8,25 @@ This file encodes patterns that survive individual projects. It is referenced by
 
 ---
 
+## How to add new rules (L-CRYPTO-13+)
+
+The weekly trading-learning review (`weekly-review-template.md` in the project folder) **must** use this file as its reference. When a new lesson is learned:
+
+1. **Threshold test:** Would this lesson still be true in 6 months? If yes, it's a rule. If no, it's a journal entry in `trade-journal/` instead.
+2. **Append here** with a new L-CRYPTO-NN number, following the existing format (rule, source, why, verification, anti-pattern where applicable).
+3. **Mirror to project folder:** add the same rule to `LEARNED_CRYPTO_INTELLIGENCE.md` in `~/Obsidian/Hermes/40_Projects/Active/PROJ-2026-06_crypto-trading-intelligence/`.
+4. **Sync to GitHub backup:** commit to `~/Repos/BossMan/docs/crypto-trading-intelligence/LEARNED_CRYPTO_INTELLIGENCE.md`.
+5. **Reference the goal:** tag the new rule with `goal_id: t_goal_crypto_swing_trader_20260613` if it advances the curriculum.
+
+**Current goal:** `t_goal_crypto_swing_trader_20260613` — Become a competent crypto swing trader (12 months).
+**Active curriculum stage:** Stage 1 — Chart literacy (4 sub-tasks, all `ready`).
+
+## Current L-CRYPTO rule count
+
+12 (L-CRYPTO-01 through L-CRYPTO-12).
+
+---
+
 ## L-CRYPTO-01: The live engine is canonical, not the design docs
 
 `~/.hermes/knowledge/crypto-intel/` is the source of truth for **what crypto intelligence Marcelo's systems are doing right now**. The 12 design docs harvested from `~/Desktop/CLAW-Backup/` describe **how the engine was designed**, but they are frozen at 2026-05-20. The engine has been running and evolving since.
