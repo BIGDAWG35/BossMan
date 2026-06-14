@@ -191,3 +191,32 @@ Then:
 3. `t_crypto_learn_s1_02_bull_bear_structure` → running (auto-advance)
 
 **Skill created:** `curriculum-auto-advance` — future sessions will follow the rule without re-explanation.
+
+---
+
+## 2026-06-13 — Standing crypto learning instructions locked (F)
+
+**Scope:** Per Marcelo 2026-06-13 master directive.
+
+**Codified:**
+
+1. **Standing state:**
+   - `/goal` `t_goal_crypto_swing_trader_20260613` — running
+   - Curriculum `t_e53da070` — running
+   - Stage 1.1 `t_crypto_learn_s1_01_chart_basics` — running
+   - Stage 1.2–1.4 — todo
+
+2. **`t_ec23a194` (Market Regime Identification Framework) → `ready`**
+   - Body text unchanged (per directive "do not change the body text")
+   - This re-applies the previous turn's intent after a status reversion (likely parallel-session drift)
+
+3. **Standing trigger:** when Marcelo says "chart basics is done" (or similar), apply the `curriculum-auto-advance` skill:
+   - Mark 1.1 done
+   - Harvest lessons to `LEARNED_CRYPTO_INTELLIGENCE.md` under "Stage 1 – Chart Basics" section, tagged `[TRADING][CRYPTO][CSDAWG]`
+   - Mirror to Obsidian project folder + BossMan repo + commit + push to origin
+   - Auto-advance 1.2 from todo to running
+   - Confirm back to Marcelo which card is now running
+
+**Skill in effect:** `~/.hermes/skills/curriculum-auto-advance/SKILL.md`
+
+**Reference:** `~/.hermes/knowledge/LEARNED_CRYPTO_INTELLIGENCE.md` is the canonical destination for new lessons; weekly review template (in project folder) defines the threshold (would this still be true in 6 months?) for durable rule vs stage-section lesson.
