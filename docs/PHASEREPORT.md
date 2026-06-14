@@ -173,3 +173,21 @@ Then:
 - 4 other blocked cards: untouched (still blocked)
 - Weekly review template: already wired to LEARNED_CRYPTO_INTELLIGENCE.md
 - CLAW-Backup: still cold storage with harvest notice (no further move attempts)
+
+---
+
+## 2026-06-13 — Stage 1.1 chart basics started; auto-advance rule saved (E)
+
+**Scope:** Per Marcelo 2026-06-13 directive.
+
+**Codified:**
+- `t_crypto_learn_s1_01_chart_basics` (Stage 1.1): `todo` → **running**, started_at set
+- Auto-advance rule saved as a hermes skill: `~/.hermes/skills/curriculum-auto-advance/SKILL.md`
+  - When Marcelo says "done": move task to done, harvest lessons to LEARNED_CRYPTO_INTELLIGENCE.md (under "Stage 1 – Chart Basics" section, tagged [TRADING][CRYPTO][CSDAWG]), mirror to 3 storage layers, auto-advance next sibling to running
+
+**Workflow (when 1.1 done):**
+1. `t_crypto_learn_s1_01_chart_basics` → done
+2. Lessons appended to LEARNED_CRYPTO_INTELLIGENCE.md under "Stage 1 – Chart Basics" section
+3. `t_crypto_learn_s1_02_bull_bear_structure` → running (auto-advance)
+
+**Skill created:** `curriculum-auto-advance` — future sessions will follow the rule without re-explanation.
