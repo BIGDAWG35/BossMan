@@ -124,3 +124,36 @@ Then:
 **Open follow-up:** Marcelo to triage the 6 blocked children. The actual strategic work for the crypto learning system lives in those cards.
 
 **Audit reference:** `~/.hermes/knowledge/CRYPTO_TRADING_KNOWLEDGE_AUDIT_2026-06-13.md` (24 KB)
+
+---
+
+## 2026-06-13 — Crypto learning system active (C)
+
+**Scope:** Per Marcelo 2026-06-13 directive, the crypto learning system went from audit-complete to actively running.
+
+**Codified:**
+- New /goal card: `t_goal_crypto_swing_trader_20260613` — Become a competent crypto swing trader (12 months, status=running)
+- `t_e53da070` (Crypto Education Curriculum — Modular Foundation): blocked → **running**, linked to goal
+- `t_ec23a194` (Market Regime Identification Framework): **awaiting planned→ready|scheduled decision** (planned is not in legal status set per SOUL.md § Kanban)
+- 4 new Stage 1 tasks created, all linked to goal + parent + epic:
+  - `t_crypto_learn_s1_01_chart_basics` — Candles, timeframes, volume
+  - `t_crypto_learn_s1_02_bull_bear_structure` — HH/HL, LH/LL, trend strength
+  - `t_crypto_learn_s1_03_support_resistance` — Horizontal, diagonal, key levels
+  - `t_crypto_learn_s1_04_moving_averages` — 50/200 MA, golden cross, death cross
+- `~/Obsidian/Hermes/40_Projects/Active/PROJ-2026-06_crypto-trading-intelligence/stage-1/INDEX.md` — Stage 1 plan + done criteria
+- `~/Obsidian/Hermes/40_Projects/Active/PROJ-2026-06_crypto-trading-intelligence/weekly-review-template.md` — Sunday evening review template (6 sections: engine check / chart study / curriculum progress / live systems / lessons learned / next week)
+- `~/Obsidian/Hermes/40_Projects/Active/PROJ-2026-06_crypto-trading-intelligence/trade-journal/README.md` — per-day tactical trade log
+- `LEARNED_CRYPTO_INTELLIGENCE.md` — added "How to add new rules (L-CRYPTO-13+)" section, with threshold test (would this still be true in 6 months?) and 3-way storage rule (Hermes knowledge + project folder + BossMan repo)
+- CLAW-Backup: still at `~/Desktop/CLAW-Backup/` as cold storage (7.8 MB, 141 files, harvest notice present). **No further move attempts** per Marcelo directive.
+
+**Kanban state:**
+- 1 new goal card (running)
+- 2 status updates (1 to running, 1 awaiting decision)
+- 4 new Stage 1 sub-tasks (all ready)
+- Total: 1 + 2 + 4 = 7 card operations
+
+**BossMan repo:** commit `834b139` — 3 files, 167 insertions, pushed to origin.
+
+**Open follow-up:** Marcelo to pick the planned synonym for `t_ec23a194` (recommended: `ready` — in queue, not started; or `scheduled` if there's a planned start time).
+
+**Reference:** `LEARNED_CRYPTO_INTELLIGENCE.md` (12 rules) + `weekly-review-template.md` (the review loop).
