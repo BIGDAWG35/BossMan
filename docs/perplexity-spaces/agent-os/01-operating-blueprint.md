@@ -25,7 +25,7 @@ This document defines Hermes as the **primary control plane** for Marcelo's oper
 ```
 Marcelo (human, decision authority)
     ↓
-Hermes — BossMan profile (primary orchestrator; M3 + model stack)
+Hermes — BossMan profile (primary orchestrator, MiniMax 2.7)
     ↓
 ┌──────────────────────────────────────────────────────┐
 │  Hermes Kanban (bossman board)                     │
@@ -60,80 +60,19 @@ Hermes — BossMan profile (primary orchestrator; M3 + model stack)
 
 ---
 
-## Model Stack Policy (Permanent — 2026-06-03, v3.0 "10/10")
+## Model Stack Policy
 
-BossMan is a single orchestrator running on a stack of specialized models. Each model has one sharp role; BossMan picks which one writes the artifact. This replaces all earlier "MiniMax 2.7 primary brain" framing. Full policy in `~/.hermes/AGENTS.md` under **Model Routing** and the canonical `~/.hermes/knowledge/ROUTING-RULES.md` v3.0.
-
-| Model | Role | When to use |
-|---|---|---|
-| **Perplexity Search (Pro)** | First-step research, current docs, gotchas | Step 1 of every non-trivial build or troubleshooting. |
-| **M3 (MiniMax M3)** | Thinking and planning brain, orchestrator, Kanban card author | Step 2 (design) + Step 3 routing/architecture. Default for routine work. |
-| **DeepSeek** | Heavy coding, complex logic, debugging, edge cases, **and Step 5 QA (red-team)** | Primary builder for complex or critical backend logic, data, or debugging. **Default QA model** — red-team mindset. |
-| **Llama (Ollama local)** | Bulk transforms, scaffolding, refactors, test generation, cleanup | Step 4 harden and clean up. Preferred for high-token grinding. |
-| **OpenAI** | Production finisher, user-facing copy | Primary builder when output is user-facing or high-risk. Final polish only. **Step 5 QA fallback.** |
-| **Claude** | Long-form docs, runbooks, multi-page explanations | Step 6 only — after code is stable AND QA passes. |
-| **Perplexity Computer** | **Rare escalation tool** — multi-step Mac/browser workflows | Only on projects with `escalate_to_computer: yes` flag, approved by Marcelo. Budget: 10,000 credits/month. NOT part of the everyday default path. |
-
-### Default Build Flow (every new project or major feature) — 6 steps "10/10"
-
-1. **Research** — Perplexity Search pulls current docs and gotchas. Link sources into the main project card.
-2. **Design** — M3 designs architecture, defines components, breaks work into Kanban cards with acceptance criteria. Saved in the main project card.
-3. **Build** — For each build card, pick exactly one primary builder (DeepSeek / Llama / OpenAI) and note it under a `model_plan:` line in the card body.
-4. **Harden and clean up** — Llama handles bulk cleanup and test generation. DeepSeek or OpenAI only as a final sanity pass on critical components, never rewriting large chunks that are already acceptable.
-5. **QA PASS (DeepSeek red-team)** — mandatory for critical cards (money, PII, infra, trading, auth, public APIs). DeepSeek uses red-team mindset: edge cases, security, performance, failure modes. Findings logged as card comments and/or QA sub-cards. Default model: DeepSeek. Fallback: OpenAI → M3.
-6. **Docs and handoff** — Claude writes long-form docs and runbooks only after the code is stable AND QA has passed (or every QA issue is logged as a sub-card and tracked).
-
-### Multi-model per card — controlled
-
-- Do not use more than two models actively writing to the same card unless a handoff is explicitly documented.
-- Example: `model_plan: DeepSeek writes initial code → Llama refactors and adds tests → OpenAI only polishes comments and README`.
-- Avoid multiple models making large, overlapping edits to the same code in the same pass. Prefer a clear sequence of ownership.
-
-### Per-card fields (v3.0)
-
-- `model_plan:` — primary builder + cleanup pass
-- `qa_required:` — `yes` for critical cards (mandatory), `no` otherwise
-- `qa_model:` — DeepSeek default, OpenAI fallback, M3 last resort
-- `qa_status:` — `pending` / `passed` / `failed` / `logged`
-- `escalate_to_computer:` — `yes` only after Marcelo approval
-- `escalate_to_computer_reason:` — only set if the flag is `yes`
-- `build_passes:` — `1` / `2` / `3+`, set when the card is closed
-- `rewrite_scope:` — `none` / `minor` / `major`, set when the card is closed
-
-### Token and cost policy
-
-- Prefer **Llama** and **M3** for high-token grinding and planning.
-- Use **DeepSeek**, **OpenAI**, and **Claude** only when their strengths matter.
-- **Fallback chain** when a paid model fails on quota or billing:
-  - Planning / reasoning: **M3 → Llama → DeepSeek**
-  - Code / debugging: **DeepSeek → Llama → OpenAI**
-  - Docs / specs: **Claude → OpenAI → M3**
-  - QA / red-team: **DeepSeek → OpenAI → M3**
-- On every card that uses a paid model, log: which model(s) were used, rough usage, and the location of key outputs.
-
-### Light build metrics (v3.0)
-
-- Every build card sets `build_passes:` and `rewrite_scope:` when closed.
-- Monthly review: one comment on the bossman board (or a small report at `~/.hermes/knowledge/BUILD_METRICS_<YYYY-MM>.md`) summarizing 1-pass vs 2/3+ pass counts, cleanest `model_plan:` patterns, noisiest patterns, and any canon-change proposals.
-- Metrics feed back into the flow — when a pattern is clear, BossMan proposes a flow change and updates the canon with Marcelo's approval.
-
-### Perplexity Computer — rare escalation (v3.0)
-
-- **NOT part of the everyday default path.** Used only on projects with `escalate_to_computer: yes` approved by Marcelo.
-- Allowed only on: (1) greenfield full-stack SaaS builds, (2) large cross-service refactors/migrations, (3) complex multi-domain research.
-- Hard cap: **10,000 credits/month.** BossMan pre-warns Marcelo if a project would consume more than ~3,000 credits.
-- When the cap is reached, BossMan stops using Computer and falls back to the local stack (or waits for Marcelo's override).
-- LBC35 does not trigger Perplexity Computer; it only follows the flag in the handoff packet.
+|| Model | Role | When to Use |
+|-------|------|------------|
+| **MiniMax 2.7** | Primary brain — orchestrator, routing, creative expansion, second-pass ideas | Everything except SquarePayouts |
+| **DeepSeek** | Deep reasoning, technical validation, edge-case analysis, crypto logic, cycle comparison | Low-cost backup, all projects |
+| **OpenAI** | Synthesis, product framing, operational writing, summarization | Clean production output, all projects |
+| **Claude** | Architecture planning, workflow design, structured kanban planning, prompt/agent design | High-stakes review, all models conflict |
+| **Perplexity** | Research, Deep Research, web reasoning, process analysis, crypto research, verification | Browser/Brave QA path |
 
 ### SquarePayouts Model Restriction (Permanent — 2026-05-20)
 
-- SquarePayouts is restricted to **Claude, DeepSeek, and OpenAI only**.
-- **M3 is BLOCKED** for all SquarePayouts work. Perplexity Search, Llama, and Claude remain approved for SquarePayouts research and review. Perplexity Computer requires the same `escalate_to_computer: yes` approval as everywhere else.
-
-### Legacy framing (deprecated, kept only for traceback)
-
-- "MiniMax 2.7 primary brain" and "MiniMax 2.7 BLOCKED for SquarePayouts" — replaced by the M3 / DeepSeek / Llama / OpenAI / Claude / Perplexity / Perplexity Computer roles above.
-- `model.default = MiniMax-M2.7` → migrated to `MiniMax-M3` on 2026-06-03 (commit `c2e703b`). Existing references to "M2.7" elsewhere in the canon are descriptive legacy and will be cleaned on the next routine doc-sync pass.
+**MiniMax 2.7 is BLOCKED for all SquarePayouts work.** Use Claude, DeepSeek, or OpenAI only. Applies to all subagents and delegated executors.
 
 ### Detailed Tool Strategy → AGENTS.md
 
@@ -175,6 +114,48 @@ inbox → planned → running → client_testing → feedback_review → done
                  ↑
            (blocked ← awaiting_approval)
 ```
+
+---
+
+## Routing Ledger (Mandatory — Every AI Kanban Card)
+
+**Every Kanban card involving AI work MUST include a Routing Ledger in the card body.**
+
+```yaml
+## Routing Ledger
+work_type:           # new_build | existing_build | troubleshooting | audit | refactor
+primary_artifact:     # main repo/app/dashboard/prompt/service/doc being changed
+lead_model:          # primary model for this card (MiniMax|DeepSeek|Claude|OpenAI|Perplexity|Local)
+supporting_models:   # models/tools allowed to assist (comma-separated)
+review_models:       # models allowed to review/critique but NOT overwrite
+final_integrator:    # BossMan|builder|ops|trading|content — who merges canonical artifact
+cost_tier:           # 1|2|3|4|5
+last_model_used:     # [model] — last model that actually touched this artifact
+next_model_planned:  # [model] — next model expected to act (or "none")
+```
+
+**Rules:**
+- One owner per artifact per phase — only `lead_model` can modify the artifact
+- Reviewers may NOT overwrite — only comment/propose via card comments
+- No ad-hoc model use — every model touching this artifact must be named in the Ledger
+- All model activity logged — BossMan adds a card comment after each model activation:
+  ```
+  [MODEL USED]: [model] | [REASON]: [why chosen] | [ARTIFACT]: [file] | [OUTCOME]: [result] | [NEXT]: [handoff note]
+  ```
+
+**Three Blueprint Types:**
+
+| Type | Use For | Key Fields |
+|------|---------|-----------|
+| **Kickoff** | New projects/major builds | goal, deliverables, model_ownership_matrix, approval_gates, final_integrator |
+| **Continuation** | Existing builds + features | what_exists, what_is_changing, previous_owners, new_owners, handoff_rules |
+| **Triage** | Troubleshooting/debugging | bug_description, affected_artifacts, primary_troubleshooter, supporting_models, final_integrator |
+
+**Cost-aware escalation:**
+```
+Tier 1 (free) → Tier 2 (free local) → Tier 3 (MiniMax) → Tier 4 (DeepSeek/OpenAI/Claude) → Tier 5 (Perplexity Computer)
+```
+Always try lower tiers first. Tier 4/5 outputs MUST be saved to `~/.hermes/knowledge/` for reuse.
 
 ---
 
@@ -552,6 +533,215 @@ BossMan is already connected to Telegram. Send commands directly from your phone
 
 > Full command reference: `~/.hermes/knowledge/TELEGRAM_COMMANDS.md`
 
+---
+
+## File Delivery Workflow (Permanent — Default for All File Deliverables)
+
+**Applies to:** Every file-based deliverable — documents, PDFs, PowerPoints, spreadsheets, images, videos, audio, archives, reports, screenshots, and any other binary or document output.
+
+**A file is ONLY complete when ALL THREE are done:**
+1. ✅ Saved locally (source of truth)
+2. ✅ Sent successfully to Telegram as an attachment
+3. ✅ Logged on Kanban card with version + delivery status
+
+**Local path alone is NOT delivery. Telegram attachment alone is NOT delivery. Both + Kanban log = complete.**
+
+**The Kanban card CANNOT be marked Done unless Marcelo explicitly approves an exception.**
+
+### Kanban Card Fields (required for every file deliverable)
+
+- `request_summary`: what was asked for
+- `deliverable_type`: PDF / PPTX / XLSX / image / video / audio / doc / zip / other
+- `status`: Requested → In Progress → File Generated → Sent to Telegram → Waiting for Feedback → Revised → Approved / Blocked
+- `local_save_path`: absolute path on Mac mini
+- `telegram_delivery_status`: Pending | Sent | Failed
+- `revision_count`: v1, v2, v3…
+- `blockers_or_errors`: exact error if Telegram delivery failed
+
+### Caption Format (required on every Telegram file delivery)
+
+```
+[filename]
+[what it is]
+Version: v1 | draft | final
+Sent: YYYY-MM-DD HH:MM
+```
+
+### File Type Telegram Rules
+
+| File type | Telegram method |
+|---|---|
+| PDF, DOCX, PPTX, XLSX, ZIP, TXT | Document attachment |
+| Image (JPG, PNG, WebP) | Photo or document |
+| Video (MP4, MOV) | Video attachment |
+| Audio (MP3, OGG, M4A) | Audio or document |
+| Screenshot | Photo (preferred for preview) |
+
+### Telegram Delivery Failure → Blocked Protocol
+
+If Telegram delivery fails:
+1. Set Kanban card status → **Blocked**
+2. Record exact error in `blockers_or_errors`
+3. Report to Marcelo: Status, File, Local Path, Error reason
+4. Do NOT mark the card Done
+5. Retry once after diagnosing
+6. If persistent failure, escalate to Marcelo
+
+### Revision Protocol
+
+If Marcelo requests changes:
+1. Increment revision (v1 → v2 → v3)
+2. Set status → In Progress
+3. Regenerate → save locally
+4. Send revised file to Telegram as **new attachment**
+5. Update Kanban card with new version
+6. Caption: `Version: v2 (revised per feedback)`
+
+### Execution Handoff
+
+When work is delegated via Kanban:
+- BossMan creates/updates the card before delegation
+- Executor works within assigned scope, reports completion or blockers on the same card
+- BossMan verifies Telegram delivery before closing
+- LBC35 / OpenClaw executes within this workflow only — does not change workflow or mark cards Done on its own
+
+### Response Format (completion)
+
+```
+- Status: Sent to Telegram
+- File: [filename]
+- Local Path: [full path]
+- Telegram: Delivered successfully
+- Kanban: [card name or ID]
+- Version: [v1, v2, etc.]
+```
+
+### Response Format (failure)
+
+```
+- Status: Blocked
+- File: [filename]
+- Local Path: [full path]
+- Telegram: Failed
+- Error: [exact reason]
+- Kanban: [card name or ID]
+```
+
+### Clarify Before Execution
+
+Ask Marcelo to clarify if the request is ambiguous:
+- File format not specified (PDF vs DOCX?)
+- Purpose unclear (internal vs external client?)
+- Naming convention not defined
+
+### Skill Reference
+
+Codified as permanent skill: `~/.hermes/skills/file-delivery-workflow/SKILL.md`
+
+This workflow is the default for ALL file deliverables unless Marcelo explicitly says "don't send via Telegram."
+
+---
+
+## Perplexity-Assisted Planning Workflow
+
+**Applies to:** All projects and features that need research, specs, or architecture review before implementation.
+
+### Planning Layer
+
+**Perplexity Space "Agent OS — Marcelo's Hermes Orchestrator"** is the designated planning/spec layer for:
+- Hermes architecture discussions
+- Feature implementation planning
+- Research-backed spec development
+- Trade-off analysis before Marcelo commits
+
+### Decision Authority
+
+**Marcelo remains the decision authority.** He reviews Perplexity-generated specs and approves:
+- Major features and architecture changes
+- Execution plans and resource commitments
+- Go/no-go on delegated implementation
+
+Marcelo approves with a simple response: `A` (approve), `B` (change something), or `C` (not now).
+
+### BossMan Handoff After Approval
+
+After Marcelo approves via Telegram/Perplexity:
+1. BossMan reads the Perplexity-generated spec
+2. BossMan creates a Kanban card with the spec as the card body
+3. BossMan assigns the card to the appropriate profile (builder, ops, etc.)
+4. BossMan executes or delegates implementation
+5. BossMan reports completion back to Marcelo
+
+**BossMan only escalates back to Marcelo for:**
+- Blocker decisions that cannot be resolved autonomously
+- Architecture trade-offs with significant downstream impact
+- Final sign-off on completed work
+
+### Handoff Example
+
+```
+Marcelo (via Perplexity or Telegram):
+  "We should add TTS voice replies to BossMan Telegram"
+  
+Perplexity Space → generates spec:
+  - Triggers: /voice, "read this aloud"
+  - Provider: MiniMax TTS abstracted behind interface
+  - Text always sent; TTS failure = text only
+  - Implementation: extend send_message tool
+
+Marcelo reviews → approves via Telegram: "A"
+
+BossMan → Kanban:
+  hermes kanban create "Implement Telegram TTS replies" \
+    --body "$(cat <<'EOF'
+    ## Goal
+    Add optional TTS voice replies to BossMan Telegram chat.
+    
+    ## Triggers
+    - /voice
+    - "read this aloud"
+    - "say it"
+    
+    ## Behavior
+    - Default: text only
+    - Triggered: text + MiniMax TTS voice note
+    - TTS failure: text only, error logged
+    
+    ## Implementation
+    - Extend send_message tool with generate_tts flag
+    - Abstract TTS provider behind interface
+    - Update TELEGRAM_COMMANDS.md
+    
+    ## Constraints
+    - Text always present; never voice-only by default
+    - MiniMax as initial TTS provider
+    - Provider swappable via config
+    EOF
+    )" \
+    --assignee builder --priority 1 --board bossman
+
+BossMan replies to Marcelo:
+  ✅ Card created: t_xxxxxxxx
+  Assignee: builder
+  Priority: 1
+  [Spec summary]
+  Starting work.
+```
+
+### File References
+
+| Document | Path |
+|---------|------|
+| Perplexity-assisted workflow | `~/.hermes/knowledge/PERPLEXITY_BOSSMAN_HANDOFF.md` |
+| Telegram commands | `~/.hermes/knowledge/TELEGRAM_COMMANDS.md` |
+| This blueprint | `~/.hermes/knowledge/OPERATING_BLUEPRINT.md` |
+
+### Relationship to LBC35
+
+LBC35 remains a **delegated executor only**. Perplexity specs do NOT go directly to LBC35 — they go to BossMan, who creates the Kanban card and assigns work. LBC35 receives work exclusively via BossMan handoff packet. See `LBC35_SOUL_v2_delegated_executor.md` for constraints.
+
+> **This workflow does not weaken approval guardrails. Marcelo approves everything material. BossMan handles execution routing.**
+
 ### Perplexity & Spaces Tool Selection Policy
 
 When to use each tool:
@@ -611,4 +801,58 @@ Still requires explicit BossMan approval:
 - Retire dashboards
 - Modify Perplexity Spaces
 - Delete cards
+
+---
+
+## Travel OS — v1 Complete (2026-06-03)
+
+**What it is:** A trip management dashboard + Telegram reminder stack for Marcelo's personal travel. Built as a Next.js app (`travel-os-dashboard`) on port 3535, orchestrated via the BossMan Kanban board. All work in Phases 14–20 tracked on cards `t_305deb2e` (Phase 19) through `t_0a2472f2` (Phase 20).
+
+**Status:** v1 complete — all phases delivered. New work = new kanban card, not silent edits.
+
+---
+
+### Modules
+
+| Module | Purpose |
+|--------|---------|
+| `OverviewModule` | Portfolio health score (0–100), priority queue (P1–P6), trip timeline |
+| `UpcomingModule` | Pre-trip checklist: T-14 through T-1 actions, blocker status, days-to-departure |
+| `PastModule` | Past trip archive with settlement status, post-trip notes, repeat/skip tags |
+| `TripDetailsModule` | Per-trip details + Financial Closeout Panel (settle, archive, notes) |
+| `ResearchModule` | Hidden gems research layer — places, restaurants, activities sourced via Perplexity |
+| `ItineraryModule` | Day-by-day agenda builder: flight/stay/activity/meal/transport/compliance events |
+| `ExpensesModule` | Shared expense entry, greedy split algorithm, per-person net owed/paid, settlement ledger |
+| `BookingModule` | Flight/stay/transport/activity bookings with confirmation codes and status |
+| `SafetyModule` | Per-trip safety advisories with level indicators |
+| `ComplianceModule` | Destination-specific forms (FMM, Visitax, etc.) tracking |
+| `RemindersModule` | Trip-specific reminder configuration |
+| `TripControlCenter` | Primary trip selector + module router |
+
+**Reminder Stack:** `/api/travel-os/preview` → `scripts/process-trip-reminders.py` (Python) → Telegram broadcast to Marcelo. Supports modes: `any`, `t-14`, `t-7`, `t-3`, `t-1`, `post-trip`, `group`. Strictly non-destructive (no cron mutation, no live Telegram sends).
+
+**Financial Closeout (Phase 19):** Settle all balances → archive to Past Trips. Scope: "friends-paid-me-back" level only. Explicitly out of scope: tax logic, receipt OCR, accounting exports.
+
+**Admin Tools (Phase 20):** `/api/travel-os/admin` with 4 actions:
+- `?action=diag` — health report (trip count, closeout entries, orphaned bundles, stale export warnings)
+- `?action=export-check` — validates `trip-export.json` structure
+- `?action=repair-bundles` — removes orphaned bundle keys
+- `?action=clear-audit` — clears audit log
+
+**Source files:**
+- Dashboard: `~/Projects/travel-os-dashboard/`
+- Obsidian notes: `~/Desktop/CLAW-Backup/2026-06-03 Travel OS Phase XX.md`
+- Phase history: `~/.hermes/spaces/agent-os/04-phase-history.md`
+
+**Key constraint:** Any new Travel OS feature requires a new BossMan kanban card. Do NOT silently edit module files outside of a card-based phase. If unsure whether something is in scope, ask Marcelo — do not assume.
+
+---
+
+## Version History
+
+| Version | Date | Changes |
+|---------|------|---------|
+| 1.0 | 2026-05-08 | Initial blueprint |
+| 1.1 | 2026-05-20 | Model stack policy, Perplexity Spaces integration |
+| 1.2 | 2026-06-03 | Travel OS v1 complete — modules, reminder stack, closeout, admin tools documented |
 
