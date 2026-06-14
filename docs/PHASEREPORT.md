@@ -267,3 +267,36 @@ Then:
 - Promote `/review` to a weekly cron? (Default schedule: Sunday 6pm PT)
 - Default `deliver: local` (writes brief) or `deliver: telegram` (pings summary)?
 - 3-month review: did Marcelo trigger `/review` consistently? If yes, cron promotion is justified per the no-spam rule's "narrow wall-clock" criterion.
+
+---
+
+## 2026-06-13 — Crypto weekly review cron registered (H)
+
+**Scope:** Per Marcelo 2026-06-13 directive (1-cron option), registered the weekly crypto review as a real cron.
+
+**Cron registered:** ea0157d715fa
+- Name: Crypto Weekly Learning and Intel Review - Sunday 6pm PT
+- Schedule: 0 18 * * 0 (Sunday 6pm system-TZ, PDT/PT)
+- Deliver: telegram (single Home channel ping per run)
+- Mode: agent (loads crypto-weekly-review skill)
+- Skills: crypto-weekly-review
+- First run: 2026-06-14T18:00:00-07:00 (tomorrow)
+- Prompt: pointer to ~/.hermes/skills/crypto-weekly-review/references/cron-prompt.md (8.5 KB)
+
+**3-criteria test (Cron no-spam rule):**
+- Narrow wall-clock: Sunday 6pm, fixed.
+- One-sentence explainable: Weekly Sunday 6pm, run crypto learning review, write brief, ping Telegram once.
+- Default deliver local: Marcelo explicitly approved Telegram ping, so deliver: telegram.
+
+**Cost bound:** at most 1 DeepSeek call + at most 1 OpenAI call (fallback) per run. If either exceeds 4k tokens input, surface cost in brief and ask Marcelo before expanding.
+
+**No-spam:** explicit rule in cron-prompt: do not send daily or extra pings. If brief is empty, say "nothing to review" and exit.
+
+**Important note from registration:** The first registration attempt used --profile trading which routed the cron to the trading profile jobs.json (id db495c7ea712), segregated from the default profile scheduler. Detected via grep, removed by deleting the profile jobs.json, re-registered in default profile (id ea0157d715fa). The hermes cron list and hermes cron remove CLI does NOT see profile-scoped jobs, so direct file deletion was the only path.
+
+**No-spec drift:**
+- ~/.hermes/knowledge/AUTOMATION_INVENTORY.md updated: 28 cron jobs (was 27), new row 28 with one-line justification
+- ~/.hermes/skills/crypto-weekly-review/references/cron-prompt.md created (8.5 KB, full instructions)
+- ~/Repos/BossMan/skills/crypto-weekly-review/SKILL.md already on origin (commit 6126db9)
+
+**Next run:** tomorrow Sunday 2026-06-14 18:00 PDT.

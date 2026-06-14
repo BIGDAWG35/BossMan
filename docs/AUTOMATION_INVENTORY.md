@@ -1,6 +1,6 @@
 # Automation Inventory — Cron Jobs + LaunchAgents
 
-**Snapshot:** 2026-06-12 (updated 2026-06-12 with 2 new Obsidian audit jobs)
+**Snapshot:** 2026-06-13 (updated with crypto weekly review cron `ea0157d715fa`)
 **Owner:** BossMan Hermes
 **Source of truth:** `hermes cron list` (cron) + `launchctl list` (LaunchAgents)
 **Codified in:** `~/.hermes/SOUL.md § Cron + Automation Policy — No Spam, High Signal`
@@ -9,7 +9,7 @@ BossMan updates this file whenever the cron/LaunchAgent set changes. Every entry
 
 ---
 
-## Cron Jobs (27 active, all `hermes cron list`)
+## Cron Jobs (28 active, all `hermes cron list`)
 
 | # | ID | Name | Schedule | Deliver | Mode | One-line justification |
 |---|---|---|---|---|---|---|
@@ -40,6 +40,7 @@ BossMan updates this file whenever the cron/LaunchAgent set changes. Every entry
 | 25 | `378ef14a305b` | Hermes Weekly MEMORY Health Check — Monday 9:05 AM | `5 9 * * 1` | origin | agent | Codified enforcement of the MEMORY hygiene hard rule. Opens kanban card if MEMORY > 1,800 chars. |
 | 26 | `0613ba1877bc` | Obsidian Vault Monthly Audit — 1st 09:00 PT | `0 9 1 * *` | local | no-agent | 8-check vault hygiene; silent when healthy. |
 | 27 | `ee1f669efb1e` | Obsidian Vault Bi-Monthly Review — 1st 10:00 PT (even months) | `0 10 1 */2 *` | origin | no-agent | 5-task vault review; surfaces to Telegram by design. |
+| 28 | `ea0157d715fa` | Crypto Weekly Learning & Intel Review — Sunday 6pm PT | `0 18 * * 0` | telegram | agent | Sunday-evening review: 3-5 questions for Marcelo + 3-5 for CSDAWGBOT (DeepSeek + OpenAI), writes brief, single Telegram ping. Per 2026-06-13 Marcelo approval. Bound: ≤1 DeepSeek + ≤1 OpenAI call per run. |
 
 ---
 
@@ -113,7 +114,7 @@ These are Node.js apps used by the cron jobs above. Not in scope for daily opera
 
 ## Cron jobs NOT approved under the new "no spam" rule
 
-None of the 25 active cron jobs violate the new policy. All meet the three-criteria test (narrow case, one-sentence explainable, silent output by default).
+None of the 28 active cron jobs violate the new policy. All meet the three-criteria test (narrow case, one-sentence explainable, silent output by default — or single Telegram ping if approved for Telegram delivery).
 
 ## Recommended follow-ups (carry as separate kanban cards, not auto-fixed)
 
