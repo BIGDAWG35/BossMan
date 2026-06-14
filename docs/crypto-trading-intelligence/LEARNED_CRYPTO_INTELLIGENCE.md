@@ -19,11 +19,63 @@ The weekly trading-learning review (`weekly-review-template.md` in the project f
 5. **Reference the goal:** tag the new rule with `goal_id: t_goal_crypto_swing_trader_20260613` if it advances the curriculum.
 
 **Current goal:** `t_goal_crypto_swing_trader_20260613` — Become a competent crypto swing trader (12 months).
-**Active curriculum stage:** Stage 1 — Chart literacy (4 sub-tasks, all `ready`).
+**Active curriculum stage:** Stage 1 — Chart literacy (4 sub-tasks).
+- Stage 1.1 — Chart basics: `done` (2026-06-13)
+- Stage 1.2 — Bull/bear structure: `running` (auto-advanced)
+- Stage 1.3 — Support/resistance: `todo`
+- Stage 1.4 — Moving averages: `todo`
 
 ## Current L-CRYPTO rule count
 
-12 (L-CRYPTO-01 through L-CRYPTO-12).
+13 (L-CRYPTO-01 through L-CRYPTO-13).
+
+---
+
+## Stage 1 – Chart Basics  [TRADING][CRYPTO][CSDAWG]
+
+**Sub-task:** `t_crypto_learn_s1_01_chart_basics` — CSDAWGBOT: Stage 1.1 — Chart basics (candles, timeframes, volume)
+**Completed:** 2026-06-13 (status `done`, completed_at set)
+**Source material covered (per deliverable spec):**
+- Investopedia / Babypips chart basics
+- BTCUSDT 1D chart, 7-day observation log
+- Vocabulary: OHLC, wick, body, timeframes (1m / 5m / 15m / 1H / 4H / 1D / 1W), volume, divergence
+
+**Lessons (inferred from deliverable spec; Marcelo to correct/augment on next weekly review):**
+
+- **S1-CHART-01 — Pick one pair, one timeframe, one week.** The done-criteria explicitly said "Pick ONE pair to study, watch it for 1 week, log observations." Multi-pair, multi-timeframe observation produces noise that masquerades as insight. Single-pair focus forces pattern recognition depth over breadth.
+- **S1-CHART-02 — Candle vocabulary is the lock; indicators come later.** OHLC + wick + body is the irreducible vocabulary. Every indicator (MA, RSI, MACD) is a derived view of OHLC. Reading candles directly builds the substrate that makes indicator readings meaningful.
+- **S1-CHART-03 — Timeframe hierarchy: 1m/5m/15m noise, 1H/4H signal, 1D/1W structure.** Same candle, different context. A bullish engulfing on 1m is different from one on 4H. The spec calls out 1D as the primary study timeframe for swing trading, with 4H as the entry-timing frame.
+- **S1-CHART-04 — Volume divergence is the first falsifiable signal.** "Price up, volume down" is the simplest divergence and the first signal that separates price action from conviction. Without volume, every price move is unfalsifiable.
+- **S1-CHART-05 — The self-test gate (explain to a non-trader without jargon) is a real filter, not a formality.** If you can't translate "bullish engulfing" into "buyers took control and pushed price above yesterday's high" for a non-trader, you don't understand it yet. The deliverable treats this as a done criterion for a reason.
+
+**Open questions for weekly review:**
+- Did Marcelo write the summary to `01-chart-basics.md`? (not seen in vault — flag for review)
+- Did the 7-day observation log get started? (should be in `trade-journal/` or `stage-1/`)
+- What was the most surprising candle pattern he saw on BTCUSDT 1D?
+
+---
+
+## L-CRYPTO-13: Curriculum auto-advance contract — "done" triggers the next task
+
+When a curriculum sub-task is marked `done`, the system must:
+
+1. Set `status='done'`, `completed_at=now`
+2. Harvest key lessons to LEARNED under a stage section
+3. Mirror to Obsidian project + BossMan repo, commit + push
+4. Auto-advance the **next sibling** (same parent, next-by-ordinal) from `todo` → `running`
+5. Confirm back to Marcelo with: task moved, lessons harvested, next task running
+
+**Rule:** The auto-advance keeps Marcelo's learning loop tight. Finish → write down what you learned → next task ready. Latency between finish and next-task-running should be under 30 seconds (measured from "done" message to Telegram confirmation).
+
+**Trigger phrases** (encoded in `~/.hermes/skills/curriculum-auto-advance/SKILL.md`):
+- "X.Y is done" / "X.Y is complete" / "I finished X.Y"
+- "<topic> is done" (where topic matches a running sub-task title)
+- "stage X is done" / "I finished stage X"
+- "move on to the next one" / "what's next"
+
+**Anti-pattern to avoid:** Asking "which task are you referring to?" when there's a single running sub-task. That breaks the latency advantage. The skill resolves ambiguity by finding the single running sub-task under the curriculum parent and acting.
+
+**Verification:** This contract was first executed 2026-06-13 with 1.1 → 1.2 transition. Subsequent sub-tasks should follow the same path.
 
 ---
 
