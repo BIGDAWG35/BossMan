@@ -124,3 +124,27 @@ None of the 28 active cron jobs violate the new policy. All meet the three-crite
 4. **3 scripts not in cron and probably orphaned** — `spaces-audit.sh`, `gateway-health-check.sh`, `tunnel-url-monitor.sh`. Decide: keep as one-shot or archive.
 
 These are recommendations only — not auto-actions. Each requires Marcelo's `Approved` per Rule 1.
+
+---
+
+## 2026-06-15 — binance-bot live ops package (t_0f9f7820)
+
+Two new cron jobs added to support LIVE binance-bot:
+
+| Cron | Schedule | Script | Deliver | Notes |
+|---|---|---|---|---|
+| `binance-bot-live-monitor` | `*/5 * * * *` | `binance-bot-live-monitor.sh` | local (silent when healthy) | 5 checks: PM2 state, /api/status, mode, balance vs exchange, health-check, PM2 error log |
+| `binance-bot-auto-ticket` | `*/5 * * * *` | `binance-bot-auto-ticket.sh` | local (silent when healthy) | Comments on `t_0f9f7820` when monitor writes FAIL file; idempotent (4-min dedup) |
+
+Plus re-enabled cron: `PM2 Health Monitor` (`01dff7ff61e4`, was disabled).
+
+**New scripts in `~/.hermes/scripts/`:**
+- `binance-bot-live-monitor.sh` — 5-check watchdog, writes FAIL file on any problem
+- `binance-bot-auto-ticket.sh` — reads FAIL file, comments on t_0f9f7820 via `hermes kanban comment`
+
+**New code in `~/Projects/binance-bot/`:**
+- `pre-start.js` — PM2 fail-closed wrapper (safe-start + LIVE_PILOT check + DB write-test + pre-trade-hook load + PAPER_MODE check, then require server.js in-process)
+
+**Updated `ecosystem.config.cjs`** with 100% uptime hardening (min_uptime/max_restarts/restart_delay/kill_timeout/max_memory_restart).
+
+**Total cron count:** 30 → 32
