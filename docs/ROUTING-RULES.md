@@ -400,6 +400,32 @@ BossMan put in the handoff packet.
   - grep -n "^## Troubleshooting Mode (Incidents)" ~/.hermes/knowledge/ROUTING-RULES.md
 - SquarePayouts carve-out preserved: M3 is permanently BLOCKED on SquarePayouts in the new skill; Step 2 auto-substitutes Claude Sonnet-4 in that lane. No other service has a carve-out as of this writing.
 
+### Hermes Doctor – Routing Drift Checks (Required)
+
+Hermes doctor MUST fail with a health warning if any of these conditions are true:
+
+- `model.default` in `~/.hermes/config.yaml` is not `qwen2.5:3b`, or any global default is set to MiniMax-M3.
+- The Troubleshooting Mode skill file `~/.hermes/skills/troubleshooting-mode/SKILL.md` is missing or unreadable.
+- The routing appendix heading `## Troubleshooting Mode (Incidents)` is missing from `~/.hermes/knowledge/ROUTING-RULES.md`.
+
+Recommended warning key:
+
+```yaml
+health:
+  warnings:
+    forbidden_global_default:
+      ok_when:
+        - model.default == "qwen2.5:3b"
+        - troubleshooting_mode_skill_present == true
+        - routing_rules_appendix_present == true
+      message: >
+        Routing configuration is drifting. Ensure model.default is qwen2.5:3b,
+        troubleshooting-mode skill exists, and ROUTING-RULES has the Troubleshooting
+        Mode (Incidents) appendix. Run hermes-drift-check and fix before proceeding.
+```
+
+Implementation note: `hermes doctor` should run the same checks as `hermes-drift-check` and surface this warning if any check fails, blocking routing/incident changes from being considered live.
+
 *This document is the single source of truth for the Default Build Flow
 v3.0, multi-model routing, the QA pass, Perplexity Computer
 escalation, and light build metrics. Updated by BossMan when model
