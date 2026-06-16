@@ -347,6 +347,7 @@ BossMan runs a weekly review every Monday morning covering:
 - Service ports — any anomalies from baseline
 - Memory files — any stale entries to clean up
 - Security audit schedule — confirm quarterly pentests are current
+- Run `hermes doctor` and confirm there are no `health.warnings.forbidden_global_default` or routing drift warnings before approving any routing or incident configuration changes.
 
 ### Sub-Agent Performance Tracking (Permanent)
 
