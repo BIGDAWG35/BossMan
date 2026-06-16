@@ -180,7 +180,29 @@ Repos with already-good READMEs (no change): `boss-hub`, `binance-bot`, `squarep
 - **3/3 orchestrator/hub repos** (`BossMan`, `boss-hub`, `master-dashboard`) have non-overlapping roles clearly described.
 - **10/10 local READMEs** normalized to match the new descriptions.
 - **7/7 local README updates** successfully pushed to GitHub.
-- **1 known issue** — BossMan push blocked by secret scanner on a historical commit; resolution requires Marcelo's manual unblock (or a follow-up card). Does not affect any live service.
+- **1 known issue** — ✅ RESOLVED (2026-06-16). BossMan push was blocked by secret scanner on the historical `8f42461` commit (hygiene-plan.md with a literal `gho_…` OAuth token at line 82). Fixed via soft-reset + recommit: the 8-commit lead was collapsed into 2 clean commits that never contained the literal token. Pushed to `origin/main` as a regular (non-force) push — no history rewrite needed, no force-push required. Commit SHAs that landed: `abb96f4` (weekly reviews) and `994e1a4` (hygiene docs). `origin/main` is now fully clean.
 
 BossMan can now route unambiguously to any of the 20 BIGDAWG35 repos by name + role + owner.
+
+---
+
+## 8. Prevention: avoiding future `gho_…` string leaks in audit docs
+
+**Rule:** When documenting a secret finding (token, key, credential), replace the literal value with `[REDACTED:<TYPE>-TOKEN]` at write-time — before the commit is created. Never commit a literal secret string to any tracked file, even in an "audit log" or "findings doc." GitHub's secret scanner matches the literal string pattern; it does not care about intent or context.
+
+**Pre-commit hook** (recommended for BossMan and all BIGDAWG35 repos that handle audit docs):
+
+```bash
+# .git/hooks/pre-commit — block common secret prefixes
+SECRET_PATTERN='gho_…|ghp_…|ghs_…|sk_live_…|sk_test_…|AKIA[A-Z0-9]{16}|xox[b-p][A-Za-z0-9]{10,}'
+
+if git diff --cached | grep -IPE "$SECRET_PATTERN" > /dev/null 2>&1; then
+  echo "ERROR: secret pattern detected in staged files. Redact before committing."
+  exit 1
+fi
+```
+
+**On secret scanner block:** If GitHub blocks a push, the fix is to rebase/squash the dirty commit into a clean one (remove the secret string from the file, amend or soft-reset, recommit) — then push a clean history. The goal is to never have the literal string in any commit that touches the remote.
+
+**Skill:** This workflow is documented in skill `git-history-hygiene` (L-HYGIENE series).
 
