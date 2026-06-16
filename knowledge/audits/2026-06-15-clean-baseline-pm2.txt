@@ -1,0 +1,12 @@
+money-pipeline | online | restarts=0
+client-hub | online | restarts=2
+travel-os | online | restarts=2
+health-dashboard | online | restarts=0
+bakery | online | restarts=3
+youtube-dashboard | online | restarts=0
+trading-control | online | restarts=0
+csdawg-dashboard | online | restarts=0
+boss-hub-internal | online | restarts=5
+boss-hub-external | online | restarts=5
+pmd-web | online | restarts=37
+binance-bot | online | restarts=1

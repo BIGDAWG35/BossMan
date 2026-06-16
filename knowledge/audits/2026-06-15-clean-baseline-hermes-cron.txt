@@ -1,0 +1,223 @@
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│                         Scheduled Jobs                                  │
+└─────────────────────────────────────────────────────────────────────────┘
+
+  0561fcffeba1 [active]
+    Name:      SquaresPayouts Daily Exporter
+    Schedule:  0 9 * * *
+    Repeat:    ∞
+    Next run:  2026-06-16T09:00:00-07:00
+    Deliver:   local
+    Last run:  2026-06-15T09:00:35.888821-07:00  ok
+
+  c6d759d2b561 [active]
+    Name:      BakeryOps Daily Exporter
+    Schedule:  5 9 * * *
+    Repeat:    ∞
+    Next run:  2026-06-16T09:05:00-07:00
+    Deliver:   local
+    Last run:  2026-06-15T09:06:06.756496-07:00  ok
+
+  7203f2330d92 [active]
+    Name:      perplexity-spaces-sync
+    Schedule:  0 6 * * *
+    Repeat:    ∞
+    Next run:  2026-06-16T06:00:00-07:00
+    Deliver:   origin
+    Script:    sync_perplexity_spaces.sh
+    Mode:      no-agent (script stdout delivered directly)
+    Last run:  2026-06-15T06:00:39.965466-07:00  ok
+
+  5f3569ba2813 [active]
+    Name:      Morning Pipeline Brief
+    Schedule:  0 8 * * 1-5
+    Repeat:    ∞
+    Next run:  2026-06-16T08:00:00-07:00
+    Deliver:   origin
+    Last run:  2026-06-15T08:00:59.055469-07:00  ok
+
+  e8c2a1f3d419 [active]
+    Name:      Hermes Monthly Deep-Audit
+    Schedule:  0 9 1 * *
+    Repeat:    ∞
+    Next run:  2026-07-01T09:00:00-07:00
+    Deliver:   origin
+    Script:    deep-audit-cron.sh
+    Mode:      no-agent (script stdout delivered directly)
+    Last run:  2026-06-01T09:00:31.954835-07:00  ok
+
+  88eff3953480 [active]
+    Name:      Hermes Weekly Systems Review — Monday 8 AM
+    Schedule:  0 8 * * 1
+    Repeat:    ∞
+    Next run:  2026-06-22T08:00:00-07:00
+    Deliver:   telegram
+    Skills:    hermes-agent
+    Last run:  2026-06-15T08:04:02.280805-07:00  ok
+
+  76956b7cafa7 [active]
+    Name:      CSDAWG 2.0 Weekly Intelligence
+    Schedule:  0 15 * * 1
+    Repeat:    ∞
+    Next run:  2026-06-22T15:00:00-07:00
+    Deliver:   origin
+    Skills:    hermes-agent, memory
+    Last run:  2026-06-15T15:01:57.784405-07:00  ok
+
+  c77d492c5b6d [active]
+    Name:      MoneyPipeline Morning Research
+    Schedule:  0 5 * * *
+    Repeat:    ∞
+    Next run:  2026-06-16T05:00:00-07:00
+    Deliver:   local
+    Script:    money-pipeline-morning-research.sh
+    Mode:      no-agent (script stdout delivered directly)
+    Last run:  2026-06-15T05:00:42.074369-07:00  ok
+
+  8fb30e332d6d [active]
+    Name:      MoneyPipeline Auto-Enrich V2
+    Schedule:  0 6 * * *
+    Repeat:    ∞
+    Next run:  2026-06-16T06:00:00-07:00
+    Deliver:   local
+    Script:    money-pipeline-auto-enrich-v2.sh
+    Mode:      no-agent (script stdout delivered directly)
+    Last run:  2026-06-15T06:00:35.847906-07:00  ok
+
+  84896b15c68b [active]
+    Name:      CuaDriver Health Monitor
+    Schedule:  */5 * * * *
+    Repeat:    ∞
+    Next run:  2026-06-15T20:05:00-07:00
+    Deliver:   local
+    Script:    cuadriver-health-cron.sh
+    Mode:      no-agent (script stdout delivered directly)
+    Last run:  2026-06-15T20:00:27.725204-07:00  ok
+
+  8d04ee3f0227 [active]
+    Name:      Client Hub Feedback Queue Processor
+    Schedule:  */5 * * * *
+    Repeat:    ∞
+    Next run:  2026-06-15T20:05:00-07:00
+    Deliver:   local
+    Script:    process-feedback-queue.sh
+    Mode:      no-agent (script stdout delivered directly)
+    Last run:  2026-06-15T20:00:27.065913-07:00  ok
+
+  01dff7ff61e4 [active]
+    Name:      PM2 Health Monitor
+    Schedule:  */15 * * * *
+    Repeat:    ∞
+    Next run:  2026-06-15T20:15:00-07:00
+    Deliver:   telegram
+    Skills:    pm2-health-check
+    Last run:  2026-06-15T20:01:32.977639-07:00  ok
+
+  fed3553cf244 [active]
+    Name:      binance-health-check-am
+    Schedule:  0 9 * * *
+    Repeat:    ∞
+    Next run:  2026-06-16T09:00:00-07:00
+    Deliver:   telegram
+    Last run:  2026-06-15T09:00:27.573158-07:00  ok
+
+  4d4552dc85c9 [active]
+    Name:      binance-health-check-pm
+    Schedule:  0 21 * * *
+    Repeat:    ∞
+    Next run:  2026-06-15T21:00:00-07:00
+    Deliver:   telegram
+    Last run:  2026-06-14T21:00:31.742282-07:00  ok
+
+  ff0b6860cba5 [active]
+    Name:      Weekly Hermes → Perplexity Spaces Refresh
+    Schedule:  0 7 * * 6
+    Repeat:    ∞
+    Next run:  2026-06-20T07:00:00-07:00
+    Deliver:   origin
+    Skills:    perplexity-spaces-workflow, cron-job-output-design
+    Last run:  2026-06-13T07:07:22.262247-07:00  ok
+
+  b858e01bd089 [active]
+    Name:      Travel OS External Watchdog
+    Schedule:  */15 * * * *
+    Repeat:    ∞
+    Next run:  2026-06-15T20:15:00-07:00
+    Deliver:   local
+    Script:    travel-os-external-watchdog.sh
+    Mode:      no-agent (script stdout delivered directly)
+    Last run:  2026-06-15T20:00:27.123996-07:00  ok
+
+  ab41f101c407 [active]
+    Name:      Travel OS Handoff Sync — Weekly Drift Check
+    Schedule:  0 6 * * 6
+    Repeat:    ∞
+    Next run:  2026-06-20T06:00:00-07:00
+    Deliver:   local
+    Script:    weekly-travel-os-handoff-sync.sh
+    Mode:      no-agent (script stdout delivered directly)
+    Last run:  2026-06-13T06:00:49.058958-07:00  ok
+
+  378ef14a305b [active]
+    Name:      Hermes Weekly MEMORY Health Check — Monday 9:05 AM
+    Schedule:  5 9 * * 1
+    Repeat:    ∞
+    Next run:  2026-06-22T09:05:00-07:00
+    Deliver:   origin
+    Script:    memory-health-check.py
+    Last run:  2026-06-15T09:06:56.366208-07:00  ok
+
+  0613ba1877bc [active]
+    Name:      Obsidian Vault Monthly Audit — 1st 09:00 PT
+    Schedule:  0 9 1 * *
+    Repeat:    ∞
+    Next run:  2026-07-01T09:00:00-07:00
+    Deliver:   local
+    Script:    obsidian-vault-audit.sh
+    Mode:      no-agent (script stdout delivered directly)
+
+  ee1f669efb1e [active]
+    Name:      Obsidian Vault Bi-Monthly Review — 1st 10:00 PT (even months)
+    Schedule:  0 10 1 */2 *
+    Repeat:    ∞
+    Next run:  2026-07-01T10:00:00-07:00
+    Deliver:   origin
+    Script:    obsidian-vault-review.sh
+    Mode:      no-agent (script stdout delivered directly)
+
+  ea0157d715fa [active]
+    Name:      Crypto Weekly Learning & Intel Review — Sunday 6pm PT
+    Schedule:  0 18 * * 0
+    Repeat:    ∞
+    Next run:  2026-06-21T18:00:00-07:00
+    Deliver:   telegram
+    Skills:    crypto-weekly-review
+    Last run:  2026-06-14T18:06:57.966280-07:00  ok
+
+  0d9d490f7ec2 [active]
+    Name:      binance-bot-live-monitor
+    Schedule:  */5 * * * *
+    Repeat:    ∞
+    Next run:  2026-06-15T20:05:00-07:00
+    Deliver:   local
+    Script:    binance-bot-live-monitor.sh
+    Last run:  2026-06-15T20:00:29.066610-07:00  ok
+
+  691b1d66658e [active]
+    Name:      binance-bot-auto-ticket
+    Schedule:  */5 * * * *
+    Repeat:    ∞
+    Next run:  2026-06-15T20:05:00-07:00
+    Deliver:   local
+    Script:    binance-bot-auto-ticket.sh
+    Last run:  2026-06-15T20:00:27.068796-07:00  ok
+
+  7f58cef97c80 [active]
+    Name:      Travel OS — Trip Reminder (consolidated)
+    Schedule:  0 8 * * *
+    Repeat:    ∞
+    Next run:  2026-06-16T08:00:00-07:00
+    Deliver:   telegram
+    Workdir:   /Users/bigdawg/Projects/travel-os-dashboard
+
