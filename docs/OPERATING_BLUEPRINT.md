@@ -301,6 +301,48 @@ LBC35 **may** without asking:
 
 ---
 
+## Binance Bot — 24/7 ONLINE Policy (Permanent — 2026-06-16, Phase 6 Track B)
+
+**Crypto is 24/7, so `binance-bot` is expected ONLINE 24/7 with `autostart: true`.** This is the new normal under Phase 6 Track B. The earlier "stopped = healthy, online = alert" stance is retired.
+
+### Expected state
+
+- `binance-bot` status: `online`
+- `autostart`: `true`
+- `restart_time`: 0 (or low and stable)
+- `/api/status`: 200, `mode=LIVE`, `paperMode=false`
+
+### Allowed OFF states (both required to suppress alerts)
+
+- **Maintenance window** — kanban card exists with `label:maintenance` and title contains `binance`
+- **Open incident card** — kanban card exists with `label:incident` and title contains `binance`
+
+If neither is on the board, STOPPED is a **L2/L3 alert**.
+
+### Alert conditions (Binance bot only)
+
+- `binance-bot` STOPPED with no maintenance/incident card → **L2/L3 ALERT**
+- `restart_time >= 5` in 24h → **L2**
+- `/api/status` non-200, empty, or shows `totalExposure > maxExposure * 1.10`, or open position that contradicts the most recent signal → **L2/L3**
+- `pm2 logs` shows exceptions, crash loops, or > 3 safe-start failures in 60 min → **L2**
+- `cooldownActive=true` for > 4h in a single UTC day → **L3**
+- `dailyLimitHit=true` more than 2 days in a row → **L3**
+
+### Do NOT alert just because `binance-bot` is online
+
+ONLINE is the expected state. BossMan stays silent on a healthy bot. PM2 Health Monitor cron (`01dff7ff61e4`) checks the kanban for `maintenance` / `incident` cards before paging Marcelo on a STOPPED state.
+
+### Code/docs of record
+
+- `~/Projects/binance-bot/RUNBOOK.md` — §"Operational Policy — 24/7 ONLINE" + §"Maintenance Windows"
+- `~/.hermes/knowledge/error-escalation.md` — §"Binance Bot — Expected State (24/7 ONLINE, Phase 6 Track B)"
+- `~/.hermes/knowledge/health-monitoring.md` — expected-state flip in front matter
+- `~/.hermes/skills/devops/pm2-health-check/SKILL.md` — §"BINANCE-BOT 24/7 RULE"
+- PM2 Health Monitor cron prompt (`01dff7ff61e4`) — 24/7 block appended
+- Kanban card `t_1c502da6` — Phase 6 Track B go-live card, body updated
+
+---
+
 ## Version History
 
 || Version | Date | Change ||
@@ -308,6 +350,7 @@ LBC35 **may** without asking:
 || 1.0 | 2026-05-07 | Initial — Hermes-first, BossMan orchestrator, OpenClaw demoted ||
 || 1.1 | 2026-05-08 | Phase 4 — handoff packet format, routing checklist, LBC35 constraints, production workflow diagram, 3 test handoffs verified ||
 || 1.2 | 2026-05-20 | Track 1 additions — self-improvement rules, self-audit rules, verified sub-agent roster, memory capture policy ||
+|| 1.3 | 2026-06-16 | Phase 6 Track B — Binance bot 24/7 ONLINE policy codified; routing lock + Troubleshooting Mode fully wired |
 
 ---
 
