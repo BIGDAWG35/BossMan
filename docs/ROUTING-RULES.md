@@ -388,6 +388,18 @@ BossMan put in the handoff packet.
 
 ---
 
+### 8. Troubleshooting Mode & Routing Lock (2026-06-16)
+
+- Drift discovered (2026-06-15 audit): ~/.hermes/config.yaml still had model.default: MiniMax-M3 (line 2), ~/.hermes/skills/troubleshooting-mode/SKILL.md did not exist, and ~/.hermes/knowledge/ROUTING-RULES.md had no ## Troubleshooting Mode (Incidents) appendix. The v3.0 6-step routing map was documented but not enforced — a 12–13 day gap between spec and config.
+- Routing lock applied (2026-06-16): model.default is now qwen2.5:3b (cheapest free local model) with a permanent comment-block forbidding MiniMax-M3 as global default. provider: minimax and base_url are unchanged. M3 remains allowed only as the Step 2 orchestrator slot in the v3.0 routing map, never as a silent global default. [file:2]
+- Troubleshooting Mode wired (2026-06-16): skill file ~/.hermes/skills/troubleshooting-mode/SKILL.md exists with the 8-step incident protocol (Classify → Fact-gather → Route via v3.0 map → Design fix → Apply → Verify → Report ALERT → Escalate). ROUTING-RULES.md now ends with the ## Troubleshooting Mode (Incidents) appendix. Auto-triggers: status: incident, status: blocked + body matches incident|outage|broken|down|not working|error, label: troubleshooting, or /troubleshoot from chat. [file:3]
+- Escalation anchors: ~/.hermes/knowledge/error-escalation.md (ALERT block format, Binance bot STOPPED, money-pipeline ≥ 10 restarts, Telegram/Tailscale disconnects) and ~/.hermes/knowledge/health-monitoring.md (PM2 health rules, service drift detection) are the source of truth — both referenced from the new skill and the ROUTING-RULES appendix. [file:1][file:3]
+- Verification method (drift-check): all three commands below must return “good” for the routing lock + Troubleshooting Mode to be considered live:
+  - grep -n "^  default:" ~/.hermes/config.yaml
+  - ls -la ~/.hermes/skills/troubleshooting-mode/SKILL.md
+  - grep -n "^## Troubleshooting Mode (Incidents)" ~/.hermes/knowledge/ROUTING-RULES.md
+- SquarePayouts carve-out preserved: M3 is permanently BLOCKED on SquarePayouts in the new skill; Step 2 auto-substitutes Claude Sonnet-4 in that lane. No other service has a carve-out as of this writing.
+
 *This document is the single source of truth for the Default Build Flow
 v3.0, multi-model routing, the QA pass, Perplexity Computer
 escalation, and light build metrics. Updated by BossMan when model
