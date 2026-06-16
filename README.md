@@ -1,4 +1,6 @@
-# BossMan — Hermes Agent Operations Command Center
+# BossMan — Hermes Primary Orchestrator
+
+**BossMan** is the primary orchestrator repository for Marcelo's Hermes Agent stack. It holds the canonical knowledge base (`hermes/knowledge/`), the AGENTS/SOUL standards, kanban governance rules, and the audit log of operational changes. BossMan is the knowledge + governance brain — not the registry (see [`boss-hub`](../boss-hub)) and not the UI shell (see [`master-dashboard`](../master-dashboard)).
 
 ## Overview
 
