@@ -174,6 +174,12 @@ Always try lower tiers first. Tier 4/5 outputs MUST be saved to `~/.hermes/knowl
 
 **Rule:** LBC35 receives work **exclusively** via handoff packet. No other routing path to LBC35 is valid.
 
+### Incident Ownership and Troubleshooting Mode
+
+- Any Kanban card with `status: incident`, or `status: blocked` with a body containing incident|outage|broken|down|not working|error, or label `troubleshooting`, is **owned** by Hermes Troubleshooting Mode and must run via the v3.0 routing map and Troubleshooting Mode skill.
+- All such incidents must use the 7-section response template: Incident Summary, Type, Facts, Root Cause, Fix Plan, QA / Risk Review, Runbook Notes, Escalation, with ALERT blocks following `error-escalation.md` for Level 2–3 events.
+- For issues touching money-pipeline, Binance bot, Telegram gateway, or Tailscale, apply thresholds and page Marcelo immediately when alert conditions from `health-monitoring.md` and `error-escalation.md` are met.
+
 ---
 
 ## Handoff Packet Format (Standard)
