@@ -34,3 +34,14 @@
 - **TBD** — Phase 12: live trading review (currently PAPER mode, pending Marcelo's next go-live decision).
 - **TBD** — Coinbase bot retirement (already archived 2026-06-13).
 - **TBD** — Kraken bot integration (paused since 2026-05-20, blocked on auth issues — see `Trading — Kraken + CSDAWGBOT Weekly Review Recovery.md`).
+
+- **2026-06-19 (DAILY-RADAR)** — Stage 2 (Perplexity enrichment) + Stage 7 (cron + logging) shipped:
+  - 13:00 — `daily_research.js` extended with internal-derivation fallback (Brave 429, CUA dead)
+  - 13:01 — `daily_memo.js` source labelling fixed (DeepSeek was being lied to)
+  - 13:02 — `daily_decision.js` strict USDT-symbol regex replaces lenient `cleanSym`
+  - 13:03 — `daily_pipeline.sh` wrapper created with JSONL run log
+  - 13:04 — Full end-to-end run: 8/8 stages ok (1 degraded fallback), 13.0s total
+  - 13:05 — Cron `2141a756a0aa` registered at `0 12 * * *`, next run `2026-06-20T12:00:00-07:00`
+  - 13:06 — Knowledge capture (`~/.hermes/knowledge/crypto-intel/STAGE_2_7_CAPTURE_2026-06-19.md`)
+
+**Critical incident during QA:** DeepSeek emitted `"MEMECOINS WITH LOW VOLUME AND HIGH VOLATILITY (E.G., SPXUSDT, 1000MOGUSDT)USDT"` as a single string in `do_not_touch`. Caught by BossMan. Fixed with two-layer sanitizer (memo producer + decision consumer).

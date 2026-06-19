@@ -70,3 +70,21 @@
 ### OD-05: Engine version (currently 1.8) — when to bump to 2.0?
 - Bump criteria: 6+ weeks of resolved predictions with track record > 0% accuracy.
 - Currently 0 resolved (10 pending). Bump not yet justified.
+
+### D-12: DAILY-RADAR research path = internal derivation (locked 2026-06-19)
+- **Source:** Empirical Stage 2 work on 2026-06-19 (Brave 429, CUA dead, no API by design)
+- **Decision:** Stage 2 Phase B primary path is **internal derivation** from Stage 1 + Stage 3 outputs. External sources (`perplexity_browser_qa`, `brave_search_degraded`) are first-attempted and gracefully fall back. `research_quality` is honestly labelled `PARTIAL` when internal-only — never `OK` unless external fetch succeeded.
+- **Why:** Spec said "Perplexity Browser QA primary". Reality: CUA daemon dead, Brave rate-limited, API forbidden by locked rule. The honest ceiling is PARTIAL until external research is viable.
+- **Trust contract:** No fabrication. External dimensions marked `null` with `source: bot_internal_only` tag. DeepSeek downstream correctly reasons about partial research.
+
+### D-13: Two-layer USDT-symbol sanitization (locked 2026-06-19)
+- **Source:** Failure 4 in `STAGE_2_7_CAPTURE_2026-06-19.md`
+- **Decision:** Both producer (`daily_memo.js`) and consumer (`daily_decision.js`) enforce `^[A-Z0-9]{2,15}USDT$` regex on `do_not_touch` and `watchlist`. Invalid entries dropped silently with stderr warning.
+- **Why:** Defense in depth. DeepSeek can emit sentence fragments for symbol lists. Without sanitization, the bot's decision file would contain malformed data.
+- **Trust contract:** Bot never reads a malformed symbol from `data/daily_radar.json`.
+
+### D-14: Cron delivery = origin (silent on healthy) (locked 2026-06-19)
+- **Source:** Marcelo's "no Telegram spam" directive (recurring)
+- **Decision:** Daily pipeline cron `2141a756a0aa` uses `deliver: origin` but the prompt is structured to only emit on **real** failure or degraded-mode event. Healthy runs are silent.
+- **Why:** Spec said "geen nieuwe Telegram". Silent-when-healthy is the operational equivalent of `deliver: local` without losing the audit trail.
+- **Verification:** First run (2026-06-19 13:04) emitted nothing to Marcelo.

@@ -1,0 +1,50 @@
+{
+  "date": "2026-06-19",
+  "completed_at": "2026-06-19T20:04:21.179Z",
+  "total_stages": 8,
+  "ok_count": 7,
+  "failed_count": 0,
+  "total_elapsed_ms": 13028,
+  "stages": [
+    {
+      "stage": "stage_1_census",
+      "status": "ok",
+      "elapsed_ms": 1123
+    },
+    {
+      "stage": "stage_3_briefs",
+      "status": "ok",
+      "elapsed_ms": 5463
+    },
+    {
+      "stage": "stage_2_phase_a_research_prompts",
+      "status": "ok",
+      "elapsed_ms": 71
+    },
+    {
+      "stage": "stage_2_phase_b_brave",
+      "status": "fallback_to_internal",
+      "elapsed_ms": 0
+    },
+    {
+      "stage": "stage_2_phase_b_internal_fallback",
+      "status": "ok",
+      "elapsed_ms": 81
+    },
+    {
+      "stage": "stage_2_finalize",
+      "status": "ok",
+      "elapsed_ms": 70
+    },
+    {
+      "stage": "stage_4_memo",
+      "status": "ok",
+      "elapsed_ms": 6148
+    },
+    {
+      "stage": "stage_5_decision",
+      "status": "ok",
+      "elapsed_ms": 72
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "report_date": "2026-06-19",
+  "generated_at": "2026-06-19T20:04:20.861Z",
+  "source": "binance-bot/scripts/daily_memo.js",
+  "epic_id": "t_aefb15e8",
+  "card_id": "t_99314fd0",
+  "research_available": true,
+  "regime_today": "MID_CYCLE",
+  "top_3_thesis": [
+    {
+      "symbol": "HYPEUSDT",
+      "thesis": "Memecoin with high volume rank and concentrated volume, indicating unusual activity despite low absolute volume."
+    },
+    {
+      "symbol": "SPXUSDT",
+      "thesis": "Memecoin showing strong 24h price gain of 17.8% but with very low volume, suggesting low liquidity and potential manipulation risk."
+    },
+    {
+      "symbol": "BTCUSDT",
+      "thesis": "Stable L1 with minimal price change and high volume, serving as a market anchor in mid-cycle conditions."
+    }
+  ],
+  "risk_flags": [
+    "Concentration: 40% of top-10 is memecoin or other speculative sectors",
+    "Research quality PARTIAL: all research is internal-only, missing external dimensions (regulatory, partnerships, social sentiment, listings)"
+  ],
+  "watchlist_changes": {
+    "added": [],
+    "removed": [],
+    "reason": "No new signals to add or remove based on today's data."
+  },
+  "do_not_touch": [
+    "SPXUSDT",
+    "1000MOGUSDT"
+  ],
+  "confidence": "MEDIUM",
+  "research_quality": "PARTIAL",
+  "sanity_verdict": "PASS",
+  "sanity_reasons": [
+    "No research array provided, so no source citation mismatch possible.",
+    "Price/volume figures are not contradicted by any input data (no input data provided).",
+    "No claims about 'today' that contradict an input date (no input date provided).",
+    "All required fields appear present.",
+    "All symbols in thesis (HYPEUSDT, SPXUSDT, BTCUSDT) are consistent with the memo's internal logic; no top-10 input to check against.",
+    "Research quality is PARTIAL, not MISSING, but no external sources are cited, so no fabrication issue."
+  ]
+}

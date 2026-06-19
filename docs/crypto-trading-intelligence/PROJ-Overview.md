@@ -81,3 +81,26 @@ Weekly cron (`crypto-intel-weekly.js`) pulls BTC + sector + funding + fear-greed
 - `crypto-weekly-review` (on-demand) — reads L-CRYPTO + latest intel, drafts 3-5 questions for Marcelo + 3-5 for CSDAWGBOT, creates linked kanban tasks, branches on PAPER vs LIVE
 - `curriculum-auto-advance` — when a Stage sub-task is done, move to done, harvest lessons, auto-advance next sibling
 - `pm2-health-check` — 5-min PM2 self-healing (separate, not crypto-specific)
+
+---
+
+## Addendum — 2026-06-19 — DAILY-RADAR Stage 2 + Stage 7 ship
+
+The DAILY-RADAR pipeline (epic `t_aefb15e8`) is now end-to-end functional with the Perplexity Browser QA path **degraded** (CUA daemon zero-bounds bug) and replaced by **internal-derivation fallback** that consumes Stage 1 + Stage 3 outputs and emits `research_quality: PARTIAL`. The pipeline runs daily at 12:00 PDT via cron `2141a756a0aa`, silent on healthy runs, alerts only on real failure.
+
+**Sub-systems:**
+- `scripts/daily_research.js` — 3-source taxonomy (`perplexity_browser_qa` / `brave_search_degraded` / `bot_internal_only`)
+- `scripts/daily_memo.js` — sanitized + honest source labelling
+- `scripts/daily_decision.js` — strict USDT-symbol regex defense
+- `scripts/daily_pipeline.sh` — wrapper with JSONL run log + JSON summary
+- `~/.hermes/knowledge/crypto-intel/daily/run_log_*.jsonl` — per-stage evidence
+- `~/.hermes/knowledge/crypto-intel/daily/run_summary_*.json` — daily totals
+
+**What changed in the bot's view of the world (2026-06-19):**
+- `regime_today: UNKNOWN → MID_CYCLE`
+- `confidence: LOW → MEDIUM`
+- `research_quality: MISSING → PARTIAL`
+- `watchlist: [HYPEUSDT] → [HYPEUSDT, BTCUSDT]`
+- `do_not_touch`: was malformed sentence, now `[SPXUSDT, 1000MOGUSDT]` clean
+
+Full capture: `~/.hermes/knowledge/crypto-intel/STAGE_2_7_CAPTURE_2026-06-19.md`

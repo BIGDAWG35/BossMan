@@ -1,0 +1,8 @@
+{"ts":"2026-06-19T20:03:09.891795Z","stage":"stage_1_census","status":"ok","elapsed_ms":1123,"date":"2026-06-19"}
+{"ts":"2026-06-19T20:03:15.456065Z","stage":"stage_3_briefs","status":"ok","elapsed_ms":5463,"date":"2026-06-19"}
+{"ts":"2026-06-19T20:03:15.625464Z","stage":"stage_2_phase_a_research_prompts","status":"ok","elapsed_ms":71,"date":"2026-06-19"}
+{"ts":"2026-06-19T20:04:14.386851Z","stage":"stage_2_phase_b_brave","status":"fallback_to_internal","elapsed_ms":0,"date":"2026-06-19","reason":"brave_failed_or_rate_limited"}
+{"ts":"2026-06-19T20:04:14.566618Z","stage":"stage_2_phase_b_internal_fallback","status":"ok","elapsed_ms":81,"date":"2026-06-19"}
+{"ts":"2026-06-19T20:04:14.734512Z","stage":"stage_2_finalize","status":"ok","elapsed_ms":70,"date":"2026-06-19"}
+{"ts":"2026-06-19T20:04:20.983434Z","stage":"stage_4_memo","status":"ok","elapsed_ms":6148,"date":"2026-06-19"}
+{"ts":"2026-06-19T20:04:21.154765Z","stage":"stage_5_decision","status":"ok","elapsed_ms":72,"date":"2026-06-19"}

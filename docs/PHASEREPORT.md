@@ -300,3 +300,49 @@ Then:
 - ~/Repos/BossMan/skills/crypto-weekly-review/SKILL.md already on origin (commit 6126db9)
 
 **Next run:** tomorrow Sunday 2026-06-14 18:00 PDT.
+
+---
+
+## 2026-06-19 — DAILY-RADAR Stage 2 + Stage 7 ship
+
+**Scope:** End-to-end DAILY-RADAR pipeline Stage 2 (Perplexity enrichment) + Stage 7 (cron + logging) under epic `t_aefb15e8`.
+
+**What was codified:**
+
+1. **D-12 — Research path = internal derivation (degraded-mode contract).**
+   External Perplexity Browser QA path is dead on this host (CUA daemon zero-bounds bug, documented since 2026-05-23). Brave Search via curl returns 429 from this IP. Perplexity Search API is forbidden by locked rule (no API key by design). Resolution: internal derivation from Stage 1 + Stage 3 outputs, with `source: bot_internal_only` tag and `research_quality: PARTIAL`. Never fabricated. PARTIAL is the honest ceiling until external research is viable.
+
+2. **D-13 — Two-layer USDT-symbol sanitization (defense in depth).**
+   Both `daily_memo.js` (producer) and `daily_decision.js` (consumer) enforce `^[A-Z0-9]{2,15}USDT$` regex on `do_not_touch` and `watchlist`. DeepSeek can emit sentence fragments for symbol lists; without sanitization, the bot's `data/daily_radar.json` would contain malformed data. Invalid entries dropped silently with stderr warning. Caught in QA during full pipeline run — fixed at root before any bot read the file.
+
+3. **D-14 — Cron silent-on-healthy delivery pattern.**
+   Cron `2141a756a0aa` (DAILY-RADAR daily 12:00 PDT) uses `deliver: origin` but the prompt is structured to only emit on **real** failure or degraded-mode event. Healthy runs are silent. Operational equivalent of `deliver: local` without losing audit trail. First run (2026-06-19 13:04) emitted nothing to Marcelo. Pattern is reusable for any future daily pipeline cron where Marcelo does not want a daily Telegram ping.
+
+4. **L-CRYPTO-13 — DeepSeek instruction set must recognise PARTIAL as a valid `research_quality` rating.**
+   Pre-fix, DeepSeek rated any non-OK research as MISSING. Now: PASS / PARTIAL / MISSING with explicit semantics — PARTIAL = internal derivation present, external dimensions null; MISSING = no research at all. Affects `daily_memo.js` and any future consumer that reads `research_quality`.
+
+**Where it was saved:**
+- Canonical knowledge doc: `~/.hermes/knowledge/crypto-intel/STAGE_2_7_CAPTURE_2026-06-19.md`
+- Obsidian mirror: `~/Obsidian/Hermes/40_Projects/Active/PROJ-2026-06_crypto-trading-intelligence/{PROJ-Overview,PROJ-Timeline,PROJ-Decisions,PROJ-Notes-2026-06-19_DAILY-RADAR-Stage-2-7}.md`
+- Run evidence: `~/.hermes/knowledge/crypto-intel/daily/run_log_2026-06-19.jsonl` + `run_summary_2026-06-19.json`
+- Source: `/Users/bigdawg/Projects/binance-bot/scripts/daily_{census,research,pair_brief,memo,decision}.js` + `daily_pipeline.sh`
+- Cron: `2141a756a0aa` (next run 2026-06-20T12:00:00-07:00)
+
+**Linked kanban card:** `t_aefb15e8` (DAILY-RADAR: Binance.US USDT intel radar)
+
+**Stage 5 wire-up commit:** `96c8018`
+
+**Verification:**
+- 8/8 stages ok in end-to-end pipeline run (1 degraded fallback, degraded-mode worked)
+- Total elapsed: 13.0s
+- Bot runtime (PM2 `binance-bot` PID 4696): online, unaffected
+- `data/daily_radar.json` final shape: `regime_today: MID_CYCLE`, `confidence: MEDIUM`, `research_quality: PARTIAL`, `watchlist: [HYPEUSDT, BTCUSDT]`, `do_not_touch: [SPXUSDT, 1000MOGUSDT]` clean
+
+**What was NOT formalized:**
+- L-CRYPTO-10 (two-gate approval) unchanged — bot stays in LIVE-pilot per Phase 11A, radar pipeline is advisory-only per L-CRYPTO-03
+- No PAIRS universe changes
+- No `PERPLEXITY_API_KEY` provisioning (deliberately not part of this project)
+
+**Open follow-up (only when Marcelo asks):**
+- If CUA daemon recovers, re-route Stage 2 Phase B from internal-only back to Perplexity Browser QA for true external news/sentiment (PARTIAL → OK).
+- If DeepSeek keeps emitting sentences for symbol lists, add a Marcelo alert path for sanitizer drops.
