@@ -1,6 +1,6 @@
 ---
 name: daily-radar-pipeline
-description: DAILY-RADAR pipeline — daily USDT-pair heat-tag, per-pair intel briefs, and price-windowed intel package. The bot's `checkIntelGate()` reads it only when Stage 5 lands; until then it's write-only and zero bot impact. **Stage 6 (preview-gated, L-CRYPTO-14 governance) consumes this intel package as input to the BossMan decision layer** — pipeline itself remains advisory-only at the wire. Triggers include daily_radar, DAILY_RADAR_10, DAILY_MEMO, PAIR_BRIEFS, price_window, intel gate design, advisory-only intel, Stage 2.5, daily pair brief, stage 4 decision layer, do_not_touch, watchlist radar, L-CRYPTO-14, BossMan decision.
+description: DAILY-RADAR pipeline — daily USDT-pair heat-tag, per-pair intel briefs, and price-windowed intel package. The bot's `checkIntelGate()` reads it only when Stage 5 lands; until then it's write-only and zero bot impact. **Stage 6 (preview-gated, L-CRYPTO-14 governance) consumes this intel package as input to the BossMan decision layer** — pipeline itself remains advisory-only at the wire. **Stage 7 (read-and-gate integration, L-CRYPTO-16 governance) is the bot-side reader that gates signals per `per_coin[sym].decision` from `data/bossman_decision.json`** — pure read, no mutation, fail-CLOSED. Triggers include daily_radar, DAILY_RADAR_10, DAILY_MEMO, PAIR_BRIEFS, price_window, intel gate design, advisory-only intel, Stage 2.5, daily pair brief, stage 4 decision layer, do_not_touch, watchlist radar, L-CRYPTO-14, BossMan decision, L-CRYPTO-16, Stage 7 reader.
 ---
 
 # Daily Radar Pipeline (DAILY-RADAR)
@@ -35,7 +35,9 @@ A daily-running intel pipeline that produces per-coin heat-tags + per-pair intel
 
 **Stage 6 — BossMan decision layer (L-CRYPTO-14, PENDING WIRE — emitter shipped 2026-06-19):** reads Stages 1-3 outputs and emits `data/bossman_decision.json` (overwrite) plus a dated archive `data/bossman_decision.<YYYY-MM-DD>.json`. Inline schema validator enforces 8 hard-reject conditions; on any failure the artifact is NOT written. Decisions cover coin rotation (active/watchlist/do_not_touch), strategy class per coin, aggression tier (T1/T2/T3, fixed), per-trade qualify/deny. Hard $75 floor enforced at the signal layer (sub-75 rows dropped, counted in `floor_audit.denied_below_floor`). **Does NOT execute trades.** Decisions still pass through Policy Gate (L-CRYPTO-02 / `INTEL_GATE`). Wire discipline is preserved: pipeline stages never mutate bot config, never send Telegram, never trigger a trade. See `scripts/bossman_decision.js`, `~/.hermes/knowledge/SPEC-BINANCE-AUTONOMOUS-TRADER.md` v1.4 (Stage 6 section), and `L-CRYPTO-15` in `LEARNED_CRYPTO_INTELLIGENCE.md`.
 
-**Bot integration (Stage 7 — separate card, separate approval):** bot MAY consult `data/bossman_decision.json` for trade gating. Not in scope for the current skill.
+**Bot integration (Stage 7 — SHIPPED 2026-06-19, L-CRYPTO-16):** bot NOW consults `data/bossman_decision.json` for trade gating via `scripts/_bossman_decision.js` (`checkBossmanDecision(symbol)`). Read-only sibling gate to `checkIntelGate()`. Fail-CLOSED on every error path with reason codes: `BOSSMAN_FILE_MISSING`, `BOSSMAN_SCHEMA_INVALID`, `BOSSMAN_STALE`, `BOSSMAN_SYMBOL_MISMATCH`, `BOSSMAN_DENY`, `BOSSMAN_WATCH_ONLY`. Env flag `BOSSMAN_DECISION_GATE_ENABLED` defaults ON. 21/21 unit fixtures pass. `strategy_class` + `aggression_tier` from artifact are reserved for separate future sizing/execution card (NOT consulted on this gate). See `~/.hermes/knowledge/SPEC-BINANCE-AUTONOMOUS-TRADER.md` v1.5 (Stage 7 section) and `L-CRYPTO-16` in `LEARNED_CRYPTO_INTELLIGENCE.md`.
+
+**Execution-layer guard (Phase 11A — SHIPPED 2026-06-19, L-CRYPTO-17):** third independent $75 floor at the FIRST line of `executeTrade()` in `server.js`. Pure guard at `scripts/_execution_floor_guard.js`. Rejects sub-75 with `EXECUTION_FLOOR_BELOW_75`. Blocks BOTH PAPER and LIVE. No resizing. 18/18 fixtures pass.
 
 ## Hard Rule — Advisory-Only Contract (L-CRYPTO-03 + L-CRYPTO-14)
 
@@ -128,6 +130,7 @@ These are the **class-level pitfalls** for any future "add a sibling field to a 
 - `references/stage-1-census-and-price-window.md` — Stage 1 schema + price-window rule
 - `references/kanban-card-t_15af72e0.md` — Stage 2.5 sub-card body (template for future Stage-X cards)
 - `references/cost-log-format.md` — `TOKEN_LOG.jsonl` schema: `{ ts, stage, model, cost_usd, prompt_tokens, completion_tokens, duration_ms }`
+- `references/stage-7-read-and-gate-pattern.md` — Reusable read-and-gate consumer pattern (L-CRYPTO-16): reason-code scheme, three test-design pitfalls (real-disk shadows tests, env captured at require-time, mtime-TTL interaction), server.js additive integration recipe, no-drift verification commands, env-only rollback.
 
 ## Out-of-Scope
 
