@@ -1,8 +1,8 @@
 # LEARNED_*.md Files — Full Index
 
 **Source:** `~/.hermes/knowledge/`
-**Status:** Active — 25 files
-**Regenerated:** 2026-06-14 06:00
+**Status:** Active — 26 files
+**Regenerated:** 2026-06-19 06:00
 
 ---
 
@@ -17,6 +17,7 @@
 | `LEARNED_BAKERY_HOUSTON.md` | Starting a Home-Based Baking Business - Houston, TX |
 | `LEARNED_BAKERY_SYSTEM.md` | Home Bakery Business System Learning |
 | `LEARNED_BASEBALL_BETTING.md` | LEARNED_BASEBALL_BETTING.md - Baseball Squares & Betting |
+| `LEARNED_BINANCE_BOT.md` | LEARNED_BINANCE_BOT.md — Binance bot (CSdawgbot) on port 8104 |
 | `LEARNED_CORE_ARCHITECTURE.md` | Core Architecture - Internal Collaboration Hub |
 | `LEARNED_CRYPTO_INTELLIGENCE.md` | LEARNED_CRYPTO_INTELLIGENCE.md |
 | `LEARNED_CS50.md` | CS50 - Computer Science Fundamentals |
