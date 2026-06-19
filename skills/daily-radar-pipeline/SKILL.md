@@ -33,7 +33,9 @@ A daily-running intel pipeline that produces per-coin heat-tags + per-pair intel
 
 **Stage 5 — Wire-up (PENDING, Marcelo preview approval):** Stage 2.5's `data/pair_briefs.json` and Stage 1's `data/daily_radar.json` get read by the bot's `checkIntelGate()`. **Bot behavior change** — `server.js` edit. Triggers user approval gate (security/system change).
 
-**Stage 6 — BossMan decision layer (L-CRYPTO-14, PREVIEW-GATED, governance lock 2026-06-19):** reads Stages 1-3 outputs and emits `data/bossman_decision.json` with coin rotation + tier + strategy class + per-trade qualify/reject decisions. **Does NOT execute trades.** Decisions still pass through Policy Gate (L-CRYPTO-02 / `INTEL_GATE`). Wire discipline is preserved: pipeline stages never mutate bot config, never send Telegram, never trigger a trade. See `~/.hermes/knowledge/SPEC-BINANCE-AUTONOMOUS-TRADER.md` Decision Policy section for the full spec.
+**Stage 6 — BossMan decision layer (L-CRYPTO-14, PENDING WIRE — emitter shipped 2026-06-19):** reads Stages 1-3 outputs and emits `data/bossman_decision.json` (overwrite) plus a dated archive `data/bossman_decision.<YYYY-MM-DD>.json`. Inline schema validator enforces 8 hard-reject conditions; on any failure the artifact is NOT written. Decisions cover coin rotation (active/watchlist/do_not_touch), strategy class per coin, aggression tier (T1/T2/T3, fixed), per-trade qualify/deny. Hard $75 floor enforced at the signal layer (sub-75 rows dropped, counted in `floor_audit.denied_below_floor`). **Does NOT execute trades.** Decisions still pass through Policy Gate (L-CRYPTO-02 / `INTEL_GATE`). Wire discipline is preserved: pipeline stages never mutate bot config, never send Telegram, never trigger a trade. See `scripts/bossman_decision.js`, `~/.hermes/knowledge/SPEC-BINANCE-AUTONOMOUS-TRADER.md` v1.4 (Stage 6 section), and `L-CRYPTO-15` in `LEARNED_CRYPTO_INTELLIGENCE.md`.
+
+**Bot integration (Stage 7 — separate card, separate approval):** bot MAY consult `data/bossman_decision.json` for trade gating. Not in scope for the current skill.
 
 ## Hard Rule — Advisory-Only Contract (L-CRYPTO-03 + L-CRYPTO-14)
 
@@ -132,7 +134,7 @@ These are the **class-level pitfalls** for any future "add a sibling field to a 
 - No weekly regime engine (that's `crypto-intelligence` skill, CSDAWG 2.0, separate)
 - No bot config writes (Stage 5 only, with Marcelo approval)
 - No execution logic, position sizing, or capital allocation
-- **No decisions** (coin rotation, tier, strategy class, per-trade qualify/reject) — those are the BossMan decision layer (Stage 6, L-CRYPTO-14), preview-gated, separate pass
+- **No decisions** (coin rotation, tier, strategy class, per-trade qualify/reject) — those are the BossMan decision layer (Stage 6, L-CRYPTO-14). Emitter shipped 2026-06-19; this pipeline does NOT make them.
 - No Telegram/email/push (zero outbound channels to operator)
 - No 3rd-party API keys (DeepSeek via `.env`; Perplexity via Browser QA — no API key)
 
@@ -141,7 +143,7 @@ These are the **class-level pitfalls** for any future "add a sibling field to a 
 L-CRYPTO-14 upgraded BossMan to autonomous decision authority for crypto. This pipeline was amended to:
 
 1. Name BossMan as the decision consumer (in the frontmatter description, Profile section, and "Reference Files" section).
-2. Add Stage 6 to the pipeline table as a **preview-gated** stage that reads this pipeline's outputs.
+2. Add Stage 6 to the pipeline table. **Status 2026-06-19: PENDING WIRE — emitter shipped; bot integration (Stage 7) is a separate, future card.**
 3. Add a "no decisions" item to the "NEVER" list above (L-CRYPTO-14 hard constraint).
 4. Add Stage 6 mention to the Profile section so the next reader knows the wire is intel-only, not decision.
 

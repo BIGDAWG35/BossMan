@@ -1,4 +1,61 @@
-# PHASEREPORT.md — Hermes phase / standard formalization log
+# PHASER
+
+## 2026-06-19 — L-CRYPTO-14 governance lock: BossMan is the autonomous crypto decision engine
+
+**What happened.** Marcelo redirected the crypto decision model: BossMan is no longer a
+"package intel and ask" advisor. BossMan is now the **autonomous crypto decision engine** with
+hard $75 minimum trade floor. This is a governance change, not a code/runtime change.
+
+**Authority upgrade — what BossMan now decides (within fixed boundaries):**
+- Coin rotation (add/remove/watchlist) across the 15-pair universe
+- Trade type / strategy class (L-CRYPTO-12: scalper, swing, position, hedge)
+- Aggressiveness tier selection (named tier, from a fixed list — not a numeric band)
+- Per-trade qualify / reject
+
+**Authority boundaries — BossMan MAY NOT change without Marcelo approval:**
+- Numeric risk / aggressiveness band values
+- $75 hard minimum trade floor (signal AND execution layer)
+- PAPER ↔ LIVE mode flip
+- Security-sensitive settings (auth, secrets, key scopes, withdrawals, leverage)
+
+**Codified as L-CRYPTO-14.** Wired into the SPEC as the "Decision Policy" section
+(spec v1.3). Wired into both pipeline skills as a hard rule.
+
+**Hard $75 floor — dual-layer enforcement.**
+- **Signal layer:** intel producers MUST NOT emit recommendations whose notional < $75.
+  Any < $75 recommendation is structurally invalid and gets dropped at the source.
+- **Execution layer:** the trading layer MUST reject any < $75 trade as `INVALID_FLOOR`
+  even if upstream signals or human override try to pass one through.
+- Both layers are required; a single-layer guard is a single point of failure.
+
+**No Telegram spam.** Routine outputs (daily decisions, weekly intel) go to local files
+and mirrors only. Telegram is reserved for security-sensitive alerts and mode/config/boundary
+change approvals. Weekly summary is the default Telegram cadence for crypto.
+
+**Wire discipline preserved (L-CRYPTO-03):** the advisory pipeline's wire contract is unchanged
+at the file layer. The intel wire stays advisory-only; the decision wire is a separate
+L-CRYPTO-14 layer above it. The bot's `checkIntelGate()` still reads intel as advisory.
+
+**Phase 1 scope — governance only.** Canon artifacts + skill metadata + PHASEREPORT entry
++ Obsidian + BossMan repo mirrors. NO runtime touch. Stage 6 code wire-up (BossMan decision
+emitter) is a separate, preview-gated pass. No new crons, no `.env` changes, no PM2 restarts.
+
+**Files changed:**
+- `~/.hermes/knowledge/LEARNED_CRYPTO_INTELLIGENCE.md` (rule count 13 → 14; L-CRYPTO-14 added)
+- `~/.hermes/knowledge/SPEC-BINANCE-AUTONOMOUS-TRADER.md` (v1.3; Decision Policy section added)
+- `~/.hermes/skills/crypto-weekly-review/SKILL.md` (3-5 questions loop → one-shot decision digest)
+- `~/.hermes/skills/trading/daily-radar-pipeline/SKILL.md` (Stage 6 named, "no decisions" added)
+- `~/.hermes/knowledge/PHASEREPORT.md` (this entry)
+- Mirrors to `~/Obsidian/Hermes/` and `~/Repos/BossMan/docs/` in the next step.
+
+**Contracts intact.**
+- L-CRYPTO-02 (one-way `INTEL_GATE`) — still binds; nothing leaks back to intel producer
+- L-CRYPTO-03 (advisory-only at the wire) — still binds; no bot config writes from intel
+- L-CRYPTO-10 (two-gate approval for mode flips) — still binds; BossMan may not flip PAPER↔LIVE
+
+**Status:** Phase 1 governance lock shipped. Stage 6 (BossMan decision emitter, code pass)
+awaits Marcelo's preview approval.
+EPORT.md — Hermes phase / standard formalization log
 
 **Purpose:** Append-only log of major formalizations, policy adoptions, and phase closures. Each entry has: date, scope, what was codified, where, and link to the kanban card.
 
@@ -303,46 +360,159 @@ Then:
 
 ---
 
-## 2026-06-19 — DAILY-RADAR Stage 2 + Stage 7 ship
+## 2026-06-14 — Crypto weekly review (5 tasks proposed, 5 created)
+- mode: PAPER, regime: MID_CYCLE/UNCERTAINTY (0.45), funding: NEGATIVE 164w, death_cross 245w
+- intel: 6 days stale (2026-06-08 → 2026-06-14) — first CSDAWGBOT proposal is intel refresh
+- stage: Stage 1.2 (bull/bear structure) running; Stage 1.1 closed 2026-06-13
+- proposed: 5 CSDAWGBOT tasks (intel refresh, prediction resolution, Stage 1.3 draft, regime-precursor backtest, sector rotation study), created 5 kanban cards
+- cards: t_8bec8b2a, t_947f0fa4, t_00af7146, t_b58afdfe, t_fcc58ae8 (all todo, assignee=trading)
+- brief: ~/Obsidian/Hermes/40_Projects/Active/PROJ-2026-06_crypto-trading-intelligence/weekly-reviews/crypto-review-2026-06-14.md
+- mirror: ~/Repos/BossMan/docs/crypto-trading-intelligence/weekly-reviews/crypto-review-2026-06-14.md
+- commit: 1c4f970 pushed to origin/main
+- cost: 1 M3 call (3,784 input / 4,483 output tokens, ~$0.01); 0 DeepSeek, 0 OpenAI (per cost-control budget, M3 produced structured output in one pass — no second call needed)
+- l-crpto rule updates: none (no durable new lesson this week — only intel-refresh + prediction-resolution protocol candidates, which need another week of data to qualify for L-CRYPTO-14)
+- L-CRYPTO-10: dormant (PAPER default preserved)
+- L-CRYPTO-03: enforced (no engine writes, no bot config changes, no auto-trade triggers)
+- First-resolution dates to watch: 2026-06-18 (LINK WARM + WARM-count-10+), 2026-06-19 (WARM-13+), 2026-06-22 (regime-conf > 0.5)
 
-**Scope:** End-to-end DAILY-RADAR pipeline Stage 2 (Perplexity enrichment) + Stage 7 (cron + logging) under epic `t_aefb15e8`.
+## 2026-06-15 — PM2 + Cron Cleanup Audit (Marcelo directive)
 
-**What was codified:**
+**Result:** 11 safe actions executed, 3 investigations completed. 13 → 12 PM2 processes, 31 → 25 active Hermes crons, 1 PM2 god daemon (was 3), 2 orphan dirs cleaned.
 
-1. **D-12 — Research path = internal derivation (degraded-mode contract).**
-   External Perplexity Browser QA path is dead on this host (CUA daemon zero-bounds bug, documented since 2026-05-23). Brave Search via curl returns 429 from this IP. Perplexity Search API is forbidden by locked rule (no API key by design). Resolution: internal derivation from Stage 1 + Stage 3 outputs, with `source: bot_internal_only` tag and `research_quality: PARTIAL`. Never fabricated. PARTIAL is the honest ceiling until external research is viable.
+**Killed/removed:**
+- 2 ghost PM2 daemons (PIDs 67410, 37930) — orphaned `/Users/bigdawg/.hermes/pro` home
+- caddy PM2 process (90,812 restart loop, no Caddyfile) — removed; doc: `~/.hermes/knowledge/infrastructure/CADDY_REMOVED_2026-06-15.md`
+- 2 obsolete Hermes crons: `dcdb8bf68e01` (disabled since 2026-05-27, missing script), `d7baa1737ba8` (Basecamp Monitor)
+- 1 duplicate system crontab entry: `squarespayouts-status-exporter.js` (already covered by Hermes cron 0561fcffeba1)
+- 1 stale PM2 module_conf.json port override: `squarepayouts: 8030` (squarepayouts not running on any port)
+- 1 orphan script moved to `legacy/`: `basecamp-monitor-cron.sh`
 
-2. **D-13 — Two-layer USDT-symbol sanitization (defense in depth).**
-   Both `daily_memo.js` (producer) and `daily_decision.js` (consumer) enforce `^[A-Z0-9]{2,15}USDT$` regex on `do_not_touch` and `watchlist`. DeepSeek can emit sentence fragments for symbol lists; without sanitization, the bot's `data/daily_radar.json` would contain malformed data. Invalid entries dropped silently with stderr warning. Caught in QA during full pipeline run — fixed at root before any bot read the file.
+**Consolidated:**
+- 2 Monday 8am crons → 1 (88eff3953480 absorbs 2ba797d7ccfa's scope; survivor = LLM-driven)
+- 6 Travel OS trip reminder crons → 1 (7f58cef97c80, runs all 6 stages of process-trip-reminders.py)
 
-3. **D-14 — Cron silent-on-healthy delivery pattern.**
-   Cron `2141a756a0aa` (DAILY-RADAR daily 12:00 PDT) uses `deliver: origin` but the prompt is structured to only emit on **real** failure or degraded-mode event. Healthy runs are silent. Operational equivalent of `deliver: local` without losing audit trail. First run (2026-06-19 13:04) emitted nothing to Marcelo. Pattern is reusable for any future daily pipeline cron where Marcelo does not want a daily Telegram ping.
+**Throttled (per system stability):**
+- PM2 Health Monitor: `*/5` → `*/15` (288/day → 96/day)
+- Travel OS External Watchdog: `*/5` → `*/15` (288/day → 96/day)
+- Binance-bot-live-monitor and binance-bot-auto-ticket: KEPT at `*/5` per Marcelo policy
 
-4. **L-CRYPTO-13 — DeepSeek instruction set must recognise PARTIAL as a valid `research_quality` rating.**
-   Pre-fix, DeepSeek rated any non-OK research as MISSING. Now: PASS / PARTIAL / MISSING with explicit semantics — PARTIAL = internal derivation present, external dimensions null; MISSING = no research at all. Affects `daily_memo.js` and any future consumer that reads `research_quality`.
+**Doc changes:**
+- pm2-health-check SKILL.md: trading-control route updated `/api/health` → `/` per directive; caddy-removal cross-ref added
 
-**Where it was saved:**
-- Canonical knowledge doc: `~/.hermes/knowledge/crypto-intel/STAGE_2_7_CAPTURE_2026-06-19.md`
-- Obsidian mirror: `~/Obsidian/Hermes/40_Projects/Active/PROJ-2026-06_crypto-trading-intelligence/{PROJ-Overview,PROJ-Timeline,PROJ-Decisions,PROJ-Notes-2026-06-19_DAILY-RADAR-Stage-2-7}.md`
-- Run evidence: `~/.hermes/knowledge/crypto-intel/daily/run_log_2026-06-19.jsonl` + `run_summary_2026-06-19.json`
-- Source: `/Users/bigdawg/Projects/binance-bot/scripts/daily_{census,research,pair_brief,memo,decision}.js` + `daily_pipeline.sh`
-- Cron: `2141a756a0aa` (next run 2026-06-20T12:00:00-07:00)
+**Investigated (no fix):**
+- pmd-web: 37 restarts = cumulative from dev-mode hot-reloads; current run 3D stable, 0 unstable, prod mode. `/portfolio` returns HTTP 200. **NOT in PM2 health-check whitelist — should be added if health-monitor coverage desired.**
+- boss-hub-internal / boss-hub-external: 5 restarts each, all clustered at bring-up (June 12), `unstable_restarts: 0`, 3D current uptime. **Healthy, no action needed.**
+- Hermes gateway (PID 1679): 90% CPU reading was a burst (6.7% → 0.6% in 5s). Healthy state, 14-day uptime, 4 ESTABLISHED HTTPS connections to LLM providers, 4 LSP child processes (TypeScript, Python, bash), cua-driver, Chrome headless. **No stuck job. Baseline Hermes activity.**
 
-**Linked kanban card:** `t_aefb15e8` (DAILY-RADAR: Binance.US USDT intel radar)
+**Cron count:**
+- Before audit: 31 active
+- After audit: 25 active (31 - 2 deleted - 1 collapsed into 1 = 6 deleted, 1 merged with existing = 25)
+- Breakdown: 25 active + 0 disabled = 25 total
 
-**Stage 5 wire-up commit:** `96c8018`
+**PM2 count:**
+- Before audit: 13 (1 caddy in restart loop + 12 healthy)
+- After audit: 12 (caddy removed, all 12 healthy)
 
-**Verification:**
-- 8/8 stages ok in end-to-end pipeline run (1 degraded fallback, degraded-mode worked)
-- Total elapsed: 13.0s
-- Bot runtime (PM2 `binance-bot` PID 4696): online, unaffected
-- `data/daily_radar.json` final shape: `regime_today: MID_CYCLE`, `confidence: MEDIUM`, `research_quality: PARTIAL`, `watchlist: [HYPEUSDT, BTCUSDT]`, `do_not_touch: [SPXUSDT, 1000MOGUSDT]` clean
+**Open finding flagged in report (NOT auto-fixed):**
+- pmd-web not in PM2 health-check whitelist. Route: `/portfolio` (HTTP 200). Should be added if auto-repair coverage is wanted.
 
-**What was NOT formalized:**
-- L-CRYPTO-10 (two-gate approval) unchanged — bot stays in LIVE-pilot per Phase 11A, radar pipeline is advisory-only per L-CRYPTO-03
-- No PAIRS universe changes
-- No `PERPLEXITY_API_KEY` provisioning (deliberately not part of this project)
+## 2026-06-19 — Browser QA / Perplexity in Brave path restored
 
-**Open follow-up (only when Marcelo asks):**
-- If CUA daemon recovers, re-route Stage 2 Phase B from internal-only back to Perplexity Browser QA for true external news/sentiment (PARTIAL → OK).
-- If DeepSeek keeps emitting sentences for symbol lists, add a Marcelo alert path for sanitizer drops.
+**Context.** The 2026-05-28 Brave + Perplexity bridge doc described a CuaDriver / Hermes
+Computer Use path. That path is dead on this host (CuaDriver zero-bounds bug; Perplexity
+desktop app same). The 2026-06-19 STAGE_2/7 capture initially concluded "Perplexity Browser
+QA path is dead" and locked the pipeline to internal-only derivation. **Both conclusions
+were later overturned** when a separate, isolated Brave instance + raw WebSocket CDP
+turned out to be a working path.
+
+**What was built.**
+- `scripts/cdp_client.js` — raw WebSocket CDP client, no new deps. `openPerplexity()` and
+  `queryPerplexity(prompt, opts)` exposed.
+- `scripts/daily_research.js` — added `--source browserqa` mode with per-symbol graceful
+  fallback to Brave text search → internal-only.
+- `scripts/daily_pipeline.sh` — preferred path switched to `browserqa`; added post-Phase-B
+  source-tally audit logging to RUN_LOG.
+- New isolated Brave instance launched with `--remote-debugging-port=9222 --user-data-dir=/tmp/brave-debug`
+  so the bot path does NOT touch Marcelo's default profile or `cello35` Perplexity login.
+
+**Three non-obvious traps (D-16, D-17) documented at:**
+`~/.hermes/knowledge/LEARNED_BRAVE_PERPLEXITY_BRIDGE.md` (mirrored at
+`/Users/bigdawg/Repos/BossMan/docs/LEARNED_BRAVE_PERPLEXITY_BRIDGE.md`).
+
+1. Perplexity has no submit button — `form.requestSubmit()` does NOT trigger the React
+   submit. Use real `Input.dispatchKeyEvent` Enter OR direct URL `/search?q=...`.
+2. Citations are ¹²³ superscripts, not `[1]` chips — polling heuristic must use
+   `indexOf('Sources')`, not regex on bracket chars.
+3. `JSON.stringify` template-literal regex literals double-escape `\\d` → runtime sees
+   `\d` → matches single chars like "d". Use `indexOf` to avoid the escape game.
+
+**Cron impact.** None. The existing `2141a756a0aa` (daily_pipeline.sh @ 12:00 PT) continues
+to do all the work; no new jobs registered.
+
+**Verification.** BTCUSDT smoke test: 14.2s, 6406 chars, `ok:true`, source-tag
+`perplexity_browser_qa`. Token log shows `model: perplexity_search`, `ok: true`.
+
+**Contract intact.** L-CRYPTO-03 advisory-only; no trading config or PAIRS universe changes;
+internal-only derivation remains the last-resort fallback with `research_quality: PARTIAL`.
+
+**Files mirrored across canonical layers** (dual-layer rule):
+- `~/.hermes/knowledge/LEARNED_BRAVE_PERPLEXITY_BRIDGE.md` ↔ `/Users/bigdawg/Repos/BossMan/docs/LEARNED_BRAVE_PERPLEXITY_BRIDGE.md`
+- `~/.hermes/knowledge/AUTOMATION_INVENTORY.md` ↔ `/Users/bigdawg/Repos/BossMan/docs/AUTOMATION_INVENTORY.md`
+- `~/.hermes/knowledge/PHASEREPORT.md` (this file) ↔ `/Users/bigdawg/Repos/BossMan/docs/PHASEREPORT.md`
+- `~/.hermes/knowledge/crypto-intel/STAGE_2_7_CAPTURE_2026-06-19.md` (Recovery section added)
+- Memory entry: "Perplexity = Browser QA via CDP only" (lesson cluster D-12/13/14/15/16/17)
+
+**BossMan can now debug or re-run this path in future sessions without pulling Marcelo
+back into the loop** — every artifact, trap, and decision is captured in the canonical docs.
+
+## 2026-06-19 — Stage 6 BossMan Decision Emitter wired (Phase 2-3)
+
+**Marker.** `L-CRYPTO-15-EMITTER-SHIPPED-2026-06-19`
+
+**What shipped.** `scripts/bossman_decision.js` — Stage 6 of the DAILY-RADAR pipeline. Pure
+BossMan decision emitter: reads Stage 1-3 intel (`data/daily_radar.json`, `data/pair_briefs.json`,
+`~/.hermes/knowledge/crypto-intel/daily/DAILY_MEMO_<date>.json`,
+`~/.hermes/knowledge/crypto-intel/weekly/latest/intelligence.json`) plus `server.js` PAIRS
+(regex-parse, read-only), then emits **one** structured artifact: `data/bossman_decision.json`
+(overwrite) plus a dated archive `data/bossman_decision.<YYYY-MM-DD>.json`. Inline schema
+validator enforces 8 hard-reject conditions — on any failure the artifact is NOT written.
+
+**Governance.** L-CRYPTO-14 contract preserved end-to-end: $75 hard floor enforced at the
+signal layer (sub-75 rows dropped, counted in `floor_audit.denied_below_floor`); no Telegram
+spam; no PAPER↔LIVE flip; no numeric risk-band mutation; no `.env` / `server.js` /
+`pre-trade-hook.js` / `ecosystem.config.cjs` / cron / PM2 writes. New rule L-CRYPTO-15
+locks the schema and validation rules. Bot's `checkIntelGate()` still reads
+`data/daily_radar.json` unchanged — Stage 6 is a sibling artifact, not a replacement.
+
+**Preview gate.** Marcelo approved the design preview (msg 27899) before any code was
+written. Preview covered schema, validation rules, dual-layer $75 floor split, tier set,
+strategy classes, wire discipline, files-to-add list, and verification plan.
+
+**Verification (live).** Inline validator: **128/128 checks pass** (top-level fields, schema
+constants, universe parity with PAIRS, per_coin coverage, tier/strategy/decision enums, $75
+floor, mode block). SHA-256 of artifact stable across re-reads. `pm2 jlist`: `binance-bot`
+PID 4696 unchanged before/after Stage 6 writes — no restart. `.gitignore` updated to
+exclude `data/bossman_decision*.json` (artifact contains live daily decisions, not
+source-of-truth).
+
+**Files added/changed.**
+
+- NEW: `scripts/bossman_decision.js` (~660 lines, inline JSON-schema validator, no new npm deps).
+- NEW: `data/bossman_decision.json`, `data/bossman_decision.2026-06-19.json` (gitignored).
+- UPDATE: `~/.hermes/knowledge/LEARNED_CRYPTO_INTELLIGENCE.md` (rule count 14 → 15; L-CRYPTO-15 section appended).
+- UPDATE: `~/.hermes/knowledge/SPEC-BINANCE-AUTONOMOUS-TRADER.md` (v1.4 row; new "Stage 6 — BossMan Decision Emitter" section before Gate Map).
+- UPDATE: `~/.hermes/skills/trading/daily-radar-pipeline/SKILL.md` (Stage 6 status: PREVIEW-GATED → PENDING WIRE).
+- UPDATE: `.gitignore` (added `data/bossman_decision*.json`).
+- Mirrors: `~/Obsidian/Hermes/40_Projects/Active/PROJ-2026-06_crypto-trading-intelligence/` and `~/Repos/BossMan/docs/`. Commit local only, no git push.
+
+**Today's artifact (preview).** regime `MID_CYCLE`, confidence `MEDIUM`, watchlist
+`[HYPEUSDT]`, do_not_touch `[]`. Tier distribution: T1=5, T2=10, T3=0. Strategy: swing (15).
+Decisions: QUALIFY=9, DENY=6. No sub-75 rows. `next_action = human_review_or_approval_required`.
+
+**Open items / next pass.**
+
+- Stage 7 — bot reads `bossman_decision.json` for trade gating (separate card, separate approval).
+- Execution-layer $75 floor in `pre-trade-hook.js` (separate card).
+- Per-trade qualify integration (separate card).
+- HARD GATE §B (LIVE-readiness): UI-verified `canWithdraw=false`, but checklist is still paused pending a second-pass review of `canTrade` semantics with Marcelo before resuming Phase 11A.
+- Push deferred pending merge strategy with sibling commits.

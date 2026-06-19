@@ -27,7 +27,7 @@ The weekly trading-learning review (`weekly-review-template.md` in the project f
 
 ## Current L-CRYPTO rule count
 
-14 (L-CRYPTO-01 through L-CRYPTO-14).
+15 (L-CRYPTO-01 through L-CRYPTO-15).
 
 ## L-CRYPTO-14: BossMan is the autonomous crypto decision engine (amends L-CRYPTO-03)
 
@@ -269,3 +269,46 @@ Before 2026-06-13, the actual strategic work for the crypto learning system was 
 ## Cardinal rule
 
 **The loop is closed:** engine produces → engine archives → dashboard serves → bot reads → predictions logged → predictions graded → back to engine. Anything that breaks the loop needs explicit operator intervention.
+
+## L-CRYPTO-15: Stage 6 BossMan Decision Artifact (L-CRYPTO-14 enforcement contract)
+
+**Status:** 2026-06-19 — Phase 2-3 wired (preview-gated, approved by Marcelo). Schema + emitter live, no runtime/.env/PM2/cron touched.
+
+**Scope:** Defines the schema and validation rules for `data/bossman_decision.json`, the single artifact Stage 6 emits. Each Stage 6 run writes ONE such artifact (overwrite) plus a dated archive. Stage 6 is a pure decision emitter — it does NOT trade, gate, size, or alter any execution. That contract is shared with L-CRYPTO-03 (advisory-only) and L-CRYPTO-14 (BossMan autonomy within fixed boundaries).
+
+**Hard rules — enforced by `scripts/bossman_decision.js` BEFORE any file write:**
+
+1. **Schema validation must pass.** Top-level required fields: `schema_version`, `generated_at`, `date`, `decision_layer`, `l_crypto_rule`, `regime_today`, `confidence`, `research_quality`, `universe`, `per_coin`, `floor_audit`, `mode`, `next_action`, `preview_id`. On any failure: artifact NOT written.
+2. **Universe is locked.** `universe.active` must be exactly the canonical 15 USDT pairs in the same order as `server.js` `PAIRS`. `watchlist` ≤ 3. `do_not_touch` ≤ 3. No overlap. `do_not_touch` entries must come from the canonical PAIRS list (block-only). Watchlist entries are conservatively restricted to PAIRS as well.
+3. **Hard $75 minimum notional (signal layer).** Every `per_coin[*].notional_usd` must be ≥ 75. Sub-75 rows are dropped, not emitted. Counted in `floor_audit.denied_below_floor` and `floor_audit.violations_dropped`. This is the signal-layer guard; the execution-layer guard (in `pre-trade-hook.js` or equivalent) is a separate, future-pass question.
+4. **Tiers are named and fixed.** `aggression_tier` ∈ {`TIER_1_CONSERVATIVE`, `TIER_2_BASE`, `TIER_3_AGGRESSIVE`}. Numeric band definitions remain unchanged from `LIVE_PILOT_MAX_NOTIONAL`. BossMan selects per-coin; never redefines the tier set.
+5. **Strategy classes are fixed.** `strategy_class` ∈ {`scalper`, `swing`, `position`, `hedge`} (L-CRYPTO-12 set). BossMan selects per-coin; never redefines the class set.
+6. **Regime enum.** `regime_today` ∈ {`EARLY_CYCLE`, `MID_CYCLE`, `LATE_CYCLE`, `DISTRIBUTION`, `RISK_OFF`, `RECOVERY`, `UNKNOWN`}.
+7. **Mode block is READ_FROM_ENV only.** `mode.PAPER_MODE = "READ_FROM_ENV"`, `mode.LIVE_PILOT_MAX_NOTIONAL = "READ_FROM_ENV"`, `mode.stage_6_mutation = "NONE — advisory only"`. Stage 6 NEVER writes to `.env`, `server.js`, `pre-trade-hook.js`, or any bot config.
+8. **`l_crypto_rule` field is mandatory.** Every artifact must declare `"l_crypto_rule": "L-CRYPTO-14"`. Schema and decision_layer fields lock the artifact's authority chain.
+
+**Verification (Phase 2-3 — emitter live, no runtime integration yet):**
+
+- `node scripts/bossman_decision.js --dry-run` prints the candidate artifact; no file write.
+- `node scripts/bossman_decision.js --schema` prints the inline JSON-schema spec; no file write.
+- `node scripts/bossman_decision.js` writes `data/bossman_decision.json` and `data/bossman_decision.<date>.json`. SHA-256 verified stable across re-reads.
+- Inline validator returns `{ ok: true }` on the 128/128-check verification battery (top-level fields, schema constants, universe parity with PAIRS, per_coin coverage, tier/strategy/decision enums, $75 floor, mode block).
+- `pm2 jlist` shows `binance-bot` PID unchanged before/after Stage 6 writes (PID 4696, no restart).
+- `data/bossman_decision*.json` is added to `.gitignore` (artifact contains live daily decisions, not source-of-truth).
+
+**Anti-pattern to avoid (Stage 6 misuse):**
+
+- Treating `bossman_decision.json` as an execution signal — Stage 6 is advisory; bot integration is a separate future card (Stage 7 wire-up, separate approval).
+- Writing sub-75 notional rows to "log them anyway" — sub-75 rows are dropped at the signal layer and never emitted.
+- Loosening the universe check to allow new pairs without an `server.js` `PAIRS` change — Stage 6 mirrors, never adds.
+- Reading `LIVE_PILOT_MAX_NOTIONAL` from env to "scale" notional — the spec locks notional to 75 (T2/T1) or 113 (T3, hardcoded 1.5×), independent of env.
+- Sending Telegram from Stage 6 — Telegram emissions are reserved for security-sensitive alerts and explicit operator approval under L-CRYPTO-03 / no-spam contract.
+
+**Wire discipline (mirrors L-CRYPTO-03 + L-CRYPTO-14):**
+
+Stage 6 NEVER writes `.env`, `server.js`, `pre-trade-hook.js`, `ecosystem.config.cjs`, cron jobs, or PM2 config. Stage 6 reads `PAIRS` from `server.js` via regex parse (read-only) and falls back to a hard-coded canonical copy. The bot's `checkIntelGate()` continues to read `data/daily_radar.json` unchanged — Stage 6 is a sibling artifact, not a replacement.
+
+**Mirrors:**
+
+- `~/Obsidian/Hermes/40_Projects/Active/PROJ-2026-06_crypto-trading-intelligence/LEARNED_CRYPTO_INTELLIGENCE.md`
+- `~/Repos/BossMan/docs/LEARNED_CRYPTO_INTELLIGENCE.md`
