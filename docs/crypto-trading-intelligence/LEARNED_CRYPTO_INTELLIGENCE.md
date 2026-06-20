@@ -455,3 +455,19 @@ Each additive. If upstream sizing math drifts, if a race condition ever passes a
 **Wire discipline:** Pure governance spec. No Stage 6 emitter mutation. No Stage 7 reader mutation. No `$75` floor mutation. No `.env` mutation. No PM2 mutation. No cron mutation. No Telegram mutation. No new intelligence sources. No new signal logic.
 
 **Mirrors:** `~/Obsidian/Hermes/40_Projects/Active/PROJ-2026-06_crypto-trading-intelligence/LEARNED_CRYPTO_INTELLIGENCE.md` and `~/Repos/BossMan/docs/crypto-trading-intelligence/LEARNED_CRYPTO_INTELLIGENCE.md` (3-mirror parity).
+
+## L-CRYPTO-20: No autonomous PAPER↔LIVE flip — governance rule (2026-06-19)
+
+**Status:** 2026-06-19 — Phase 12C-A governance pass. Approved by Marcelo. Pure governance rule; binds to L-CRYPTO-18/19 enums and to the `qualifyIntegration()` gate (Phase 12C-B code change).
+
+**Rule:** No agent, cron, LaunchAgent, scheduled task, or sub-process may change `PAPER_MODE` in `.env` or otherwise toggle the bot between PAPER and LIVE. The PAPER → LIVE transition is permitted only when **all** are true: (i) Marcelo files a Kanban card titled `LIVE FLIP — <YYYY-MM-DD>` with the pilot scale + revert policy fields populated; (ii) Marcelo sends a Perplexity ack to BossMan referencing that card ID; (iii) BossMan echoes the card ID back, confirming the audit trail.
+
+**Enforceability surface:** the `qualifyIntegration()` gate (Phase 12C-B code change). A signal that reaches `executeTrade()` in LIVE mode must first clear all three qualify rules (tier-cap ceiling, class×tier legality, regime×tier legality) before the LIVE_PILOT_MAX_NOTIONAL ceiling and execution-floor guards. Any signal that fails qualify is journaled with `hookResult='rejected'`, `error='qualify:<reason>'` — never reaches the live Binance API. Stage 7 fail-CLOSED contract (L-CRYPTO-19 wire discipline) is preserved: Stage 7 only READS the new fields.
+
+**Reversal (LIVE → PAPER):** permitted without prior approval when triggered by the documented revert-policy conditions (realized fill >2% adverse, 3 BossMan denials in 24h, exposure cap hit, BOSSMAN_STALE, live-balance reconcile fail, pre-trade hook unreachable). Manual reversal by Marcelo at any time is permitted. No agent performs the revert automatically except under those enumerated conditions.
+
+**Cross-references:** L-CRYPTO-10 (no-ambient-LIVE posture), L-CRYPTO-14 (signal-layer $75 floor), L-CRYPTO-16 (BossMan-gate $75 floor), L-CRYPTO-17 (execution-layer $75 floor), L-CRYPTO-18 (strategy_class × aggression_tier matrix), L-CRYPTO-19 (regime_today enum + regime × tier matrix).
+
+**Wire discipline:** Pure governance rule. No Stage 6 emitter mutation. No Stage 7 reader mutation. No `$75` floor mutation. No `.env` mutation by automated means. No PM2 mutation by automated means. No cron mutation. No Telegram mutation. The rule binds to the `qualifyIntegration()` gate introduced in Phase 12C-B; if that gate is removed or disabled, this rule becomes advisory-only and a new L-CRYPTO rule must be filed.
+
+**Mirrors:** `~/Obsidian/Hermes/40_Projects/Active/PROJ-2026-06_crypto-trading-intelligence/LEARNED_CRYPTO_INTELLIGENCE.md` and `~/Repos/BossMan/docs/crypto-trading-intelligence/LEARNED_CRYPTO_INTELLIGENCE.md` (3-mirror parity).
