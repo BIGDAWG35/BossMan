@@ -9,6 +9,45 @@
 
 ---
 
+## 2026-06-23 — S1-STEER: Aim Security & PM2 loop at money/trading lanes
+
+**Scope:** Steering patch to S1 loop (operator-driven, no behavior change).
+
+**What changed:**
+
+1. **Loop spec** (`~/.hermes/knowledge/GOAL-LOOP-SECURITY_PM2.md`):
+   - New "Priority Lanes & Wake-up Rules" section (T1 priority lanes, T2 supporting infra, A/B P1 card format, no-spam defaults)
+   - T1 priority lanes: boss-hub, bakery, trading-control, binance-bot, money-pipeline, csdawg-dashboard, agent-os
+   - T2 supporting infra: cloudflare tunnels, tailscale, PM2 daemon, Hermes gateway, security-watch, pm2-health-check
+   - Wake-up rules: Telegram = P0/FAIL only, P1 card only if T1 or public port, P2/P3 log-only
+   - State-loss ID fix: `t_e56d53cd` → `t_bf23cc0f` (5 references)
+
+2. **Cron driver** (`~/.hermes/scripts/security-pm2-monthly.sh`):
+   - INTAKE step now T1-first, T2-second, full enumeration third
+   - T1 detection: inline Python regex against `PRIORITY_LANES` env var
+   - T2 detection: cloudflared, tailscale status, pm2 ping
+   - Listening-port scan added (flags new public ports)
+   - State-loss ID fix: `t_e56d53cd` → `t_bf23cc0f` (4 references)
+   - Syntax check PASS, dry-run PASS (all 7 T1 lanes detected, T2 all healthy)
+
+3. **3 P1 cards** (A/B decision blocks added as comments):
+   - `t_4ffc976d` (PM2 baseline) → recommend A: align docs to reality
+   - `t_793fe0ff` (bakery port) → recommend A: 3001 is canonical, update docs
+   - `t_cd6c78c4` (boss-hub public) → recommend A: keep dual-process, document, run security review
+
+**Governance:**
+- Card: `t_d9de3921` (S1-STEER, completed)
+- Goal card: `t_bf23cc0f` (S1 long-lived)
+- Step-5 verdict: `docs/verdicts/step5-verdict-s1-steer-2026-06-23.json` (PASS, 13/13)
+- P5 final: 10/10 PASS
+- Behavior change: **none** (no service restart, no port change, no PM2 delete, no SOUL/AGENTS edit)
+- Cron `675fdbeba374` unchanged (still active, still `30 23 1 * *`, still `--no-agent --deliver local`)
+- Telegram noise: 0 (no P0 findings, no Step-5 FAIL)
+
+**Next S1 cycle:** 2026-07-01 23:30 PT (cron auto-fires, scope inherits S1-STEER patches).
+
+---
+
 ## 2026-06-23 — S1-KERNEL: Wire Security & PM2 Watch Goal Loop into SOUL + AGENTS
 
 **Scope:** Kernel-doc wiring only. SOUL.md + AGENTS.md (canonical + Obsidian mirror) now reference the S1 Goal Loop so future sessions discover it without service behavior change.
