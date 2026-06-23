@@ -9,6 +9,50 @@
 
 ---
 
+## 2026-06-23 — Security & PM2 Watch: Agent OS security lane registration
+
+**Scope:** Kernel-doc + lane-doc additions to register Security & PM2
+Watch as the canonical Agent OS security lane. Additive; no service
+behavior change.
+
+**Files updated:**
+- `~/Projects/BossMan/docs/perplexity-spaces/agent-os/01-operating-blueprint.md`
+  → new "Security Lane (Permanent — 2026-06-23, S1-STEER LOCK)"
+  section (lane doc, not kernel-doc)
+- `~/Projects/BossMan/hermes/knowledge/ROUTING-RULES.md` (canon) +
+  `~/Projects/BossMan/docs/ROUTING-RULES.md` (mirror, git-tracked
+  duplicate of canon per doc-sync rule) → new §11 "Security & PM2
+  Watch Lane (Permanent — 2026-06-23, S1-STEER LOCK)" (kernel-doc,
+  additive, no behavior change)
+
+**Agent OS overview** now identifies Security & PM2 Watch as the
+default security sub-agent for PM2 / cron / ports in Agent OS. T1
+priority lanes, T2 supporting infra, wake-up rules, and the hard
+guard (read-only + write-to-evidence only) are all documented.
+
+**Routing Ledger §11** registers the lane in canonical YAML:
+`lane: security-pm2-watch`, `status: active`, `goal_card: t_bf23cc0f`,
+`work_type: meta-loop (monthly audit)`, `qa_required: yes (Step-5
+mandatory)`, `tier: 1`, `cost_per_cycle: ~$0.20`,
+`telegram_discipline: P0 + Step-5 FAIL only`. State-loss rule
+(goal card resolved by title, not hard-coded ID) codified in §11.8.
+
+**Governance** (carried forward from S1-STEER LOCK):
+- Step-5 QA mandatory for every S1 cycle and any future scope change
+- No edits to SOUL / AGENTS / MODEL_ROUTING_WORKFLOW from inside lane
+- T1/T2 lanes, wake-up severity, P1 A/B format are deliberate
+  operator decisions (not routine steering)
+
+**Result:** Security lane is fully autonomous on monthly loop, quiet
+by default (no daily security spam), aggressively money/trading-
+biased, strict about never auto-fixing P1s. Future Agent OS work
+treats it as the default security sub-agent — no new security
+crons needed.
+
+**Service behavior UNCHANGED.** Cron `675fdbeba374` unchanged.
+
+---
+
 ## 2026-06-23 — S1-STEER LOCKED: long-term default scope (operator confirmed)
 
 **Scope:** Final lock-in of S1-STEER scope. Supersedes the earlier

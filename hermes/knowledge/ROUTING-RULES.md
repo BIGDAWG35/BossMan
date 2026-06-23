@@ -570,3 +570,114 @@ Per-project tiered caps (different `N` per project) are deferred to a
 later phase. Today's rule is a single global uniform value.
 
 ---
+
+## 11. Security & PM2 Watch Lane (Permanent — 2026-06-23, S1-STEER LOCK)
+
+**Status:** ACTIVE. §1–10 above are unchanged. This section is
+additive: it registers the **Security & PM2 Watch Goal Loop** as a
+first-class routing lane in Agent OS.
+
+### 11.1 Mission
+
+> "Keep PM2/crons/security posture clean for money/trading lanes,
+> surface drift, never auto-fix."
+
+### 11.2 Lane registration (Routing Ledger)
+
+```yaml
+lane: security-pm2-watch
+status: active
+goal_card: t_bf23cc0f       # resolved dynamically by title
+spec: ~/.hermes/knowledge/GOAL-LOOP-SECURITY_PM2.md
+script: ~/.hermes/scripts/security-pm2-monthly.sh
+cron:
+  id: 675fdbeba374
+  schedule: "30 23 1 * *"   # monthly, 1st of month 23:30 local
+  flags: --no-agent --deliver local
+evidence_dir: ~/.hermes/knowledge/SECURITY_LOOP/cycles/YYYY-MM/
+review_doc: docs/cycles/YYYY-MM/SECURITY_PM2_REVIEW_YYYY-MM.md
+verdict_pattern: docs/verdicts/step5-verdict-s1-*.json
+work_type: meta-loop (monthly audit)
+qa_required: yes (Step-5 mandatory)
+tier: 1
+cost_per_cycle: ~$0.20
+telegram_discipline: P0 + Step-5 FAIL only
+```
+
+### 11.3 Lane focus
+
+**T1 priority lanes** (every cycle, checked first):
+
+- `boss-hub` (internal + public)
+- `bakery`
+- `trading-control`
+- `binance-bot` / `money-pipeline`
+- `csdawg-dashboard`
+- `agent-os`
+
+**T2 supporting infra** (logged, alerted on failure):
+
+- `cloudflared`
+- `tailscale`
+- `PM2 daemon`
+- `Hermes gateway`
+- `security-watch` (daily/weekly)
+- `pm2-health-check`
+
+### 11.4 Wake-up rules
+
+| Severity | What counts | Surface |
+|---|---|---|
+| **P0** | Security / money / auth broken or stuck | **Telegram + Step-5 QA** |
+| **P1** | Touches T1 lane or public port | **Dedicated A/B card, no auto-fix** |
+| **P1** | Does NOT touch T1 lane | Log only, no card |
+| **P2** | Anything not in P0/P1 | Monthly `SECURITY_PM2_REVIEW_YYYY-MM.md`, no Telegram |
+| **P3** | Cosmetic / informational | Monthly report only |
+
+### 11.5 Hard guard — loop is read-only + write-to-evidence only
+
+The script's `S1_GUARD_ACTIVE` block enforces:
+
+- **BLOCKED** from S1: `pm2 restart|delete|start|reload|stop`,
+  `hermes cron create|remove|update`, `crontab -e|-r`,
+  `launchctl unload|load|bootout`, `kill[-9]`, `lsof -i :PORT -k`,
+  writes to `SOUL.md` / `hermes/AGENTS.md` / Obsidian mirror /
+  `PHASEREPORT.md`, T1 service env / secrets / auth / `NEXTAUTH_*`.
+- **ALLOWED**: `pm2 list|jlist|show|logs`, hermes kanban
+  read + create (review card) + comment + complete (cycle card
+  only), `lsof -iTCP -sTCP:LISTEN`, evidence writes.
+
+Any P1 finding that requires a blocked action surfaces as an A/B
+card and waits for `approve A` / `approve B` / `hold`. **Service
+behavior is unchanged until the operator approves.**
+
+### 11.6 P1 card format (mandatory)
+
+Title + context + A/B options + one-paragraph risk/benefit + a
+recommended option (A or B) with reasoning + what does NOT change
+without approval + `accept_when` (operator approval language).
+
+### 11.7 Governance
+
+- Step-5 QA mandatory for every S1 cycle and any future scope change.
+- No edits to `SOUL.md` / `hermes/AGENTS.md` /
+  `MODEL_ROUTING_WORKFLOW.md` from inside this lane.
+- This section is **kernel-doc**, so any change to it requires
+  Routing Ledger + Step-5 + PHASEREPORT.
+- Future Agent OS work treats Security & PM2 Watch as the **default
+  security sub-agent** for PM2 / cron / port questions. Do not invent
+  new security crons; reuse this lane.
+
+### 11.8 State-loss rule
+
+Goal card is resolved by **title** (e.g. "Security & PM2 Watch"),
+not by hard-coded ID. Scripts use `kanban find "Security & PM2 Watch"`
+or equivalent title-match. ID drift across state-loss events is
+expected and not a bug.
+
+### 11.9 No future steering prompt
+
+Unless the operator explicitly changes T1/T2 lanes, wake-up
+severity, or P1 A/B format, no future steering prompt is needed for
+this lane. The S1-STEER LOCK spec and this section are the
+authoritative scope.

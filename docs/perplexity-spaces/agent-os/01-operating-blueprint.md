@@ -489,6 +489,50 @@ Template: `~/.hermes/knowledge/WEEKLY_REVIEW_TEMPLATE.md` — PM2 health, logs, 
 
 Service map, PM2 sync, architecture, security, memory audit, cron/LaunchAgent audit, backup verification.
 
+### Security Lane (Permanent — 2026-06-23, S1-STEER LOCK)
+
+**Security lane = Security & PM2 Watch Goal Loop (Phase S1).** This is the
+default security sub-agent for PM2 / cron / ports in Agent OS — no need
+to invent new security crons.
+
+- **Goal card**: `t_bf23cc0f` (long-lived, `ready`, rehydrated 2026-06-23)
+- **Mission**: "Keep PM2/crons/security posture clean for money/trading
+  lanes, surface drift, never auto-fix."
+- **Cadence**: Monthly cron (`675fdbeba374`, `30 23 1 * *`, --no-agent,
+  --deliver local)
+- **Output**:
+  - `~/.hermes/knowledge/SECURITY_LOOP/cycles/YYYY-MM/SECURITY_PM2_REVIEW_YYYY-MM.md`
+  - P1 cards (A/B + risk/benefit + recommendation) when findings warrant
+  - Telegram ONLY on P0 (security / money / auth) or Step-5 FAIL
+
+**T1 priority lanes (every cycle checks first)**:
+- `boss-hub` (internal + public)
+- `bakery`
+- `trading-control`
+- `binance-bot` / `money-pipeline`
+- `csdawg-dashboard`
+- `agent-os`
+
+**T2 supporting infra (logged, alerted on failure)**:
+- `cloudflared`, `tailscale`, `PM2 daemon`, `Hermes gateway`,
+  `security-watch` (daily/weekly), `pm2-health-check`
+
+**Wake-up rules (inherited from S1-STEER LOCK)**:
+- P0 (security / money / auth) → Telegram + Step-5 QA
+- P1 touching T1 lane or public port → dedicated A/B card, no auto-fix
+- P1 not touching T1 → log only
+- P2 / P3 / routine drift → monthly report only, no Telegram
+
+**Hard guard enforced in `~/.hermes/scripts/security-pm2-monthly.sh`**:
+the loop is **read-only + write-to-evidence only**. It does NOT restart
+PM2, edit SOUL/AGENTS, change ports, or modify T1 service env/secrets.
+Any change requires operator `approve A` / `approve B` / `hold` on the P1
+card.
+
+**Future Agent OS work rule**: Treat Security & PM2 Watch as the default
+security sub-agent for PM2 / cron / port questions. Do not create new
+security crons or duplicate security scans.
+
 ### [PERFORMANCE] Memory Entry Format
 
 ```

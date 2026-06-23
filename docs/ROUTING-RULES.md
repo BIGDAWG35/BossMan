@@ -25,6 +25,11 @@ Mirrors (kept in sync):
 - `~/Repos/BossMan/docs/ROUTING-RULES.md` (GitHub mirror)
 - `~/Repos/BossMan/docs/perplexity-spaces/agent-os/03-routing-rules.md` (GitHub Spaces mirror)
 
+**Obsidian Vault Workflow Standard (2026-06-13):**
+- `~/.hermes/knowledge/OBSIDIAN_VAULT_WORKFLOW.md` (Hermes knowledge — authoritative)
+- `~/Desktop/CLAW-Backup/OBSIDIAN_VAULT_WORKFLOW.md` (Obsidian vault mirror)
+- `~/Repos/BossMan/docs/OBSIDIAN_VAULT_WORKFLOW.md` (GitHub mirror)
+
 Cross-references:
 - `~/.hermes/AGENTS.md` — Model Routing (parent policy)
 - `~/.hermes/OPERATINGBLUEPRINT.md` — Operating procedure
@@ -385,11 +390,294 @@ BossMan put in the handoff packet.
 | 1.0 | 2026-05-08 | Initial routing rules (Hermes-first). |
 | 2.0 | 2026-06-03 | Canon rewrite: 5-step Default Build Flow (Perplexity → M3 → primary builder → Llama → Claude). LBC35 disowns model choice. |
 | 3.0 | 2026-06-03 | **"10/10" update.** 5-step flow → 6-step flow with mandatory Step 5 QA pass (DeepSeek red-team, mandatory for critical cards). Perplexity Computer as a rare escalation tool (10k credits/month, `escalate_to_computer:` flag). Light build metrics (`build_passes`, `rewrite_scope`) + monthly review. Fallback chain extended to QA. Per-card template updated with `qa_required`, `qa_model`, `qa_status`, `escalate_to_computer`, `build_passes`, `rewrite_scope`. |
+| 3.1 | 2026-06-18 | **Phase 4 — Multi-Project OS + Loop Engine.** Added §10. Strict `project:` tag (closed vocabulary), 1–2 active cards per project, mandatory Tier-4/5 reuse-check via `ARTIFACT_INDEX.md`. **§1–9 unchanged.** |
+| 3.2 | 2026-06-18 | **§10.6 — Per-project concurrency cap (dispatcher pick-time rule).** Cap mechanism revised: was demote-to-todo (collided with `recompute_ready()` auto-promote), now opt-in dispatcher-time skip via `kanban.max_in_progress_per_project` config key. Status mutations forbidden for cap compliance. Telemetry via `DispatchResult.skipped_per_project_capped`. §1–9 unchanged; §10.2 mechanism revision only. |
 
 ---
+
+## Troubleshooting Mode (Incidents)
+
+When a kanban card is an incident, bug, or system-health task, BossMan switches to Troubleshooting Mode instead of the normal 6-step build flow. The full protocol is at ~/.hermes/skills/troubleshooting-mode/SKILL.md.
+
+Triggers (any one):
+- card status: incident
+- card status: blocked AND body contains incident|outage|broken|down|not working|error
+- card has label: troubleshooting
+- user types /troubleshoot, "incident", "outage", "broken", "down", or "system health"
+
+Routing — same 6-step map, no global default:
+- Step 1 (facts): Perplexity Search when web_research is wired; fallback is browser_navigate + read_file + terminal (PM2 / ports / cron / logs / hermes insights). Step 1 is fact-only — no guesses.
+- Step 2 (design): MiniMax-M3 decomposes the incident, except for SquarePayouts (M3 BLOCKED) and trading/money projects where caution is required.
+- Step 3 (fixes): Claude Sonnet-4 (production polish, careful diffs) or DeepSeek v4-flash (heavy backend code). One primary per fix.
+- Step 4 (cleanup): Qwen 14B via Ollama for bulk log / test / refactor work; Qwen 3B for tiny fast helpers. Helper, never the incident owner.
+- Step 5 (QA): DeepSeek v4-flash red-team. Mandatory for any fix touching money-pipeline, binance-bot, csdawg-dashboard, trading-control, or shared infrastructure (PM2 / cron / env / API keys). If DeepSeek is skipped, say so explicitly.
+- Step 6 (runbook): Claude Sonnet-4 writes the final answer in the 7-section template (Incident Summary, Type, Facts, Root Cause, Fix Plan, QA, Runbook Notes, Escalation).
+
+Escalation: Page Marcelo immediately if Binance bot is online when it should be stopped, money-pipeline has ≥ 10 restarts or is unresponsive, Telegram gateway is disconnected, Tailscale VPN is disconnected, or any critical service is completely unresponsive. Use the ALERT block from §7 of the troubleshooting-mode skill. [file:2][file:3]
+
+Known gaps to flag in every run: Perplexity Search not wired (use browser_navigate fallback); DeepSeek v4-flash dormant (1 call/30d, expect Claude fallback); LBC-35 profile not yet created.
 
 *This document is the single source of truth for the Default Build Flow
 v3.0, multi-model routing, the QA pass, Perplexity Computer
 escalation, and light build metrics. Updated by BossMan when model
 specializations, escalation patterns, cost tiers, or routing rules
 change. All mirrors kept in sync (spaces + GitHub).*
+
+---
+
+## 10. Phase 4 — Multi-Project OS + Loop Engine (2026-06-18)
+
+**Status:** ACTIVE. Strictly additive. §1–9 above are unchanged.
+
+Phase 4 adds two operating layers on top of the 6-step Default Build Flow
+described in §3:
+
+1. **Multi-Project OS** — every active Kanban card lives under exactly one
+   project (closed vocabulary in `PROJECT_VOCABULARY.md`); at most one
+   epic per project; at most 1 card in `running` + 1 card in `ready` per
+   project (the active-card cap). Cards with label `fast-track` are exempt.
+2. **Loop Engine** — every Tier-4/5 model call (DeepSeek / OpenAI /
+   Claude / Perplexity Computer) is preceded by a reuse-check against
+   `ARTIFACT_INDEX.md` and followed by an artifact save (if newly
+   produced). The reuse-check is a routing-ledger field, not a
+   recommendation.
+
+### 10.1 Project tag enforcement
+
+Every active Kanban card on the `bossman` board carries a `project:` line
+in its body. The value MUST be one of the closed tags in
+`PROJECT_VOCABULARY.md`. BossMan backfills missing tags on existing cards
+unilaterally (no approval needed); new cards are flagged at claim time
+if missing.
+
+### 10.2 Active-card cap (1–2 rule)
+
+| Project state | Maximum |
+|---|---|
+| `running` cards | 1 |
+| `ready` cards | 1 |
+| `todo` cards | unlimited (backlog) |
+| `blocked` cards | unlimited (paused, not active) |
+| `planned` epics | 1 |
+
+**Mechanism revision 2026-06-18 (v3.1 → v3.2):** The original cap was
+implemented by BossMan demoting excess cards to `todo` with a comment.
+That implementation was **superseded** because it collided with
+`recompute_ready()` (which auto-promotes `todo → ready` on every
+`hermes kanban list` call whenever all parents are done), creating a
+regression where the cap demotion was undone on the next list call.
+The cap is now enforced **at dispatcher pick time only** (see §10.6).
+Status mutations are **forbidden** for cap compliance — only
+`recompute_ready()` owns the `todo ↔ ready ↔ blocked` transitions.
+
+Cards with label `fast-track` are exempt from the cap.
+
+### 10.3 Loop protocol — Tier-4/5 reuse-check
+
+Before any Tier-4/5 call, the caller runs:
+
+```bash
+grep -i "<1-3 keywords>" ~/.hermes/knowledge/ARTIFACT_INDEX.md
+```
+
+If a hit lands in `Filename`, the artifact is reused and the call is
+skipped. Routing Ledger gains two new fields (additive; existing fields
+unchanged):
+
+```yaml
+reuse_check: yes | no          # yes = found in ARTIFACT_INDEX.md, reused
+artifact_index_entry: <path>    # reused path (yes) or newly saved path (no)
+```
+
+If `reuse_check: yes`, the Tier-4/5 call does NOT happen. The next-model
+line still names the original model so the ledger is auditable.
+
+Valid skip reasons: `index_unavailable`, `marcelo_override:<reason>`.
+
+### 10.4 Out of scope
+
+§10 does NOT change: model roles (§3), cost tiers (§3), fallback chain
+(§3), Perplexity Computer budget or `escalate_to_computer:` rules (§4),
+Light Build Metrics (§7), LBC35's model-choice rule (§6), or any other
+section above.
+
+### 10.5 Reference documents
+
+- `PHASE_4_MULTI_PROJECT_OS.md` — canonical spec for Phase 4
+- `PROJECT_VOCABULARY.md` — closed list of project tags
+- `ARTIFACT_INDEX.md` — single lookup table for Tier-4/5 outputs
+- `MODEL_ROUTING_WORKFLOW.md` §10 — loop protocol details
+- `KNOWLEDGE_REUSE_PIPELINE.md` §6 — loop hook command
+
+### 10.6 Per-project concurrency cap (dispatcher pick-time rule)
+
+**Effective:** 2026-06-18 (Phase 4 v3.2). Section 10.2 mechanism revised.
+
+A uniform **per-project concurrency ceiling** can be opted in by setting
+`kanban.max_in_progress_per_project` in `~/.hermes/config.yaml`. When
+unset (default), dispatcher behavior is bit-for-bit identical to the
+pre-Phase-4 baseline.
+
+#### Semantics
+
+- **Per project** (matching the first `project: <name>` line in the
+  task body), the dispatcher limits **already-running + newly-picked**
+  `ready` tasks combined to at most `N` per dispatch tick.
+- **Untagged tasks are cap-exempt.** They pass through the cap block
+  unconditionally. This is a deliberate forward-compat decision — new
+  tags can be introduced without a code change.
+- **No status mutations.** The cap defers dispatch via the new
+  `DispatchResult.skipped_per_project_capped` field; it does NOT
+  mutate `task.status`. `recompute_ready()` continues to own the
+  `todo ↔ ready ↔ blocked` transitions. This is the load-bearing
+  invariant that resolves the cap-vs-recompute conflict.
+
+#### Config
+
+```yaml
+# ~/.hermes/config.yaml
+kanban:
+  # Phase 4 §10.6 — per-project concurrency cap. Opt-in, uniform.
+  # Default unset = cap disabled.
+  max_in_progress_per_project: 2
+```
+
+#### Telemetry
+
+`DispatchResult.skipped_per_project_capped: list[(task_id, project, current)]`
+is populated by every `dispatch_once()` call. The `hermes kanban dispatch
+--json` CLI surfaces it as `skipped_per_project_capped`. Use it to
+observe cap pressure without re-reading the DB.
+
+#### Implementation surface (append-only)
+
+- `hermes_cli/kanban_db.py`
+  - `_extract_project_tag(body) -> str | None` (helper, regex-based,
+    first-match-wins; returns `None` for untagged)
+  - `DispatchResult.skipped_per_project_capped` field
+  - Cap block inside `dispatch_once()` `for row in ready_rows:` loop,
+    mirroring the existing per-profile cap pattern
+- `hermes_cli/kanban.py` `_cmd_dispatch` — reads
+  `kanban.max_in_progress_per_project` from config and passes to
+  `dispatch_once()`
+- `tests/hermes_cli/test_kanban_per_project_cap.py` — 13 tests:
+  cap=1, cap=2, untagged-bypass, recompute-untouched (regression),
+  idempotency, dry-run
+
+#### Out of scope
+
+Per-project tiered caps (different `N` per project) are deferred to a
+later phase. Today's rule is a single global uniform value.
+
+---
+
+## 11. Security & PM2 Watch Lane (Permanent — 2026-06-23, S1-STEER LOCK)
+
+**Status:** ACTIVE. §1–10 above are unchanged. This section is
+additive: it registers the **Security & PM2 Watch Goal Loop** as a
+first-class routing lane in Agent OS.
+
+### 11.1 Mission
+
+> "Keep PM2/crons/security posture clean for money/trading lanes,
+> surface drift, never auto-fix."
+
+### 11.2 Lane registration (Routing Ledger)
+
+```yaml
+lane: security-pm2-watch
+status: active
+goal_card: t_bf23cc0f       # resolved dynamically by title
+spec: ~/.hermes/knowledge/GOAL-LOOP-SECURITY_PM2.md
+script: ~/.hermes/scripts/security-pm2-monthly.sh
+cron:
+  id: 675fdbeba374
+  schedule: "30 23 1 * *"   # monthly, 1st of month 23:30 local
+  flags: --no-agent --deliver local
+evidence_dir: ~/.hermes/knowledge/SECURITY_LOOP/cycles/YYYY-MM/
+review_doc: docs/cycles/YYYY-MM/SECURITY_PM2_REVIEW_YYYY-MM.md
+verdict_pattern: docs/verdicts/step5-verdict-s1-*.json
+work_type: meta-loop (monthly audit)
+qa_required: yes (Step-5 mandatory)
+tier: 1
+cost_per_cycle: ~$0.20
+telegram_discipline: P0 + Step-5 FAIL only
+```
+
+### 11.3 Lane focus
+
+**T1 priority lanes** (every cycle, checked first):
+
+- `boss-hub` (internal + public)
+- `bakery`
+- `trading-control`
+- `binance-bot` / `money-pipeline`
+- `csdawg-dashboard`
+- `agent-os`
+
+**T2 supporting infra** (logged, alerted on failure):
+
+- `cloudflared`
+- `tailscale`
+- `PM2 daemon`
+- `Hermes gateway`
+- `security-watch` (daily/weekly)
+- `pm2-health-check`
+
+### 11.4 Wake-up rules
+
+| Severity | What counts | Surface |
+|---|---|---|
+| **P0** | Security / money / auth broken or stuck | **Telegram + Step-5 QA** |
+| **P1** | Touches T1 lane or public port | **Dedicated A/B card, no auto-fix** |
+| **P1** | Does NOT touch T1 lane | Log only, no card |
+| **P2** | Anything not in P0/P1 | Monthly `SECURITY_PM2_REVIEW_YYYY-MM.md`, no Telegram |
+| **P3** | Cosmetic / informational | Monthly report only |
+
+### 11.5 Hard guard — loop is read-only + write-to-evidence only
+
+The script's `S1_GUARD_ACTIVE` block enforces:
+
+- **BLOCKED** from S1: `pm2 restart|delete|start|reload|stop`,
+  `hermes cron create|remove|update`, `crontab -e|-r`,
+  `launchctl unload|load|bootout`, `kill[-9]`, `lsof -i :PORT -k`,
+  writes to `SOUL.md` / `hermes/AGENTS.md` / Obsidian mirror /
+  `PHASEREPORT.md`, T1 service env / secrets / auth / `NEXTAUTH_*`.
+- **ALLOWED**: `pm2 list|jlist|show|logs`, hermes kanban
+  read + create (review card) + comment + complete (cycle card
+  only), `lsof -iTCP -sTCP:LISTEN`, evidence writes.
+
+Any P1 finding that requires a blocked action surfaces as an A/B
+card and waits for `approve A` / `approve B` / `hold`. **Service
+behavior is unchanged until the operator approves.**
+
+### 11.6 P1 card format (mandatory)
+
+Title + context + A/B options + one-paragraph risk/benefit + a
+recommended option (A or B) with reasoning + what does NOT change
+without approval + `accept_when` (operator approval language).
+
+### 11.7 Governance
+
+- Step-5 QA mandatory for every S1 cycle and any future scope change.
+- No edits to `SOUL.md` / `hermes/AGENTS.md` /
+  `MODEL_ROUTING_WORKFLOW.md` from inside this lane.
+- This section is **kernel-doc**, so any change to it requires
+  Routing Ledger + Step-5 + PHASEREPORT.
+- Future Agent OS work treats Security & PM2 Watch as the **default
+  security sub-agent** for PM2 / cron / port questions. Do not invent
+  new security crons; reuse this lane.
+
+### 11.8 State-loss rule
+
+Goal card is resolved by **title** (e.g. "Security & PM2 Watch"),
+not by hard-coded ID. Scripts use `kanban find "Security & PM2 Watch"`
+or equivalent title-match. ID drift across state-loss events is
+expected and not a bug.
+
+### 11.9 No future steering prompt
+
+Unless the operator explicitly changes T1/T2 lanes, wake-up
+severity, or P1 A/B format, no future steering prompt is needed for
+this lane. The S1-STEER LOCK spec and this section are the
+authoritative scope.
