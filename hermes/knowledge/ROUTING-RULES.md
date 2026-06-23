@@ -681,3 +681,113 @@ Unless the operator explicitly changes T1/T2 lanes, wake-up
 severity, or P1 A/B format, no future steering prompt is needed for
 this lane. The S1-STEER LOCK spec and this section are the
 authoritative scope.
+
+---
+
+## 12. Doc Hygiene Lane (Permanent — 2026-06-23, Phase 3)
+
+### 12.1 Mission (canonical)
+
+> Keep Hermes/BossMan canon, mirrors, and key docs clean, consistent,
+> and lean, using the 5-step Goal Loop pattern. Fix drift, don't
+> invent new structure.
+
+### 12.2 Lane registration
+
+```yaml
+lane: doc-hygiene
+status: active
+phase: 3
+goal_card: t_f42ecbe1  # rehydrated from lost t_3e4a14d4 (state-loss event)
+                       # resolve dynamically by TITLE ("Doc Hygiene")
+phase3_parent: t_811e342d  # rehydrated from lost t_81e30070
+spec: ~/.hermes/knowledge/GOAL-LOOP-DOC-HYGIENE.md  # 266 lines
+work_type: meta-loop (monthly doc cleanup)
+qa_required: yes (Step-5 mandatory for kernel-doc edits)
+tier: 1
+cost_per_cycle: varies (manual first review; cron when approved)
+telegram_discipline: only for P0 doc issues (kernel-doc corruption);
+                     otherwise local-only
+cadence: monthly, 1st of month 23:00 PT
+first_review: 2026-07-23 (manual)
+```
+
+### 12.3 Focus
+
+- **Canon files**: `~/.hermes/knowledge/` — long-lived spec + decision docs
+- **Core BossMan docs**: SOUL.md, AGENTS.md, ROUTING-RULES.md, PHASEREPORT.md,
+  key skills under `~/.hermes/skills/` and `~/Projects/BossMan/skills/`
+- **Obsidian mirror**: `~/Obsidian/Hermes/20_Agents/AGENTS.md` (and any
+  other mirrors to be added)
+- **GitHub mirror**: `~/Projects/BossMan/docs/ROUTING-RULES.md` and other
+  files in the BossMan repo
+
+### 12.4 Autonomous scope (loop may run without operator approval)
+
+- Read-only detection: case-dup, md5 mirror, mtime, scan for
+  `TODO|FIXME|STUB|PLACEHOLDER`
+- Report generation: `PHASEREPORT_DOC_HYGIENE_YYYY-MM.md` + 1-line
+  entry in top-level `PHASEREPORT.md`
+- Mechanical mirror-only fixes: `cp` from canon to mirror when canon is
+  newer AND the file is NOT kernel-doc
+- Case-dup deletion: when `stat -f%i upper == stat -f%i lower` (true
+  duplicate on case-insensitive fs), delete the lowercase twin
+- Goal card updates: bump `last_reviewed`, append `## YYYY-MM-DD` log entry
+- Review card creation: spawn one `monthly_review_YYYY-MM` child card
+
+### 12.5 Approval gates (operator approval REQUIRED)
+
+- Cron registration (proposal in `DOC-HYGIENE-CRON-PROPOSAL_*.md`)
+- Kernel-doc edits: SOUL.md, AGENTS.md, ROUTING-RULES.md,
+  MODELROUTINGWORKFLOW.md, PHASEREPORT.md body, all `skills/*/SKILL.md`
+  kernel sections
+- Mirror topology changes: adding/removing a mirror location, changing
+  sync direction, rewriting the 3-mirror model
+- Case-dup deletions in `docs/PHASEREPORT.md` or any `docs/` files
+  (these are reference docs in the BossMan GitHub repo, never auto-delete)
+- Any change introducing a new blast-radius class (PII, customer data,
+  auth tokens through mirrors)
+
+### 12.6 STOP conditions (loop MUST halt and escalate)
+
+- **Conflicting canon** — 2 canon docs disagree (e.g., SOUL says A to B,
+  AGENTS says A↔B)
+- **Ambiguous case-dup deletion** — inode check passes but md5 of
+  upper ≠ md5 of lower (real drift, not a true duplicate)
+- **2-of-3 model disagreement** on P0 vs P1
+- **Large structural change** — >500 lines moved, mirror topology
+  rewritten, new skill added under `~/.hermes/skills/`
+- **Mirror miss in kernel doc** — md5 mismatch on SOUL/AGENTS/ROUTING-RULES/
+  MODELROUTINGWORKFLOW → STOP, never auto-sync kernel docs from mirror
+- **Operator pre-empt** — `STOP doc-hygiene` via Telegram halts
+  immediately
+
+### 12.7 Governance (permanent)
+
+- **Step-5 QA mandatory** for any kernel-doc changes
+- **No changes to SOUL/AGENTS/MODEL_ROUTING_WORKFLOW from inside routine
+  hygiene loops** without explicit operator approval
+- **State-loss rule**: resolve goal card by title, not hard-coded ID
+  (same rule as Security & PM2 Watch lane)
+- **Scope discipline**: doc hygiene focuses on canon/mirror correctness
+  and lean structure; **behavior changes (code/config) belong to other
+  lanes**
+- **Hard guard**: this section is **kernel-doc** (ROUTING-RULES.md), so
+  any change to it requires Routing Ledger + Step-5 + PHASEREPORT
+- **No daily spam**: monthly review only; ad-hoc doc fixes still go
+  through ACP
+
+### 12.8 Future Agent OS work rule
+
+Doc Hygiene is the **default doc-cleanup sub-agent** for Agent OS.
+Future Agent OS work that touches canon/mirror drift, doc consistency,
+or doc lean-ness routes to this lane rather than inventing new
+one-off scripts or crons. Do not create new doc-hygiene crons or
+duplicate doc audits.
+
+### 12.9 No future steering prompt
+
+Unless the operator explicitly changes the lane scope, approval
+gates, STOP conditions, or cadence, no future steering prompt is
+needed for this lane. The Doc Hygiene spec (`GOAL-LOOP-DOC-HYGIENE.md`)
+and this section are the authoritative scope.

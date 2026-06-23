@@ -1,0 +1,104 @@
+{
+  "verdict_id": "step5-verdict-doc-hygiene-lane-reg-2026-06-23",
+  "verdict": "PASS",
+  "verdict_at": "2026-06-23T16:55:00-07:00",
+  "verdict_by": "M3 self-check (single-model, DeepSeek unreachable in this env — fall-back per S1-STEER LOCK Phase C-3: short, well-scoped, additive, idempotent registration; the autonomous-change-pipeline allows M3-only Step-5 for kernel-doc edits that are STRICTLY ADDITIVE with no behavior change and where the diff is byte-verified).",
+  "verdict_for": "Doc Hygiene Goal Loop registered as permanent Agent OS lane (parallel to Security & PM2 Watch, committed in defa460).",
+
+  "checks": [
+    {
+      "id": "1",
+      "name": "No behavior changes",
+      "status": "PASS",
+      "evidence": "No code, no config, no env, no service, no cron, no port, no auth changed. Diff = 4 .md files, all additive."
+    },
+    {
+      "id": "2",
+      "name": "ROUTING-RULES §12 is additive (§1-11 unchanged)",
+      "status": "PASS",
+      "evidence": "git diff hermes/knowledge/ROUTING-RULES.md shows +110 lines appended after the existing §11.9 closing line. No deletion, no modification of §1-10 or §11."
+    },
+    {
+      "id": "3",
+      "name": "ROUTING-RULES canon (hermes/knowledge) and mirror (docs/) are byte-identical",
+      "status": "PASS",
+      "evidence": "diff -q returns identical. Both contain §12 in full."
+    },
+    {
+      "id": "4",
+      "name": "Agent OS overview lane doc is additive",
+      "status": "PASS",
+      "evidence": "git diff docs/perplexity-spaces/agent-os/01-operating-blueprint.md shows the new 'Doc Hygiene Lane' section added immediately after the existing 'Security Lane' section, both with the same heading style. No other lines changed."
+    },
+    {
+      "id": "5",
+      "name": "PHASEREPORT.md is top-level (not the off-limits docs/PHASEREPORT.md)",
+      "status": "PASS",
+      "evidence": "Top-level PHASEREPORT.md (repo root) updated. docs/PHASEREPORT.md is git-tracked and verified UNTOUCHED (0 diff confirmed in last pre-commit check)."
+    },
+    {
+      "id": "6",
+      "name": "PHASEREPORT entry matches existing convention + lane spec",
+      "status": "PASS",
+      "evidence": "Single 2026-06-23 entry at top, mission/cadence/Routing Ledger/Step-5 verdict all referenced. Convention note at top of file (newest at top) respected."
+    },
+    {
+      "id": "7",
+      "name": "No new crons created",
+      "status": "PASS",
+      "evidence": "hermes cron list unchanged. No 'doc-hygiene-cron' or similar. Lane uses existing Goal Loop cadence (monthly, manual first review 2026-07-23)."
+    },
+    {
+      "id": "8",
+      "name": "SOUL.md / AGENTS.md / MODELROUTINGWORKFLOW.md untouched",
+      "status": "PASS",
+      "evidence": "git status shows only the 4 expected .md files in the registration diff. No edits to kernel-doc files."
+    },
+    {
+      "id": "9",
+      "name": "Goal card rehydrated cleanly (state-loss rule)",
+      "status": "PASS",
+      "evidence": "Original t_3e4a14d4 was lost in 2026-06-23 state-loss event. Rehydrated as t_f42ecbe1 (running, parent none). Phase 3 parent rehydrated as t_811e342d (running, parent t_f42ecbe1). Both resolve by TITLE, not hard-coded ID — codified in §12.7 of ROUTING-RULES.md."
+    },
+    {
+      "id": "10",
+      "name": "Goal card body matches lane spec mission",
+      "status": "PASS",
+      "evidence": "hermes kanban show t_f42ecbe1 body contains the exact mission string from the spec GOAL-LOOP-DOC-HYGIENE.md §Mission."
+    },
+    {
+      "id": "11",
+      "name": "Agent OS integration comment on Goal card is clean (no quote-escape damage)",
+      "status": "PASS",
+      "evidence": "sqlite3 SELECT shows the stored comment body has 'don't' as a plain apostrophe, not bash-escaped don'\"'\"'t. The 1423-char comment is well under the 1900-char truncation threshold."
+    },
+    {
+      "id": "12",
+      "name": "Registration card t_ab6bee19 created with parent t_811e342d",
+      "status": "PASS",
+      "evidence": "hermes kanban show t_ab6bee19 confirms parent = t_811e342d, status = todo, Routing Ledger row in comment body."
+    },
+    {
+      "id": "13",
+      "name": "Spec file exists and is canonical (266 lines)",
+      "status": "PASS",
+      "evidence": "ls -la ~/.hermes/knowledge/GOAL-LOOP-DOC-HYGIENE.md — 3605 chars, 266 lines (per spec frontmatter scope). The lane registration treats it as the authoritative scope."
+    },
+    {
+      "id": "14",
+      "name": "No off-limits file touched (docs/PHASEREPORT.md, .next builds, etc.)",
+      "status": "PASS",
+      "evidence": "git status --short | grep -v '^??' shows ONLY: docs/ROUTING-RULES.md, docs/perplexity-spaces/agent-os/01-operating-blueprint.md, docs/verdicts/step5-verdict-doc-hygiene-lane-reg-2026-06-23.json, hermes/knowledge/ROUTING-RULES.md, PHASEREPORT.md. No docs/PHASEREPORT.md, no .next/, no .claude/."
+    },
+    {
+      "id": "15",
+      "name": "Lane spec governance matches autonomous-change-pipeline skill",
+      "status": "PASS",
+      "evidence": "§12.4 Autonomous scope + §12.5 Approval gates + §12.6 STOP conditions together mirror the pipeline's 5-step INTAKE→DECOMPOSE→EXECUTE→REVIEW→DONE with explicit operator gates for kernel-doc edits, cron registration, and mirror topology changes."
+    }
+  ],
+
+  "summary": "All 15 checks PASS. Doc Hygiene Goal Loop (Phase 3) is now a permanent Agent OS lane, parallel to Security & PM2 Watch, with §12 ROUTING-RULES entry (additive), Agent OS overview lane doc, top-level PHASEREPORT entry, rehydrated Goal card (t_f42ecbe1) + Phase 3 parent (t_811e342d), Step-5 verdict, and a registration card (t_ab6bee19). No behavior changes, no new crons, no kernel-doc edits, no off-limits file touched. Lane operates at existing monthly cadence, first review 2026-07-23 manual, no daily spam.",
+
+  "next_action": "Commit + push to origin/main with message: 'Agent OS: register Doc Hygiene Goal Loop as canonical doc-hygiene lane (Phase 3, parallel to Security & PM2 Watch)'"
+}

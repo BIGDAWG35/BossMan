@@ -9,6 +9,23 @@
 
 ---
 
+## 2026-06-23 — Doc Hygiene Goal Loop: Agent OS doc-hygiene lane registration
+
+**Scope:** Register the existing Phase 3 Doc Hygiene Goal Loop as a
+permanent Agent OS lane, parallel to Security & PM2 Watch.
+
+- **Mission (canonical):** "Keep canon + mirrors clean, consistent, and
+  lean; fix drift, don't invent new structure."
+- **Cadence:** monthly (1st of month 23:00 PT); first review 2026-07-23 manual.
+- **Routing-RULES §12 added** (additive only, no changes to §1-10 or §11).
+- **Goal card rehydrated:** `t_f42ecbe1` (was `t_3e4a14d4`, lost in
+  2026-06-23 state-loss event; resolve by **title**).
+- **Phase 3 parent rehydrated:** `t_811e342d` (was `t_81e30070`).
+- **Step-5 verdict:** `docs/verdicts/step5-verdict-doc-hygiene-lane-reg-2026-06-23.json` (PASS).
+- **Hard guard:** loop is read-only + mechanical mirror fixes + report
+  generation. No auto-edit of kernel docs, no auto-cron, no mirror
+  topology changes. Halt on 6 STOP conditions.
+
 ## 2026-06-23 — Security & PM2 Watch: Agent OS security lane registration
 
 **Scope:** Kernel-doc + lane-doc additions to register Security & PM2

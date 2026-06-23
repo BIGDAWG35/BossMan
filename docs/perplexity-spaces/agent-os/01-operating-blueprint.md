@@ -533,6 +533,45 @@ card.
 security sub-agent for PM2 / cron / port questions. Do not create new
 security crons or duplicate security scans.
 
+### Doc Hygiene Lane (Permanent — 2026-06-23, Phase 3)
+
+**Lane:** Doc Hygiene Goal Loop (the existing Phase 3 Goal Loop, now a
+first-class Agent OS lane). Goal card rehydrated as `t_f42ecbe1` (from
+lost `t_3e4a14d4` after 2026-06-23 state-loss event); Phase 3 parent
+rehydrated as `t_811e342d` (from lost `t_81e30070`). Resolve both by
+**title**, not hard-coded ID.
+
+**Cadence:** Monthly doc-hygiene loop, 1st of each month 23:00 PT.
+First review: 2026-07-23 (manual, until cron approved). No daily
+doc-hygiene spam.
+
+**Output:** `PHASEREPORT_DOC_HYGIENE_YYYY-MM.md` in canon + 1-line
+entry in top-level `PHASEREPORT.md` + specific doc-fix cards for any
+P0/P1 findings.
+
+**Mission:** *"Keep canon + mirrors clean, consistent, and lean; fix
+drift, don't invent new structure."*
+
+**Focus:**
+- Canon files in `~/.hermes/knowledge/` (long-lived spec + decision docs)
+- Core BossMan docs: SOUL, AGENTS, ROUTING-RULES, PHASEREPORT, key skills
+- Obsidian mirror: `~/Obsidian/Hermes/20_Agents/AGENTS.md` and others
+- GitHub mirror: `~/Projects/BossMan/docs/ROUTING-RULES.md` and others
+
+**Hard guard (from spec §Scope & STOPs):** the loop is read-only +
+mechanical mirror fixes + report generation. It does NOT auto-edit
+kernel docs (SOUL/AGENTS/ROUTING-RULES/MODELROUTINGWORKFLOW), does NOT
+auto-register a cron, does NOT change mirror topology, and halts on
+any of the 6 STOP conditions (conflicting canon, ambiguous case-dup,
+2-of-3 model disagreement, >500-line structural change, kernel-doc
+mirror miss, operator pre-empt).
+
+**Future Agent OS work rule**: Treat Doc Hygiene as the default
+doc-cleanup sub-agent for Agent OS. Future Agent OS work that
+touches canon/mirror drift, doc consistency, or doc lean-ness routes
+to this lane rather than inventing new one-off scripts or crons. Do
+not create new doc-hygiene crons or duplicate doc audits.
+
 ### [PERFORMANCE] Memory Entry Format
 
 ```
