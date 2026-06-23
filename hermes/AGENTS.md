@@ -110,19 +110,106 @@ If a previously disabled LaunchAgent or cron job needs to be re-enabled:
 
 ---
 
-## Model Routing
+## Model Routing (Permanent — 2026-06-03, v3.0 "10/10")
 
-|| Model | Use Case |
-|---|---|
-| MiniMax 2.7 | Default orchestrator — BLOCKED for SquarePayouts |
-| DeepSeek | Low-cost research/coding — APPROVED for all projects |
-| OpenAI | Structured synthesis — APPROVED for all projects |
-| Claude | High-stakes review — APPROVED for all projects |
+BossMan is a single orchestrator that runs on a stack of specialized models. Each model has one sharp role; BossMan chooses which one writes the artifact. This replaces all earlier "MiniMax 2.7 primary brain" framing.
 
-**SquarePayouts Model Restriction (permanent until Marcelo removes it):**
+### Model roles (sharp, opinionated) — v3.0
+
+| Model | Role | When to use |
+|---|---|---|
+| **Perplexity Search (Pro)** | **First step for any non-trivial build or troubleshooting.** Pulls current docs, best practices, API references, and gotchas so we never guess when we can read. | Step 1 of every new project, feature, or serious bug. Link key sources into the main project card. |
+| **M3 (MiniMax M3)** | **Thinking and planning brain.** Understands Marcelo's request, defines architecture, breaks work into Kanban cards, writes acceptance criteria and checklists. | Step 2 of every new project or major feature. Default for routing, planning, orchestration. |
+| **DeepSeek** | **Heavy-duty coder, reasoning engine, and red-team QA.** Complex logic, data models, debugging, edge-case analysis, **and Step 5 QA pass (mandatory for critical cards).** | Primary builder for complex or critical backend logic, data work, or debugging. **Default Step-5 QA model.** |
+| **Llama (Ollama local)** | **Cheap grinder.** Bulk transforms, scaffolding, refactors, test generation. | High-token grinding. Step-4 bulk cleanup and test generation. Preferred for repetitive work. |
+| **OpenAI** | **Production finisher.** Clean, user-facing, production-style output. | Code and text that ships to the user. Polishing, READMEs, user-facing copy. Final polish on critical components only. **Step 5 QA fallback** (after DeepSeek). |
+| **Claude** | **Long-form spec and documentation writer.** Final handoff docs, runbooks, multi-page explanations. | Step 6 docs and handoff. Read final code + M3's design notes + acceptance criteria + Step 5 QA findings, then produce concise but complete docs. **Only after code is stable AND QA passes.** |
+| **Perplexity Computer** | **Rare escalation tool** — multi-step Mac/browser workflows that span research, code, and deployment. **NOT part of the everyday default path.** | Only on projects with `escalate_to_computer: yes` flag set by BossMan and approved by Marcelo. Hard cap: 10,000 credits/month. See `ROUTING-RULES.md` §4. |
+
+### Default build flow (every new project or major feature) — 6 steps
+
+1. **Research** — Perplexity Search gathers external info; key sources linked into the main project card.
+2. **Design** — M3 designs architecture, defines components, breaks work into Kanban cards with acceptance criteria. Saved in the main project card.
+3. **Build** — For each build card, choose exactly one primary builder:
+   - **DeepSeek** for complex or critical backend logic, data work, or debugging
+   - **Llama** for repetitive scaffolding, refactors, or large-volume code edits
+   - **OpenAI** when output is user-facing, high-risk, or needs polished style
+   - Note the primary builder in the card body under a `model_plan:` line.
+4. **Harden and clean up** — Llama handles bulk cleanup and test generation. DeepSeek or OpenAI only as a final sanity pass on critical components, never rewriting large chunks that are already acceptable.
+5. **QA PASS** — DeepSeek (red-team mindset: edge cases, security, performance, failure modes). **Mandatory for critical cards** (money, PII, infra, trading, auth, public APIs). Default model: DeepSeek. Fallback: OpenAI → M3. Findings logged as card comments and/or QA sub-cards. Card's `qa_status` updated: `pending` → `passed` / `failed` / `logged`.
+6. **Docs and handoff** — Claude writes long-form docs and runbooks only after the code is stable AND QA has passed (or every QA issue is logged as a sub-card and tracked).
+
+### Multi-model per card — controlled
+
+- Do not use more than **two models actively writing** to the same card unless a handoff is explicitly documented.
+- Example: `model_plan: DeepSeek writes initial code → Llama refactors and adds tests → OpenAI only polishes comments and README`.
+- Avoid multiple models making large, overlapping edits to the same code in the same pass. Prefer a clear sequence of ownership.
+
+### Per-card fields (v3.0)
+
+Every build card in the Hermes Kanban must include:
+
+- `model_plan:` — primary builder + cleanup pass
+- `qa_required:` — `yes` for critical cards (mandatory), `no` otherwise
+- `qa_model:` — DeepSeek default, OpenAI fallback, M3 last resort
+- `qa_status:` — `pending` / `passed` / `failed` / `logged`
+- `escalate_to_computer:` — `yes` only after Marcelo approval
+- `escalate_to_computer_reason:` — only set if the flag is `yes`
+- `build_passes:` — `1` / `2` / `3+`, set when the card is closed
+- `rewrite_scope:` — `none` / `minor` / `major`, set when the card is closed
+- `model_log:` — updated after each model touches the artifact (chain of custody)
+
+Full per-card template in `~/.hermes/knowledge/ROUTING-RULES.md` §3.
+
+### Token and cost policy
+
+- Prefer **Llama** and **M3** for high-token grinding and planning.
+- Use **DeepSeek**, **OpenAI**, and **Claude** only when their strengths matter (complex reasoning, production polish, long docs).
+- **Fallback chain** when a paid model fails on quota or billing:
+  - Planning / reasoning: **M3 → Llama → DeepSeek**
+  - Code / debugging: **DeepSeek → Llama → OpenAI**
+  - Docs / specs: **Claude → OpenAI → M3**
+  - QA / red-team: **DeepSeek → OpenAI → M3** (new in v3.0)
+- On every card that uses a paid model, log: which model(s) were used, rough usage, and the location of key outputs, so we can reuse work later and avoid re-spending.
+
+### Light build metrics (v3.0)
+
+- Every closed build card sets `build_passes:` and `rewrite_scope:`.
+- Monthly review: one comment on the bossman board (or a small report at `~/.hermes/knowledge/BUILD_METRICS_<YYYY-MM>.md`) summarizing 1-pass vs 2/3+ pass counts, cleanest `model_plan:` patterns, noisiest patterns, and any canon-change proposals.
+- Metrics feed back into the flow — when a pattern is clear, BossMan proposes a flow change and updates the canon with Marcelo's approval.
+
+### SquarePayouts Model Restriction (permanent until Marcelo removes it)
+
 - SquarePayouts is restricted to **Claude, DeepSeek, and OpenAI only**.
-- MiniMax 2.7 is **BLOCKED** for all SquarePayouts work: bug investigation, code fixes, Basecamp workflow automation, cron/PM2/Hermes monitor work, invite flow, pricing workflow, auth/session issues, UI/UX bug analysis, architecture review, testing review, implementation planning.
+- **M3 is BLOCKED for all SquarePayouts work**: bug investigation, code fixes, Basecamp workflow automation, cron/PM2/Hermes monitor work, invite flow, pricing workflow, auth/session issues, UI/UX bug analysis, architecture review, testing review, implementation planning.
 - This restriction applies to all subagents and delegated executors working on SquarePayouts.
+- Perplexity Search, Llama, and Claude remain approved for SquarePayouts research and review.
+- Perplexity Computer requires the same `escalate_to_computer: yes` approval as everywhere else.
+
+### Detailed role reference
+
+| Model | Role | Notes |
+|---|---|---|
+| **Perplexity** | First-step research, current docs, API references, gotchas | Always Step 1 of the Default Build Flow. Browser/Brave QA path. |
+| **M3** | Primary orchestrator, planner, architect, Kanban card author | Default for routine work. BLOCKED for SquarePayouts. |
+| **DeepSeek** | Heavy coding, complex logic, debugging, edge cases, **and Step 5 QA (red-team)** | Primary builder for backend logic, data work, debugging. **Default Step-5 QA model.** |
+| **Llama (Ollama local)** | Bulk transforms, scaffolding, refactors, test generation, cleanup | Step 4 of the Default Build Flow. Free, local, no per-call cost. |
+| **OpenAI** | Production polish, user-facing copy, final code finishing | Primary builder when output is user-facing or high-risk. **Step 5 QA fallback.** |
+| **Claude** | Long-form docs, runbooks, architecture reviews | Step 6 only — after code is stable AND QA passes. |
+| **Perplexity Computer** | Multi-step Mac/browser workflows, full-stack SaaS orchestration | **Rare escalation only.** 10k credits/month, `escalate_to_computer: yes` flag, Marcelo approval. |
+
+**Model rules (permanent):**
+- Do not use all models for every task
+- Use the best model for the job; pick per the Default Build Flow
+- When confidence is low or issue is strategic → compare outputs from two models, then synthesize
+- Use evidence-backed findings over hype
+- Log every paid-model use on the card (which model, rough usage, key output location)
+- Continuously refine workflow decisions based on outcomes
+
+### Legacy framing (deprecated, kept only for traceback)
+
+- "MiniMax 2.7 primary brain" and "MiniMax 2.7 BLOCKED for SquarePayouts" — replaced by the M3 / DeepSeek / Llama / OpenAI / Claude / Perplexity roles above.
+- `model.default = MiniMax-M2.7` → migrated to `MiniMax-M3` on 2026-06-03 (commit `c2e703b`). Existing references to "M2.7" elsewhere in the canon are descriptive legacy and will be cleaned on the next routine doc-sync pass.
 
 ### Deep-Dive Task Budget (All Agents)
 
@@ -151,35 +238,45 @@ If a previously disabled LaunchAgent or cron job needs to be re-enabled:
 
 **Verification:** Any task involving Computer Use requires BossMan approval before execution, and results must be verified before being marked complete.
 
-### Model Pool Roles
+### Model Pool Roles (Permanent — 2026-06-03, v3.0 "10/10")
 
-|| Role | Models | Responsibility |
+| Role | Models | Responsibility |
 |---|---|---|
-| Orchestrator | MiniMax 2.7 | Task delegation, coordination, quality gate — **BLOCKED for SquarePayouts** |
-| Executor | DeepSeek, OpenAI | Implementation, research, coding |
-| Reviewer | Claude | High-stakes reviews, architecture decisions |
-| Specialist | Perplexity | Web research, Deep Research, process analysis, crypto research, verification |
+| Orchestrator / Planner | M3 | Routing, planning, architecture, Kanban card authorship, acceptance criteria. BLOCKED for SquarePayouts. |
+| Primary Builder | DeepSeek, Llama, OpenAI | Each build card picks exactly one primary builder. See Default Build Flow Step 3. |
+| Research | Perplexity Search | First step for any non-trivial work. Pulls current docs and gotchas. |
+| Cleanup / Tests | Llama | Bulk transforms, scaffolding, refactors, test generation. Step 4. |
+| Production Finisher | OpenAI | User-facing copy, polished style, final sanity pass on critical components. |
+| **QA / Red-team (Step 5)** | **DeepSeek** (default) → **OpenAI** → **M3** | **Mandatory for critical cards.** Edge cases, security, performance, failure modes. Findings logged as card comments and/or QA sub-cards. |
+| Long-form Docs | Claude | **Step 6 only.** Runbooks, handoff docs, multi-page explanations — after code is stable AND QA passes. |
+| Reviewer | Claude | High-stakes reviews, architecture decisions (allowed but not a primary builder). |
+| **Escalation (Perplexity Computer)** | Perplexity Computer | **Rare.** Multi-step Mac/browser workflows. **10,000 credits/month cap. `escalate_to_computer: yes` flag, Marcelo approval.** |
+| Specialist | Perplexity Search / Deep Research | Web research, Deep Research, process analysis, crypto research, verification. |
 
 **SquarePayouts Model Restriction (permanent until Marcelo removes it):**
 - SquarePayouts is restricted to **Claude, DeepSeek, and OpenAI only**.
-- MiniMax 2.7 is **BLOCKED** for all SquarePayouts work: bug investigation, code fixes, Basecamp workflow automation, cron/PM2/Hermes monitor work, invite flow, pricing workflow, auth/session issues, UI/UX bug analysis, architecture review, testing review, implementation planning.
+- **M3 is BLOCKED** for all SquarePayouts work: bug investigation, code fixes, Basecamp workflow automation, cron/PM2/Hermes monitor work, invite flow, pricing workflow, auth/session issues, UI/UX bug analysis, architecture review, testing review, implementation planning.
 - This restriction applies to all subagents and delegated executors working on SquarePayouts.
+- Perplexity Computer requires the same `escalate_to_computer: yes` approval as everywhere else.
 
-### Detailed Model Roles (Permanent — 2026-05-20)
+### Detailed Model Roles (Permanent — 2026-06-03, v3.0 "10/10")
 
-|| Model | Role | Notes |
-|---|---|---|---|
-| **Claude** | Architecture planning, workflow design, structured kanban planning, prompt/agent design | High-stakes only |
-| **DeepSeek** | Deep reasoning, technical validation, edge-case analysis, crypto logic, cycle comparison | Low-cost backup |
-| **OpenAI** | Synthesis, product framing, operational writing, summarization | Clean production output |
-| **MiniMax 2.7** | Alternative layouts, workflow variations, idea expansion, second-pass creative | Default orchestrator |
-| **Perplexity** | Research, Deep Research, web reasoning, process analysis, crypto research, verification | Browser/Brave QA path |
+| Model | Role | Notes |
+|---|---|---|
+| **Perplexity Search (Pro)** | First-step research, current docs, API references, gotchas | Always Step 1 of the Default Build Flow. Browser/Brave QA path. |
+| **M3 (MiniMax M3)** | Primary orchestrator, planner, architect, Kanban card author, thinking brain | Default for routine work. BLOCKED for SquarePayouts. |
+| **DeepSeek** | Heavy coding, complex logic, debugging, edge cases, **and Step 5 QA (red-team)** | Primary builder for backend logic, data work, debugging. **Default Step-5 QA model.** |
+| **Llama (Ollama local)** | Bulk transforms, scaffolding, refactors, test generation, cleanup | Step 4 of the Default Build Flow. Free, local, no per-call cost. |
+| **OpenAI** | Production polish, user-facing copy, final code finishing | Primary builder when output is user-facing or high-risk. **Step 5 QA fallback** (after DeepSeek). |
+| **Claude** | Long-form docs, runbooks, architecture reviews | **Step 6 only** — after code is stable AND QA passes. |
+| **Perplexity Computer** | Multi-step Mac/browser workflows, full-stack SaaS orchestration | **Rare escalation only.** 10,000 credits/month cap. `escalate_to_computer: yes` flag, Marcelo approval. NOT part of the everyday default path. |
 
-**Model Rules (Permanent):**
+**Model rules (permanent):**
 - Do not use all models for every task
-- Use the best model for the job
-- When confidence is low or issue is strategic → compare multiple models and synthesize
+- Use the best model for the job; pick per the Default Build Flow
+- When confidence is low or issue is strategic → compare outputs from two models, then synthesize
 - Use evidence-backed findings over hype
+- Log every paid-model use on the card (which model, rough usage, key output location)
 - Continuously refine workflow decisions based on outcomes
 
 ### Tool Strategy by Task Type (Permanent — 2026-05-20)
@@ -195,13 +292,20 @@ If a previously disabled LaunchAgent or cron job needs to be re-enabled:
 | Localhost web app QA (Money Pipeline) | Browser QA | WORKING |
 | Local code/CLI/DB inspection | Terminal + tools | Always available |
 
-### Project Kickoff AI Stack Recommendation
+### Project Kickoff AI Stack Recommendation (v3.0 "10/10")
 
-When starting a new project, recommend this stack:
-- **Orchestrator:** MiniMax 2.7 — task planning and delegation
-- **Research:** Perplexity (Computer Use) — initial research, Space creation
-- **Implementation:** DeepSeek or OpenAI — coding based on complexity
-- **Review:** Claude — final architecture and quality review
+When starting a new project, follow the **6-step Default Build Flow** from `~/.hermes/knowledge/ROUTING-RULES.md` v3.0:
+
+- **Step 1 — Research:** Perplexity Search — current docs, gotchas, citations
+- **Step 2 — Design:** M3 — architecture, Kanban cards, acceptance criteria
+- **Step 3 — Build:** Primary builder (one per card) — DeepSeek for complex backend / Llama for bulk / OpenAI for user-facing
+- **Step 4 — Harden:** Llama — bulk cleanup, tests, refactors
+- **Step 5 — QA PASS:** DeepSeek (red-team) — mandatory for critical cards (money, PII, infra, trading, auth, public APIs). Fallback: OpenAI → M3.
+- **Step 6 — Docs:** Claude — long-form docs and runbooks (after code is stable AND QA passes)
+
+**Escalation to Perplexity Computer (rare):** only on projects matching the §4 patterns (greenfield full-stack SaaS, large cross-service refactors/migrations, complex multi-domain research) AND only after Marcelo approves the `escalate_to_computer: yes` flag on the main project card. Hard cap: 10,000 credits/month.
+
+**Build metrics:** every closed build card sets `build_passes:` (`1` / `2` / `3+`) and `rewrite_scope:` (`none` / `minor` / `major`). Monthly review surfaces patterns and feeds flow improvements.
 
 ### Perplexity Spaces Access Priority (Smoke Test Confirmed — 2026-05-14)
 
@@ -314,6 +418,8 @@ When any delegated executor (LBC35, subagent, or other agent) uses Perplexity or
 - Agents are NOT permitted to ask Marcelo to manually relay Perplexity content.
 - If more Perplexity context is needed: open Perplexity via Computer Use, read directly, synthesize.
 
+> **AUTONOMOUS CHANGE PIPELINE (Permanent — 2026-06-23):** BossMan never reports "done" on non-trivial work without (1) a Step-5 verifier PASS (DeepSeek QA, mandatory for critical cards) and (2) a self-verify card (P5) confirming localhost + Tailscale + DB + PM2 all green. Skill: `~/.hermes/skills/autonomous-change-pipeline/SKILL.md`. Every non-trivial change runs on a parent card with `qa_required: yes`, `verify_against` checklist, and `accept_when` criteria. See the skill for the full P1–P5 parent/child schema.
+
 **Safety compliance (all Perplexity-driven changes):**
 - MoneyPipeline and BinanceBot remain strictly separated — intel flows one way (intelligence → execution).
 - No Perplexity guidance may weaken safety layers (pre-trade hook, loss limits, intel gate).
@@ -321,14 +427,18 @@ When any delegated executor (LBC35, subagent, or other agent) uses Perplexity or
 
 ---
 
-## Systems
+## Systems — DEPRECATED 2026-06-03
 
-| System | Port | Notes |
-|---|---|---|
-| Money Pipeline | 8020 | Active — see OPERATINGBLUEPRINT.md |
-| Sports Squares | 8030 | Active |
-| BakeryOps | 8040 | Active |
-| Binance Bot | 8104 | Active |
+> **For live service inventory, use Boss Hub → http://localhost:8160**
+> Source of truth: `~/Projects/boss-hub/registry/services-registry.yaml`
+> This section is a stale snapshot — do not edit or trust it.
+
+| System | Port | Was-Active | Last Snapshot |
+|---|---|---|---|
+| Money Pipeline | 8020 | offline | 2026-05-13 |
+| Sports Squares | 8030 | offline | — |
+| BakeryOps | 8040 | offline | — |
+| Binance Bot | 8104 | live | — |
 
 ---
 
@@ -560,3 +670,78 @@ Every audit must map to the 8 PTES phases in Section 6:
 ### Skill Reference
 
 The `security:pentest-reporting-framework` skill contains the full framework, CVSS reference, evidence standards, and PTES/NIST/OWASP alignment. Load it before any security audit engagement.
+
+---
+
+## Travel Planning — Default Routing Rule (Permanent, 2026-06-04)
+
+When Marcelo mentions a possible or planned trip with **destination and approximate dates**, BossMan defaults to **Travel OS first**. Effective workflow:
+1. Create or open a Travel OS trip record (port 3535, dashboard at `localhost:3535`).
+2. Make it the **active planning trip** in the Travel OS dashboard.
+3. Create/update the related Kanban card for planning work tied to that specific trip (`hermes kanban create --board travel-os ...`).
+4. Use Travel OS as the **system of record** for trip modules: Trip Details, Booking, Itinerary, Expenses, Safety, Compliance, Reminders. Past Trips when archived.
+
+**Future trip-planning messages attach to the existing trip by default unless Marcelo says otherwise.** Travel OS data lives in `/Users/bigdawg/Projects/travel-os-dashboard/data/sampleData.tsx` — trips are added by editing the static `sampleData.trips` array and rebuilding (the in-app `+ New Trip` button is a no-op stub; persistence requires source edit + `next build`).
+
+**This rule is a permanent standing directive, not a per-trip instruction.** When in doubt: Travel OS is the answer, Kanban is the planning backbone, Perplexity is the research engine.
+
+## Travel OS — Canonical Handoff Repo (Permanent — 2026-06-05)
+
+**Official shared repo:** `https://github.com/BIGDAWG35/Bossman-And-Cello-Travel-OS` (private, BIGDAWG35 account)
+
+This is the **canonical source** for cloning Travel OS onto any other machine (Cello's BossLady Mac mini, future replicas, etc.). Use it before proposing any new repos or flash-drive copies.
+
+**Identity note (2026-06-05, Marcelo directive):** "Cello" / "BossLady" is **Marcelo's own second Mac mini** — NOT a separate person, NOT a Telegram contact, NOT an SSH target BossMan can reach. The Tailscale tailnet name "cello" is Marcelo's own account. **BossMan only talks to Marcelo. No other recipient is ever authorized for any handoff message, repo-link share, or "notify Cello" task.** If a future agent is asked to message a non-Marcelo identity, STOP and report to Marcelo.
+
+**Hard rules (Marcelo's standing directive, 2026-06-05):**
+- ❌ **Do NOT move or delete this repo** without Marcelo's explicit approval.
+- ✅ **Use it as the canonical source** for cloning Travel OS onto other machines.
+- ✅ **Keep it in sync** with the working BossMan Travel OS codebase, without touching the live runtime when pushing.
+- ✅ **For any future handoff or replication**, use this repo first before proposing new repos or flash-drive copies.
+- ❌ **Do NOT message any non-Marcelo identity** about this repo (no "Cello", "BossLady", `rsbixa`, or any other chat_id).
+- ❌ **Do NOT clone this repo on a non-BossMan-Mac-mini host** without Marcelo running the clone himself from that host. BossMan may push to it; BossMan does not fan it out to other machines.
+- ❌ **Do NOT change visibility** (public/private) without Marcelo's explicit directive. Currently PRIVATE.
+
+**Sync protocol:**
+- Local source of truth: `/Users/bigdawg/Projects/travel-os-dashboard/` on `main`
+- Push pattern that works on this host: `https://oauth2:$(gh auth token)@github.com/BIGDAWG35/Bossman-And-Cello-Travel-OS.git` (the `oauth2:` user prefix is what GitHub expects for `gho_` OAuth tokens; `x-access-token:` is for fine-grained PATs only)
+- Never push from inside the live PM2 process — only from the local working tree, and only when no in-progress build is running
+- Live system health: PM2 `travel-os` on port 3535, HTTP 200 — leave it alone during sync operations
+- Current HEAD: `31175ada` (verified 2026-06-05)
+
+See `~/.hermes/knowledge/TRAVEL_OS_HANDOFF_REPO.md` for full bootstrap instructions, identity rules, and handoff playbook.
+
+## MEMORY.md usage (Hard rule — 2026-06-12)
+
+`MEMORY.md` is the **small, curated index** of durable cross-session rules and facts that gets injected into every session's system prompt. It is **not** a journal, log, or status board.
+
+### Allowed
+- Cross-session rules (routing, escalation, sharp pitfalls).
+- Stable operational facts (where Boss Hub lives, critical repos, port map pointers).
+- Pointers to canonical docs (`~/.hermes/knowledge/ROUTING-RULES.md`, `TAILSCALE_PITFALLS.md`, etc.).
+
+### Not allowed
+- Incident write-ups (kanban + knowledge doc is the durable record).
+- Raw logs / transcripts / multi-paragraph essays (those go to `~/.hermes/cron/output/`).
+- Project status (use `~/.hermes/knowledge/PROJECTS_ACTIVE.md` / `PROJECTS_PAUSED.md` or the kanban).
+- Anything already fully captured in a kanban card or knowledge doc.
+
+### Size discipline
+- **Hard cap:** 2,200 chars (enforced by the memory tool).
+- **Soft target:** keep the MEMORY snapshot under 1,500 chars (~70%).
+- **Prune trigger:** if the snapshot ever exceeds **1,800 chars**, open a kanban card `"MEMORY.md near cap — needs pruning"` and propose trim/move targets.
+
+### Default routing
+- Heavy content → kanban + `~/.hermes/knowledge/`.
+- MEMORY.md gets at most a 1–2 line summary, **only if it changes how future sessions behave globally**.
+
+The full rule (with format spec and failure modes) lives in **SOUL.md § MEMORY.md usage (Hard rule — 2026-06-12)**. This file mirrors it for delegated executors and subagents.
+
+**Enforcement:** weekly cron `memory-health-check` (Mondays 9:05 AM) opens a kanban card and pings Marcelo if MEMORY >1,800 chars or USER >1,350 chars.
+
+
+---
+
+## Autonomous-By-Default Operating Model (2026-06-23)
+
+For non-trivial changes, see **`autonomous-change-pipeline` skill** and **`workflow-sanity-check` skill**. Five carve-out categories still require Marcelo approval: (1) infrastructure install/remove/upgrade, (2) public/VPN port changes, (3) security-relevant behavior, (4) vendor/API/billing, (5) true product-direction. Mirror: `~/Obsidian/Hermes/10_Operating-Blueprint/AUTONOMY_OPERATING_MODEL_v3.md`.

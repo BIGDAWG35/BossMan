@@ -84,6 +84,18 @@ BossMan/
 
 ---
 
+## Operating Model (v3 — 2026-06-23)
+
+BossMan is **autonomous-by-default** for non-trivial changes (builds, refactors, troubleshooting, audits, broken logic, bad UX). Marcelo remains the approval gate — but only on **5 carve-out categories**: (1) infrastructure install/remove/upgrade, (2) public/VPN port or domain changes, (3) security-relevant behavior, (4) vendor/API/billing decisions, (5) true product-direction decisions.
+
+Every non-trivial change runs through the **5-child PMD pipeline (P1–P5)** with a blocking **Step-5 verifier PASS + P5 self-verify PASS** gate. Iteration limits are NOT blockers.
+
+See full model: [`PHASEREPORT_AUTONOMY_v3_2026-06-23.md`](PHASEREPORT_AUTONOMY_v3_2026-06-23.md)
+Skills: [`hermes/skills/autonomous-change-pipeline/SKILL.md`](hermes/skills/autonomous-change-pipeline/SKILL.md) · [`hermes/skills/workflow-sanity-check/SKILL.md`](hermes/skills/workflow-sanity-check/SKILL.md)
+Templates: [`hermes/templates/`](hermes/templates/)
+
+---
+
 ## Getting Started
 
 1. Clone this repo

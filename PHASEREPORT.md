@@ -7,6 +7,165 @@
 
 ---
 
+## 2026-06-18 — Phase 5 v3.3: Multi-Project Flow + Backlog Triage under Cap
+
+**Scope:** 4 projects (Option 1, locked) — `money-pipeline`, `binance-bot`, `csdawg-dashboard` (tag = `agent-os`, lane = `agent-os`), `youtube-content`.
+
+**Decisions locked by Marcelo:**
+1. `csdawg-dashboard` is a project **tag**; the lane is `agent-os`. The tag is what counts under the cap.
+2. Logical epic per project (no new physical epic cards in this phase). 1–2 active cards per project under cap=2.
+3. Top-3 blocked ranked by unblock-likelihood, not age.
+
+**Writes applied (3, all per Marcelo's instruction):**
+| # | Action | Result | Card |
+|---|---|---|---|
+| 1 | Add `project: binance-bot` to Binance Bot v1 Epic | no-op (tag already present at body line 5 — P5-1a scan missed it) | `t_9fe07c44` |
+| 2 | Create YouTube placeholder card | created, status=ready, has `project: youtube-content` | `t_8ba0f9ae` |
+| 3 | Unblock Money Pipeline v2 Epic | `blocked` → `ready` | `t_9f22b48f` |
+
+**Operational surprise (disclosed):** Within ~12s of write 3, the dispatcher tick fired and auto-claimed `t_9f22b48f` because its body still has `Internal owner: bossman` + `Human owner: Marcelo` and `bossman` is the default-assignee profile. A worker (pid 16409) is now `running` on the Epic. Pre-existing block-comment had read "Requires Marcelo approval before executing subcards. Marcelo has not yet responded in the comment thread." Two paths: (A) let the worker produce something Marcelo reviews, (B) re-block the Epic and pick MP6-01 manually. **Not auto-resolved — surfaced to Marcelo.**
+
+**Tag backfill status:** 87/87 active cards now have a canonical `project:` tag (0 untagged, 0 legacy, 0 mis-tagged). The "untagged" classification in P5-1a was a scan-regex bug; first-line-only match missed tag lines that appeared after a heading. Verified via direct SQL.
+
+**Recompute vs. manual promote:** `recompute_ready()` does **not** auto-promote `ready` parents' children — only `done` parents trigger child promotion. MP6-* children stayed `todo` after the Epic unblock. Per Marcelo's "no other status edits" directive, children are not auto-promoted in this phase.
+
+**Cap interaction:** verified live at 2026-06-18 17:09 — 3 ready+tagged binance-bot tasks for `builder` produced `spawned: 2, skipped_per_project_capped: 1` with shape `{task_id, project, current}`. Untagged tasks confirmed cap-exempt.
+
+**Advisory outputs (not codified as DB writes):**
+- Per-project logical epics + 1–2 active card picks → see Telegram digest message of 2026-06-18.
+- Per-project top-3 blocked by unblock-likelihood → published in the same digest.
+- No card renames. No new physical epic cards. No status mutations beyond the 3 listed above.
+
+**Mirrors (deferred to Phase 6 sync per standing save-order policy):** This entry is in `~/Projects/BossMan/PHASEREPORT.md` only. Mirrors at `~/Repos/BossMan/PHASEREPORT.md`, `~/Repos/BossMan/docs/PHASEREPORT.md`, `~/Projects/BossMan/docs/PHASEREPORT.md` do not yet have it.
+
+---
+
+## 2026-06-18 — Phase 4 v3.2: per-project concurrency cap (dispatcher pick-time rule)
+
+**What happened:** Marcelo approved the §10.2 mechanism revision: the
+active-card cap is no longer enforced by demoting cards to `todo` (which
+collided with `recompute_ready()` auto-promotion on every
+`hermes kanban list` call). Instead, the cap is enforced at dispatcher
+pick time, opt-in via `kanban.max_in_progress_per_project` in
+`~/.hermes/config.yaml`. Status mutations are forbidden for cap
+compliance — only `recompute_ready()` owns the `todo ↔ ready ↔ blocked`
+transitions.
+
+**What was codified (append-only — no rewrites):**
+
+1. `hermes_cli/kanban_db.py` — new `_extract_project_tag(body)` helper
+   (regex, first-match-wins, returns `None` for untagged), new
+   `DispatchResult.skipped_per_project_capped: list[(task_id, project,
+   current)]` field, new cap block inside `dispatch_once()` mirroring
+   the existing per-profile cap pattern. `ready_rows` SELECT
+   extended with `body` so the cap can read project tags. **No schema
+   changes.**
+2. `hermes_cli/kanban.py::_cmd_dispatch` — reads
+   `kanban.max_in_progress_per_project` from `load_config()`, coerces
+   to positive int, passes to `dispatch_once()`. CLI JSON output
+   surfaces `skipped_per_project_capped` (alongside the existing
+   `skipped_per_profile_capped`).
+3. `tests/hermes_cli/test_kanban_per_project_cap.py` — 13 unit tests:
+   cap=1, cap=2, untagged-bypass, recompute-untouched (regression),
+   idempotency, dry-run, telemetry field shape.
+4. `~/.hermes/knowledge/ROUTING-RULES.md` §10.6 (NEW) — canonical
+   definition: semantics, config, telemetry, implementation surface,
+   out-of-scope. §10.2 mechanism amendment explaining why demote-to-todo
+   was retired (cap-vs-recompute conflict). Version-history row v3.2.
+5. `~/.hermes/knowledge/MODEL_ROUTING_WORKFLOW.md` §10.7 (NEW) —
+   model-routing perspective: when the cap fires, what happens to
+   deferred tasks, interaction with model choice (none), Routing
+   Ledger impact (none). Version-history row v3.2.
+
+**Backward compatibility:** Zero-risk. When the config key is unset
+(default), dispatcher behavior is bit-for-bit identical to the
+pre-Phase-4 baseline. Verified live: `hermes kanban dispatch --dry-run
+--json` shows the new `skipped_per_project_capped: []` field as an
+empty list — the JSON shape now includes it but no tasks are skipped.
+
+**Test results (2026-06-18):**
+
+- `tests/hermes_cli/test_kanban_per_project_cap.py` — 13/13 pass in
+  0.65s
+- `tests/hermes_cli/test_kanban_per_profile_cap.py` — 9/9 pass
+  (regression check — my `SELECT body` change didn't break it)
+- `tests/hermes_cli/test_kanban_cli_dispatch_passthrough.py` — pass
+- `tests/hermes_cli/test_kanban_db_init.py` — pass
+- `tests/hermes_cli/test_kanban_core_functionality.py` — 196/197
+  pass; 1 failure is pre-existing test-isolation flakiness (passes when
+  run alone, fails when run after other tests in same session — shared
+  monkeypatched env). Not caused by this change.
+
+**Config-set is PENDING Marcelo approval.** Hermes refuses to write
+`~/.hermes/config.yaml` without explicit consent (security-sensitive
+infrastructure file — Approval Trigger #2). The default value `2` was
+Marcelo's initial request. When set, live `skipped_per_project_capped`
+will populate on dispatch. Until then, the field is well-formed but
+empty.
+
+**Decisions logged:**
+
+- **Cap-vs-recompute conflict resolved by separation of concerns:**
+  dispatcher owns cap, `recompute_ready()` owns status. They don't
+  fight anymore. The cap can never be undone by an accidental
+  `hermes kanban list` call.
+- **Untagged-bypass is intentional.** Forward compat: new tags can be
+  introduced without a code change. Legacy/no-tag work is not held
+  hostage to a vocabulary upgrade.
+- **Uniform cap only (single global value).** Per-project tiered caps
+  (different N per project) explicitly deferred. Today's rule is one
+  knob, one ceiling.
+- **No schema changes.** Adding a column or table would have broken
+  every existing bossman board. The cap fits entirely in
+  `dispatch_once()` + `DispatchResult`.
+
+**Status:** Code + tests + canon DONE. Config-set awaiting Marcelo
+approval (infrastructure trigger #2). DB restored to clean state
+after live dry-run: `kanban.db.post_p4_12_20260618_165647` is the
+new baseline.
+
+**Related kanban cards:** `t_pm2_daemon_env_leak_1780979963`-style
+audit trail linked from the active Phase 4 P4.11/P4.12 cards.
+
+---
+
+## 2026-06-18 — Phase 4: Multi-Project OS + Loop Engine
+
+**What happened:** Approved Marcelo's Phase 4 preview (no changes) and executed end-to-end on the bossman board + canon. Phase 4 layers multi-project discipline + a paid-model artifact-reuse loop on top of Routing Rules v3 + Model Routing Workflow v3. The 6-step Default Build Flow and model roles are untouched — everything is additive.
+
+**What was codified (5 new + 1 amended canon doc):**
+
+1. `PHASE_4_MULTI_PROJECT_OS.md` (NEW, canonical) — declares Phase 4, defines project tags, active-cap, fast-track carve-out, mirror contract, success metrics.
+2. `PROJECT_VOCABULARY.md` (NEW) — closed list of 10 project tags: `money-pipeline`, `binance-bot`, `crypto-intel`, `bakery-ops`, `square-payouts`, `pmd`, `altus-forensic`, `youtube-content`, `agent-os`, `travel-os`. Mapping table from legacy title prefixes (`[MP]`, `[BC]`, `[SQ]`, etc.) and legacy tag values (`Trading`, `Bakery`, `SquarePayouts`, `Infra`, `Cross-Cutting`, `AltusForensic`).
+3. `ARTIFACT_INDEX.md` (NEW, seeded) — single-lookup table of Tier-4/5 outputs. 18 seeded rows across 7 projects. Loop hook is one grep.
+4. `ROUTING-RULES.md` §10 (NEW appendix) — Multi-Project OS section (tag enforcement, cap, fast-track, mirror rule, exception path).
+5. `MODEL_ROUTING_WORKFLOW.md` §10 (NEW appendix) — Routing Ledger gains 2 new fields (`reuse_check`, `artifact_index_entry`); full loop hook shell snippet (§10.2), valid skip reasons (§10.3), post-call save protocol (§10.4), 2 worked examples (§10.5).
+6. `KNOWLEDGE_REUSE_PIPELINE.md` §6 (NEW, "Loop Hook") — executable form of the existing §3 Paid Model Artifact Reuse Policy; inserted ahead of "Memory Capture Policy Summary" which was renumbered §7; old §7/§8 bumped to §8/§9.
+
+**What was changed in the bossman board (86 active cards):**
+
+- **Tag backfill (P4.7):** 86/86 active cards now carry a closed-vocabulary `project:` tag. Pre-P4 distribution: 0 cards had canonical tags (14 had no `project:` line, 72 had legacy values like `Trading`, `Bakery`, `Cross-Cutting`). Post-P4: 31 `money-pipeline`, 19 `agent-os`, 12 `crypto-intel`, 9 `binance-bot`, 5 `altus-forensic`, 4 `square-payouts`, 4 `bakery-ops`, 2 `pmd`. Cards were NOT renamed — only the body field was updated.
+- **Active-card cap (P4.8):** 4 projects exceeded the 1-running + 1-ready cap (`money-pipeline` 14 ready, `agent-os` 4 ready, `binance-bot` 4 ready, `bakery-ops` 2 ready). 20 cards demoted to `todo` with a `phase4-note: active-cap: project X exceeded Y cap (P4.8 enforcement 2026-06-18)` reason line in the body. Post-P4: 0 breaches.
+- **Backup:** `kanban.db.pre_p4_backup_20260618_160704` (pre-tag-backfill) + `kanban.db.pre_p48_backup_20260618_160830` (pre-cap-demotion) saved alongside the live DB.
+
+**What was wired (loop hook):**
+
+- DRY-RUN verified: 3 past Tier-4 outputs (`SPEC-BINANCE-AUTONOMOUS-TRADER.md`, `CRYPTO_TRADING_KNOWLEDGE_AUDIT_2026-06-13.md`, `PHASE_4_MULTI_PROJECT_OS.md`) all return hits when grepping `ARTIFACT_INDEX.md` for their project tag — pre-check latency is sub-millisecond, so no effective slowdown.
+- Every future Tier-4/5 Routing Ledger now requires `reuse_check: yes|no` + `artifact_index_entry: <path>`. Valid skips are `index_unavailable` or explicit `override: <reason>` from Marcelo. Other skips logged as violations.
+
+**Decisions logged:**
+
+- **Append-only on existing canon** — no rewrites of Routing Rules v3.0, MRW v3, or Pipeline §1–§5/§7–§8. The 6-step Default Build Flow, model roles, Perplexity budget, Light Build Metrics, and LBC35 model-agnostic rule are explicitly OUT of scope (per preview guardrails).
+- **Card titles preserved** — only the body field was modified. The `[MP]`, `[BC]`, `[SQ]` title prefixes coexist with the new `project:` body field.
+- **Fast-track carve-out** — cards with `fast-track: yes` in body are exempt from the cap. None exist yet; gate is reserved for future urgent work.
+- **Ambiguous Cross-Cutting classification resolved manually** — 18 cards needed human review because the legacy `Cross-Cutting` tag was overloaded (meta-workflow, project-specific, personal-admin). Final mapping committed; reasoning logged here for the audit trail.
+
+**Status:** Implemented. Verification step P4.11 in progress (tag-backfill confirmed; cap confirmed; index presence confirmed; mirrors deferred to Phase 6 sync per standing save-order policy).
+
+**Related kanban card:** (none — this was inline phase closure, not card-driven).
+
+---
+
 ## 2026-06-13 — Concurrent-edit resolution: OBSIDIAN_VAULT_WORKFLOW.md
 
 **What happened:** A separate parallel BossMan session (the `bossman-profile`) was working on `~/Desktop/CLAW-Backup/` (Marcelo's primary personal Obsidian vault) and committed `docs/OBSIDIAN_VAULT_WORKFLOW.md` to the BossMan repo at commit `04a103d`. That doc is canonical for CLAW-Backup, with focus on vault identification, security boundaries, and daily-note workflows.
@@ -358,3 +517,34 @@ Then:
 
 **Open finding flagged in report (NOT auto-fixed):**
 - pmd-web not in PM2 health-check whitelist. Route: `/portfolio` (HTTP 200). Should be added if auto-repair coverage is wanted.
+
+
+---
+
+## 2026-06-23 — AUTONOMY-BY-DEFAULT OPERATING MODEL v3
+
+**Scope:** Make BossMan the default operator for non-trivial changes (builds, refactors, troubleshooting, audits, bad-logic fixes). Marcelo remains the approval gate — but only on 5 carve-out categories.
+
+**What was codified:**
+- 5-child PMD pipeline (P1–P5) as the default execution shape for non-trivial changes
+- 5-carve-out approval gate (infra install / public port / security / vendor-billing / product-direction)
+- "Challenge bad logic, not just broken code" rule
+- "BossMan NEVER reports done without Step-5 PASS + P5 self-verify PASS" kernel rule
+- 3 new templates (handoff-packet, acceptance-criteria, step5-verdict.json)
+- 2 new skills (autonomous-change-pipeline, workflow-sanity-check) + 1 patch (troubleshooting-mode adds cross-refs)
+- LBC35 SOUL v3.0 (no model pick, no Perplexity Computer, no Step-5 override, SquarePayouts M3 ban)
+- 8-dim autonomy audit PASSED (separate card t_8458f5b5)
+
+**Where:**
+- `hermes/SOUL.md` §AUTONOMOUS REMEDIATION MODEL + AUTONOMOUS CHANGE PIPELINE
+- `hermes/AGENTS.md` v3.0
+- `hermes/templates/{handoff-packet,acceptance-criteria,step5-verdict.json}`
+- `hermes/skills/{autonomous-change-pipeline,workflow-sanity-check}/SKILL.md`
+- `hermes/skills/troubleshooting-mode/SKILL.md` (patched — companion skills)
+- `PHASEREPORT_AUTONOMY_v3_2026-06-23.md` (comprehensive entry)
+- `~/Obsidian/Hermes/10_Operating-Blueprint/AUTONOMY_OPERATING_MODEL_v3.md` (mirror)
+- `~/Obsidian/Hermes/50_Phase-Reports/PHASEREPORT_AUTONOMY_v3_2026-06-23.md` (mirror)
+
+**Kanban:** t_0376eba5 (parent) · P1–P5 children (all done) · doc-sync PASS · git push PASS
+
+**Rule of record:** BossMan autonomous-by-default for all non-trivial changes. Iteration limits are NOT blockers. Marcelo approves ONLY on 5 carve-out categories.

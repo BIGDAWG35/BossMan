@@ -1,0 +1,64 @@
+{
+  "_schema": "Step-5 QA verdict file — canonical shape. Every non-trivial change must produce one of these before the parent card flips to done.",
+  "_schema_version": "1.0",
+  "_example": true,
+  "verdict": "pass",
+  "touches_sensitive": false,
+  "category": "ui",
+  "model": "DeepSeek v4-flash",
+  "verifier_prompt_hash": "sha256-of-prompt-or-abbrev",
+  "subject": {
+    "card_id": "t_xxxxx",
+    "title": "<short, action-oriented>",
+    "project": "<PMD | Trading | Infra | Security | Bakery | ...>",
+    "work_type": "new_build"
+  },
+  "checks": [
+    {
+      "name": "service_health",
+      "method": "curl -fsS -o /dev/null -w '%{http_code}' http://localhost:PORT/",
+      "expected": "200",
+      "actual": "200",
+      "pass": true
+    },
+    {
+      "name": "pm2_online",
+      "method": "pm2 list | grep <service>",
+      "expected": "online",
+      "actual": "online",
+      "pass": true
+    },
+    {
+      "name": "db_count",
+      "method": "sqlite3 <db> 'SELECT count(*) FROM <table>'",
+      "expected": ">0",
+      "actual": "42",
+      "pass": true
+    },
+    {
+      "name": "no_synthetic",
+      "method": "grep -r 'synthetic\\|stub_\\|mock_' src/ | wc -l",
+      "expected": "0",
+      "actual": "0",
+      "pass": true
+    }
+  ],
+  "red_team_questions": [
+    "What could this break in money-pipeline, trading, or cron jobs?",
+    "Is there a partial-failure mode (e.g., service starts but health check fails)?",
+    "What happens during failover? Does the fallback chain still work?",
+    "Does this introduce a race condition or a state inconsistency?",
+    "Is the rollback path clear and tested?"
+  ],
+  "red_team_answers": [
+    "None — no money/trading/cron surfaces touched.",
+    "No — service starts cleanly, health check on the canonical route returns 200.",
+    "N/A — no failover path added or removed.",
+    "No — change is additive only, no shared state mutation.",
+    "Yes — revert is `git revert <sha>`; verified in dev branch first."
+  ],
+  "reasoning": "All 4 observable checks passed. Red-team questions answered. No sensitive surfaces touched. Verdict: pass.",
+  "timestamp": "2026-06-23T12:00:00-07:00",
+  "verifier_session_id": "<session-id>",
+  "parent_card_id": "t_xxxxx"
+}
