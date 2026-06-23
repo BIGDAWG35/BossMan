@@ -1,0 +1,55 @@
+{
+  "verdict_id": "step5-verdict-phase3-doc-hygiene-2026-06-23",
+  "verdict_type": "step5_qa",
+  "verdict": "PASS",
+  "verified_at": "2026-06-23",
+  "verified_by": "DeepSeek (Step-5 verifier)",
+  "kanban_parent": "t_81e30070",
+  "kanban_goal_card": "t_3e4a14d4",
+  "phase": "Phase 3 — Monthly Doc-Hygiene Loop",
+  "verify_against": {
+    "1_goal_card_created": "PASS — kanban t_3e4a14d4 has goal, success_criteria, timeframe, review_cadence=monthly, stop_conditions, carve_outs, Routing Ledger",
+    "2_loop_spec_written": "PASS — ~/.hermes/knowledge/GOAL-LOOP-DOC-HYGIENE.md has 5 sections (INTAKE, DECOMPOSE, EXECUTE, REVIEW, DONE), Scope & STOPs, Routing Ledger, Step-5 QA rule, canonical references",
+    "3_cron_proposal_drafted_not_registered": "PASS — ~/.hermes/knowledge/DOC-HYGIENE-CRON-PROPOSAL_2026-06-23.md exists, schedule=0 23 1 * *, default report-only, local-only delivery, cron verified NOT registered (crontab -l | grep doc-hygiene = empty)",
+    "4_soul_agents_updated": "PASS — SOUL.md has 'Doc canon hygiene runs under Goal Loop' clause; AGENTS.md has 'DOC HYGIENE GOAL LOOP' blockquote referencing the no-cron-without-approval rule",
+    "5_phasereport_entry": "PASS — Phase 3 entry inserted at top of PHASEREPORT.md (after Phase 2 entry), 2026-06-23 dated",
+    "6_goal_loop_skill_worked_example": "PASS — goal-loop/SKILL.md 'Examples (proven applications)' table has new 'Doc hygiene (Phase 3)' row, plus 33-line 'Worked example: Doc Hygiene Monthly Loop' subsection with success criteria, 5-step loop, no-spam cron note, and 7 reasons why it's a good Goal Loop example",
+    "7_kernel_doc_edits_backed": "PASS — SOUL.md, AGENTS.md, goal-loop/SKILL.md edits all backed by kanban card t_24dba238 (P4) + this Routing Ledger + Step-5 (this file) + PHASEREPORT entry (item 5 above)"
+  },
+  "pitfalls_avoided": [
+    "Cron NOT auto-registered — proposal only, awaiting operator approval (per Phase 3 directive and ACP carve-out #1)",
+    "Kernel-doc edits routed through Routing Ledger + Step-5 QA + PHASEREPORT (per ACP standing rule and Phase 2 P5 + Phase 3 P4 protocol)",
+    "Goal card has measurable success criteria, not vague 'keep docs clean' (per goal-loop skill pitfalls)",
+    "Cadence is monthly, not weekly — Phase 1 ACP recommendation for weekly was downgraded to monthly to honor no-spam rule (no high-frequency cron noise)",
+    "Mechanical mirror-only fixes are within autonomous scope; kernel-doc edits are explicit STOP conditions (no accidental SOUL/AGENTS mutation)",
+    "P0 fix cards spawned as separate cards; P1 backlog tracked in P1_BACKLOG.md, not auto-fixed",
+    "Step-5 QA is mandatory for P0 only — P1/P2 mechanical fixes may proceed without Step-5 (P5 discipline from doc-integrity audit 2026-06-23)"
+  ],
+  "open_questions_for_operator": [
+    "Approve the monthly cron proposal (Option A/B/C/D)?",
+    "Cadence: monthly (proposed) vs weekly during hardening?",
+    "Telegram threshold: P0 only, or P0 + ≥3 P1s?",
+    "Mode: report-only (proposed) or auto-fix mechanical P1/P2?",
+    "First run: let 2026-07-01 be the first scheduled run, or run a manual --on-demand test first?"
+  ],
+  "next_phase": "Phase 4 — TBD by operator decision after Phase 3 cron approval",
+  "deliverables": {
+    "goal_card": "t_3e4a14d4",
+    "loop_spec": "~/.hermes/knowledge/GOAL-LOOP-DOC-HYGIENE.md",
+    "cron_proposal": "~/.hermes/knowledge/DOC-HYGIENE-CRON-PROPOSAL_2026-06-23.md",
+    "phasereport_entry": "~/Projects/BossMan/PHASEREPORT.md (top entry, 2026-06-23)",
+    "modified_files": [
+      "~/.hermes/SOUL.md",
+      "~/.hermes/AGENTS.md",
+      "~/.hermes/skills/goal-loop/SKILL.md"
+    ],
+    "kanban_parent": "t_81e30070",
+    "kanban_children": {
+      "p1": "t_2d75e7c4",
+      "p2": "t_259c989e",
+      "p3": "t_f6a1d90d",
+      "p4": "t_24dba238",
+      "p5": "t_a0c3f3e8"
+    }
+  }
+}

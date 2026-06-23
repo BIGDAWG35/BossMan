@@ -169,7 +169,41 @@ When success criteria are met (or goal is killed), the done card includes:
 | Autonomy (this) | Phase 1 doc hygiene | goal card → 5 children P1-P5 → done with PHASEREPORT entry |
 | Autonomy (this) | Phase 2 hardening | goal card → 5 children P1-P5 → done with PHASEREPORT entry |
 | Doc hygiene | Weekly case-dup audit | recurring cron → auto-advance → STOP on detection |
+| **Doc hygiene (Phase 3)** | **Monthly Goal Loop** | **goal card `t_3e4a14d4` → 3 children (D1 case-dup, D2 md5 mirror, D3 PHASEREPORT scan) → monthly REVIEW → DONE with P0 fix cards** |
 | PM2 health | Service auto-repair whitelist | goal card → scope definition → done with whitelist in PHASEREPORT |
+
+### Worked example: Doc Hygiene Monthly Loop (Phase 3, 2026-06-23)
+
+The canonical example of the Goal Loop pattern applied to a long-lived audit goal.
+
+**Goal card:** `t_3e4a14d4` — "Doc Hygiene — Keep Hermes canon + mirrors drift-free"
+
+**Success criteria (measurable):**
+1. No case-dup files in `~/.hermes/knowledge/` (detector returns 0 pairs)
+2. All kernel docs md5-match across canon / Obsidian / GitHub mirrors
+3. PHASEREPORT.md has an entry for every major doc change since last review
+4. Zero unresolved P0 findings at each monthly review
+
+**Timeframe:** ongoing, first review 2026-07-23, then monthly
+
+**5-step loop (proven design — see `~/.hermes/knowledge/GOAL-LOOP-DOC-HYGIENE.md` for full spec):**
+
+1. **INTAKE** (Day 1, 00:00 PT) — gather canon + mirror state, write `intake_YYYY-MM-DD.json`
+2. **DECOMPOSE** (Day 1, 00:30 PT) — spawn 3 children: D1 case-dup, D2 md5 mirror, D3 PHASEREPORT scan
+3. **EXECUTE** (Day 1-3) — run detectors within Scope & STOPs (kernel docs never auto-fixed)
+4. **REVIEW** (Day 4-5) — synthesize into `PHASEREPORT_DOC_HYGIENE_YYYY-MM.md` + one-line PHASEREPORT entry
+5. **DONE** (Day 5-7) — close cycle; P0s promoted to fix cards; Step-5 PASS
+
+**No-spam cron proposal (NOT registered):** `0 23 1 * *` (1st of each month, 23:00 PT) — local-only when PASS, Telegram only on P0/FAIL. See `~/.hermes/knowledge/DOC-HYGIENE-CRON-PROPOSAL_2026-06-23.md`.
+
+**Why this is a good Goal Loop example:**
+- Long-lived (recurring monthly, not one-shot)
+- Measurable success criteria (no case-dups, no mirror drift, no P0)
+- Cadence-bound (monthly, not ad-hoc)
+- Has explicit STOPs (kernel-doc edits escalate)
+- Has no-spam compliance (default silent)
+- Step-5 QA enforced on P0
+- Routing Ledger populated (`work_type: audit`, `qa_required: yes`)
 
 ## Pitfalls (Permanent — 2026-06-23)
 

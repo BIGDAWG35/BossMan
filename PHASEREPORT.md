@@ -9,7 +9,13 @@
 
 ---
 
-## 2026-06-23 — Phase 2 Hardening: Autonomy & Loop (Scope & STOPs + Goal Loop)
+## 2026-06-23 — Phase 3 Doc Hygiene: Goal Loop + Monthly Cron Proposal (no-spam)
+
+**Goal:** Wire doc hygiene into the Goal Loop pattern so canon stays tight without
+constant manual audits. Replace the ad-hoc "2026-06-23 audit + cleanup" pattern
+with a monthly, low-noise, high-signal cadence.
+
+**Scope:** Skill `goal-loop` (worke...[truncated]
 
 **Scope:** Strengthen the autonomous-change pipeline and 4 critical operational skills with explicit Scope & STOPs; codify the reusable Goal Loop pattern for any goal/multi-week project/learning objective.
 
