@@ -5,6 +5,35 @@
 **Owner:** BossMan Hermes
 **Convention:** Newest entry on top. Format: `## YYYY-MM-DD — <title>`
 
+**Note on convention drift:** The 2026-06-23 AUTONOMY entry below was committed at the bottom (commit 4ba2aa6) contrary to this convention. Future appends follow the convention; a separate housekeeping pass will re-order the existing entries.
+
+---
+
+## 2026-06-23 — Documentation Integrity Audit & Phase 1 Hygiene Fixes (Doc-sync PASS)
+
+**Scope:** Comprehensive 9-finding audit of Hermes canon / Obsidian / GitHub mirrors; apply 4 P0 + 4 P1 fixes to tighten doc canon before autonomy expansion.
+
+**What was codified:**
+- **F1 (kernel drift):** SOUL.md M2.7 → M3 default. 5 active policy lines aligned with AGENTS.md v3.0 (commit c2e703b).
+- **F2 (skill drift):** ACP skill re-synced from canon → GitHub (4,657-byte drift; includes audit-class extensions from 2026-06-23).
+- **F3 (missing canon):** SOUL.md placed in Obsidian `20_Agents/` for human-readable mirror.
+- **F4 (case-dup collapse):** 90 lowercase duplicate files deleted from `~/.hermes/knowledge/`. 91 → 0 case-dup pairs. ~990 KB reclaimed. Zero cross-references broken.
+- **F6, F7 (stale mirrors):** SERVICES_MAP.md (Jun 2) and BLOCKER_RESOLUTIONS.md (May 7) aligned across Hermes canon, Obsidian, and BossMan/docs/. md5 identical at all 3 locations.
+- **F5 (PHASEREPORT coverage):** 4 missing milestones backfilled — Single Status Surface (2026-06-09), Autonomous Remediation Model (2026-06-09), Cross-Device Bridge (2026-06-09), CuaDriver Self-Heal (2026-05-25).
+- **E1 refined:** 91 case-dup pairs (not 88 as initially reported in P3/P4 estimates — bundled detection script confirmed 91, not 88).
+
+**Where:**
+- `~/.hermes/SOUL.md` (5 M2.7→M3 patches applied)
+- `~/.hermes/knowledge/{SERVICES_MAP.md,BLOCKER_RESOLUTIONS.md}` (re-created from BossMan/docs Jun 2 source)
+- `~/Obsidian/Hermes/{20_Agents/SOUL.md,30_Services-Maps/SERVICES_MAP.md,10_Operating-Blueprint/BLOCKER_RESOLUTIONS.md}` (mirrors aligned)
+- `~/Projects/BossMan/hermes/skills/autonomous-change-pipeline/SKILL.md` (synced from canon)
+- `~/Projects/BossMan/PHASEREPORT.md` (4 missing milestones + this entry)
+- `~/.hermes/knowledge/PHASEREPORT_DOC_FIXES_2026-06-23.md` (consolidated report)
+
+**Kanban:** t_6693aa83 (parent) · 7 P1 children (P1-1, P1-2, P1-3, P1-4, P1-5, P1-6, P1-7 — all done) · Step-5 QA PASS · all mirror md5s verified
+
+**Rule of record:** Hermes canon is the source of truth. Obsidian + GitHub are read-only mirrors. Hermes wins on conflict. One-way canon → mirror. Doc-sync after every non-trivial change.
+
 ---
 
 ## 2026-06-18 — Phase 5 v3.3: Multi-Project Flow + Backlog Triage under Cap
@@ -126,6 +155,77 @@ new baseline.
 
 **Related kanban cards:** `t_pm2_daemon_env_leak_1780979963`-style
 audit trail linked from the active Phase 4 P4.11/P4.12 cards.
+
+---
+
+## 2026-06-09 — Single Status Surface: BossMan as Only Authorized Status Origin
+
+**Scope:** Stop all autonomous Telegram/status traffic from OpenClaw/LBC35 and other LaunchAgents. BossMan is the single status surface for Marcelo.
+
+**What was codified:**
+- No direct Telegram from any agent other than BossMan
+- `ai.openclaw.gateway` LaunchAgent DISABLED (was sending autonomous summaries bypassing BossMan)
+- Legacy `com.local.pm2-watchdog`, `com.local.squarepayouts`, `com.local.bakery` LaunchAgents DISABLED (redundant with BossMan PM2 health monitor)
+- Remaining LaunchAgents under review: `quickstats`, `teamstandup`, `mission-control` — no Telegram routing confirmed
+- All work, verification, and status flows through BossMan Kanban or direct BossMan report
+
+**Where:**
+- `~/.hermes/SOUL.md` §Single Status Surface — BossMan as Only Authorized Status Origin
+
+**Rule of record:** BossMan is the only authorized status origin. No other system, agent, LaunchAgent, cron job, or script may send direct Telegram messages or notifications to Marcelo outside the BossMan routing layer.
+
+---
+
+## 2026-06-09 — Autonomous Remediation Model: BossMan fixes on its own
+
+**Scope:** BossMan must diagnose, fix, verify, and report — without escalating routine matters to Marcelo. Marcelo is brought in ONLY on the 5 carve-out categories.
+
+**What was codified:**
+- 4-step remediation: Diagnose → Fix → Verify → Report
+- AI stack uses Claude / DeepSeek / OpenAI for diagnosis and fix planning
+- PM2 / crash / build / config / port / auth / DB / queue issues: BossMan handles autonomously
+- Marcelo approval gate ONLY for: (1) infra install/remove/upgrade, (2) public/VPN port or domain changes, (3) security-relevant behavior changes, (4) vendor/API/billing decisions, (5) true product-direction
+- "Challenge bad logic, not just broken code" — fix the workflow, not just the symptom
+
+**Where:**
+- `~/.hermes/SOUL.md` §AUTONOMOUS REMEDIATION MODEL (Mandatory — 2026-05-27)
+
+**Rule of record:** Marcelo should NEVER be asked to run commands, restart services, switch browsers, test localhost URLs, or perform routine troubleshooting. BossMan fixes on its own, verifies, and reports.
+
+---
+
+## 2026-06-09 — Cross-Device Bridge: Perplexity Spaces access from any device
+
+**Scope:** Marcelo may initiate work from Perplexity Spaces on any device (phone, iPad, MacBook Pro). BossMan picks up the named Space + answer snippet on the Mac mini via Hermes Computer Use and proceeds autonomously.
+
+**What was codified:**
+- BossMan owns all follow-up with Perplexity, planning, implementation, and verification
+- Marcelo is the approval gate only — never a relay between tools
+- Space thread content is OPTIONAL trigger context, NOT a dependency
+- All agent reasoning comes from: local mirror + standing docs + Perplexity main search
+- "Marcelo removed from relay loop" — BossMan does NOT ask Marcelo to copy/paste Perplexity output
+
+**Where:**
+- `~/.hermes/SOUL.md` §Perplexity as Default Communication Channel — Cross-Device Bridge (Permanent)
+
+**Rule of record:** Cross-device work via Spaces. Marcelo is approval gate. BossMan owns the full research → implement → verify cycle.
+
+---
+
+## 2026-05-25 — CuaDriver Self-Heal + Fallback (Phase Cua)
+
+**Scope:** Make CuaDriver critical infrastructure that never silently blocks project work. Auto-heal the singleton and provide fallback when broken.
+
+**What was codified:**
+- 4-layer health monitor on the CuaDriver daemon
+- Auto-restart on stale `_CuaDriverSession` singleton (root cause of 2026-05-25 instability)
+- Fallback path when CuaDriver is broken: use Browser QA at `https://perplexity.ai` as primary research path
+- Operational status: ✅ CuaDriver daemon HEALTHY (auto-heal active), ✅ Perplexity main search via Browser QA, ✅ Local mirrors canonical
+
+**Where:**
+- `~/.hermes/SOUL.md` §CuaDriver Self-Heal + Fallback (Permanent — Phase Cua, 2026-05-25)
+
+**Rule of record:** CuaDriver is critical infrastructure. Never silently block project work. Auto-heal + fallback to Browser QA.
 
 ---
 

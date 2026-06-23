@@ -12,8 +12,8 @@ description: |
   "non-trivial change", "autonomous pipeline", "PMD-style", "P1..P5",
   "verify_against", "accept_when", "self-verify card", "I want the full
   loop run autonomously", "stop asking me which option". NOT for: trivial
-  one-liner edits, dry-runs, single-card bug fixes, or any work where
-  Marcelo wants to drive step-by-step.
+  NOT for: trivial one-liner edits, dry-runs, single-card bug fixes, or any work where
+  Marcelo wants to drive step-by-step. Doc-sync variant: see `references/doc-sync-as-acp.md`.
 ---
 
 # Autonomous Change Pipeline (Permanent)
@@ -84,16 +84,49 @@ the 5-card shape.
 
 | # | Card | Owner | Output | Model |
 |---|------|-------|--------|-------|
-| **P1** | Schema / UI | bossman | `decision.md` (options, evidence, recommended choice) + `schema/UI sketch` | MiniMax-M3 (writes decision.md) |
-| **P2** | Decision | bossman | `decision.md` finalized with Marcelo's call OR a recommended choice with `## Marcelo approve` gate | MiniMax-M3 |
+| **P1** | Schema / UI (or **Map** for audits) | bossman | `decision.md` (options, evidence, recommended choice) + `schema/UI sketch`; **for audits: full enumeration of every target file with sizes/mtimes** | MiniMax-M3 (writes decision.md) |
+| **P2** | Decision (or **Methodology** for audits) | bossman | `decision.md` finalized with Marcelo's call OR a recommended choice with `## Marcelo approve` gate; **for audits: 6 finding classes + priority scoring rules** | MiniMax-M3 |
 
 **P2 also challenges bad logic, not just code.** If the existing workflow
 is broken or doesn't make sense as a user flow, P2 includes a "fix the
 flow" recommendation, not just a "fix the code" recommendation. Use
 the `workflow-sanity-check` skill to verify the candidate flow.
-| **P3** | Implementation | builder (Claude / DeepSeek) | Code, config, doc, dashboard — the actual change | DeepSeek (primary builder) |
-| **P4** | Honest Recompute / Verification | builder | Re-derive every number from source-of-truth; prove no stubs / no synthetic data leaked | DeepSeek (verification) |
-| **P5** | Self-Verify Card | bossman | `localhost:port 200` + `tailscale status` + `pm2 list` + `db integrity` + `verify_against` checklist all green | MiniMax-M3 (synthesizes) |
+| **P3** | Implementation (or **Execute Audit** for audits) | builder (Claude / DeepSeek) | Code, config, doc, dashboard — the actual change; **for audits: read every target, classify into 6 finding classes, log raw findings to kanban** | DeepSeek (primary builder) |
+| **P4** | Honest Recompute / Verification | builder | Re-derive every number from source-of-truth; prove no stubs / no synthetic data leaked; **for audits: re-verify every P0-severity finding independently, withdraw false positives explicitly** | DeepSeek (verification) |
+| **P5** | Self-Verify Card | bossman | `localhost:port 200` + `tailscale status` + `pm2 list` + `db integrity` + `verify_against` checklist all green; **for audits: operator-ready report grouped by finding class + P0/P1/P2 cleanup plan + cron recommendation** | MiniMax-M3 (synthesizes) |
+
+## Audit work_type (work_type: audit)
+
+When the kanban card's `work_type: audit`, the pipeline still uses P1-P5 but each phase has audit-specific output. Proven 2026-06-23 (Documentation Integrity Audit, parent `t_722c291d`, 9 findings / 4 P0 / 4 P1 / 1 P2).
+
+**Phase mapping for audits:**
+
+| Phase | Build-class output | Audit-class output |
+|---|---|---|
+| P1 | decision.md | **Audit universe map** — every target file with size/mtime |
+| P2 | decision.md finalized | **6 finding classes + priority scoring** (see below) |
+| P3 | code/config/docs | **Read every target, classify, log raw findings** |
+| P4 | recompute numbers | **Re-verify P0 findings independently; withdraw false positives explicitly** |
+| P5 | self-verify checklist | **Operator-ready report + cleanup plan + cron recommendation** |
+
+**The 6 finding classes** (use this exact taxonomy when reporting):
+
+1. **clean/no-action** — verified good, no work needed
+2. **needs-wording-cleanup** — content drift, fix in place
+3. **wrong-location** — file is canon but lives at wrong path
+4. **stale-mirror** — mirror (Obsidian/GitHub) is out of sync with canon
+5. **duplicate/merge** — content exists twice, collapse or repoint
+6. **missing-phasereport-or-xref** — gap in audit log or in cross-refs
+
+**Priority scoring:**
+
+- **P0** — kernel canon inconsistent with itself, or P0-class safety/correctness drift (fix before next non-trivial work)
+- **P1** — stale mirror, missing PHASEREPORT, missing STOP conditions on workflow skills (within the week)
+- **P2** — cosmetic / on-demand / next-quarter
+
+**P4 false-positive discipline** (critical for honest audits): every audit MUST include a P4 pass that re-verifies P0-severity findings from raw evidence. When a P3 finding turns out to be wrong on re-verify, withdraw it explicitly in the report — do NOT silently drop. Example: the 2026-06-23 doc-integrity audit initially flagged "templates handoff-packet.md and acceptance-criteria.md missing from `~/.hermes/templates/`" — P4 re-verify confirmed both files existed (2,633b and 2,950b); both findings withdrawn.
+
+For the full audit recipe, see `references/doc-integrity-audit.md` (Documentation Integrity Audit playbook — proven 2026-06-23).
 
 If the work is data-heavy and needs a separate "Decision" card (P2), promote
 it to its own card. Otherwise P1 and P2 collapse into a single "Plan" card.
@@ -244,6 +277,14 @@ for the 5 carve-outs above, not for internal budget exhaustion.
 - **Security Watch Phase 4 2026-06-23** — extended silent-by-default watch
   with DeepSeek QA + selective Telegram alert. Used modified 5-child shape
   (build → dry-runs → docs → verification).
+- **Doc-Sync Persistence Pass 2026-06-23** (parent `t_0376eba5`, commit
+  `4ba2aa6`) — autonomy-by-default operating model v3 mirrored to Hermes
+  canon + Obsidian + GitHub. Doc-sync variant documented in
+  `references/doc-sync-as-acp.md`.
+- **Documentation Integrity Audit 2026-06-23** (parent `t_722c291d`, 9
+  findings / 4 P0 / 4 P1 / 1 P2) — first audit-class run. P4 false-positive
+  discipline caught 2 phantom template-missing findings. Audit recipe in
+  `references/doc-integrity-audit.md`.
 
 ## Pitfalls (observed 2026-06-22/23)
 
@@ -254,3 +295,22 @@ for the 5 carve-outs above, not for internal budget exhaustion.
 - **Parent card must have `accept_when`** — without it, "done" is subjective
 - **`verify_against` is a list of observable checks** — not a paragraph
 - **Don't skip P4 honest recompute** — P3 + P5 with no P4 hides stub pollution
+- **`hermes kanban comment` heredoc-embedded `$(...)` fails with "Could not
+  determine home directory"** — the shell expands `$(...)` before the comment
+  payload reaches the kanban CLI. Fix: write the comment to `/tmp/foo.md`
+  first, then `hermes kanban comment <id> "$(cat /tmp/foo.md)"`. Discovered
+  on doc-integrity audit 2026-06-23.
+- **Audit-class: false positives must be WITHDRAWN, not silently dropped** —
+  P4 honest recompute re-verifies every P0-severity finding. If a P3
+  finding fails re-verify, log it as "WITHDRAWN as false positive" in the
+  P4 report. Future audits must not re-flag what was already disproven.
+- **`hermes kanban complete` returns "unknown id or terminal state" when the
+  card is still `todo`** — must `promote --force` first. Error message is
+  misleading (it says "unknown id" but the ID is fine; the state isn't).
+  Sequence: `promote --force` → `complete`. Hit twice in 2026-06-23 audit.
+- **macOS case-insensitive filesystem produces silent duplicate files when
+  Obsidian sync writes lowercase names** — symptom: `~/.hermes/knowledge/`
+  accumulates case-different pairs (e.g., `APPROVAL_POLICY.md` +
+  `approval_policy.md`) that are byte-identical. Detection:
+  `scripts/detect-case-dup-pairs.sh` (bundled). Always dedup at P4 of any
+  doc-integrity audit.
