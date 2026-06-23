@@ -9,6 +9,95 @@
 
 ---
 
+## 2026-06-23 — Phase S1 Security & PM2 Watch: Goal Loop + Cron Proposal (no-spam)
+
+**Goal:** Add a long-lived Security & PM2 Watch Goal Loop that wraps (does not
+replace) the existing security-watch daily/weekly drivers and the PM2 Health
+Monitor cron. Monthly cadence, no-spam default, hard STOPs on money/trading/
+auth/env/kernel-doc.
+
+**Scope:** Add a Goal Loop for runtime health + security posture drift. Same
+pattern as Phase 3 doc-hygiene loop. Align with the 4 primary skills'
+existing Scope & STOPs blocks (pm2-health-check, incident-response,
+kanban-orchestrator, migration-playbook). Draft a cron proposal that is
+NOT registered until operator approves.
+
+**What was codified:**
+
+- **S1-P1 — Long-lived Goal card.** `t_e56d53cd` "Security & PM2 Watch —
+  Keep PM2/crons/security posture clean (Goal Loop)". Status=ready.
+  Body contains: Goal, 5 success criteria, timeframe=monthly (started
+  2026-06-23), 8 explicit STOPs, autonomous scope (8 items), full Routing
+  Ledger (worktype=audit+watch, leadmodel=M3+DeepSeek, costtier=Tier 1,
+  qa_required=yes), references 5 skills + 3 blessed crons + BLESSED-LISTS.md
+  baseline + 5 Phase 2 carve-outs.
+- **S1-P2 — 5-step loop spec.** `~/.hermes/knowledge/GOAL-LOOP-SECURITY_PM2.md`
+  (287 lines, 10 H2 sections). Steps: INTAKE (PM2 + cron + LaunchAgent
+  snapshots) → DECOMPOSE (3 child cards) → EXECUTE (diff vs baseline, BLESSED
+  items only) → REVIEW (`SECURITY_PM2_REVIEW_YYYY-MM.md` ≤200 lines + one-line
+  PHASEREPORT) → DONE (Step-5 PASS, Goal card log update, mirror).
+- **S1-P3 — Alignment matrix.** `~/.hermes/knowledge/SECURITY_LOOP/SCOPE-STOPs-ALIGNMENT-MATRIX.md`
+  (161 lines, 8 H2 sections). Cross-references 4 primary skills. Result:
+  14/14 autonomous capabilities allowed; 15/15 STOPs consistent; Routing
+  Ledger = strict subset; Step-5 verdict shape + JSON path convention
+  aligned. Conflict resolution rule: more conservative STOP wins + operator
+  approval required.
+- **S1-P4 — Cron proposal (NOT REGISTERED).** `~/.hermes/knowledge/SECURITY_LOOP/SECURITY_PM2_CRON_PROPOSAL_2026-06-23.md`
+  (262 lines, 13 H2 sections). Schedule: `30 23 1 * *` (1st of month,
+  23:30 PT — 30 min after doc-hygiene to avoid contention). Default:
+  report-only, local-only when PASS, Telegram only on P0/FAIL. Estimated
+  ~$0.20/cycle. Crontab verified empty for S1 entry; hermes cron list
+  verified empty for S1 entry. 4 approval options A/B/C/D. Standing
+  assumption: 7-day default = no action.
+- **S1-P5 — Step-5 PASS + PHASEREPORT + mirror + operator pre-approval ask.**
+  Step-5 verdict JSON: `~/Projects/BossMan/docs/verdicts/step5-verdict-security-pm2-2026-06-23.json`
+  (verdict: PASS). PHASEREPORT entry (this section, NEWEST-ON-TOP). Mirror
+  to GitHub BossMan repo via `cp` + `git add` + `git commit`. SOUL.md /
+  AGENTS.md additions prepared but NOT applied (Phase 2 carve-out: kernel-doc
+  edits require explicit operator pre-approval).
+
+**Pre-existing infrastructure (BLESSED, do NOT re-register):**
+- Skill: `~/.hermes/skills/security-watch/SKILL.md` (Phase 3+4 shipped earlier
+  today, 2026-06-23)
+- Cron: `security-watch-daily` (id 133f6f655d59, `17 3 * * *`, local)
+- Cron: `security-watch-weekly` (id 1b1e3e82a86a, `42 18 * * 0`, local)
+- Cron: PM2 Health Monitor (every 5 min, local)
+- Skill: `~/.hermes/skills/pm2-health-check/SKILL.md` (Phase 2 blessed)
+- Skill: `~/.hermes/skills/incident-response/SKILL.md` (Phase 2 blessed)
+- Skill: `~/.hermes/skills/devops/kanban-orchestrator/SKILL.md` (Phase 2 blessed)
+- Skill: `~/.hermes/skills/devops/migration-playbook/SKILL.md` (Phase 2 blessed)
+- Baseline: `~/.hermes/knowledge/security-watch/BLESSED-LISTS.md` (26 crons +
+  11 LaunchAgents + 14 PM2 processes, 100% clean as of 2026-06-23)
+
+**Phase S1 cards:**
+- Parent: `t_21f1db14` (ready → running when children promoted; auto-completes
+  when all children done; pending final close after Step-5)
+- S1-P1 `t_384470fc` ✅ done
+- S1-P2 `t_4543a0ab` ✅ done
+- S1-P3 `t_e5786971` ✅ done
+- S1-P4 `t_89ce7840` ✅ done
+- S1-P5 `t_61025967` in_progress (this entry)
+- Goal card: `t_e56d53cd` (ready, long-lived — stays in `ready` for monthly cycles)
+
+**Stop reasons enforced:**
+- SOUL.md / AGENTS.md additions: prepared as proposal, NOT applied (Phase 2
+  carve-out: kernel-doc edits require explicit operator pre-approval)
+- Cron registration: HALT, awaiting operator choice (A/B/C/D)
+- No new autonomous capabilities: S1 is a meta-loop wrapping existing skills
+
+**Pattern precedent:** Phase 3 Doc Hygiene (entry above) — same Goal Loop +
+monthly cron proposal pattern. S1 is the security/PM2 counterpart.
+
+**Next steps (operator decision required):**
+1. Approve SOUL.md / AGENTS.md cross-reference additions (or revise) → A/B/C/D
+2. Approve cron registration (or revise schedule) → A/B/C/D
+3. Decide whether S1 cron fires 2026-07-01 (first proposed date) or after
+   a manual first cycle to validate the loop
+
+**Verdict:** Step-5 PASS — see `~/Projects/BossMan/docs/verdicts/step5-verdict-security-pm2-2026-06-23.json`
+
+---
+
 ## 2026-06-23 — Phase 3 Doc Hygiene: Goal Loop + Monthly Cron Proposal (no-spam)
 
 **Goal:** Wire doc hygiene into the Goal Loop pattern so canon stays tight without
