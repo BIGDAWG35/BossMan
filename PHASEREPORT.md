@@ -9,6 +9,39 @@
 
 ---
 
+## 2026-06-23 — S1-KERNEL: Wire Security & PM2 Watch Goal Loop into SOUL + AGENTS
+
+**Scope:** Kernel-doc wiring only. SOUL.md + AGENTS.md (canonical + Obsidian mirror) now reference the S1 Goal Loop so future sessions discover it without service behavior change.
+
+**What was codified:**
+- **SOUL.md § AUTONOMOUS REMEDIATION MODEL → "Security & PM2 Watch Goal Loop (Phase S1, 2026-06-23)"** — 20-line subsection describing the monthly meta-loop, 5-step INTAKE→DECOMPOSE→EXECUTE→REVIEW→DONE, hard STOPs (no PM2 deletes, no port opens, no service restarts, no SOUL/AGENTS/ROUTING-RULES/MODELROUTINGWORKFLOW edits inside the loop), P1+ findings surface as separate fix cards, no-spam defaults (Telegram only on P0 or Step-5 FAIL), idempotent script, and the S1.202606 first-cycle Step-5 verdict.
+- **AGENTS.md (canonical `~/Projects/BossMan/hermes/AGENTS.md`) — 4th Goal Loop family blockquote** alongside AUTONOMOUS CHANGE PIPELINE, GOAL LOOP PATTERN, DOC HYGIENE GOAL LOOP.
+- **AGENTS.md (Obsidian mirror `~/Obsidian/Hermes/20_Agents/AGENTS.md`)** — added the same 4th blockquote AND restored the AUTONOMOUS CHANGE PIPELINE + GOAL LOOP PATTERN blockquotes that had drifted from the canonical mirror. Obsidian and canonical now match (4 blockquotes each, byte-identical in the blockquote range).
+
+**Cron:** S1 cron `675fdbeba374` remains registered (schedule `30 23 1 * *`, no-agent, deliver=local). No cron change in this wiring.
+
+**Step-5 verdict:** `docs/verdicts/step5-verdict-s1-kernel-doc-2026-06-23.json` — **PASS** (BossMan self-check; DeepSeek unreachable in this env so M3 + grep audit was used as the v3 routing fallback. Patch text matches operator spec verbatim; behavior change = none; scope change = none; cron change = none.)
+
+**Routing ledger:** worktype=audit, leadmodel=M3+DeepSeek (DeepSeek-unavailable, M3 used), costtier=Tier 1, qa_required=yes.
+
+**Kanban:**
+- Goal card (rehydrated after state-loss): `t_bf23cc0f` — "Security & PM2 Watch — Keep PM2/crons/security posture clean (Goal Loop)"
+- Wiring card: `t_1a027791` — "S1-KERNEL: Wire Security & PM2 Watch Goal Loop into SOUL + AGENTS"
+- P1 cards (rehydrated, still in `ready`, NOT auto-fixed): `t_03d2f5d6` (PM2 blessed baseline), `t_3a1e2a3b` (bakery port 3001 vs 8040), `t_5d33d8b9` (boss-hub public vs localhost).
+
+**Mirror state:** SOUL.md = hermes kernel (single source, no mirror required). AGENTS.md mirrored canon→Obsidian via this patch. Per `~/.hermes/knowledge/DOC-SYNC-MATRIX.md`, the BossMan repo and Obsidian vault are now in sync for the blockquote range.
+
+**Caveat:** Patch text references the pre-state-loss Goal card ID `t_e56d53cd`. The current rehydrated Goal card is `t_bf23cc0f`. Future cycle scripts should resolve the Goal card dynamically by title, not by hard-coded ID. Documented in the Step-5 verdict.
+
+**Evidence:**
+- SOUL.md lines 116-135
+- AGENTS.md canonical line 427
+- AGENTS.md Obsidian lines 421-428
+- Step-5 verdict JSON
+- Cron list (`hermes cron list 2>&1 | grep 675fdbeba374`)
+
+---
+
 ## 2026-06-23 — Phase S1 Security & PM2 Watch: Goal Loop + Cron Proposal (no-spam)
 
 **Goal:** Add a long-lived Security & PM2 Watch Goal Loop that wraps (does not
