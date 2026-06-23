@@ -9,7 +9,56 @@
 
 ---
 
-## 2026-06-23 — S1-STEER: Aim Security & PM2 loop at money/trading lanes
+## 2026-06-23 — S1-STEER LOCKED: long-term default scope (operator confirmed)
+
+**Scope:** Final lock-in of S1-STEER scope. Supersedes the earlier
+"aim at money/trading lanes" entry above. This is the long-term
+default that every future S1 cycle inherits without steering prompts.
+
+**Operator confirmation (2026-06-23):** "Treat the S1-STEER scope as
+the long-term default for Security & PM2 Watch. From now on, the loop
+behaves exactly like this without needing more steering prompts:
+monthly, quiet, money/trading-biased checks; drift surfaced via
+cards, never auto-fixed; only real risks wake me up."
+
+**What this entry formalizes as permanent (not just date-stamped):**
+
+1. **T1 priority lanes** (every cycle, checked first): boss-hub,
+   bakery, trading-control, binance-bot / money-pipeline,
+   csdawg-dashboard, agent-os.
+2. **T2 supporting infra** (logged, alerted on failure):
+   cloudflared, tailscale, PM2 daemon, Hermes gateway,
+   security-watch daily/weekly, pm2-health-check.
+3. **Wake-up rules:**
+   - P0 (security / money / auth) → **Telegram alert** + full Step-5 QA
+   - P1 touching T1 lane or public port → **A/B decision card**, no auto-fix
+   - P2 / P3 / routine drift → **monthly `SECURITY_PM2_REVIEW_YYYY-MM.md`** only, no Telegram
+4. **No auto-fix from inside S1.** Even at 95% confidence, loop creates
+   A/B card and waits for `approve A` / `approve B` / `hold`.
+5. **State-loss rule:** Goal card resolved by **title**, not hard-coded ID.
+6. **Off-limits from S1:**
+   - `~/Projects/BossMan/docs/PHASEREPORT.md` (top-level `PHASEREPORT.md` is canonical)
+   - `~/.hermes/SOUL.md`, `~/Projects/BossMan/hermes/AGENTS.md`, Obsidian AGENTS mirror
+   - T1 service env / secrets / auth / `NEXTAUTH_*`
+   - `pm2 restart/delete/start`, `hermes cron create/remove/update`,
+     `crontab -e/-r`, `launchctl unload`, `kill[-9]`,
+     `lsof -i :PORT -k`
+7. **Noise discipline:** no daily security cron, no Telegram for
+   "interesting but safe" drift, monthly report is the main
+   surface for P1/P2/P3, only P0 + Step-5 FAIL interrupt the operator.
+
+**P1 card format (mandatory for any P1 that wakes the operator):**
+title + context + A/B options + risk/benefit + recommendation
+(A or B + reasoning) + what does NOT change without approval
++ `accept_when` (operator approval language).
+
+**Commit:** pending S1-STEER-LOCK commit (this entry will be in it).
+**Verdict:** pending S1-STEER-LOCK Step-5 verdict JSON.
+**Next S1 cycle:** 2026-07-01 23:30 PT, inherits this scope verbatim.
+
+---
+
+## 2026-06-23 — S1-STEER: Aim loop at money/trading lanes
 
 **Scope:** Steering patch to S1 loop (operator-driven, no behavior change).
 

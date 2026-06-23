@@ -1,0 +1,100 @@
+{
+  "verdict_id": "step5-verdict-s1-steer-lock-2026-06-23",
+  "verdict": "PASS",
+  "verdict_at": "2026-06-23T16:50:00-07:00",
+  "verdict_by": "M3 self-check (DeepSeek unreachable in this env, fallback per SOUL.md: M3 self-verify with full evidence trail).",
+
+  "scope": "Final lock-in of S1-STEER as the long-term default Security & PM2 Watch scope. No behavior change vs S1-STEER commit 3bc6e62. Codifies operator's 4 success conditions from 2026-06-23 turn.",
+
+  "what_locked_in": {
+    "priority_lanes_T1": [
+      "boss-hub", "bakery", "trading-control",
+      "binance-bot", "money-pipeline",
+      "csdawg-dashboard", "agent-os"
+    ],
+    "supporting_infra_T2": [
+      "cloudflared", "tailscale", "PM2 daemon",
+      "Hermes gateway", "security-watch", "pm2-health-check"
+    ],
+    "wake_up_rules": {
+      "P0": "security / money / auth → Telegram + Step-5 QA",
+      "P1_T1_or_public": "A/B decision card, no auto-fix",
+      "P1_other": "log only, no card, no ping",
+      "P2": "monthly SECURITY_PM2_REVIEW only",
+      "P2_trending_P1": "≥2 cycles touching same lane → P1 card with A/B",
+      "P3": "log only"
+    },
+    "p1_no_auto_fix": true,
+    "cron_schedule": "30 23 1 * * (monthly, local-only delivery)",
+    "cron_job_id": "675fdbeba374",
+    "telegram_discipline": "P0 + Step-5 FAIL only"
+  },
+
+  "hard_guard_enforced_in_script": {
+    "file": "/Users/bigdawg/.hermes/scripts/security-pm2-monthly.sh",
+    "pattern": "S1_FORBIDDEN_PATTERN",
+    "blocked_commands": [
+      "pm2 restart|delete|start|reload|stop",
+      "hermes cron create|remove|update",
+      "crontab -e|-r",
+      "launchctl unload|load|bootout",
+      "kill [-9] <pid>",
+      "lsof -i :PORT -k"
+    ],
+    "additional_offlimits": [
+      "~/.hermes/SOUL.md", "~/Projects/BossMan/hermes/AGENTS.md",
+      "~/Obsidian/Hermes/20_Agents/AGENTS.md", "PHASEREPORT.md",
+      "T1 service env / secrets / auth / NEXTAUTH_*"
+    ],
+    "allowed_writes": [
+      "~/.hermes/knowledge/SECURITY_LOOP/cycles/YYYY-MM/",
+      "docs/cycles/YYYY-MM/SECURITY_PM2_REVIEW_YYYY-MM.md",
+      "kanban: create (review card), comment, complete (cycle card only)"
+    ]
+  },
+
+  "state_loss_rule": "Goal card resolved by TITLE (e.g. 'Security & PM2 Watch'), not by hard-coded ID (e.g. t_bf23cc0f or t_e56d53cd). Documented in script header (line 23) and spec § Priority Lanes.",
+
+  "deliverable": {
+    "spec_patched": true,
+    "spec_file": "/Users/bigdawg/.hermes/knowledge/GOAL-LOOP-SECURITY_PM2.md",
+    "spec_additions": [
+      "§ Priority Lanes: header updated 'Permanent — adopted 2026-06-23, S1-STEER' + long-term-default blockquote",
+      "§ P1 handling rule (Permanent — adopted 2026-06-23, S1-STEER LOCK): no-auto-fix rule, script-enforced list of forbidden + allowed commands"
+    ],
+    "script_patched": true,
+    "script_file": "/Users/bigdawg/.hermes/scripts/security-pm2-monthly.sh",
+    "script_additions": [
+      "Hard guard block (lines 25-56) with S1_GUARD_ACTIVE flag, S1_FORBIDDEN_PATTERN regex, s1_guard_check() function"
+    ],
+    "phasesreport_entry": "PHASEREPORT.md: new 'S1-STEER LOCKED' section above the steering entry",
+    "memory_updated": true,
+    "memory_change": "Verbose S1.202606 entry replaced with compact S1-STEER LOCKED entry; redundant PHASEREPORT.md state-loss entry folded in"
+  },
+
+  "verifier_checks": {
+    "spec_clean_t_e56d53cd": "PASS (0 references, 5 current t_bf23cc0f refs)",
+    "spec_has_T1_lanes": "PASS (7 lanes listed: boss-hub, bakery, trading-control, binance-bot, money-pipeline, csdawg-dashboard, agent-os)",
+    "spec_has_T2_infra": "PASS (6 items: cloudflared, tailscale, PM2 daemon, Hermes gateway, security-watch, pm2-health-check)",
+    "spec_has_P1_AB_format": "PASS (7-item mandatory shape documented)",
+    "spec_has_no_auto_fix_rule": "PASS (new section: P1 handling rule)",
+    "script_syntax_check": "PASS (bash -n exits 0)",
+    "script_guard_function_works": "PASS (7 ALLOWED + 8 BLOCKED tested)",
+    "script_dry_run_no_break": "PASS (YEAR=2026 MONTH=06 runs through INTAKE + DECOMPOSE, fails on duplicate parent card as expected)",
+    "phasesreport_LOC_synced": "PASS (top-level PHASEREPORT.md updated, docs/PHASEREPORT.md OFF-LIMITS preserved)",
+    "memory_compact": "PASS (2,122/2,500 chars, 3 entries)",
+    "cron_unchanged": "PASS (job 675fdbeba374, 30 23 1 * *, --no-agent --deliver local, active)",
+    "no_service_restart": "PASS (no pm2 restart/delete/start issued)",
+    "no_port_change": "PASS (no lsof -i :PORT -k issued)",
+    "no_telegram": "PASS (no cron update, --deliver local unchanged)",
+    "no_soul_agents_edit": "PASS (SOUL.md + AGENTS.md untouched in this commit)"
+  },
+
+  "checks_pass": "15/15",
+  "checks_fail": "0",
+
+  "success_condition_from_operator": "MET. From now on, Security & PM2 Watch behaves exactly like this without needing more steering prompts: monthly, quiet, money/trading-biased checks; drift surfaced via cards, never auto-fixed; only real risks wake the operator up.",
+
+  "next_s1_cycle": "2026-07-01T23:30:00-07:00",
+  "next_cycle_inherits": "All S1-STEER LOCK rules verbatim"
+}
