@@ -19,6 +19,60 @@ description: |
 # Autonomous Change Pipeline (Permanent)
 
 The standing governance pattern BossMan follows for every non-trivial change.
+
+ ## Scope & STOPs (Permanent — 2026-06-23)
+
+ **Purpose:** Make explicit what ACP may auto-queue vs what it must escalate. Tied to v3 Routing Ledger + Step-5 QA rule.
+
+ ### Autonomous scope (ACP may auto-queue without operator approval)
+
+ - **Doc-sync passes** for non-kernel docs (LEARNED_*, PHASEREPORT entries, skill edits without kernel impact)
+ - **Doc-only edits** to mirror files (Obsidian mirror, GitHub mirror) when canon is already approved
+ - **Parent + 5-child kanban card creation** with `qa_required: yes`, `verify_against`, `accept_when`
+ - **Step-5 verifier dispatch** to DeepSeek / best available reasoning model
+ - **Mirror commit + push** for changes that have already passed Step-5
+
+ ### Approval gates (operator approval REQUIRED)
+
+ - **New crons or recurring automations** — always explicit approval
+ - **Changes to ROUTING-RULES.md or AGENTS.md routing sections** — explicit approval + commit message referencing the phase/blueprint
+ - **New MCP server registrations** — explicit approval
+ - **New kanban lane definitions** (workers, queues) — explicit approval
+ - **Any change that introduces a new blast-radius class** (e.g., touching PII, expanding port exposure)
+
+ ### STOP conditions (ACP MUST halt and escalate)
+
+ - **SOUL.md, AGENTS.md, ROUTING-RULES.md, MODELROUTINGWORKFLOW.md edits** — kernel-doc; always operator approval, never auto-queue
+ - **Money pipelines, trading bots, PII** — never auto-fix; mandatory Step-5 + operator approval
+ - **Infra install/remove/upgrade** — Homebrew, databases, Caddy, Tailscale, PM2 itself, OS-level tools, language runtimes, daemons — explicit approval
+ - **Public/VPN port changes** — opening, closing, or repointing any port/hostname/MagicDNS/Caddy vhost reachable from outside the host — explicit approval
+ - **Security-relevant behavior** — auth flows, data retention, encryption, customer-visible terms, permissions, token issuance, audit logging — explicit approval
+ - **Vendor/API/billing decisions** — paid API keys, SaaS subscriptions, billing changes, vendor lock-in, contractual commitments — explicit approval
+ - **True product-direction decisions** — pricing model, target market, scope pivot, customer-facing copy that defines positioning — explicit approval
+ - **Conflicting canon** — when two canon docs disagree, STOP and surface the conflict; do not auto-resolve
+ - **Disagreement between AI models** — if 2 of {Claude, DeepSeek, OpenAI} do not agree on the fix path, STOP and surface the disagreement
+
+ ### Routing Ledger (what a card invoking ACP looks like)
+
+ | Field | Value |
+ |---|---|
+ | work_type | orchestration (new_build \| existing_build \| troubleshooting \| audit \| refactor delegated to children) |
+ | lead_model | bossman |
+ | cost_tier | medium–high (5 children × ~5 min each) |
+ | qa_required | yes (mandatory; Step-5 PASS required before reporting done) |
+
+ ### Step-5 QA rule (Permanent)
+
+ ACP MUST run Step-5 verifier (DeepSeek or best available reasoning model) before reporting "done" on any non-trivial work. No exceptions for: infra changes, money/trading cards, auth changes, multi-file refactors, public API changes, PII, or kernel-doc edits. See PHASEREPORT entries for standing policy.
+
+ ### Canonical references
+
+ - AGENTS.md (M3 routing) — `~/.hermes/AGENTS.md`
+ - ROUTING-RULES v3 — `~/Projects/BossMan/docs/ROUTING-RULES.md`
+ - PHASEREPORT — `~/Projects/BossMan/PHASEREPORT.md`
+ - Phase 1 doc-fix entry — `~/.hermes/knowledge/PHASEREPORT_DOC_FIXES_2026-06-23.md`
+ - Phase 2 hardening entry — `~/.hermes/knowledge/PHASEREPORT_AUTONOMY_PHASE2_2026-06-23.md` (forthcoming)
+ - Goal Loop pattern — `~/.hermes/skills/goal-loop/SKILL.md` (forthcoming)
 Applies to PMD, security work, infra changes, product builds, migrations,
 or any work that would otherwise take >1 kanban card to deliver.
 
@@ -127,6 +181,8 @@ When the kanban card's `work_type: audit`, the pipeline still uses P1-P5 but eac
 **P4 false-positive discipline** (critical for honest audits): every audit MUST include a P4 pass that re-verifies P0-severity findings from raw evidence. When a P3 finding turns out to be wrong on re-verify, withdraw it explicitly in the report — do NOT silently drop. Example: the 2026-06-23 doc-integrity audit initially flagged "templates handoff-packet.md and acceptance-criteria.md missing from `~/.hermes/templates/`" — P4 re-verify confirmed both files existed (2,633b and 2,950b); both findings withdrawn.
 
 For the full audit recipe, see `references/doc-integrity-audit.md` (Documentation Integrity Audit playbook — proven 2026-06-23).
+
+For the doc-hygiene cleanup playbook (mirror topology, case-dup deletion, kernel-canon migration, PHASEREPORT backfill, recovery), see `references/doc-hygiene-cleanup.md` (proven on Phase 1 2026-06-23).
 
 If the work is data-heavy and needs a separate "Decision" card (P2), promote
 it to its own card. Otherwise P1 and P2 collapse into a single "Plan" card.
@@ -245,9 +301,16 @@ kanban card rather than letting it drift.
 - `~/.hermes/templates/handoff-packet.md` — BossMan → sub-agent handoff structure
 - `~/.hermes/templates/acceptance-criteria.md` — observable-check template
 - `~/.hermes/templates/step5-verdict.json` — Step-5 verdict JSON shape
+- `templates/phase-doc-hygiene-report.md` — Doc-hygiene cleanup report
+  template (Section structure for any "apply audit P0+P1 fixes" pass)
+- `scripts/snapshot-canon.sh` — git snapshot of `~/.hermes/knowledge/`
+  before any destructive op
 - `references/8-dim-autonomy-audit.md` — the 8-dimension audit checklist
   BossMan runs after any major governance change OR when a "is this still
   autonomous?" question surfaces
+- `references/doc-hygiene-cleanup.md` — Doc-hygiene cleanup playbook
+  (mirror topology, case-dup deletion, kernel-canon migration,
+  PHASEREPORT backfill, recovery)
 
 ## When this skill applies (broad trigger list)
 
@@ -285,6 +348,15 @@ for the 5 carve-outs above, not for internal budget exhaustion.
   findings / 4 P0 / 4 P1 / 1 P2) — first audit-class run. P4 false-positive
   discipline caught 2 phantom template-missing findings. Audit recipe in
   `references/doc-integrity-audit.md`.
+- **Phase 1 — Doc Hygiene Fixes 2026-06-23** (parent `t_6693aa83`, 7
+  children P1-1..P1-7) — applied 4 P0 + 4 P1 fixes from the doc-integrity
+  audit. Caught 2 new pitfalls: (a) **patch tool two-occurrence match trap**
+  (PHASEREPORT.md duplicate insertion, recovered via `git checkout HEAD`),
+  (b) **macOS case-insensitive `rm` deletion trap** (3 critical canon files
+  lost, recovered from BossMan/docs/ mirror). Both now codified as pitfalls
+  in this skill. Final commits `9ba923f`, `ac97d44`, `89af4e8`. Report:
+  `~/.hermes/knowledge/PHASEREPORT_DOC_FIXES_2026-06-23.md`. Step-5 verdict
+  PASS.
 
 ## Pitfalls (observed 2026-06-22/23)
 
@@ -334,3 +406,55 @@ for the 5 carve-outs above, not for internal budget exhaustion.
   atomically rename; (4) re-check md5 of every "deleted" file's canonical
   twin immediately after the rm batch; (5) never delete more than 10 files
   in a batch without an `ls` + md5 round-trip in between.
+- **patch tool "two-occurrence match" trap (critical, 2026-06-23 Phase 1)** —
+  when a `patch` `old_string` appears 2+ times in the target file, the tool
+  will match the FIRST occurrence (or in `replace_all=true` mode, replace
+  ALL). If the context isn't unique enough, the patch can corrupt unrelated
+  sections. Phase 1 incident: my first PHASEREPORT.md patch intended to add
+  the doc-sync PASS entry at the top, but the metadata-block anchor already
+  appeared BEFORE the existing 2026-06-23 entry (which I'd thought was at
+  the bottom but was actually at the top). The patch silently inserted the
+  4-milestone block + 2026-06-23 doc-sync block TWICE — once at top, once
+  in the middle. Caught by `git diff --stat` and recovered via `git
+  checkout HEAD -- PHASEREPORT.md`. **Safety rule for future patch ops:**
+  (1) ALWAYS run `grep -c "<old_string-substring>" <file>` BEFORE patching
+  to confirm uniqueness; (2) for non-unique strings, use a longer anchor
+  that includes ≥3 lines of surrounding context; (3) if a unique anchor
+  is genuinely impossible, use `read_file` + `write_file` to do the
+  insertion in a known position rather than a search-and-replace; (4)
+  ALWAYS run `git diff` on the modified file IMMEDIATELY after a patch,
+  before any further edits, to catch duplicate insertions.
+- **Mirror topology discovery before doc-sync (Phase 1, 2026-06-23)** — when
+  Phase 1 F6/F7 looked like "update stale Obsidian docs", the right move
+  was NOT to update Obsidian directly. There were 3 mirror locations:
+  `~/.hermes/knowledge/` (canon, was empty for these files due to case-dup
+  deletion), `~/Projects/BossMan/docs/` (BossMan repo, most current —
+  SERVICES_MAP.md was Jun 2 vs Obsidian's May 7), and `~/Obsidian/Hermes/`
+  (stale). The right sync topology: **find the most recent authoritative
+  source** (often BossMan repo) → place a fresh copy in canon → mirror to
+  Obsidian + GitHub. **Rule for future doc-sync work:** before any
+  `cp`/edit, run `find ~ -iname "<name>" -not -path "*/node_modules/*"`
+  to locate ALL copies, then `ls -la` to identify the most recent by mtime.
+  Don't assume the directory you're editing is the most current.
+- **`terminal` tool "Tool result missing due to internal error" (Phase 1,
+  2026-06-23)** — observed twice: once on a `bash <script>` call that
+  contained complex `for/while` loops with `done` redirects, once on a
+  `hermes kanban comment` call where the inline string was large. The
+  tool does NOT return an error code; it returns NO output. **Mitigation:**
+  (1) break complex bash into 2-3 simpler `terminal` calls rather than
+  one large script; (2) for `hermes kanban comment`, keep the body
+  under ~3KB inline OR use the `write_file` + `terminal "hermes kanban
+  comment ID \"\$(cat /tmp/foo.md)\""` pattern, but with a SMALLER
+  /tmp file (split if >3KB); (3) ALWAYS verify the operation actually
+  ran (e.g. `hermes kanban show <id> | head`) before moving on; a
+  silent "Tool result missing" is the worst possible failure mode
+  because you don't know if the side effect happened.
+- **Phase 1 commit-before-destructive-ops rule (2026-06-23)** — before any
+  batch deletion of case-dup files, mtime/size-collision resolution, or
+  other potentially-irreversible canon operations, run `git add -A
+  ~/.hermes/knowledge/` and `git commit -m "snapshot: pre-cleanup"`. This
+  gives a guaranteed recovery point. In Phase 1, PHASEREPORT.md was
+  recoverable via `git checkout HEAD` but the 3 critical canon files
+  (SERVICES_MAP, BLOCKER_RESOLUTIONS, PHASEREPORT_DOC_FIXES) were NOT in
+  git and required recovery from BossMan/docs/ — a slower path with
+  version-skew risk. Future cleanup passes should snapshot first.

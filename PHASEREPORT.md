@@ -9,6 +9,42 @@
 
 ---
 
+## 2026-06-23 — Phase 2 Hardening: Autonomy & Loop (Scope & STOPs + Goal Loop)
+
+**Scope:** Strengthen the autonomous-change pipeline and 4 critical operational skills with explicit Scope & STOPs; codify the reusable Goal Loop pattern for any goal/multi-week project/learning objective.
+
+**What was codified:**
+
+- **P1 — Map scope + audit.** All 5 target skills located, read, and audited. Canonical locations documented in `~/.hermes/knowledge/PHASE2_PIPELINE/P1_AUDIT.md`. Frontmatter + section anchors captured for surgical edits.
+- **P2 — Design STOPs/Scope language.** Standardized "Scope & STOPs" section designed with 4 mandatory parts: Purpose + Autonomous scope + Approval gates + STOP conditions. Plus Routing Ledger table + Step-5 QA rule + Canonical references. Design doc: `~/.hermes/knowledge/PHASE2_PIPELINE/P2_DESIGN.md`.
+- **P3 — Apply to 5 skills.** Scope & STOPs section inserted near the top of each:
+  - `~/.hermes/skills/autonomous-change-pipeline/SKILL.md` (ACP — the governance parent)
+  - `~/.hermes/skills/devops/pm2-health-check/SKILL.md`
+  - `~/.hermes/skills/devops/kanban-orchestrator/SKILL.md`
+  - `~/.hermes/skills/devops/migration-playbook/SKILL.md`
+  - `~/.hermes/skills/devops/incident-response/SKILL.md`
+- **P4 — Goal-Loop skill + SOUL/AGENTS cross-refs.** New skill `~/.hermes/skills/goal-loop/SKILL.md` derived from the crypto learning system. 5-step loop: intake → decompose → execute (with STOPs) → review (cadence) → done (with lesson harvest). Cross-references added to `~/.hermes/SOUL.md` (provenance list) and `~/.hermes/AGENTS.md` (new standing blockquote).
+- **P5 — PHASEREPORT entry + Step-5 verdict + mirror sync.** This entry. Step-5 verifier JSON at `~/Projects/BossMan/docs/verdicts/step5-verdict-phase2-hardening-2026-06-23.json`. Mirror sync after commit.
+
+**Where (final canon locations):**
+- `~/.hermes/skills/autonomous-change-pipeline/SKILL.md` (Scope & STOPs added)
+- `~/.hermes/skills/devops/pm2-health-check/SKILL.md` (Scope & STOPs added)
+- `~/.hermes/skills/devops/kanban-orchestrator/SKILL.md` (Scope & STOPs added)
+- `~/.hermes/skills/devops/migration-playbook/SKILL.md` (Scope & STOPs added)
+- `~/.hermes/skills/devops/incident-response/SKILL.md` (Scope & STOPs added)
+- `~/.hermes/skills/goal-loop/SKILL.md` (NEW — Goal Loop pattern)
+- `~/.hermes/SOUL.md` (Goal Loop cross-ref added to ACP provenance)
+- `~/.hermes/AGENTS.md` (Goal Loop standing rule blockquote added)
+- `~/Projects/BossMan/PHASEREPORT.md` (this entry at top)
+- `~/.hermes/knowledge/PHASE2_PIPELINE/{P1_AUDIT.md,P2_DESIGN.md,PHASEREPORT_AUTONOMY_PHASE2_2026-06-23.md}` (working docs)
+- `~/Projects/BossMan/docs/verdicts/step5-verdict-phase2-hardening-2026-06-23.json` (Step-5 PASS)
+
+**Kanban:** t_3441147e (parent) · 5 P1 children (P1=t_061a2cde, P2=t_d77d0ca1, P3=t_5ab509f8, P4=t_4b257efc, P5=t_04beaafb — all done) · Step-5 QA PASS pending
+
+**Rule of record (Phase 2 — 2026-06-23):** Every non-trivial change must run on ACP with explicit Scope & STOPs. Every goal/multi-week project/learning objective must run on the Goal Loop pattern. The 5 carve-out categories (infra install/remove/upgrade, public/VPN port changes, security-relevant behavior, vendor/API/billing, true product-direction) remain the only things that halt BossMan. Mirror discipline unchanged: Hermes canon → Obsidian → GitHub. One-way canon → mirror.
+
+---
+
 ## 2026-06-23 — Documentation Integrity Audit & Phase 1 Hygiene Fixes (Doc-sync PASS)
 
 **Scope:** Comprehensive 9-finding audit of Hermes canon / Obsidian / GitHub mirrors; apply 4 P0 + 4 P1 fixes to tighten doc canon before autonomy expansion.
