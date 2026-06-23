@@ -314,3 +314,23 @@ for the 5 carve-outs above, not for internal budget exhaustion.
   `approval_policy.md`) that are byte-identical. Detection:
   `scripts/detect-case-dup-pairs.sh` (bundled). Always dedup at P4 of any
   doc-integrity audit.
+- **Patched 2026-06-23: detect-case-dup-pairs.sh false-positive bug** — on
+  macOS HFS+/APFS, `[ -f "$lower" ]` returns true even when the lowercase name
+  resolves to the SAME inode as the uppercase (case-insensitive lookup). The
+  script then counts a "pair" for a single physical file. **Fix in place:**
+  the script now compares inodes (`stat -f%i upper == stat -f%i lower`)
+  before counting a pair. Same inode → skip. **Implication:** always re-run
+  the patched script after a cleanup pass and trust inode-based stats, not
+  name-based `[ -f ]` checks.
+- **macOS case-insensitive deletion trap (critical, 2026-06-23)** — `rm
+  lowercase` on HFS+ SILENTLY DELETES the uppercase twin (same inode). This
+  is how 3 critical canon files (SERVICES_MAP.md, BLOCKER_RESOLUTIONS.md,
+  PHASEREPORT_DOC_FIXES_2026-06-23.md) were accidentally lost during the
+  Phase 1 cleanup pass — recovered from BossMan/docs/ mirror. **Safety rule
+  for future case-dup deletions:** (1) ALWAYS commit to git FIRST so the
+  twin is in version control; (2) verify with `stat -f%i` that the two
+  names actually have DIFFERENT inodes before deleting; (3) if in doubt,
+  `mv lowercase tempfile && rm tempfile && mv uppercase lowercase` to
+  atomically rename; (4) re-check md5 of every "deleted" file's canonical
+  twin immediately after the rm batch; (5) never delete more than 10 files
+  in a batch without an `ls` + md5 round-trip in between.
