@@ -7,23 +7,31 @@
 
 ---
 
-## Slash Commands for Phase Logs (v3.1 — 2026-06-23)
+## Slash Commands for Phase Logs (v3.2 — 2026-06-23)
 
-Slash commands are **optional control-plane markers** used in Perplexity Spaces, Obsidian notes, and `~/.hermes/knowledge/` entries to signal intent to Hermes. They are **NOT required** — Hermes parses prose first. They only matter when they map to a real artifact (kanban card, goal, review workflow, or save-order action per PHASEREPORT.md v3).
+Slash commands are **optional control-plane markers** used in Perplexity Spaces, Obsidian notes, and `~/.hermes/knowledge/` entries to signal intent to Hermes. They are **NOT required** — Hermes parses prose first. They only matter when they map to a real artifact (kanban card, goal, review workflow, save-order action, or evidence reference per PHASEREPORT.md v3.2).
 
 | Slash | Maps to | Example (one line) |
 |---|---|---|
-| `/phase` | A new `## YYYY-MM-DD — <title>` entry in this file (or a kanban card driving one) | `/phase Append 2026-06-23 — Binance-bot monitor delta-in-window fix (t_d6aabd51)` |
-| `/goal` | A running `goal_id` on the kanban board (e.g. `t_goal_*`, `t_bf23cc0f`) | `/goal link rule to t_bf23cc0f (S1 Security & PM2 Watch — Phase S1)` |
-| `/review` | A scheduled `*-review.sh` script or the `crypto-weekly-review` skill | `/review weekly — run ~/.hermes/scripts/obsidian-vault-review.sh (2026-07-01)` |
-| `/verify` | A Phase 4 / Step-5 verifier artifact at `~/Projects/BossMan/docs/verdicts/step5-verdict-*.json` | `/verify emit docs/verdicts/step5-verdict-binance-bot-restart-spike-2026-06-23.json` |
-| `/sync` | A save-order action: `~/.hermes/knowledge/` → `~/Obsidian/Hermes/` → `~/Repos/BossMan/docs/` → Spaces | `/sync mirror to ~/Obsidian/Hermes/50_Phase-Reports/ + commit cd3abb3` |
+| `/goal` | A real multi-step outcome goal card on the kanban board, linked to its `PROJ-` and `goal_id`. Stays `running` until a Step-5 verifier PASS is recorded. | `/goal link L-007 → t_bf23cc0f (S1 Security & PM2 Watch — Phase S1)` |
+| `/task` | A single concrete action on the board as a child of a project/goal. Default status `todo`. Never `done` without `/verify` evidence attached. | `/task add t_<new_id> — child of PROJ-2026-06_crypto-trading-intelligence; default todo` |
+| `/phase` | A new `## YYYY-MM-DD — <title>` entry in this file (or a kanban card driving one). Tag the entry with the date so the text merges back into canon instead of staying stranded in Spaces. | `/phase Append 2026-06-23 — Binance-bot monitor delta-in-window fix (t_d6aabd51)` |
+| `/learn` | A candidate LEARNED rule or anti-pattern (cross-cutting or domain-specific like Crypto LEARNED). Must pass the 6-month test; route through `~/.hermes/knowledge/` FIRST, then mirror to Obsidian and the BossMan repo. | `/learn candidate: bot lifecycle events must survive PM2 restart (6mo evidence)` |
+| `/memory` | A short, stable personal fact that influences most turns (per Memory Policy v3.2). NEVER used to promote `/goal`, `/task`, `/phase`, or `/sync` into MEMORY/USER — those resolve via kanban or knowledge docs. | `/memory candidate: cron registration must be verified before pm2 restart` |
+| `/review` | A structured audit or weekly-review workflow (e.g. `crypto-weekly-review`, PMD QA). Interpreted as "run the appropriate skill, create any needed cards, return a brief," not a loose chat answer. | `/review weekly — invoke crypto-weekly-review on L-CRYPTO-14 draft` |
+| `/verify` | A Step-5 verification gate. Enforce `qa_required: yes` on the linked card; block any "done" report until real evidence (DB/API/screenshots/PHASEREPORT/LEARNED) is checked and a verifier PASS is logged. | `/verify emit docs/verdicts/step5-verdict-binance-bot-restart-spike-2026-06-23.json` |
+| `/evidence` | Screenshots, logs, or files on disk. Store the absolute path or reference on the card so future audits and reviews know exactly what evidence was used. | `/evidence /tmp/bnb-fake-bin/{pm2,curl,node} + ~/logs/pm2-health.log (P4 tests)` |
+| `/sync` | A save-order action: `~/.hermes/knowledge/` → `~/Obsidian/Hermes/` → `~/Repos/BossMan/docs/` → Perplexity Spaces. `~/.hermes/knowledge/` stays canonical on conflict. | `/sync mirror to ~/Obsidian/Hermes/50_Phase-Reports/ + commit 2fda202` |
 
-**Rules of use:**
+**Rules of use (v3.2 — permanent):**
 - Optional everywhere. Never required to make a phase entry valid.
-- Never auto-execute. A slash command in a Space is a **hint**, not a CLI call. BossMan interprets intent from prose and only acts on slashes that map to a kanban card, a real goal, a registered review script, a Step-5 verifier, or a save-order step.
-- If a slash maps to no real artifact (no card, no goal, no script), Hermes logs it as "slash-without-target" on the closest active kanban card and proceeds from prose.
+- **Hints, not orders.** When a slash appears in a Perplexity Space, BossMan must interpret it into a real kanban operation and/or a `~/.hermes/knowledge/` edit per PHASEREPORT.md v3.2, LEARNED.md v3 L-006, Memory Policy v3.2, Crypto Intelligence LEARNED, and Obsidian Vault Workflow. A Space is **never** allowed to overwrite canon directly — it always flows through this resolution flow.
+- **Never auto-execute.** A slash command in a Space is a **hint**, not a CLI call. BossMan interprets intent from prose and only acts on slashes that map to a kanban card, a real goal, a registered review script, a Step-5 verifier, a save-order step, or a real evidence path on disk.
+- If a slash maps to no real artifact (no card, no goal, no script, no path), Hermes logs it as "slash-without-target" on the closest active kanban card and proceeds from prose.
 - Slash commands **do not** bypass the 5-carve-out approval gate (infra install / public port / security / vendor-billing / product-direction). The hint may surface an ask; it does not authorize the action.
+- `/goal` and `/task` markers without a `t_<id>` on the board are **not goals or tasks** — only `t_<id>` on the kanban board is. Until a card exists, the slash is a draft hint, not a record.
+- `/verify` is required before `/task` can flip to `done` on any non-trivial task. The verifier MUST emit a `step5-verdict-*.json` artifact under `~/Projects/BossMan/docs/verdicts/` and that file MUST exist on disk before the card is marked complete.
+- `/evidence` paths must be absolute and reachable at audit time. Relative paths and stale paths fail the next weekly review and raise a drift finding.
 
 ---
 

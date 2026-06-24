@@ -7,23 +7,33 @@
 
 ---
 
-## L-006 — Slash commands in LEARNED workflows (2026-06-23)
+## L-006 — Slash commands in LEARNED workflows (2026-06-23, v3.2)
 
-**Rule:** Slash commands (`/learn`, `/goal`, `/sync`, `/phase`, `/task`, `/review`, `/verify`) are **optional control-plane markers** that surface intent when reading LEARNED files in Perplexity Spaces, Obsidian, or `~/.hermes/knowledge/`. They are hints, not CLI calls. Hermes parses prose first and only acts on a slash when it maps to a real artifact.
+**Rule:** Slash commands (`/learn`, `/goal`, `/task`, `/phase`, `/memory`, `/review`, `/verify`, `/evidence`, `/sync`) are **optional control-plane markers** that surface intent when reading LEARNED files in Perplexity Spaces, Obsidian, or `~/.hermes/knowledge/`. They are hints, not CLI calls. Hermes parses prose first and only acts on a slash when it maps to a real artifact on disk or on the kanban board.
+
+**Canonical full list lives in PHASEREPORT.md v3.2 "Slash Commands for Phase Logs" table.** This rule documents the LEARNED-file-specific semantics.
 
 **Allowed usages inside LEARNED workflows:**
 
-1. **`/learn`** — mark a **candidate** LEARNED rule or anti-pattern. Used inline next to a rule body to flag it for the next promotion review (e.g. `/learn candidate: bot lifecycle events must survive PM2 restart`). A `/learn`-marked line is NOT a rule until it passes threshold tests (6-month survival, evidence, no contradiction with existing rules) and is numbered L-NNN.
-2. **`/goal`** — link a rule to a running `goal_id` on the kanban board (e.g. `/goal link to t_goal_crypto_swing_trader_20260613` for crypto learnings; `/goal link to t_bf23cc0f` for S1 Security & PM2 Watch learnings). The link is metadata only — it tells Hermes which goal loop should re-evaluate the rule on its next cycle.
-3. **`/sync`** — mark a LEARNED section that **must be mirrored from Spaces back into the canonical save order**: `~/.hermes/knowledge/LEARNED.md` (and any domain-specific `LEARNED_*.md`) FIRST, then `~/Obsidian/Hermes/` mirror, then `~/Repos/BossMan/docs/` commit. `bash ~/.hermes/scripts/sync_perplexity_spaces.sh` treats `/sync` markers as **hints only**; the script's source-of-truth hierarchy still resolves to `~/.hermes/knowledge/` last. If a Space-only rule is missing from `~/.hermes/knowledge/`, the next weekly Spaces audit raises it as a drift finding.
+1. **`/learn`** — mark a **candidate** LEARNED rule or anti-pattern (cross-cutting → L-NNN here; domain-specific → e.g. L-CRYPTO-NN in `LEARNED_CRYPTO_INTELLIGENCE.md`). Used inline next to a rule body to flag it for the next promotion review (e.g. `/learn candidate: bot lifecycle events must survive PM2 restart`). A `/learn`-marked line is NOT a rule until it passes threshold tests (**6-month survival**, evidence, no contradiction with existing rules) and is numbered.
+2. **`/goal`** — link a rule to a running `goal_id` on the kanban board (e.g. `/goal link to t_goal_crypto_swing_trader_20260613` for crypto learnings; `/goal link to t_bf23cc0f` for S1 Security & PM2 Watch learnings). The link is metadata only — it tells Hermes which goal loop should re-evaluate the rule on its next cycle. The goal card itself stays `running` until a Step-5 verifier PASS is recorded.
+3. **`/task`** — mark a concrete child action that belongs under the parent LEARNED topic (e.g. `/task add t_<new_id> — re-audit CLAW-Backup save-order drift (PROJ-2026-06_obsidian-vault-workflow)`). Default status `todo`. NEVER mark a non-trivial `/task` `done` without a `/verify` evidence attachment and a verifier PASS on disk.
+4. **`/phase`** — mark a section that should land as a new `## YYYY-MM-DD — <title>` entry in PHASEREPORT.md v3.2. Tag the entry with the date so the text can be merged back into the canon phase log instead of staying stranded in Spaces.
+5. **`/memory`** — flag a short, stable personal fact for the next memory-health-check cycle (per Memory Policy v3.2). The marker itself does NOT write to MEMORY/USER — it only queues a candidate for review.
+6. **`/review`** — request a structured audit or weekly-review workflow (e.g. `crypto-weekly-review`, PMD QA). Interpreted as "run the appropriate skill, create any needed cards, return a brief," not a loose chat answer.
+7. **`/verify`** — require a Step-5 verifier artifact (`~/Projects/BossMan/docs/verdicts/step5-verdict-*.json`) before any `done` report is accepted on the linked card. `qa_required: yes` is enforced.
+8. **`/evidence`** — pin absolute file paths (screenshots, logs, DB exports) on the card so future audits and reviews can re-run the same checks. Relative or stale paths fail the next weekly review.
+9. **`/sync`** — mark a LEARNED section that **must be mirrored from Spaces back into the canonical save order**: `~/.hermes/knowledge/LEARNED.md` (or the relevant `LEARNED_*.md`) FIRST, then `~/Obsidian/Hermes/` mirror, then `~/Repos/BossMan/docs/` commit, then Perplexity Spaces. `bash ~/.hermes/scripts/sync_perplexity_spaces.sh` treats `/sync` markers as **hints only**; the script's source-of-truth hierarchy still resolves to `~/.hermes/knowledge/` last. If a Space-only rule is missing from `~/.hermes/knowledge/`, the next weekly Spaces audit raises it as a drift finding.
 
 **Forbidden usages inside LEARNED workflows:**
 
-- Using slash commands to **substitute** for a real kanban card, goal registration, or save-order step. A `/goal` marker is not a goal — only `t_<id>` on the kanban board is.
+- Using slash commands to **substitute** for a real kanban card, goal registration, evidence file, or save-order step. A `/goal` marker is not a goal — only `t_<id>` on the kanban board is. A `/verify` marker is not a verifier — only a `step5-verdict-*.json` file on disk is.
 - Using `/phase` to fabricate a PHASEREPORT entry without going through the standard "Date / Scope / What was codified / Where / Kanban" template.
 - Using `/sync` to push a Space-only rule into `~/.hermes/knowledge/` without a human or BossMan review (the script syncs the **other** direction — canonical → Spaces — not the reverse).
+- Putting `/goal`, `/task`, `/phase`, or `/sync` into MEMORY.md or USER.md. Memory Policy v3.2 forbids all four inside injected memory.
+- Marking a non-trivial task `done` on the board without a `/verify` evidence attachment.
 
-**Source of truth (re-stated):** `~/.hermes/knowledge/` is canonical. Spaces and Obsidian mirrors follow. Slash markers in any layer are interpretable hints only — they never redefine what is canonical.
+**Source of truth (re-stated):** `~/.hermes/knowledge/` is canonical. Spaces and Obsidian mirrors follow. Slash markers in any layer are interpretable hints only — they never redefine what is canonical. A Perplexity Space **never** writes directly into `~/.hermes/knowledge/`; it always flows through the resolution chain in PHASEREPORT.md v3.2 §"Slash Commands for Phase Logs" → Obsidian Vault Workflow "Perplexity Spaces and Slash Commands".
 
 ---
 
