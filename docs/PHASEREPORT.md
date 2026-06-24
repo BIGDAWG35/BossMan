@@ -7,6 +7,26 @@
 
 ---
 
+## Slash Commands for Phase Logs (v3.1 — 2026-06-23)
+
+Slash commands are **optional control-plane markers** used in Perplexity Spaces, Obsidian notes, and `~/.hermes/knowledge/` entries to signal intent to Hermes. They are **NOT required** — Hermes parses prose first. They only matter when they map to a real artifact (kanban card, goal, review workflow, or save-order action per PHASEREPORT.md v3).
+
+| Slash | Maps to | Example (one line) |
+|---|---|---|
+| `/phase` | A new `## YYYY-MM-DD — <title>` entry in this file (or a kanban card driving one) | `/phase Append 2026-06-23 — Binance-bot monitor delta-in-window fix (t_d6aabd51)` |
+| `/goal` | A running `goal_id` on the kanban board (e.g. `t_goal_*`, `t_bf23cc0f`) | `/goal link rule to t_bf23cc0f (S1 Security & PM2 Watch — Phase S1)` |
+| `/review` | A scheduled `*-review.sh` script or the `crypto-weekly-review` skill | `/review weekly — run ~/.hermes/scripts/obsidian-vault-review.sh (2026-07-01)` |
+| `/verify` | A Phase 4 / Step-5 verifier artifact at `~/Projects/BossMan/docs/verdicts/step5-verdict-*.json` | `/verify emit docs/verdicts/step5-verdict-binance-bot-restart-spike-2026-06-23.json` |
+| `/sync` | A save-order action: `~/.hermes/knowledge/` → `~/Obsidian/Hermes/` → `~/Repos/BossMan/docs/` → Spaces | `/sync mirror to ~/Obsidian/Hermes/50_Phase-Reports/ + commit cd3abb3` |
+
+**Rules of use:**
+- Optional everywhere. Never required to make a phase entry valid.
+- Never auto-execute. A slash command in a Space is a **hint**, not a CLI call. BossMan interprets intent from prose and only acts on slashes that map to a kanban card, a real goal, a registered review script, a Step-5 verifier, or a save-order step.
+- If a slash maps to no real artifact (no card, no goal, no script), Hermes logs it as "slash-without-target" on the closest active kanban card and proceeds from prose.
+- Slash commands **do not** bypass the 5-carve-out approval gate (infra install / public port / security / vendor-billing / product-direction). The hint may surface an ask; it does not authorize the action.
+
+---
+
 ## 2026-06-13 — Concurrent-edit resolution: OBSIDIAN_VAULT_WORKFLOW.md
 
 **What happened:** A separate parallel BossMan session (the `bossman-profile`) was working on `~/Desktop/CLAW-Backup/` (Marcelo's primary personal Obsidian vault) and committed `docs/OBSIDIAN_VAULT_WORKFLOW.md` to the BossMan repo at commit `04a103d`. That doc is canonical for CLAW-Backup, with focus on vault identification, security boundaries, and daily-note workflows.
