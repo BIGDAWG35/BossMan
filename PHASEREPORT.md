@@ -961,3 +961,28 @@ Then:
 **Kanban:** t_0376eba5 (parent) · P1–P5 children (all done) · doc-sync PASS · git push PASS
 
 **Rule of record:** BossMan autonomous-by-default for all non-trivial changes. Iteration limits are NOT blockers. Marcelo approves ONLY on 5 carve-out categories.
+
+## 2026-06-23 — Binance-bot monitor: RESTART_SPIKE permanent fix
+
+**Scope:** T1 trading/money lane. Stop forever-spam of `RESTART_SPIKE:3` alerts after legitimate Phase-12 deploy restarts.
+
+**Root cause:** `~/.hermes/scripts/binance-bot-live-monitor.sh` line 44 compared CUMULATIVE lifetime `restart_time > 2`. Bot had `restart_time=3` from 3 manual Phase-12 deploy restarts (commit `917b2f1 fix: persist balance on startup sync` + 12C-D + 12C-F). PM2 row showed `unstable_restarts=0` — bot was NOT crashing.
+
+**What changed:**
+- Detection: CUMULATIVE → DELTA-IN-WINDOW (3 restarts in 10 min). Counts only fresh restarts since last check.
+- Cooldown: 30 min. One alert per spike, silent during cooldown.
+- MAINT probe: operator-filed `~/.hermes/state/binance-bot-MAINTENANCE` JSON file silences ALL alerts during known maintenance windows.
+- 5/5 P4 smoke tests PASS (healthy, cumulative-bug, crash-loop, maint, badmode).
+- Step-5 verdict PASS — all 5 invariants green.
+
+**No-spam result:** fresh FAIL files no longer written; pre-fix spam stream stopped. Log now shows `SPIKE silent (cooldown active)` + `OK — all checks passed`.
+
+**PM2 ecosystem:** UNCHANGED — no A/B card needed (already hardened: `watch=false`, `max_restarts=10`, `min_uptime=60s`).
+
+**Where:**
+- `~/.hermes/scripts/binance-bot-live-monitor.sh` (live, 302 lines)
+- `scripts/binance-bot-live-monitor.sh` (BossMan repo mirror)
+- `docs/verdicts/step5-verdict-binance-bot-restart-spike-2026-06-23.json`
+- Commit `c771bb5` (pushed)
+
+**Kanban:** t_d6aabd51 (parent) · P1 t_8edbdbab DONE · P2 t_af142bd1 DONE · P3 t_7d7dac5d DONE · P4 t_5336da01 DONE · P5 t_20ba01c2 DONE
