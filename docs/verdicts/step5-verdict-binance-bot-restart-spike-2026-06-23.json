@@ -1,0 +1,53 @@
+{
+  "verdict_id": "t_d6aabd51_step5_20260623",
+  "card_id": "t_d6aabd51",
+  "card_title": "Binance-bot RESTART_SPIKE:3 permanent fix (T1 trading/money lane)",
+  "evaluated_at": "2026-06-23T17:19:47.368188",
+  "invariants": {
+    "I1_source_changed": {
+      "PASS": true,
+      "note": "runtime script rewritten 154\u2192302 lines; new logic (delta-in-window, cooldown, MAINT probe, no-spam)"
+    },
+    "I2_repo_matches_runtime": {
+      "PASS": true,
+      "note": "runtime sha b6a7c881b23d == repo sha b6a7c881b23d"
+    },
+    "I3_tests_pass": {
+      "PASS": true,
+      "detail": {
+        "1_healthy": {
+          "exit": 0,
+          "last_line": "\u2713 Healthy test PASS \u2014 silent, log shows OK"
+        },
+        "2_cumulative": {
+          "exit": 0,
+          "last_line": "\u2713 Cumulative test PASS \u2014 NEW LOGIC silent on lifetime=3, history unchanged, no false cooldown"
+        },
+        "3_crash": {
+          "exit": 0,
+          "last_line": "\u2713 Crash-loop test PASS \u2014 alert once + cooldown"
+        },
+        "4_maint": {
+          "exit": 0,
+          "last_line": "\u2713 MAINT test PASS \u2014 silenced during maintenance window"
+        },
+        "5_badmode": {
+          "exit": 0,
+          "last_line": "\u2713 Bad-mode test PASS \u2014 BAD_MODE detected, no false RESTART_SPIKE"
+        }
+      },
+      "note": "5/5 P4 smoke tests PASS"
+    },
+    "I4_live_silent_under_bug_scenario": {
+      "PASS": true,
+      "evidence": "[2026-06-23 17:15:43 PDT] FAIL \u2014 RESTART_SPIKE:3\n[2026-06-23 17:15:49 PDT] SPIKE silent (cooldown: 1794s remaining, count: 3)\n[2026-06-23 17:15:49 PDT] OK \u2014 all checks passed\n[2026-06-23 17:18:23 PDT] SPIKE silent (cooldown: 1640s remaining, count: 3)\n[2026-06-23 17:18:23 PDT] OK \u2014 all checks passed\n",
+      "note": "bot restart_time=3 cumulative \u2192 monitor went silent (NOT original forever-spam)"
+    },
+    "I5_no_spam_invariant": {
+      "PASS": true,
+      "detail": [],
+      "note": "no fresh FAIL file; pre-fix spam stream stopped"
+    }
+  },
+  "overall": "PASS"
+}

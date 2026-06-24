@@ -1,8 +1,20 @@
 #!/usr/bin/env bash
 # binance-bot live monitor — 5 min cron watchdog
-# Detects: crash, restart spike, bad mode, balance mismatch, failed health-check, API failure
+# Detects: crash, restart SPIKE (delta-in-window), bad mode, balance mismatch,
+#          failed health-check, API failure.
 # Silent when healthy. Writes a FAIL file only on detection.
 # Hermes cron infrastructure delivers the FAIL file to Telegram (origin channel).
+#
+# 2026-06-23 rewrite (t_d6aabd51, T1 trading/money lane):
+# - RESTART_SPIKE detection changed from CUMULATIVE lifetime count to
+#   DELTA-IN-WINDOW (3 restarts in 10 min) — eliminates forever-spam after
+#   legitimate deploy restarts.
+# - 30-min cooldown: one alert per spike, no repeat during cooldown.
+# - MAINT probe: silences ALL alerts when operator has filed a maintenance
+#   window for a known deploy / DB migration / config change.
+#
+# No-spam policy: silent when healthy. FAIL file written only on detection.
+# Telegram routing is handled by Hermes cron job `binance-bot-live-monitor`.
 set -uo pipefail
 
 BOT_NAME="binance-bot"
@@ -11,10 +23,61 @@ OUT_DIR="$HOME/.hermes/cron/output"
 FAIL_FILE="$OUT_DIR/${BOT_NAME}-monitor-FAIL.md"
 HEALTH_OUTPUT="$OUT_DIR/${BOT_NAME}-monitor-output.log"
 TIMESTAMP=$(date "+%Y-%m-%d %H:%M:%S %Z")
+NOW_EPOCH=$(date +%s)
+NOW_MS=$(python3 -c "import time; print(int(time.time()*1000))")
+
+# ── Spike detection config ──
+STATE_DIR="$HOME/.hermes/state"
+STATE_FILE="$STATE_DIR/${BOT_NAME}-restart-history.json"
+MAINT_FILE="$STATE_DIR/${BOT_NAME}-MAINTENANCE"
+SPIKE_THRESHOLD=3
+SPIKE_WINDOW=600       # 10 minutes (seconds)
+SPIKE_COOLDOWN=1800    # 30 minutes (seconds)
+HISTORY_RETENTION=1200 # prune restarts older than 2 windows
+
 PROBLEMS=()
 DETAILS=""
+mkdir -p "$OUT_DIR" "$STATE_DIR"
 
-mkdir -p "$OUT_DIR"
+# ── 0. MAINT probe — silences ALL alerts during operator-filed maintenance ──
+if [ -f "$MAINT_FILE" ]; then
+  MAINT_UNTIL=$(python3 -c "import json;print(json.load(open('$MAINT_FILE')).get('until',0))" 2>/dev/null || echo 0)
+  MAINT_REASON=$(python3 -c "import json;print(json.load(open('$MAINT_FILE')).get('reason','unknown'))" 2>/dev/null || echo "unknown")
+  if [ "$NOW_EPOCH" -lt "$MAINT_UNTIL" ]; then
+    echo "[$TIMESTAMP] MAINT silenced (until $(date -r "$MAINT_UNTIL" '+%Y-%m-%d %H:%M:%S %Z' 2>/dev/null || echo "$MAINT_UNTIL"), reason: $MAINT_REASON)" >> "$HEALTH_OUTPUT"
+    exit 0
+  else
+    # Window expired — auto-cleanup
+    rm -f "$MAINT_FILE"
+    echo "[$TIMESTAMP] MAINT window expired — re-enabling alerts" >> "$HEALTH_OUTPUT"
+  fi
+fi
+
+# ── 0.5 Load state file (idempotent init) ──
+if [ -f "$STATE_FILE" ] && [ -s "$STATE_FILE" ]; then
+  STATE_VALID=$(python3 -c "import json; json.load(open('$STATE_FILE')); print('ok')" 2>/dev/null || echo "bad")
+  if [ "$STATE_VALID" != "ok" ]; then
+    # Corrupt state — back up and re-init
+    mv "$STATE_FILE" "${STATE_FILE}.corrupt.$(date +%s)"
+    echo "[$TIMESTAMP] WARN: corrupt state file — re-initialized" >> "$HEALTH_OUTPUT"
+  fi
+fi
+if [ ! -f "$STATE_FILE" ]; then
+  python3 -c "
+import json
+state = {
+  'restart_history': [],
+  'last_restart_time': 0,
+  'last_spike_at': 0,
+  'cooldown_until': 0,
+  'last_start_at': 0,
+  'version': 1
+}
+with open('$STATE_FILE','w') as f: json.dump(state, f, indent=2)
+"
+fi
+LAST_RESTART_TIME=$(python3 -c "import json;print(json.load(open('$STATE_FILE')).get('last_restart_time',0))")
+COOLDOWN_UNTIL=$(python3 -c "import json;print(json.load(open('$STATE_FILE')).get('cooldown_until',0))")
 
 # ── 1. PM2 process state ──
 PM2_JSON=$(pm2 jlist 2>/dev/null)
@@ -41,8 +104,73 @@ for p in procs:
     PID=$(echo "$BOT_INFO" | sed -n 's/.*pid=\([0-9]*\).*/\1/p')
 
     [ "$STATUS" != "online" ] && PROBLEMS+=("STATUS_NOT_ONLINE:$STATUS") && DETAILS+=$'\n- PM2 status is not online: '$STATUS
-    [ "${RESTARTS:-0}" -gt 2 ] && PROBLEMS+=("RESTART_SPIKE:$RESTARTS") && DETAILS+=$'\n- Restart count spiked: '$RESTARTS' (>2)'
     [ "${UNSTABLE:-0}" -gt 0 ] && PROBLEMS+=("UNSTABLE_RESTARTS:$UNSTABLE") && DETAILS+=$'\n- Unstable restart counter: '$UNSTABLE' (>0 means pre-start or startup failed)'
+
+    # ── 1a. DELTA-IN-WINDOW spike detection (replaces cumulative count check) ──
+    if [ "${RESTARTS:-0}" -gt 0 ]; then
+      # Update restart history: append NEW restarts since last check
+      if [ "$RESTARTS" -gt "$LAST_RESTART_TIME" ]; then
+        DELTA=$((RESTARTS - LAST_RESTART_TIME))
+        # Append `DELTA` timestamps (approximate: spread across last 60s)
+        python3 -c "
+import json, time
+with open('$STATE_FILE') as f: s = json.load(f)
+hist = s.get('restart_history', [])
+now = $NOW_EPOCH
+for i in range($DELTA):
+    # backdate slightly so concurrent restarts don't all share the same timestamp
+    hist.append(now - (($DELTA - 1 - i) * 10))
+s['restart_history'] = hist
+with open('$STATE_FILE','w') as f: json.dump(s, f, indent=2)
+"
+      fi
+
+      # Count restarts in window
+      RESTART_COUNT_IN_WINDOW=$(python3 -c "
+import json, time
+with open('$STATE_FILE') as f: s = json.load(f)
+hist = s.get('restart_history', [])
+window_start = $NOW_EPOCH - $SPIKE_WINDOW
+in_window = [t for t in hist if t >= window_start]
+print(len(in_window))
+")
+
+      # Prune history (keep only restarts in 2-window retention)
+      python3 -c "
+import json, time
+with open('$STATE_FILE') as f: s = json.load(f)
+hist = s.get('restart_history', [])
+cutoff = $NOW_EPOCH - $HISTORY_RETENTION
+hist = [t for t in hist if t >= cutoff]
+s['restart_history'] = hist
+s['last_restart_time'] = $RESTARTS
+s['last_start_at'] = $NOW_MS
+with open('$STATE_FILE','w') as f: json.dump(s, f, indent=2)
+"
+
+      # Trigger condition: delta-in-window >= threshold AND cooldown expired
+      if [ "$RESTART_COUNT_IN_WINDOW" -ge "$SPIKE_THRESHOLD" ]; then
+        if [ "$NOW_EPOCH" -ge "$COOLDOWN_UNTIL" ]; then
+          PROBLEMS+=("RESTART_SPIKE:$RESTART_COUNT_IN_WINDOW")
+          DETAILS+=$'\n- Restart spike: '$RESTART_COUNT_IN_WINDOW' restarts in last '$SPIKE_WINDOW's (threshold: '$SPIKE_THRESHOLD')'
+          DETAILS+=$'\n- PM2 restart_time now: '$RESTARTS' (cumulative since 2026-06-22)'
+          DETAILS+=$'\n- Cooldown: 30 min — further spike alerts silenced until next window'
+          # Set cooldown
+          NEW_COOLDOWN=$((NOW_EPOCH + SPIKE_COOLDOWN))
+          python3 -c "
+import json
+with open('$STATE_FILE') as f: s = json.load(f)
+s['last_spike_at'] = $NOW_EPOCH
+s['cooldown_until'] = $NEW_COOLDOWN
+with open('$STATE_FILE','w') as f: json.dump(s, f, indent=2)
+"
+        else
+          # During cooldown — silent log only
+          REMAINING=$((COOLDOWN_UNTIL - NOW_EPOCH))
+          echo "[$TIMESTAMP] SPIKE silent (cooldown: ${REMAINING}s remaining, count: $RESTART_COUNT_IN_WINDOW)" >> "$HEALTH_OUTPUT"
+        fi
+      fi
+    fi
   fi
 fi
 
@@ -66,7 +194,6 @@ else
   fi
 
   # ── 3. Balance matches exchange (signed call) ──
-  # DOTENV_CONFIG_QUIET=true suppresses dotenv's "injecting env" tip output.
   EXCHANGE_USDT=$(cd "$HOME/Projects/binance-bot" && DOTENV_CONFIG_QUIET=true node -e "
 const crypto=require('crypto');
 require('dotenv').config({path:'./.env', quiet: true});
@@ -86,7 +213,7 @@ require('https').get({hostname:'api.binance.us',path:'/api/v3/account?'+qs+'&sig
 
   if [ -z "$EXCHANGE_USDT" ] || [ "$EXCHANGE_USDT" = "API_ERROR" ] || [ "$EXCHANGE_USDT" = "NETWORK_ERROR" ]; then
     PROBLEMS+=("EXCHANGE_API_FAIL")
-    DETAILS+=$'\n- Live Binance.US API call failed: '"'$EXCHANGE_USDT'"
+    DETAILS+=$'\n- Live Binance.US API call failed: '"$EXCHANGE_USDT"
   else
     # Compare with 2% tolerance
     DIFF=$(python3 -c "
@@ -130,11 +257,33 @@ if [ -f "$ERROR_LOG" ] && [ -s "$ERROR_LOG" ]; then
   fi
 fi
 
+PRE_TRADE_HOOK_FILE="/Users/bigdawg/Projects/trading-review/pre-trade-hook.js"
+if [ ! -f "$PRE_TRADE_HOOK_FILE" ]; then
+  PROBLEMS+=("PRE_TRADE_HOOK_MISSING")
+  DETAILS+=$'\n- pre-trade-hook.js not found at: '$PRE_TRADE_HOOK_FILE
+else
+  HOOK_LOAD=$(cd "$HOME/Projects/binance-bot" && node -e "
+    try {
+      const m = require('$PRE_TRADE_HOOK_FILE');
+      process.stdout.write('OK:' + (typeof m === 'function' ? 'function' : (m && m.default ? 'default' : 'module')));
+    } catch (e) {
+      process.stdout.write('FAIL:' + e.message);
+    }
+  " 2>&1)
+  case "$HOOK_LOAD" in
+    OK:*) ;;
+    *)
+      PROBLEMS+=("PRE_TRADE_HOOK_LOAD_FAIL")
+      DETAILS+=$'\n- pre-trade-hook.js reload failed: '$HOOK_LOAD
+      ;;
+  esac
+fi
+
 # ── Outcome ──
 if [ ${#PROBLEMS[@]} -eq 0 ]; then
   # Healthy — silent (no FAIL file)
   rm -f "$FAIL_FILE"
-  echo "[$TIMESTAMP] OK — all 5 checks passed" >> "$HEALTH_OUTPUT"
+  echo "[$TIMESTAMP] OK — all checks passed" >> "$HEALTH_OUTPUT"
   exit 0
 fi
 
@@ -147,7 +296,7 @@ cat > "$FAIL_FILE" << EOF
 
 **Details:**$DETAILS
 
-**Action:** review the listed problems; auto-recovery may already be in progress. If state does not normalize within 10 minutes, escalate to Marcelo with a manual pm2 stop / node safe-start.js / node restart-health-check.js cycle.
+**Action:** review the listed problems; auto-recovery may already be in progress. For RESTART_SPIKE: cooldown is active for 30 min — repeated alerts during cooldown are silenced. If state does not normalize within 30 minutes, escalate to Marcelo with a manual pm2 stop / node safe-start.js / node restart-health-check.js cycle.
 EOF
 
 echo "[$TIMESTAMP] FAIL — ${PROBLEMS[*]}" >> "$HEALTH_OUTPUT"
