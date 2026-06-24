@@ -1,0 +1,26 @@
+{
+  "verdict": "pass",
+  "card_id": "t_acp_template_1782266400",
+  "card_title": "Codify PMD + Production Dashboards Autonomous-By-Default Rule",
+  "verifier": "bossman (M3 + M2.7 self-verify)",
+  "verifier_model": "deepseek (default Step-5 model)",
+  "ts": "20260624T020000Z",
+  "checks": {
+    "kernel_canon_AGENTS_md": "pass — new 'PMD + Production Dashboards — Autonomous-By-Default Rule' section added at line 749",
+    "kernel_canon_SOUL_md":    "pass — 'PMD + Production Dashboards — Autonomous-by-Default Interface' block added",
+    "kanban_template_written": "pass — ~/.hermes/templates/autonomous-change-pipeline-card.md (9,750 bytes, full P1–P5 child templates)",
+    "bossman_repo_mirror":     "pass — docs/AGENTS_mirror/AGENTS.md, docs/SOUL_mirror/SOUL.md, docs/templates/autonomous-change-pipeline-card.md",
+    "obsidian_mirror":         "pass — ~/Obsidian/Hermes/10_Operating-Blueprint/AUTONOMOUS_CHANGE_PIPELINE_CARD_v1.md",
+    "git_commit":              "pass — commit 858f8e7 on main, +2579 insertions, 3 new files",
+    "operator_interface_check": "pass — one final PASS message, no A/B/C, no bounce-backs, escalation only on v3 carve-out",
+    "skill_pointer":           "pass — autonomous-change-pipeline skill already exists at ~/.hermes/skills/autonomous-change-pipeline/"
+  },
+  "p0_findings": [],
+  "p1_findings": [],
+  "p2_findings": [],
+  "p3_findings": [
+    "M2.7 pipeline model routing table in AGENTS.md was last updated 2026-06-03; not a regression but verify routing still applies if a model change ships before next S1 cycle"
+  ],
+  "carve_out_blocks": [],
+  "notes": "Standing rule codification. No runtime change. No new infra. No port change. No security change. No vendor decision. No product-direction pivot. Marcelo's message was an explicit codification request — the directive itself is the operator's standing rule, not a carve-out-blocked action. Default operator interface honored: one final PASS message."
+}
