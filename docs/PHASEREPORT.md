@@ -99,7 +99,7 @@
 | 3 | `ai.hermes.gateway` exit -9 | P3 (by design) | Gateway decommissioned per SOUL; `ai.hermes.gateway-health` (exit 78) handles health. | Acknowledged |
 | 4 | `com.local.mission-control` exit 78 | P3 (partial state) | No service impact, no Telegram routing. | Acknowledged |
 | 5 | `SERVICES_MAP.md` is **26 days stale** (2026-05-28) — PM2 table lists only 4 services (current = 14), `*/5` schedule (current = `*/15`), last_run=2026-05-20 | **P2 (real)** | `fresh-dashboard` etc. are correctly retired per S1.202606.A cycle; doc just doesn't reflect current state. **Fix in scope:** refresh `SERVICES_MAP.md` to current state (14 PM2 + current schedules). | **FIXED** — see "Fixes Applied" below |
-| 6 | `ai.openclaw.gateway.plist` filesystem drift — live plist still in `~/Library/LaunchAgents/` (mtime 2026-05-30) instead of `disabled/` | **P2 (cosmetic)** | Runtime IS clean (not in `launchctl list`). File-system disagrees with 2026-05-18 disable rule. **Out of 5 carve-out scope (LaunchAgent install/remove)** — surface for Marcelo decision, do NOT auto-fix. | Reported, not auto-fixed |
+| 6 | `ai.openclaw.gateway.plist` filesystem drift — live plist still in `~/Library/LaunchAgents/` (mtime 2026-05-30) instead of `disabled/` | **P2 (cosmetic)** | Runtime IS clean (not in `launchctl list`). File-system disagrees with 2026-05-18 disable rule. **Out of 5 carve-out scope (LaunchAgent install/remove).** | **CLOSED — B/no per Marcelo 2026-06-23 ("runtime is what matters; no more cosmetic filesystem churn"). No further action.** |
 
 ### Fixes Applied (within scope)
 
@@ -108,7 +108,7 @@
 - Updated cron schedules (PM2 Health Monitor `*/15` not `*/5`)
 - Updated `last_run` to 2026-06-23
 - Preserved all "KEEP" / "NEEDS DECISION" / "DISABLED" classifications
-- See commit `b7c2d83` (this audit)
+- See commit `69350f8` (this audit)
 
 ---
 
