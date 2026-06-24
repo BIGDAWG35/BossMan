@@ -7,6 +7,27 @@
 
 ---
 
+## 2026-06-23 — Slash Commands v3.2 expansion: 7 → 9 slashes + hint-not-order rule
+
+**Date:** 2026-06-23
+
+**Scope:** PHASEREPORT.md v3.1 → v3.2, LEARNED.md L-006 v3.1 → v3.2, Memory Policy v3.1 → v3.2, Crypto Intelligence LEARNED v3.1 → v3.2, Obsidian Vault Workflow v3.1 → v3.2, BossMan repo `docs/PHASEREPORT.md` + `docs/LEARNED.md`.
+
+**What was codified:**
+- Slash commands table extended from 7 to **9** slashes: `/goal /task /phase /learn /memory /review /verify /evidence /sync`. New entries: `/task` (kanban board child action, default `todo`, never `done` without `/verify` evidence) and `/evidence` (absolute paths to screenshots/logs/files, pinned on the card).
+- **Hint-not-order rule** codified canonically in PHASEREPORT.md v3.2 and mirrored in LEARNED L-006, Memory Policy, Crypto LEARNED, and Obsidian Vault Workflow. The rule states: slashes in Perplexity Spaces are **hints**, not CLI calls; BossMan interprets them into real kanban ops and `~/.hermes/knowledge/` edits via the resolution chain. **A Perplexity Space never writes directly into `~/.hermes/knowledge/`** — all canon writes flow through the chain PHASEREPORT.md v3.2 → LEARNED.md v3 L-006 → Memory Policy v3.2 → Obsidian Vault Workflow.
+- Memory Policy v3.2: `/memory` allowed as **reference marker only** (queued for next memory-health-check cycle); `/goal`, `/task`, `/phase`, `/sync` explicitly **forbidden** inside MEMORY.md / USER.md (along with `/review`, `/verify`, `/learn`, `/evidence`); resolution rule restated that if a memory fact needs a slash to be interpreted, the fact itself is the wrong shape.
+- LEARNED.md L-006 forbidden list expanded: putting `/goal /task /phase /sync` inside MEMORY/USER is now explicitly called out; non-trivial `/task` cannot flip to `done` without `/verify` evidence; `/verify` is a real verifier file on disk, not just a marker.
+- Obsidian Vault Workflow: added step 6 — direct Space → canon writes forbidden — and per-slash resolution mapping (`/goal /task` → board, `/phase` → PHASEREPORT.md, `/learn` → `~/.hermes/knowledge/`, `/memory` → memory-health-check, `/review` → skill invocation, `/verify` → `step5-verdict-*.json`, `/evidence` → card paths, `/sync` → save-order pipeline).
+
+**Where:** PHASEREPORT.md v3.2 / LEARNED.md v3.2 L-006 / Memory Policy v3.2 / Crypto Intelligence LEARNED v3.2 / Obsidian Vault Workflow v3.2; mirrors at `~/Projects/BossMan/docs/PHASEREPORT.md` + `~/Projects/BossMan/docs/LEARNED.md`.
+
+**Kanban:** driver card was the v3.1 commit chain (`c771bb5` → `cd3abb3` → `2fda202`); v3.2 is commit `e7863a8` on `main`. No new card was opened — this was a doc-hygiene pass under the autonomous-change-pipeline rule (not in any of the 5 carve-outs). The next kanban task that uses a v3.2 slash will reference `e7863a8` via `/evidence` or via the linked card's commit comment.
+
+**Verification:** Step-5 not required for doc-hygiene (no service or runtime change); diff `2fda202..e7863a8` shows 2 files changed, 36 insertions(+), 18 deletions(-). The 5 Desktop V3 source docs and 2 BossMan repo mirrors were read back to confirm v3.2 was in place before commit.
+
+---
+
 ## Slash Commands for Phase Logs (v3.2 — 2026-06-23)
 
 Slash commands are **optional control-plane markers** used in Perplexity Spaces, Obsidian notes, and `~/.hermes/knowledge/` entries to signal intent to Hermes. They are **NOT required** — Hermes parses prose first. They only matter when they map to a real artifact (kanban card, goal, review workflow, save-order action, or evidence reference per PHASEREPORT.md v3.2).
