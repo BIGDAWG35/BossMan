@@ -75,7 +75,7 @@ BossMan/
 | 8100  | Worker pool          | Active |
 | 8102  | Auth service         | Active |
 | 8104  | Queue processor      | Active |
-| 8110  | Cache layer          | Active |
+| 8110  | Cache layer          | **RETIRED 2026-06-26** (legacy health-dashboard → superseded by Health OS V3 on 8121) |
 | 8130  | Notification svc     | Active |
 | 8140  | Scheduler            | Active |
 | 8020  | Backup / archival    | Active |
