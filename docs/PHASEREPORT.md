@@ -516,3 +516,191 @@ Decisions: QUALIFY=9, DENY=6. No sub-75 rows. `next_action = human_review_or_app
 - Per-trade qualify integration (separate card).
 - HARD GATE §B (LIVE-readiness): UI-verified `canWithdraw=false`, but checklist is still paused pending a second-pass review of `canTrade` semantics with Marcelo before resuming Phase 11A.
 - Push deferred pending merge strategy with sibling commits.
+
+---
+
+## Phase 2-4 — Stage 7 BossMan Decision Reader (shipped 2026-06-19, local-only commit)
+
+**Scope:** read-and-gate integration pass. Bot READS `data/bossman_decision.json` (Stage 6 emitter artifact) and gates signals per `per_coin[sym].decision`. Sibling to `checkIntelGate()` — does NOT replace it.
+
+**Files added:**
+- `binance-bot/scripts/_bossman_decision.js` — pure read-and-gate module (read-only, no writes, no npm install).
+- `binance-bot/scripts/_test_bossman_decision.js` — 21/21 unit + integration fixtures.
+
+**Files edited (server.js only, additive):**
+- `binance-bot/server.js` — +28 / -1. New section header block, env flag read, `checkBossmanDecision()` call between intel gate and inFlight, journal log shape, additive `bossmanDecisionGate` flag on `/health` + `/state` payloads, config-line append.
+
+**Files UNTOUCHED (verified by `md5sum`):**
+- `.env` (no env-var additions)
+- `ecosystem.config.cjs` (no PM2 changes)
+- `pre-trade-hook.js` (no execution-layer mutation)
+- `package.json` (no npm install)
+- `data/bossman_decision.json` (Stage 7 is read-only; Stage 6 remains sole writer)
+
+**Wire discipline:**
+- No PM2 restart. PID 4696 unchanged before/after wire-up.
+- No `.env` mutation. Env flag defaults ON, no overrides set.
+- No cron change. No Telegram. No PAPER↔LIVE flip.
+- No numeric aggression/risk-band changes. No sizing math change.
+- `strategy_class` and `aggression_tier` from artifact are NOT consulted — reserved for separate future card.
+
+**Fail-CLOSED contract (L-CRYPTO-16):** every error path blocks the signal and journals a reason code:
+
+| Condition | Code |
+|---|---|
+| File missing | `BOSSMAN_FILE_MISSING` |
+| Schema/version/layer/rule invalid | `BOSSMAN_SCHEMA_INVALID` |
+| Date ≠ today OR mtime > 24h | `BOSSMAN_STALE` |
+| Symbol absent / case-mismatch | `BOSSMAN_SYMBOL_MISMATCH` |
+| `decision == "DENY"` | `BOSSMAN_DENY` |
+| `decision == "WATCH_ONLY"` | `BOSSMAN_WATCH_ONLY` |
+| `decision == "QUALIFY"` | allow |
+| `BOSSMAN_DECISION_GATE_ENABLED=false` | pass-through |
+
+**Cache:** in-memory, TTL = 5 min, invalidated on file mtime change. No disk cache.
+
+**Verification (all green):**
+
+- ✅ `node scripts/_test_bossman_decision.js` → **21/21 fixtures pass**
+- ✅ `node -c server.js` → clean
+- ✅ `node -c scripts/_bossman_decision.js` → clean
+- ✅ `git diff --stat HEAD -- server.js` → **+28 / -1**, additive only
+- ✅ `md5sum .env ecosystem.config.cjs pre-trade-hook.js package.json` → unchanged
+- ✅ `pm2 jlist` (pid 4696 baseline) — no restart
+- ✅ `git check-ignore -v data/bossman_decision.json` → artifact stays out of git
+
+**Docs:**
+
+- ✅ `LEARNED_CRYPTO_INTELLIGENCE.md` — L-CRYPTO-16 added (count 15→16)
+- ✅ `SPEC-BINANCE-AUTONOMOUS-TRADER.md` — bumped to v1.5; Stage 7 section appended; v1.5 deltas line; Stage 7 card crossed off the "what's NOT in Phase 2-3" list
+- ✅ `PHASEREPORT.md` — this entry
+
+**Commits (local only, NO push per Phase 2-3 protocol):**
+
+- Stage 7 wire-up: pending (will commit only my own files: `server.js`, `scripts/_bossman_decision.js`, `scripts/_test_bossman_decision.js`; will not touch sibling subagent commits)
+
+**Open items / next pass.**
+
+- Execution-layer $75 floor in `pre-trade-hook.js` (separate card).
+- Per-trade qualify integration using `strategy_class` + `aggression_tier` (separate card).
+- HARD GATE §B (LIVE-readiness): still paused pending second-pass `canTrade` review with Marcelo.
+- Push deferred (per L-CRYPTO-11 + standing macOS-git-hang rule).
+
+---
+
+## Phase 11A — Execution-layer $75 hard floor (L-CRYPTO-17, SHIPPED 2026-06-19)
+
+**What:** Third independent $75 floor — the LAST line of defense inside `executeTrade()`. Runs AFTER sizing logic, intel gate, and BossMan decision gate. If anything ever passes a sub-75 notional into `executeTrade()` (race, manual trigger, future sizing drift), this guard catches it.
+
+**Why:** Upstream `size === 0 → return` at line ~277 does not catch non-zero sub-75 quantities. LOT_SIZE pre-check at line ~408 only checks Binance's `ex.minNotional` (~$10), NOT our $75. Execution layer was the genuine gap.
+
+## Phase 11B — Three-layer $75 observability CLI (SHIPPED 2026-06-19)
+
+**What:** Read-only CLI to summarize the three-layer $75 stack from `data/bot.db::signal_journal`. Counts `BOSSMAN_*` blocks (Stage 7), `EXECUTION_FLOOR_BELOW_75` blocks (Phase 11A), and `executed=1` passes over any date range. Output: text or JSON to stdout.
+
+**Why:** Operator (Marcelo) needs to see end-to-end what the three-layer stack is doing without writing new behavior, new crons, new dashboards, or Telegram pings. Strictly read-only on the journal.
+
+**Files (1):** `scripts/_summary_gates.sh` (NEW, +159 lines, bash + sqlite3 CLI + jq, zero Node deps).
+
+**Scope discipline:**
+
+- Zero writes anywhere (DB, files, env, PM2, cron, Telegram).
+- No decision-changing logic — purely counter queries on existing journal rows.
+- No new dependencies (sqlite3 + jq already on system PATH).
+- Synthetic-data test passed: 5-row fixture produced correct counts (2 BossMan + 1 floor + 2 passed = 5).
+
+**Verification (all green):**
+
+- ✅ `node -c server.js` → clean
+- ✅ `node -c scripts/_execution_floor_guard.js` → clean
+- ✅ `node scripts/_test_execution_floor.js` → 18/18 pass
+- ✅ `node scripts/_test_bossman_decision.js` → 21/21 pass (no regression)
+- ✅ `md5 -q .env ecosystem.config.cjs package.json` → unchanged
+- ✅ `pm2 jlist` (pid 4696 baseline) — no restart, online
+- ✅ `sha256sum data/bossman_decision.json` → `0bea7a37...d250` stable
+- ✅ `git check-ignore -v data/bossman_decision.json` → still gitignored
+- ✅ `git diff --stat HEAD -- server.js` → +39/-0, additive only
+
+**Strict-interpretation decisions (surfaced, not auto-final):**
+
+- PAPER sub-75 blocked: **YES** (stricter). Add `EXECUTION_FLOOR_BYPASS_PAPER=true` if you want simulation to pass sub-75.
+- Counter exposed via PM2 logs only: **YES** (no dashboard mutation).
+
+**Docs:**
+
+- ✅ `LEARNED_CRYPTO_INTELLIGENCE.md` — L-CRYPTO-17 added (count 16→17)
+- ✅ `SPEC-BINANCE-AUTONOMOUS-TRADER.md` — bumped to v1.6; Phase 11A section appended; execution-floor card crossed off
+
+**Commit (local only, NO push per L-CRYPTO-11):** pending — will commit only my own files; will not touch sibling subagent commits.
+
+**Open items (unchanged):**
+
+- Per-trade qualify integration using `strategy_class` + `aggression_tier` (separate card).
+- HARD GATE §B (LIVE-readiness): still paused pending second-pass `canTrade` review.
+- Push deferred (per L-CRYPTO-11 + standing macOS-git-hang rule).
+
+## Phase 11C — Governance spec pass: strategy classes + aggression tiers + market regimes (SHIPPED 2026-06-19)
+
+**What:** Two new governance specs canonicalize the vocabulary BossMan uses in `data/bossman_decision.json`. Both specs are pure prose+tables at the governance layer — no engine constants, no runtime behavior, no schema change, no numeric risk-band change.
+
+1. `~/.hermes/knowledge/SPEC-STRATEGY-CLASSES-AGGRESSION-TIERS.md` v0.1 (L-CRYPTO-18) — strategy classes (scalper / swing / position / hedge) and aggression tiers (TIER_1_CONSERVATIVE / TIER_2_BASE / TIER_3_AGGRESSIVE) with concrete bands (hold-time, R:R, notional cap, concurrent positions, equity-at-risk, drawdown tolerance) AND the class × tier legality matrix.
+2. `~/.hermes/knowledge/SPEC-MARKET-REGIMES.md` v0.1 (L-CRYPTO-19) — 7-value regime vocabulary (EARLY_CYCLE / MID_CYCLE / LATE_CYCLE / DISTRIBUTION / RISK_OFF / RECOVERY / UNKNOWN) with regime → tier gate matrix and legacy aliases (CAPITULATION → RISK_OFF; EUPHORIA → LATE_CYCLE).
+
+**Why:** Directive §3 (2026-06-19) shifted focus to higher-level crypto learning and strategy-class/aggression-tier/market-regime definition work at the governance/spec layer. No new code. Numeric bands explicitly labeled "governance guardrails and typical ranges, NOT engine constants" per Marcelo direction; implementation-level constants in `SPEC-BINANCE-AUTONOMOUS-TRADER.md` and bot code may be **narrower** but must NOT exceed the L-CRYPTO-18 ceilings without a new L-CRYPTO rule.
+
+**Wire discipline:** Pure governance pass. The $75 pipeline (L-CRYPTO-14 / 15 / 16 / 17), Stage 6 emitter schema, Stage 7 BossMan gate, execution-layer $75 guard, sizing math, PAIRS, .env, PM2, cron, and Telegram behavior remain **frozen**. No new crons. No Telegram pings. No PM2 or .env changes.
+
+**Files (local only, no push per L-CRYPTO-11):**
+
+- ✅ `~/.hermes/knowledge/SPEC-STRATEGY-CLASSES-AGGRESSION-TIERS.md` — NEW, ~155 lines, prose + tables + 4 cross-refs
+- ✅ `~/.hermes/knowledge/SPEC-MARKET-REGIMES.md` — NEW, ~174 lines, prose + 7-regime catalogue + tier gate + legacy alias
+- ✅ `LEARNED_CRYPTO_INTELLIGENCE.md` — rule count 17 → 19; L-CRYPTO-18 + L-CRYPTO-19 added (pure spec pointers)
+- ✅ `SPEC-BINANCE-AUTONOMOUS-TRADER.md` — bumped to v1.7; "Upstream governance specs" subsection appended; v1.7 deltas line; frozen-pipeline reminder
+- ✅ Obsidian + BossMan docs mirrors (parity check below)
+- ✅ `daily-radar-pipeline/SKILL.md` — one-line cross-ref to both new governance specs
+
+**Mirrors (3-mirror parity):** `~/Obsidian/Hermes/40_Projects/Active/PROJ-2026-06_crypto-trading-intelligence/` and `~/Repos/BossMan/docs/crypto-trading-intelligence/`.
+
+**Commit (local only, NO push per L-CRYPTO-11):** pending — will commit only my own files; will not touch sibling subagent commits.
+
+**No-drift verification (confirmed):**
+
+- ✅ No changes to `server.js`, `scripts/_execution_floor_guard.js`, `scripts/_stage6_*`, `scripts/_stage7_*`, `data/bot.db`, `.env`, `ecosystem.config.cjs`, or any cron expression.
+- ✅ PM2 process for binance-bot still on port 8104; no restart needed (no code touched).
+- ✅ Rule count: 17 → 19 (LEARNED only; SPEC v1.6 → v1.7; PHASEREPORT entry appended).
+- ✅ BossMan decision artifact schema (L-CRYPTO-15) unchanged: same `per_coin[sym].strategy_class` / `per_coin[sym].aggression_tier` / `metadata.regime_today` fields, same enum values, same numeric types.
+
+**Open items (unchanged):**
+
+- Per-trade qualify integration using `strategy_class` + `aggression_tier` (separate card, frozen).
+- HARD GATE §B (LIVE-readiness): still paused pending second-pass `canTrade` review.
+- Regime evidence-base linking (existing memo corpus to SPEC-MARKET-REGIMES §6) — pointer only; no content rewrite in this pass.
+- Position sizing math for tiers beyond the notional cap (L-CRYPTO-18 §6 open question, separate card).
+- Hedge sizing math (L-CRYPTO-18 §6 open question, separate card).
+- Push deferred (per L-CRYPTO-11 + standing macOS-git-hang rule).
+
+
+## 2026-06-28 — Crypto weekly review (L-CRYPTO-14 digest, no new tasks)
+- mode: PAPER (behavioral); API mode field = "LIVE" string drift, unchanged from 2026-06-21
+- regime: MID_CYCLE / UNCERTAINTY / confidence=0.45 (7th consecutive week at this reading)
+- regime basis: -999% annualized (was -139% last week; 7× widening — methodology audit recommended)
+- intel age: 6d 20h stale (same as last week); trigger threshold 7d hit by next cron
+- Stage 6 emitter: 9 days since last bossman_decision.json (was 2d last week — escalated from routine observation to stalled pipeline)
+- curriculum parent t_e53da070: BLOCKED (agent crash x3) — new state vs. prior weeks
+- decisions in latest artifact (2026-06-19 23:02): 9 QUALIFY / 6 DENY; floor audit clean; mutation NONE
+- cost: $0.00 (0 LLM calls — within ≤1-call weekly budget)
+- brief: ~/Obsidian/Hermes/40_Projects/Active/PROJ-2026-06_crypto-trading-intelligence/weekly-reviews/crypto-review-2026-06-28.md
+- commit: b23db8c (local; remote push BLOCKED on rebase conflict in ROUTING-RULES.md — see Step 7 note)
+
+## 2026-07-05 — Crypto weekly review (L-CRYPTO-14 digest, no new tasks)
+- mode: PAPER (behavioral); API mode field = "LIVE" string drift, unchanged from prior 3 weeks
+- regime: MID_CYCLE / **CONFIRMED** / confidence=**0.65** (was UNCERTAINTY/0.45 — first material regime-confidence move in 8+ weeks)
+- regime basis: **+1401% annualized** (was -999% last week; net 14-day swing = 1540pp from -139% → +1401%) — **new PUMP_AND_DUMP_RISK flag ACTIVE/HIGH**
+- intel age: 5d 19h stale (eased from 6d 20h; one new snapshot 2026-06-29)
+- Stage 6 emitter: **15d 18h since last bossman_decision.json** — but reframed this week from "stalled pipeline" to **gated on Marcelo preview approval** (card `t_bb2fd054` blocked since 2026-06-19)
+- BTC: $60,409 (-5.96% WoW); drawdown -52.09% (widened 3.04pp); volatility regime NORMAL → LOW
+- curriculum parent t_e53da070: BLOCKED (carry-forward; agent crash x3)
+- decisions in latest artifact (2026-06-19 23:02): 9 QUALIFY / 6 DENY; floor audit clean; mutation NONE
+- approval-boundary item this week: **t_bb2fd054 Stage 6 emitter preview** — single approval request surfaced in F1
+- cost: $0.00 (0 LLM calls — within ≤1-call weekly budget)
+- brief: ~/Obsidian/Hermes/40_Projects/Active/PROJ-2026-06_crypto-trading-intelligence/weekly-reviews/crypto-review-2026-07-05.md
