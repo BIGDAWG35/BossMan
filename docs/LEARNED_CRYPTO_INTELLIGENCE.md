@@ -27,7 +27,7 @@ The weekly trading-learning review (`weekly-review-template.md` in the project f
 
 ## Current L-CRYPTO rule count
 
-15 (L-CRYPTO-01 through L-CRYPTO-15).
+17 (L-CRYPTO-01 through L-CRYPTO-17).
 
 ## L-CRYPTO-14: BossMan is the autonomous crypto decision engine (amends L-CRYPTO-03)
 
@@ -311,4 +311,94 @@ Stage 6 NEVER writes `.env`, `server.js`, `pre-trade-hook.js`, `ecosystem.config
 **Mirrors:**
 
 - `~/Obsidian/Hermes/40_Projects/Active/PROJ-2026-06_crypto-trading-intelligence/LEARNED_CRYPTO_INTELLIGENCE.md`
+
+## L-CRYPTO-16: Stage 7 BossMan Decision Reader — read-and-gate only (L-CRYPTO-14 enforcement wire)
+
+**Status:** 2026-06-19 — Phase 2-4 wired (preview-gated, approved by Marcelo). Module live, server.js integration live, 21/21 unit fixtures pass, no PM2 restart, no .env/PM2/cron/execution/sizing drift.
+
+**Scope:** Defines the contract for `scripts/_bossman_decision.js` and the corresponding `server.js` integration. Bot READS `data/bossman_decision.json` (Stage 6 emitter artifact) to gate signals. Per-coin decision drives a hard allow/block. Stage 7 is a sibling gate to `checkIntelGate()` — does NOT replace it.
+
+**Hard rules — enforced by `scripts/_bossman_decision.js` BEFORE any allow:**
+
+1. **Read-only.** Module reads the artifact; never writes it. Stage 6 is the sole writer (L-CRYPTO-15). Stage 7 MUST NOT mutate `data/bossman_decision.json`, `.env`, `server.js`, `ecosystem.config.cjs`, `pre-trade-hook.js`, cron jobs, or PM2 config.
+2. **Fail-CLOSED on every error path.** Missing file → `BOSSMAN_FILE_MISSING`. Bad JSON / schema_version / decision_layer / l_crypto_rule → `BOSSMAN_SCHEMA_INVALID`. Date ≠ today UTC OR mtime > 24h → `BOSSMAN_STALE`. Symbol absent from per_coin/universe/index → `BOSSMAN_SYMBOL_MISMATCH`. DENY → `BOSSMAN_DENY`. WATCH_ONLY → `BOSSMAN_WATCH_ONLY`. Any non-QUALIFY → block, journal, never execute.
+3. **Schema constants are fixed.** `metadata.schema_version == "1.0"`, `metadata.decision_layer == "bossman_v1"`, `metadata.l_crypto_rule == "L-CRYPTO-14"`. `universe.active.length == 15`, `per_coin.length == 15`. Any deviation → `BOSSMAN_SCHEMA_INVALID`.
+4. **Per-coin wins over universe map.** When `per_coin[sym].decision` is present, it overrides the universe-derived mapping (`active` → QUALIFY, `watchlist` → WATCH_ONLY, `do_not_touch` → DENY).
+5. **No symbol normalization.** Uppercase PAIRS and uppercase per_coin symbols are canonical. Any case mismatch (e.g. `solusdt` vs `SOLUSDT`) → `BOSSMAN_SYMBOL_MISMATCH`. No lowercase folding, no separator rewriting.
+6. **Sizing/execution fields are NOT consulted.** `strategy_class` and `aggression_tier` from the artifact are reserved for a separate future sizing/execution card. Stage 7 reads `decision` only.
+7. **Sibling to intel gate, not a replacement.** `checkIntelGate()` runs first; only signals that pass intel gating reach the Stage 7 gate. Stage 7 is the next layer; both must allow.
+8. **Env flag default ON.** `BOSSMAN_DECISION_GATE_ENABLED` defaults to `true`. Setting to `false` (string `"false"`) makes the gate pass-through; intended for emergency disable only. State introspection via `getBossmanDecisionState()` for dashboards.
+9. **Cache discipline.** In-memory cache TTL = 5 minutes. Cache is invalidated on file mtime change so daily-overwrite files are picked up within the 5-min window. No disk cache. No global state outside the module.
+
+**Denial reason codes (server.js journals via `hookResult: 'rejected'`, `error: 'bossman_gate:<code>'`):**
+
+- `BOSSMAN_FILE_MISSING` — file absent or unreadable.
+- `BOSSMAN_SCHEMA_INVALID` — JSON parse fail, schema_version / decision_layer / l_crypto_rule mismatch, or universe/per_coin length drift.
+- `BOSSMAN_STALE` — `metadata.date` ≠ today UTC OR file mtime > 24h.
+- `BOSSMAN_SYMBOL_MISMATCH` — symbol absent from per_coin/universe index (case-sensitive).
+- `BOSSMAN_DENY` — per_coin.decision == `DENY`.
+- `BOSSMAN_WATCH_ONLY` — per_coin.decision == `WATCH_ONLY`.
+- `bossman_qualify` — allow (not a denial; logged for audit).
+- `bossman_gate_disabled` — env flag `false`; gate pass-through.
+
+**Verification (Phase 2-4 — module + integration live, no runtime drift):**
+
+- `node scripts/_test_bossman_decision.js` runs 21/21 fixtures covering all six deny-code paths, the QUALIFY happy-path, the disabled-flag path, the per_coin override, the symbol case-mismatch, and state introspection.
+- `node -c server.js` and `node -c scripts/_bossman_decision.js` syntax-clean.
+- `pm2 jlist` shows `binance-bot` PID unchanged before/after integration (PID 4696 baseline maintained).
+- `md5sum .env ecosystem.config.cjs pre-trade-hook.js package.json` unchanged before/after wire-up (no PM2/cron/.env/execution mutation).
+- `git diff --stat` on `server.js` shows 28 insertions, 1 deletion; no other tracked file modified by this card.
+- `git check-ignore -v data/bossman_decision.json` confirms artifact stays out of git.
+
+**Anti-pattern to avoid (Stage 7 misuse):**
+
+- Reading `strategy_class` or `aggression_tier` to influence sizing — those fields are advisory only on this gate path; a separate future card must approve any sizing tie-in.
+- Normalizing symbols to lowercase — silently widens the symbol-mismatch check; fail-closed is the contract.
+- Catching gate errors and "falling through to allow" — fail-CLOSED is permanent; emergency disable is via env flag only.
+- Adding Telegram output for each gate decision — no-spam contract (L-CRYPTO-03 + standing rule); gate state is observable on dashboards.
+- Writing the artifact from Stage 7 — Stage 6 is the sole writer; Stage 7 is read-only.
+- Treating `BOSSMAN_GATE_DISABLED=true` as a default — it is for emergency disable only; default is `true`.
+
+**Wire discipline (mirrors L-CRYPTO-03 + L-CRYPTO-15):**
+
+Stage 7 NEVER writes `.env`, `server.js` (config portions), `pre-trade-hook.js`, `ecosystem.config.cjs`, cron jobs, or PM2 config. Stage 7 reads `data/bossman_decision.json` (set by Stage 6) and the env flag `BOSSMAN_DECISION_GATE_ENABLED`. The bot's `checkIntelGate()` continues to read `data/daily_radar.json` unchanged. Insertion point in `server.js` is between the intel gate pass (line 1201) and the in-flight marker (`inFlight.add(sig.symbol)`); uses the existing rejected-signal journaling pattern exactly. No new journal columns. No new PM2 metrics beyond the additive `bossmanDecisionGate` boolean on dashboard payloads.
+
+**Mirrors:**
+
+- `~/Obsidian/Hermes/40_Projects/Active/PROJ-2026-06_crypto-trading-intelligence/LEARNED_CRYPTO_INTELLIGENCE.md`
 - `~/Repos/BossMan/docs/LEARNED_CRYPTO_INTELLIGENCE.md`
+
+## L-CRYPTO-17: Execution-layer $75 hard floor — independent safety net (2026-06-19)
+
+**Status:** 2026-06-19 — Phase 11A prep, approved by Marcelo (no observation window), wired without PM2 restart, 18/18 unit fixtures pass, no .env/PM2/cron/sizing/numeric-band drift.
+
+**Scope:** A third independent $75 floor, located inside `executeTrade()` at `server.js` line ~358 (the FIRST line of the execution path). Pure guard module at `scripts/_execution_floor_guard.js`. Runs AFTER signal/sizing (line ~906, ~911), AFTER intel gate (line ~1209), AFTER BossMan decision gate (line ~1223).
+
+**Contract:**
+
+- Computed trade notional = `quantity * entry`. If `< 75` USD → REJECT.
+- Reason code: `EXECUTION_FLOOR_BELOW_75` (constant string in `scripts/_execution_floor_guard.js`).
+- Blocks BOTH PAPER and LIVE paths (strict interpretation; PAPER sub-75 is still an execution).
+- No resizing, no auto-bump — cancel + journal only.
+- Counter `_executionFloorRejections` (in-memory, PM2-lifetime) exposed via `console.log` lines and `pm2 logs`. No dashboard mutation (scope guardrail).
+
+**Why three layers (not one):**
+
+| Layer | Rule | Card |
+|---|---|---|
+| Signal / sizing | No sub-75 decisions emitted | Stage 6 / L-CRYPTO-14 |
+| BossMan gate | No sub-75 trades qualified | Stage 7 / L-CRYPTO-16 |
+| Execution layer | No sub-75 trades executed | L-CRYPTO-17 (this) |
+
+Each additive. If upstream sizing math drifts, if a race condition ever passes a sub-75 quantity, if a manual trigger injects a small order — this guard catches it last.
+
+**Stricter-scope decisions surfaced (not auto-decided):**
+
+- PAPER sub-75 blocked: chose YES (stricter interpretation). If you want PAPER-only to pass when running simulations, one env-flag toggle can override.
+- Counter dashboard field: chose NO (PM2-logs only). Add later if you want a metric.
+
+**Files (Phase 11A prep, 2026-06-19):**
+
+- `scripts/_execution_floor_guard.js` (NEW, ~74 lines) — pure guard module
+- `scripts/_test_execution_floor.js` (NEW) — 18/18 fixtures
+- `server.js` (+39/-0, additive) — guard inserted as FIRST line of executeTrade()

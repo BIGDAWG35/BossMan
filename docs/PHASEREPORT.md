@@ -704,3 +704,19 @@ Decisions: QUALIFY=9, DENY=6. No sub-75 rows. `next_action = human_review_or_app
 - approval-boundary item this week: **t_bb2fd054 Stage 6 emitter preview** — single approval request surfaced in F1
 - cost: $0.00 (0 LLM calls — within ≤1-call weekly budget)
 - brief: ~/Obsidian/Hermes/40_Projects/Active/PROJ-2026-06_crypto-trading-intelligence/weekly-reviews/crypto-review-2026-07-05.md
+
+## 2026-07-12 — Crypto weekly review (run 5) + bot recovery from 36h sqlite3 outage
+- **INCIDENT recovered:** binance-bot offline ≥36h (2026-07-11T04:00 PT → 2026-07-12T18:00 PT). Root cause: sqlite3 native binding built for arm64, Mac is x86_64 → dlopen failure → auto-recovery budget (3/3) exhausted. Fix: `npm rebuild sqlite3` + reset `auto-recovery-state.json` + `pm2 start`. Bot online now (pid 64855).
+- **NEW finding:** `PAPER_MODE=false` at .env level since 2026-06-15 (NOT a string drift as 2026-06-21/06-28/07-05 briefs framed). Runtime still effectively PAPER via INTEL_GATE + BossMan gating + LIVE_PILOT_MAX_NOTIONAL=75. Surfaced for operator confirmation, not flipped (L-CRYPTO-20).
+- **LESSON added:** cron-shell PATH omission silently disables auto-recovery (no Telegram surface for ≥36h outage). Future cron changes should set explicit PATH or source the user's shell rc.
+- regime: MID_CYCLE / **UNCERTAINTY rolled back** (0.65 → 0.45) — CONFIRMED was a 1-week peak, not structural flip
+- regime basis: **+1638% annualized** (was +1401% last week; net 17-day swing = 1777pp from -139% → +1638%) — **PUMP_AND_DUMP_RISK ACTIVE/HIGH, week 3**
+- intel age: 6d 3h stale (refresh 2026-07-06; within 7d soft-signal)
+- Stage 6 emitter: **22d 19h since last bossman_decision.json** — still gated on Marcelo preview approval (card `t_bb2fd054` blocked since 2026-06-19; week 5)
+- BTC: $64,396 (+6.6% WoW); drawdown -48.92% (narrowed 3.17pp); volatility regime LOW
+- daily_radar: 0 HOT / 28 WARM / 93 WATCH / 0 COLD — universe flattened, no breakout candidates
+- curriculum parent t_e53da070: BLOCKED (carry-forward; agent crash x3)
+- decisions in latest artifact (2026-06-19 23:02): 9 QUALIFY / 6 DENY; floor audit clean; mutation NONE
+- approval-boundary items this week: **(NEW) PAPER_MODE=false env-level LIVE confirmation** + **(carry-forward week 5) t_bb2fd054 Stage 6 emitter preview** — both surfaced as single approval requests in F1
+- cost: $0.00 (0 LLM calls — within ≤1-call weekly budget)
+- brief: ~/Obsidian/Hermes/40_Projects/Active/PROJ-2026-06_crypto-trading-intelligence/weekly-reviews/crypto-review-2026-07-12.md

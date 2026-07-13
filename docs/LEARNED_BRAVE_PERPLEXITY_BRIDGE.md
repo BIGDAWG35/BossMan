@@ -88,3 +88,103 @@ Brave does not distribute a separate ARM64 macOS build. The single x86_64 binary
 - Profile data (bookmarks, wallet, history) intact
 - Perplexity bridge verified end-to-end with Marcelo's actual profile
 - No separate ARM64 Brave build exists — current build is correct
+
+---
+
+## 2026-06-19 Update — Browser QA / Perplexity via CDP (live, in pipeline)
+
+**Important:** The 2026-05-28 section above describes the **CuaDriver / Hermes Computer Use** path. That path is **dead on this host** (CuaDriver returns zero-bounds, Perplexity desktop app has the same bug — see memory entry "Perplexity = Browser QA via CDP only"). The **new working path** uses raw WebSocket CDP against a **separate, isolated Brave instance** with its own user-data-dir.
+
+### The CDP-driven path (current)
+
+```bash
+# 1. Launch isolated Brave on a separate CDP port (does NOT touch Marcelo's profile)
+"/Applications/Brave Browser.app/Contents/MacOS/Brave Browser" \
+  --remote-debugging-port=9222 \
+  --user-data-dir=/tmp/brave-debug \
+  --no-first-run \
+  --no-default-browser-check \
+  --disable-features=Translate \
+  about:blank > /tmp/brave-debug.log 2>&1 &
+
+# 2. Node code connects via WebSocket and drives Perplexity
+#    See: /Users/bigdawg/Projects/binance-bot/scripts/cdp_client.js
+#    - openPerplexity(target)        -> creates a new tab
+#    - queryPerplexity(prompt, opts) -> navigates to /search?q=<encoded>,
+#                                       polls body, extracts answer
+#    - poll heuristic: indexOf('sources') (NOT regex on [1] chips!)
+```
+
+### Pipeline integration
+
+The CDP path is wired into `scripts/daily_research.js` as `--source browserqa`:
+
+```bash
+# Preferred path:
+node scripts/daily_research.js --phase-b-all --source browserqa
+
+# Fallback chain (per-symbol, automatic):
+#   browserqa -> brave text search -> internal-only derivation
+#   (never blocks; never fabricates external dims)
+```
+
+`scripts/daily_pipeline.sh` prefers `browserqa`; if the whole Phase B fails, the wrapper
+runs `--source internal` as the last-resort degraded mode and logs a `stage_2_phase_b_source_tally`
+event to `RUN_LOG` showing the source distribution for the run.
+
+### Three traps that took real debugging to find
+
+1. **No submit button.** Perplexity's Search mode has no visible submit button — typing
+   + `form.requestSubmit()` does NOT trigger Perplexity's React submit handler. The
+   reliable path is **navigate directly to** `https://www.perplexity.ai/search?q=<urlencoded>`.
+   The SPA reads `?q=` and bootstraps straight into the answer view.
+2. **Superscript citations, not [1] chips.** Polling must use
+   `indexOf('Sources')` to detect a finished answer — the citations in the answer body
+   are ¹²³ superscript characters, not bracketed `[1] [2] [3]`. Regex on `[1]` chips
+   matches "d" instead.
+3. **JSON.stringify doubles-escapes regex.** When a CDP `Runtime.evaluate` expression
+   is wrapped in `JSON.stringify(evalResult)` and the expression contains a regex
+   literal, `\\d` is double-escaped by the JSON wrapper and arrives at runtime as `\d`,
+   which matches single characters like "d". Use `indexOf` instead of regex to avoid
+   the escape game entirely.
+
+### File map
+
+| Path | Role |
+|---|---|
+| `/Users/bigdawg/Projects/binance-bot/scripts/cdp_client.js` | Raw WebSocket CDP client (no new deps) |
+| `/Users/bigdawg/Projects/binance-bot/scripts/daily_research.js` | `--source browserqa` integration, `phaseB()` dispatch |
+| `/Users/bigdawg/Projects/binance-bot/scripts/daily_pipeline.sh` | Preferred path + source-tally audit |
+| `/Users/bigdawg/.hermes/knowledge/crypto-intel/STAGE_2_7_CAPTURE_2026-06-19.md` | Stage 2/7 post-mortem (original capture) + 2026-06-19 Recovery note |
+| `/Users/bigdawg/.hermes/knowledge/AUTOMATION_INVENTORY.md` | Cron + LaunchAgent inventory (header references this runbook) |
+
+### Why an isolated profile?
+
+Marcelo's actual Brave profile (`~/Library/Application Support/BraveSoftware/Brave-Browser/Default/`)
+contains bookmarks, wallet, AI Chat history, and the `cello35` Perplexity account login.
+A bot-driven tab that submits research queries should NOT share that profile state:
+- logged-in sidebars pollute page text and confuse naive heuristics
+- bot actions get mixed into Marcelo's browsing history
+- concurrent automation can clobber open tabs
+
+The isolated `/tmp/brave-debug` profile solves all three. Logged-in Perplexity state
+is preserved in the main profile; the bot path uses a clean default-profile that the
+user can also log into separately if human QA is needed.
+
+### Verification
+
+Smoke test (2026-06-19, BTCUSDT):
+```
+[browserqa] BTCUSDT OK (14228ms, 6406 chars)
+Header: # Source: Perplexity Browser QA (via CDP, full synthesis)
+TOKEN_LOG: source=perplexity_browser_qa, model=perplexity_search, ok=true
+```
+
+### Related decisions (D-12 / D-13 / D-14 / D-15 / D-16 / D-17)
+
+- **D-12** Perplexity = internal derivation only when no CDP path
+- **D-13** Two-layer USDT-symbol sanitization (defense in depth)
+- **D-14** Cron silent-on-healthy delivery pattern
+- **D-15** Source-labelling honesty in memo (3-way switch on `research.source`)
+- **D-16** Perplexity has no submit button — Enter via real Input.dispatchKeyEvent OR direct URL `/search?q=...`
+- **D-17** Poll with `indexOf('sources')`, not regex on citation chips

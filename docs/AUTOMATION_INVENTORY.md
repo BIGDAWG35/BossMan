@@ -1,9 +1,20 @@
 # Automation Inventory — Cron Jobs + LaunchAgents
 
-**Snapshot:** 2026-06-13 (updated with crypto weekly review cron `ea0157d715fa`)
+**Snapshot:** 2026-06-19 (updated: Browser QA / Perplexity via CDP restored, no new crons needed)
 **Owner:** BossMan Hermes
 **Source of truth:** `hermes cron list` (cron) + `launchctl list` (LaunchAgents)
 **Codified in:** `~/.hermes/SOUL.md § Cron + Automation Policy — No Spam, High Signal`
+
+**Recent changes (2026-06-19):**
+- Browser QA / Perplexity path restored via raw WebSocket CDP — see
+  `~/.hermes/knowledge/LEARNED_BRAVE_PERPLEXITY_BRIDGE.md` (mirrored at
+  `/Users/bigdawg/Repos/BossMan/docs/LEARNED_BRAVE_PERPLEXITY_BRIDGE.md`).
+- Stage 2/7 capture updated: `~/.hermes/knowledge/crypto-intel/STAGE_2_7_CAPTURE_2026-06-19.md`.
+- `daily_pipeline.sh` prefers `--source browserqa`; internal-only derivation is now
+  the last-resort fallback, not the default. Per-symbol fallback chain:
+  `browserqa -> brave text search -> internal-only`.
+- No new crons registered; the existing `2141a756a0aa` (daily_pipeline.sh @ 12:00 PT)
+  continues to do the work.
 
 BossMan updates this file whenever the cron/LaunchAgent set changes. Every entry below must justify its existence in one line. Jobs that no longer serve a real purpose get archived (not deleted — keep audit trail).
 
