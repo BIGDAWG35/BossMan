@@ -720,3 +720,20 @@ Decisions: QUALIFY=9, DENY=6. No sub-75 rows. `next_action = human_review_or_app
 - approval-boundary items this week: **(NEW) PAPER_MODE=false env-level LIVE confirmation** + **(carry-forward week 5) t_bb2fd054 Stage 6 emitter preview** — both surfaced as single approval requests in F1
 - cost: $0.00 (0 LLM calls — within ≤1-call weekly budget)
 - brief: ~/Obsidian/Hermes/40_Projects/Active/PROJ-2026-06_crypto-trading-intelligence/weekly-reviews/crypto-review-2026-07-12.md
+
+## 2026-07-19 — Crypto weekly review (run 6)
+- mode: LIVE-configured at env (PAPER_MODE=false, mtime 2026-06-15; runtime effectively PAPER via INTEL_GATE + BossMan gating + LIVE_PILOT_MAX_NOTIONAL=75)
+- regime: MID_CYCLE / CONFIRMED (0.65) — flipped BACK from UNCERTAINTY (0.45); alternating 0.45/0.65 weekly
+- regime basis: **-1014% annualized** (was +1638% last week; 21-day range 2652pp, oscillating, not trending) — NEGATIVE_FUNDING_BIAS ACTIVE / MEDIUM
+- intel age: 6d 2h stale (refresh 2026-07-13; within 7d soft-signal)
+- Stage 6 emitter: **30d 1h 58m since last bossman_decision.json** — first week crossing the 30-day hard ceiling (carry-forward from week 5 22d 19h; +7d slip in one cycle). Gated, not stalled (Lesson #13).
+- BTC: $62,052 (-2.93% WoW); drawdown -50.78% (widened 1.86pp); volatility regime LOW; death cross week 10
+- daily_radar: 4 HOT / 7 WARM / 3 WATCH / 9 COLD — DeFi reactivated (sector_rank[0], 4 HOT: UNI, MKR, AAVE, SAND)
+- curriculum parent t_e53da070: BLOCKED (carry-forward week 6; agent crash x3)
+- decisions in latest artifact (2026-06-19 23:02): 9 QUALIFY / 6 DENY; floor audit clean; mutation NONE
+- bot uptime: 7d continuous since 2026-07-12 sqlite3 arch-mismatch recovery; pm2 restart delta = 0
+- 0 trades since 2026-05-11 (correct behavior given BossMan gating)
+- approval-boundary items: **(week 2 carry-forward) PAPER_MODE=false env-level LIVE confirmation** + **(week 6 carry-forward) t_bb2fd054 Stage 6 emitter preview** — both surfaced as single approval requests in F1
+- new material finding: Stage 6 staleness crossed 30-day hard ceiling
+- cost: $0.00 (0 LLM calls — within ≤1-call weekly budget)
+- brief: ~/Obsidian/Hermes/40_Projects/Active/PROJ-2026-06_crypto-trading-intelligence/weekly-reviews/crypto-review-2026-07-19.md
