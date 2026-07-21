@@ -25,6 +25,11 @@ Mirrors (kept in sync):
 - `~/Repos/BossMan/docs/ROUTING-RULES.md` (GitHub mirror)
 - `~/Repos/BossMan/docs/perplexity-spaces/agent-os/03-routing-rules.md` (GitHub Spaces mirror)
 
+**Obsidian Vault Workflow Standard (2026-06-13):**
+- `~/.hermes/knowledge/OBSIDIAN_VAULT_WORKFLOW.md` (Hermes knowledge — authoritative)
+- `~/Desktop/CLAW-Backup/OBSIDIAN_VAULT_WORKFLOW.md` (Obsidian vault mirror)
+- `~/Repos/BossMan/docs/OBSIDIAN_VAULT_WORKFLOW.md` (GitHub mirror)
+
 Cross-references:
 - `~/.hermes/AGENTS.md` — Model Routing (parent policy)
 - `~/.hermes/OPERATINGBLUEPRINT.md` — Operating procedure
@@ -41,8 +46,8 @@ Cross-references:
 | **Perplexity Search (Pro)** | Step 1 — research. Always the first step for any non-trivial build or troubleshooting. Pulls current docs, best practices, API references, and gotchas so we never guess when we can read. |
 | **M3 (MiniMax M3)** | Step 2 — design. Marcelo's thinking and planning brain. Understands the request, defines architecture, breaks work into Kanban cards, writes acceptance criteria. Default for routine work. BLOCKED for SquarePayouts. |
 | **DeepSeek** | Step 3 — heavy coding. Primary builder for complex or critical backend logic, data work, or debugging. Also the preferred **Step 5 — QA pass** model (red-team mindset). |
-| **Llama (Ollama local)** | Step 4 — cheap grinder. Bulk transforms, scaffolding, refactors, test generation, cleanup. |
-| **OpenAI** | Step 3 — production finisher. Primary builder when output is user-facing, high-risk, or needs polished style. Final polish only. |
+| **Llama (Ollama local)** | Step 4 — **bulk grinder (default).** Bulk transforms, scaffolding, refactors, test generation, cleanup. **DEFAULT for Step 4 — use before any paid model. Free, local, no per-call cost. Escalate to DeepSeek or OpenAI only as a final sanity pass on critical components, never rewriting large chunks that are already acceptable.** |
+| **OpenAI** | Step 3 — **production finisher.** Primary builder when output is user-facing, high-risk, or needs polished style. **Reserve for final polish only. NOT the Step 4 default** — Llama handles bulk work. Step 5 QA fallback (after DeepSeek). |
 | **Claude** | Step 6 — long-form documentation. Runbooks, handoff docs, multi-page explanations, architecture reviews. Only after the code is stable AND QA has passed (or issues are logged). |
 | **Perplexity Computer** | **Rare escalation tool** — multi-step Mac/browser workflows that span research, code, and deployment. **NOT part of the everyday default path.** Used only on projects with `escalate_to_computer: yes` set by BossMan and approved by Marcelo. Budget: 10,000 credits/month. |
 | **OpenClaw / LBC35** | Delegated executor — does **not** choose models, does **not** trigger Perplexity Computer. Executes the `model_plan:` and `escalate_to_computer:` flags from the handoff packet. |
@@ -89,11 +94,13 @@ For each build card, pick exactly one primary builder:
 
 Note the primary builder in the card body under a `model_plan:` line.
 
-### Step 4 — Harden and clean up (Llama)
+### Step 4 — Harden and clean up (Llama) — Llama is the DEFAULT
+
+> **Llama is the Step 4 default. Running Step 4 via OpenAI without explicit reason is drift (P3 cost waste).**
+
 - Use **Llama** to handle bulk cleanup and test generation.
-- Use **DeepSeek** or **OpenAI** only as a final sanity pass on
-  critical components. Do not rewrite large chunks that are already
-  acceptable.
+- **Reserve DeepSeek and OpenAI for final sanity passes on critical components only** — never rewrite large chunks that are already acceptable.
+- If OpenAI was used for Step 4 bulk work, document the explicit reason on the card.
 
 ### Step 5 — QA PASS (DeepSeek red-team) — new in v3.0
 
@@ -385,49 +392,183 @@ BossMan put in the handoff packet.
 | 1.0 | 2026-05-08 | Initial routing rules (Hermes-first). |
 | 2.0 | 2026-06-03 | Canon rewrite: 5-step Default Build Flow (Perplexity → M3 → primary builder → Llama → Claude). LBC35 disowns model choice. |
 | 3.0 | 2026-06-03 | **"10/10" update.** 5-step flow → 6-step flow with mandatory Step 5 QA pass (DeepSeek red-team, mandatory for critical cards). Perplexity Computer as a rare escalation tool (10k credits/month, `escalate_to_computer:` flag). Light build metrics (`build_passes`, `rewrite_scope`) + monthly review. Fallback chain extended to QA. Per-card template updated with `qa_required`, `qa_model`, `qa_status`, `escalate_to_computer`, `build_passes`, `rewrite_scope`. |
+| 3.1 | 2026-06-18 | **Phase 4 — Multi-Project OS + Loop Engine.** Added §10. Strict `project:` tag (closed vocabulary), 1–2 active cards per project, mandatory Tier-4/5 reuse-check via `ARTIFACT_INDEX.md`. **§1–9 unchanged.** |
+| 3.2 | 2026-06-18 | **§10.6 — Per-project concurrency cap (dispatcher pick-time rule).** Cap mechanism revised: was demote-to-todo (collided with `recompute_ready()` auto-promote), now opt-in dispatcher-time skip via `kanban.max_in_progress_per_project` config key. Status mutations forbidden for cap compliance. Telemetry via `DispatchResult.skipped_per_project_capped`. §1–9 unchanged; §10.2 mechanism revision only. |
 
 ---
 
-### 8. Troubleshooting Mode & Routing Lock (2026-06-16)
+## Troubleshooting Mode (Incidents)
 
-- Drift discovered (2026-06-15 audit): ~/.hermes/config.yaml still had model.default: MiniMax-M3 (line 2), ~/.hermes/skills/troubleshooting-mode/SKILL.md did not exist, and ~/.hermes/knowledge/ROUTING-RULES.md had no ## Troubleshooting Mode (Incidents) appendix. The v3.0 6-step routing map was documented but not enforced — a 12–13 day gap between spec and config.
-- Routing lock applied (2026-06-16): model.default is now qwen2.5:3b (cheapest free local model) with a permanent comment-block forbidding MiniMax-M3 as global default. provider: minimax and base_url are unchanged. M3 remains allowed only as the Step 2 orchestrator slot in the v3.0 routing map, never as a silent global default. [file:2]
-- Troubleshooting Mode wired (2026-06-16): skill file ~/.hermes/skills/troubleshooting-mode/SKILL.md exists with the 8-step incident protocol (Classify → Fact-gather → Route via v3.0 map → Design fix → Apply → Verify → Report ALERT → Escalate). ROUTING-RULES.md now ends with the ## Troubleshooting Mode (Incidents) appendix. Auto-triggers: status: incident, status: blocked + body matches incident|outage|broken|down|not working|error, label: troubleshooting, or /troubleshoot from chat. [file:3]
-- Escalation anchors: ~/.hermes/knowledge/error-escalation.md (ALERT block format, Binance bot STOPPED, money-pipeline ≥ 10 restarts, Telegram/Tailscale disconnects) and ~/.hermes/knowledge/health-monitoring.md (PM2 health rules, service drift detection) are the source of truth — both referenced from the new skill and the ROUTING-RULES appendix. [file:1][file:3]
-- Verification method (drift-check): all three commands below must return “good” for the routing lock + Troubleshooting Mode to be considered live:
-  - grep -n "^  default:" ~/.hermes/config.yaml
-  - ls -la ~/.hermes/skills/troubleshooting-mode/SKILL.md
-  - grep -n "^## Troubleshooting Mode (Incidents)" ~/.hermes/knowledge/ROUTING-RULES.md
-- SquarePayouts carve-out preserved: M3 is permanently BLOCKED on SquarePayouts in the new skill; Step 2 auto-substitutes Claude Sonnet-4 in that lane. No other service has a carve-out as of this writing.
+When a kanban card is an incident, bug, or system-health task, BossMan switches to Troubleshooting Mode instead of the normal 6-step build flow. The full protocol is at ~/.hermes/skills/troubleshooting-mode/SKILL.md.
 
-### Hermes Doctor – Routing Drift Checks (Required)
+Triggers (any one):
+- card status: incident
+- card status: blocked AND body contains incident|outage|broken|down|not working|error
+- card has label: troubleshooting
+- user types /troubleshoot, "incident", "outage", "broken", "down", or "system health"
 
-Hermes doctor MUST fail with a health warning if any of these conditions are true:
+Routing — same 6-step map, no global default:
+- Step 1 (facts): Perplexity Search when web_research is wired; fallback is browser_navigate + read_file + terminal (PM2 / ports / cron / logs / hermes insights). Step 1 is fact-only — no guesses.
+- Step 2 (design): MiniMax-M3 decomposes the incident, except for SquarePayouts (M3 BLOCKED) and trading/money projects where caution is required.
+- Step 3 (fixes): Claude Sonnet-4 (production polish, careful diffs) or DeepSeek v4-flash (heavy backend code). One primary per fix.
+- Step 4 (cleanup): Qwen 14B via Ollama for bulk log / test / refactor work; Qwen 3B for tiny fast helpers. Helper, never the incident owner.
+- Step 5 (QA): DeepSeek v4-flash red-team. Mandatory for any fix touching money-pipeline, binance-bot, csdawg-dashboard, trading-control, or shared infrastructure (PM2 / cron / env / API keys). If DeepSeek is skipped, say so explicitly.
+- Step 6 (runbook): Claude Sonnet-4 writes the final answer in the 7-section template (Incident Summary, Type, Facts, Root Cause, Fix Plan, QA, Runbook Notes, Escalation).
 
-- `model.default` in `~/.hermes/config.yaml` is not `qwen2.5:3b`, or any global default is set to MiniMax-M3.
-- The Troubleshooting Mode skill file `~/.hermes/skills/troubleshooting-mode/SKILL.md` is missing or unreadable.
-- The routing appendix heading `## Troubleshooting Mode (Incidents)` is missing from `~/.hermes/knowledge/ROUTING-RULES.md`.
+Escalation: Page Marcelo immediately if Binance bot is online when it should be stopped, money-pipeline has ≥ 10 restarts or is unresponsive, Telegram gateway is disconnected, Tailscale VPN is disconnected, or any critical service is completely unresponsive. Use the ALERT block from §7 of the troubleshooting-mode skill. [file:2][file:3]
 
-Recommended warning key:
-
-```yaml
-health:
-  warnings:
-    forbidden_global_default:
-      ok_when:
-        - model.default == "qwen2.5:3b"
-        - troubleshooting_mode_skill_present == true
-        - routing_rules_appendix_present == true
-      message: >
-        Routing configuration is drifting. Ensure model.default is qwen2.5:3b,
-        troubleshooting-mode skill exists, and ROUTING-RULES has the Troubleshooting
-        Mode (Incidents) appendix. Run hermes-drift-check and fix before proceeding.
-```
-
-Implementation note: `hermes doctor` should run the same checks as `hermes-drift-check` and surface this warning if any check fails, blocking routing/incident changes from being considered live.
+Known gaps to flag in every run: Perplexity Search not wired (use browser_navigate fallback); DeepSeek v4-flash dormant (1 call/30d, expect Claude fallback); LBC-35 profile not yet created.
 
 *This document is the single source of truth for the Default Build Flow
 v3.0, multi-model routing, the QA pass, Perplexity Computer
 escalation, and light build metrics. Updated by BossMan when model
 specializations, escalation patterns, cost tiers, or routing rules
 change. All mirrors kept in sync (spaces + GitHub).*
+
+---
+
+## 10. Phase 4 — Multi-Project OS + Loop Engine (2026-06-18)
+
+**Status:** ACTIVE. Strictly additive. §1–9 above are unchanged.
+
+Phase 4 adds two operating layers on top of the 6-step Default Build Flow
+described in §3:
+
+1. **Multi-Project OS** — every active Kanban card lives under exactly one
+   project (closed vocabulary in `PROJECT_VOCABULARY.md`); at most one
+   epic per project; at most 1 card in `running` + 1 card in `ready` per
+   project (the active-card cap). Cards with label `fast-track` are exempt.
+2. **Loop Engine** — every Tier-4/5 model call (DeepSeek / OpenAI /
+   Claude / Perplexity Computer) is preceded by a reuse-check against
+   `ARTIFACT_INDEX.md` and followed by an artifact save (if newly
+   produced). The reuse-check is a routing-ledger field, not a
+   recommendation.
+
+### 10.1 Project tag enforcement
+
+Every active Kanban card on the `bossman` board carries a `project:` line
+in its body. The value MUST be one of the closed tags in
+`PROJECT_VOCABULARY.md`. BossMan backfills missing tags on existing cards
+unilaterally (no approval needed); new cards are flagged at claim time
+if missing.
+
+### 10.2 Active-card cap (1–2 rule)
+
+| Project state | Maximum |
+|---|---|
+| `running` cards | 1 |
+| `ready` cards | 1 |
+| `todo` cards | unlimited (backlog) |
+| `blocked` cards | unlimited (paused, not active) |
+| `planned` epics | 1 |
+
+**Mechanism revision 2026-06-18 (v3.1 → v3.2):** The original cap was
+implemented by BossMan demoting excess cards to `todo` with a comment.
+That implementation was **superseded** because it collided with
+`recompute_ready()` (which auto-promotes `todo → ready` on every
+`hermes kanban list` call whenever all parents are done), creating a
+regression where the cap demotion was undone on the next list call.
+The cap is now enforced **at dispatcher pick time only** (see §10.6).
+Status mutations are **forbidden** for cap compliance — only
+`recompute_ready()` owns the `todo ↔ ready ↔ blocked` transitions.
+
+Cards with label `fast-track` are exempt from the cap.
+
+### 10.3 Loop protocol — Tier-4/5 reuse-check
+
+Before any Tier-4/5 call, the caller runs:
+
+```bash
+grep -i "<1-3 keywords>" ~/.hermes/knowledge/ARTIFACT_INDEX.md
+```
+
+If a hit lands in `Filename`, the artifact is reused and the call is
+skipped. Routing Ledger gains two new fields (additive; existing fields
+unchanged):
+
+```yaml
+reuse_check: yes | no          # yes = found in ARTIFACT_INDEX.md, reused
+artifact_index_entry: <path>    # reused path (yes) or newly saved path (no)
+```
+
+If `reuse_check: yes`, the Tier-4/5 call does NOT happen. The next-model
+line still names the original model so the ledger is auditable.
+
+Valid skip reasons: `index_unavailable`, `marcelo_override:<reason>`.
+
+### 10.4 Out of scope
+
+§10 does NOT change: model roles (§3), cost tiers (§3), fallback chain
+(§3), Perplexity Computer budget or `escalate_to_computer:` rules (§4),
+Light Build Metrics (§7), LBC35's model-choice rule (§6), or any other
+section above.
+
+### 10.5 Reference documents
+
+- `PHASE_4_MULTI_PROJECT_OS.md` — canonical spec for Phase 4
+- `PROJECT_VOCABULARY.md` — closed list of project tags
+- `ARTIFACT_INDEX.md` — single lookup table for Tier-4/5 outputs
+- `MODEL_ROUTING_WORKFLOW.md` §10 — loop protocol details
+- `KNOWLEDGE_REUSE_PIPELINE.md` §6 — loop hook command
+
+### 10.6 Per-project concurrency cap (dispatcher pick-time rule)
+
+**Effective:** 2026-06-18 (Phase 4 v3.2). Section 10.2 mechanism revised.
+
+A uniform **per-project concurrency ceiling** can be opted in by setting
+`kanban.max_in_progress_per_project` in `~/.hermes/config.yaml`. When
+unset (default), dispatcher behavior is bit-for-bit identical to the
+pre-Phase-4 baseline.
+
+#### Semantics
+
+- **Per project** (matching the first `project: <name>` line in the
+  task body), the dispatcher limits **already-running + newly-picked**
+  `ready` tasks combined to at most `N` per dispatch tick.
+- **Untagged tasks are cap-exempt.** They pass through the cap block
+  unconditionally. This is a deliberate forward-compat decision — new
+  tags can be introduced without a code change.
+- **No status mutations.** The cap defers dispatch via the new
+  `DispatchResult.skipped_per_project_capped` field; it does NOT
+  mutate `task.status`. `recompute_ready()` continues to own the
+  `todo ↔ ready ↔ blocked` transitions. This is the load-bearing
+  invariant that resolves the cap-vs-recompute conflict.
+
+#### Config
+
+```yaml
+# ~/.hermes/config.yaml
+kanban:
+  # Phase 4 §10.6 — per-project concurrency cap. Opt-in, uniform.
+  # Default unset = cap disabled.
+  max_in_progress_per_project: 2
+```
+
+#### Telemetry
+
+`DispatchResult.skipped_per_project_capped: list[(task_id, project, current)]`
+is populated by every `dispatch_once()` call. The `hermes kanban dispatch
+--json` CLI surfaces it as `skipped_per_project_capped`. Use it to
+observe cap pressure without re-reading the DB.
+
+#### Implementation surface (append-only)
+
+- `hermes_cli/kanban_db.py`
+  - `_extract_project_tag(body) -> str | None` (helper, regex-based,
+    first-match-wins; returns `None` for untagged)
+  - `DispatchResult.skipped_per_project_capped` field
+  - Cap block inside `dispatch_once()` `for row in ready_rows:` loop,
+    mirroring the existing per-profile cap pattern
+- `hermes_cli/kanban.py` `_cmd_dispatch` — reads
+  `kanban.max_in_progress_per_project` from config and passes to
+  `dispatch_once()`
+- `tests/hermes_cli/test_kanban_per_project_cap.py` — 13 tests:
+  cap=1, cap=2, untagged-bypass, recompute-untouched (regression),
+  idempotency, dry-run
+
+#### Out of scope
+
+Per-project tiered caps (different `N` per project) are deferred to a
+later phase. Today's rule is a single global uniform value.
+
+---
