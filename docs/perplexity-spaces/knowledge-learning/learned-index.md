@@ -1,8 +1,8 @@
 # LEARNED_*.md Files — Full Index
 
 **Source:** `~/.hermes/knowledge/`
-**Status:** Active — 11 files
-**Regenerated:** 2026-07-21 06:00
+**Status:** Active — 13 files
+**Regenerated:** 2026-07-21 23:13
 
 ---
 
@@ -15,6 +15,8 @@
 | `LEARNED_DEFAULT_BUILD_FLOW.md` | LEARNED: Default Build Flow — V3 Stack (2026-07-15) |
 | `LEARNED_HEALTH_OS_V3_DECISIONS.md` | Health OS V3 — Decision Logic / Architectural Choices |
 | `LEARNED_HEALTH_OS_V3_REPORTING.md` | Health OS V3 — Reporting Shape (Strict-grade shopping lists) |
+| `LEARNED_LBC35_TELEGRAM_SPAM_INCIDENT.md` | LBC35 Telegram Spam Incident — 2026-07-20 (LEARNED) |
+| `LEARNED_PMD_VALUATION_INTEGRATION.md` | PMD Valuation Integration — LEARNED (2026-07-21) |
 | `LEARNED_STORIS_API.md` | LEARNED — STORIS API (durable takeaways) |
 | `LEARNED_USER_PREFERENCES_AUTONOMOUS_MODE.md` | Marcelo — Autonomous Operator Mode (extended detail) |
 | `LEARNED_V3_BASELINE.md` | Health OS V3 — Supplement Baseline (V3) |
