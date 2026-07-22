@@ -2,7 +2,7 @@
 
 **Source:** `~/.hermes/knowledge/`
 **Status:** Active — 13 files
-**Regenerated:** 2026-07-21 23:13
+**Regenerated:** 2026-07-22 06:00
 
 ---
 
