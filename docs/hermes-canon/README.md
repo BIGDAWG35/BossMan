@@ -20,14 +20,17 @@ sync_direction: hermes → github
 ## Files in this folder
 
 - `ROLES_AND_CHAIN_OF_COMMAND.md` — canon for roles + chain of command
-- `LEARNED_7_RULE_CONTRACT.md` — canon for the 7-rule operating contract
+- `LEARNED_7_RULE_CONTRACT.md` — canon for the 7-rule operating contract (+ Rule #0 closed-loop autonomy 2026-07-22)
 - `LEARNED_V3_MODEL_STACK.md` — canon for the V3 model stack + routing
 - `LEARNED_V3_TOKEN_ECONOMICS.md` — canon for token economics (reuse, don't re-pay)
+- `ROUTING-RULES.md` — **NEW 2026-07-22** — single canonical routing doc (Layer-2 closed-loop + V3 routing)
+- `LEARNED_SUB_AGENT_MASTER_BLUEPRINT.md` — **NEW 2026-07-22** — sub-agent lane roster + handoff contracts
+- `PHASEREPORT.md` — **NEW 2026-07-22** — canon-level phase change log
 
 ## How the mirror stays in sync
 
 1. The doc-hygiene goal loop periodically runs `~/.hermes/scripts/hermes-canon-sync.sh`.
-2. The script `cp` the 4 canonical files into this folder, then `git commit` + `git push`.
+2. The script `cp` the 7 canonical files into this folder, then `git commit` + `git push`.
 3. If the mirror is stale (md5 mismatch with canon), the loop creates a `t_drift_fix_v3_canon` kanban card.
 4. **The loop never silently rewrites the mirror without surfacing the diff.**
 
@@ -40,3 +43,4 @@ sync_direction: hermes → github
 ## Sync log
 
 - 2026-07-20: initial canonical mirror created. 4 files committed.
+- 2026-07-22: Layer-2 closed-loop autonomy formalization. 3 new files added; `LEARNED_7_RULE_CONTRACT.md` updated.

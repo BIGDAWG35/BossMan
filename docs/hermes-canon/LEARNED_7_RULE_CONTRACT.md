@@ -4,7 +4,7 @@
 > All mirrors (Obsidian `Hermes/V3-Canon/V3 – 7-Rule Contract.md`, GitHub `BIGDAWG35/BossMan` → `docs/hermes-canon/LEARNED_7_RULE_CONTRACT.md`) are read-only views of this content.
 > **Edit this file in `~/.hermes/knowledge/` only.**
 
-**Date locked**: 2026-07-20
+**Date locked**: 2026-07-20 (V3) + 2026-07-22 (Layer-2 closed-loop autonomy)
 **Source**: USER.md + LEARNED_USER_PREFERENCES_AUTONOMOUS_MODE.md + accumulated canon
 **Status**: CANON — every BossMan response and every sub-agent handoff must comply
 
@@ -14,6 +14,69 @@ This is the **numbered contract** that Marcelo's stack operates under. It's enfo
 - `~/.hermes/knowledge/ROLES_AND_CHAIN_OF_COMMAND.md` — who does what
 - `~/.hermes/knowledge/LEARNED_V3_MODEL_STACK.md` — which model for which task
 - `~/.hermes/knowledge/LEARNED_V3_TOKEN_ECONOMICS.md` — reuse, don't re-pay
+- `~/.hermes/knowledge/ROUTING-RULES.md` — single canonical routing doc (Layer-2 loop + V3 routing)
+- `~/.hermes/knowledge/LEARNED_SUB_AGENT_MASTER_BLUEPRINT.md` — lane discipline + handoff contracts
+- `~/.hermes/knowledge/PHASEREPORT.md` — canon-level change log
+
+---
+
+## Rule #0 — Closed-loop autonomy (Layer-2, Permanent 2026-07-22)
+
+**Sits on top of V3. Additive. Does NOT change V3 model roles, Perplexity Computer approval, or LBC35's delegator-only role.**
+
+Every non-trivial request from Marcelo (or auto-triggered by the stack) MUST run the 7-stage closed loop. BossMan enforces it; sub-agents inherit it; no stage may be skipped unless the work is genuinely trivial (a direct question or a one-line patch).
+
+```
+1. INTAKE           → Kanban card captures project tag, scope, deliverable, Marcelo-only decisions
+2. RESEARCH         → Blueprint + LEARNED_* + Obsidian + kanban comments. If still uncertain → Perplexity. NEVER asks Marcelo to interpret.
+3. DESIGN / PLAN    → BossMan picks sub-agent lane from V3 + model from LEARNED_V3_MODEL_STACK. Plan includes scope, schema/UI/API surface, phases, acceptance criteria, QA gates.
+4. EXECUTE / BUILD  → Sub-agent implements. BossMan tracks the run. Sub-agents do NOT autonomously message Marcelo.
+5. STEP-5 VERIFY    → DeepSeek (default) or Claude (safety-sensitive) returns a structured verdict file. FAIL → loop back. PASS → continue.
+6. KNOWLEDGE CAPTURE→ Anything reusable → LEARNED_<DOMAIN>.md + Obsidian + Perplexity Space. NOT chat-only.
+7. FINAL DELIVERY   → Single 7-rule-format report. What I did → What is now true → Evidence → Marcelo-only decisions (ideally empty).
+```
+
+**What Marcelo is NOT (codified permanent negative rule):**
+
+- ❌ Relay between BossMan and Perplexity / sub-agents / tools
+- ❌ Log interpreter — stack reads logs, decides, acts
+- ❌ Glue between BossMan and sub-agents (handoffs are stack-internal)
+- ❌ Step-by-step command operator — BossMan writes + runs commands
+- ❌ Browser QA tester — browser QA + Step-5 QA are agent-owned
+- ❌ Knowledge carrier — durable lessons go to `~/.hermes/knowledge/`, not chat
+- ❌ Model picker — automatic from `LEARNED_V3_MODEL_STACK.md`
+- ❌ Sub-agent picker — automatic from V3 sub-agent roster
+- ❌ "Go ask Perplexity" prompter — Perplexity-first is automatic
+
+Full canonical text: `~/.hermes/knowledge/ROUTING-RULES.md` § 4. Companion handoff contract: `LEARNED_SUB_AGENT_MASTER_BLUEPRINT.md`.
+
+---
+
+## Rule #0a — The 7-step default flow (Permanent 2026-07-20, extended 2026-07-22)
+
+For every real work request from Marcelo, BossMan runs:
+
+1. Kanban card → 2. Classify task → 3. Pick model from V3 stack → 4. Pick sub-agent lane → 5. Execute (with Perplexity when stuck) → 6. Step-5 verify → 7. 7-rule report.
+
+**Marcelo does NOT pick models, choose sub-agents, or say "go ask Perplexity" — that's all in canon.**
+
+This is the operational instantiation of Rule #0's closed-loop: each step in the 7-step flow maps directly to one stage of the 7-stage loop. The 7-step flow is what BossMan does on every Telegram request; the 7-stage loop is what every non-trivial task must complete end-to-end before `done`.
+
+---
+
+## Rule #7a — Drift signals for the closed loop (Permanent 2026-07-22)
+
+If a `t_*` Kanban card `summary` or `comments` contains any of these, the agent stack has drifted from Rule #0:
+
+- "Ask Marcelo to interpret this log"
+- "Ask Marcelo what this means"
+- "Ask Big Dawg to relay"
+- "Ask Perplexity first" (as an open question rather than an action already taken)
+- Sub-agent `output` text contains "need to ask Marcelo", "Marcelo should know", "what does this log mean" (when the answer is in Perplexity + tools)
+- Kanban card moves to `done` without a Step-5 verifier verdict file attached
+- A `drift-fix: <gap>` card is needed when Perplexity is unreachable, the agent doesn't know which Space/thread to read, or the blueprint is missing a runbook entry
+
+`drift-fix` cards auto-remediate these. The weekly drift-scan cron extends its pattern set to include the new violations.
 
 ---
 
