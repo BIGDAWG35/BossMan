@@ -142,7 +142,63 @@ ps aux | grep "PM2.*God Daemon" | grep -v grep
 - 64323, 11161, 11155 (already self-terminated between 18:20 and 18:25 PT detection)
 - 21084, 21092, 21100 (new zombies from concurrent agent spawns during cleanup, killed at 18:25 PT)
 
+## PM2 CLI Usage Policy (Permanent — 2026-07-22, Card t_pm2_zombie_spawn_root_cause_20260722)
+
+**Root cause confirmed (experiment 2026-07-22 18:54-19:00 PT):** When PM2 CLI is invoked with a non-canonical PM2_HOME, PM2 spawns a god daemon at that PM2_HOME. The daemon is designed to be killed when the CLI process exits, but **a race condition causes the daemon to persist as a zombie**, especially when:
+- The CLI call is short-lived (e.g., `pm2 list` in a script)
+- Multiple concurrent invocations hit the same PM2_HOME (e.g., `~/.hermes/pro`)
+
+In the actual incident that motivated this policy, `~/.hermes/pro` accumulated 3+ zombie daemons that survived for 8 days.
+
+**Two patterns tested (2026-07-22):**
+
+| Pattern | Test result | Verdict |
+|---|---|---|
+| **A: `pm2 kill` after each CLI use** | Killed the **canonical daemon** too — `pm2 kill` does NOT respect the env PM2_HOME override | ❌ **UNSAFE** — do not use |
+| **B: Per-session tmpdir isolation (no kill)** | 5 zombie daemons survived (scattered across `/tmp/pm2-hermes-*` and `~/.hermes/pro`) | ❌ **Incomplete** — isolation alone leaks |
+| **C: Per-session tmpdir isolation + `kill -TERM <pid>` by PID** | Canonical daemon untouched, 0 zombies survived, services healthy | ✅ **CANONICAL** — use this |
+
+**Chosen pattern: Isolation + kill-by-PID.** Per-session tmpdir prevents the zombie from touching `~/.hermes/pro`; direct `kill -TERM <pid>` ensures we never accidentally kill the canonical daemon via `pm2 kill` (which doesn't respect the env override).
+
+### Canonical wrapper: `pm2-hermes.sh`
+
+**Location:** `~/.hermes/scripts/pm2-hermes.sh` (executable, 3,188 bytes)
+
+```bash
+~/.hermes/scripts/pm2-hermes.sh <pm2-subcommand> [args...]
+# Examples:
+#   ~/.hermes/scripts/pm2-hermes.sh list
+#   ~/.hermes/scripts/pm2-hermes.sh jlist
+#   ~/.hermes/scripts/pm2-hermes.sh logs pmd-web --lines 50 --nostream
+```
+
+**What it does (3-step):**
+1. **Isolate:** `PM2_HOME=$(mktemp -d -t pm2-hermes-XXXXXX)` — daemon spawns in tmpdir, never touches `~/.hermes/pro`
+2. **Run:** `pm2 <subcommand> [args...]` with stdout/stderr passed through
+3. **Clean:** Find the per-session daemon's PID via `lsof $PM2_TMP/rpc.sock` (fallback: `ps aux | grep $PM2_TMP`), then `kill -TERM <pid>`. **Never use `pm2 kill`** — that kills the canonical daemon too. Wait up to 1s for graceful exit, then SIGKILL as last resort. Then `rm -rf $PM2_TMP`.
+
+**Anti-patterns (never use):**
+```bash
+# BAD — touches ~/.hermes/pro daemon
+PM2_HOME=~/.hermes/pro pm2 list
+
+# BAD — pm2 kill does not respect env PM2_HOME override; kills canonical too
+PM2_HOME=$(mktemp -d) pm2 list && PM2_HOME=$(mktemp -d) pm2 kill
+
+# BAD — isolation alone, no cleanup
+PM2_HOME=$(mktemp -d) pm2 list  # leaks a zombie daemon in /tmp/pm2-hermes-XXXXX
+```
+
+### Enforcement
+
+All hermes/agent scripts that call `pm2` CLI directly must be updated to use `~/.hermes/scripts/pm2-hermes.sh` instead:
+- `pm2 list` → `~/.hermes/scripts/pm2-hermes.sh list`
+- `pm2 jlist` → `~/.hermes/scripts/pm2-hermes.sh jlist`
+- `pm2 desc <name>` → `~/.hermes/scripts/pm2-hermes.sh desc <name>`
+- Direct `pm2` invocations in cron jobs, health monitors, and ad-hoc scripts
+
+**Permanent — 2026-07-22 (Card t_pm2_zombie_spawn_root_cause_20260722):** Any new script or agent that calls `pm2` CLI must use `pm2-hermes.sh` wrapper. This is the single canonical pattern.
+
 ### Known Issues (logged 2026-07-22)
 
 - pmd-web (port 7575) all-routes 404 — stale `.next/` build artifact. Not in auto-repair whitelist; needs Marcelo decision (separate card).
-- Zombie daemon spawn race: concurrent PM2 CLI invocations create multiple `~/.hermes/pro` daemons. Root cause investigation deferred; for now, manual cleanup playbook above is the standard response.
