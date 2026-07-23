@@ -152,6 +152,8 @@ A monthly loop-enforcement review (the "closed-loop audit") runs to confirm:
 
 Review output lands in `~/.hermes/logs/loop-enforcement-review-YYYY-MM.md` and is mirrored to `50_Phase-Reports/` in Obsidian.
 
+**Build-metrics integration (Permanent 2026-07-22, Card B):** The closed-loop health data above is also surfaced as a per-month "Loop Health" section in `~/.hermes/knowledge/BUILDMETRICSYYYY-MM.md`, derived by parsing the `routing_ledger` block in kanban card bodies. Four additive keys (`loop_complete`, `missing_stages`, `perplexity_first`, `knowledge_capture`) are documented in PHASEREPORT and parsed by `~/.hermes/scripts/build-metrics-monthly.sh`. Existing cards without these keys remain valid (parsers report "unknown", not failure).
+
 ---
 
 ## 7. Companion docs
