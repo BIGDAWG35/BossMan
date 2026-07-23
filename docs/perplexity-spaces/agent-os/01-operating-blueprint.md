@@ -856,3 +856,47 @@ Still requires explicit BossMan approval:
 | 1.1 | 2026-05-20 | Model stack policy, Perplexity Spaces integration |
 | 1.2 | 2026-06-03 | Travel OS v1 complete — modules, reminder stack, closeout, admin tools documented |
 
+
+---
+
+## Obsidian Vault Layout (Permanent — 2026-06-12)
+
+The Obsidian vault at `~/Obsidian/Hermes/` is a **long-term human archive** of Hermes knowledge. It mirrors (and is corrected from) `~/.hermes/knowledge/`.
+
+**Priority order (source of truth):**
+1. `~/.hermes/knowledge/` — primary
+2. `~/Obsidian/Hermes/` — human archive
+3. `~/Repos/BossMan/docs/` — GitHub backup
+
+**Save order (mandatory):**
+- All operational changes are written to `~/.hermes/knowledge/` FIRST.
+- Then mirrored to `~/Obsidian/Hermes/`.
+- Then synced to `~/Repos/BossMan/docs/` and committed.
+- Perplexity Spaces content is synced via `bash ~/.hermes/scripts/sync_perplexity_spaces.sh` only when relevant.
+
+**Vault layout (11 folders + `_Templates/`):**
+
+| Folder | Purpose |
+|---|---|
+| `00_INBOX/` | Short-lived drop zone; >14d old = audit warning |
+| `01_Dashboard/` | `Dashboard.md` — single landing page |
+| `10_Operating-Blueprint/` | Mirror of OPERATING_BLUEPRINT.md + canon |
+| `20_Agents/` | Agent role docs |
+| `30_Services-Maps/` | Service inventory + port maps + PM2 |
+| `40_Projects/Active/`, `On-Hold/`, `Archive/` | Project folders `PROJ-YYYY-MM_Name/` |
+| `50_Phase-Reports/` | Phase report mirrors |
+| `60_Knowledge-Topics/` | Cross-cutting knowledge topics |
+| `70_Workflows/` | Process documents |
+| `80_Logs/` | Read-only logs |
+| `90_Archive/` | Cold storage (>2y) |
+| `_Templates/` | Note templates |
+
+**Project structure:** each project = `PROJ-YYYY-MM_Project-Name/` with `PROJ-Overview.md` (required), `PROJ-Timeline.md`, `PROJ-Decisions.md`, etc. Frontmatter: `id, name, status, owner, created, tags`.
+
+**Audit cadence:**
+- **Monthly** (1st, 09:00 PT): 8-check audit, silent when healthy, ping on findings. Script: `~/.hermes/scripts/obsidian-vault-audit.sh`.
+- **Bi-monthly** (every other 1st, 10:00 PT): 5-task review, surfaces to Telegram. Script: `~/.hermes/scripts/obsidian-vault-review.sh`.
+
+**Conflict resolution:** Hermes knowledge wins. Always. If Obsidian and Hermes knowledge diverge, Hermes is right and Obsidian gets corrected.
+
+**Canonical detail:** `~/.hermes/knowledge/OBSIDIAN_VAULT_WORKFLOW.md` (the full blueprint — 11k bytes, 13 sections, version history).

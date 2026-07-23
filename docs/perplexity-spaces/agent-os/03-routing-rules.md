@@ -1,3 +1,17 @@
+# ⚠️ SUPERSEDED 2026-07-22 — see canonical Layer-2 mirror
+
+**This file (`03-routing-rules.md`) preserves the v3.0 "10/10" 6-step Default Build Flow from 2026-06-03 for historical reference only.**
+
+**It is NO LONGER the canonical routing source.** As of 2026-07-22, the canonical Layer-2 closed-loop routing rules live at:
+
+→ **`~/.hermes/spaces/agent-os/04-routing-rules-layer2.md`** (mirror of `~/.hermes/knowledge/ROUTING-RULES.md`)
+
+If you are an agent looking for current routing rules, read `04-routing-rules-layer2.md` instead. The V3 Default Build Flow (6 steps + Step 5 QA) is preserved verbatim in §3 of that file; the Layer-2 closed-loop autonomy rule sits on top in §4.
+
+The original v3.0 content below is kept for archival continuity only. Do not update this file; it is frozen.
+
+---
+
 # Routing Rules — BossMan Default Build Flow (v3.0 / "10/10")
 
 **Version:** 3.0
