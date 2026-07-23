@@ -99,6 +99,50 @@ done
 echo ""
 echo "Total drift: $DRIFT_COUNT file(s)"
 
+# Permanent 2026-07-22 (Card t_agents_md_prune_driftfix_20260722):
+# Special-case check for AGENTS.md (at ~/.hermes/AGENTS.md, NOT in knowledge/).
+# Also checks SOUL.md (similar location). Both are kernel-docs with size budgets.
+
+for KERNEL_FILE in "AGENTS.md" "SOUL.md"; do
+  case "$KERNEL_FILE" in
+    AGENTS.md) CANON=~/.hermes/AGENTS.md; OBS=~/Obsidian/Hermes/AGENTS.md; GH=~/Repos/BossMan/docs/hermes-canon/AGENTS.md ;;
+    SOUL.md) CANON=~/.hermes/SOUL.md; OBS=~/Obsidian/Hermes/SOUL.md; GH=~/Repos/BossMan/docs/hermes-canon/SOUL.md ;;
+  esac
+
+  C_MD5=""
+  G_MD5=""
+  O_MD5=""
+  if [ -f "$CANON" ]; then
+    C_MD5=$(md5 -q "$CANON")
+    SIZE=$(wc -c < "$CANON")
+    if [ "$SIZE" -gt 40960 ]; then  # 40 KB hard cap
+      STATUS="SIZE_VIOLATION"
+      DRIFT_COUNT=$((DRIFT_COUNT + 1))
+      DRIFT_REPORT="${DRIFT_REPORT}
+  - $KERNEL_FILE: SIZE $SIZE bytes > 40 KB cap"
+    fi
+  fi
+  [ -f "$OBS" ] && O_MD5=$(md5 -q "$OBS")
+  [ -f "$GH" ] && G_MD5=$(md5 -q "$GH")
+
+  if [ -n "$C_MD5" ] && [ -n "$G_MD5" ] && [ "$C_MD5" != "$G_MD5" ]; then
+    STATUS="DRIFT"
+    DRIFT_COUNT=$((DRIFT_COUNT + 1))
+    DRIFT_REPORT="${DRIFT_REPORT}
+  - $KERNEL_FILE: canon ${C_MD5} != gh ${G_MD5}"
+  fi
+  if [ -n "$C_MD5" ] && [ -n "$O_MD5" ] && [ "$C_MD5" != "$O_MD5" ]; then
+    STATUS="DRIFT"
+    DRIFT_COUNT=$((DRIFT_COUNT + 1))
+    DRIFT_REPORT="${DRIFT_REPORT}
+  - $KERNEL_FILE: canon ${C_MD5} != obs ${O_MD5}"
+  fi
+
+  if $VERBOSE; then
+    echo "  [$KERNEL_FILE] canon=$C_MD5 obs=$O_MD5 gh=$G_MD5"
+  fi
+done
+
 if [ $DRIFT_COUNT -gt 0 ]; then
   echo ""
   echo "Drift detected. Surfacing kanban card..."
