@@ -1,7 +1,7 @@
 # LEARNED_PMD.md — PMD (Property Management Dashboard) Canon
 
 **Source:** Project: `/Users/bigdawg/Projects/property-management-dashboard/`
-**Status:** Permanent (refreshed 2026-07-22, Card t_pmd_web_next_build_and_whitelist_20260722)
+**Status:** Permanent (refreshed 2026-07-22, Card t_pmd_properties_table_v1_20260722)
 
 ---
 
@@ -114,37 +114,59 @@ curl -sS -o /dev/null -w 'LOCAL:%{http_code}\n' http://localhost:7575/pmd/api/pr
 
 ---
 
-## Pages + routes (added 2026-07-22, Card t_pmd_properties_table_v1_20260722)
+## Pages + routes (updated 2026-07-22, Card t_pmd_properties_table_filters_v1_20260722)
 
 | Route | Page | Data source | Notes |
 |---|---|---|---|
 | `/pmd/` | Portfolio (dashboard home) | server-side data layer | Original landing page |
-| `/pmd/properties` | Properties table (read-only v1) | server-side `properties.listAll()` + `/pmd/api/properties` (client refresh) | New — Card t_pmd_properties_table_v1_20260722 |
+| `/pmd/properties` | Properties table (read-only v1.1) | server: `properties.listAll()` via `@/lib/data`; client: `PropertiesTable` component handles all sort/filter state | Card t_pmd_properties_table_v1_20260722 + v1.1 |
 | `/pmd/p/:id` | Property detail | `properties.listAll()` | Per-property view |
 | `/pmd/renewals`, `/pmd/pnl`, `/pmd/repairs`, `/pmd/mortgages`, `/pmd/market-value`, `/pmd/documents`, `/pmd/settings` | Other nav pages | various | Pre-existing |
 
-### Properties page architecture
+### Properties page architecture (v1.1 — Card t_pmd_properties_table_filters_v1_20260722)
 
-| Component | Role |
+| Component | File | Role |
+|---|---|---|
+| Server page | `web/app/(app)/properties/page.tsx` | Fetches initial rows via `properties.listAll().map(properties.toApi)`, passes to `PropertiesTable` |
+| Client component | `web/components/PropertiesTable.tsx` | `'use client'` — owns ALL UI state: sorting, filtering, refresh. No new API endpoints. |
+| Filter dropdown | `web/components/PropertyFilter.tsx` | Per-property filter used on other pages (not on the properties list page) |
+
+**Pattern:** Server fetches → client owns state. `PropertiesTable` uses `/api/properties` for client-side refresh only (not for initial render). Loading state via `loading.tsx` → `SkeletonPage`.
+
+### Sorting (v1.1 — client-side only)
+
+| Column | Sort key | Default direction | Toggle behavior |
+|---|---|---|---|
+| Name | `nickname` | Ascending (A→Z) | Click to sort; repeats toggle asc/desc |
+| City | `city` | Ascending (A→Z) | Click to sort; repeats toggle asc/desc |
+| Next Due Date | `updatedAt` | Descending (newest first) | Click to sort; repeats toggle asc/desc |
+
+Active sort column shows `↑` (ascending) or `↓` (descending) indicator. Inactive columns show `↕`.
+
+### Filtering (v1.1 — client-side only, combined with AND logic)
+
+| Control | Behavior |
 |---|---|
-| `web/app/(app)/properties/page.tsx` | Server component — fetches via `@/lib/data` (`properties.listAll().map(properties.toApi)`), passes to client component |
-| `web/components/PropertiesTable.tsx` | Client component — renders table, handles Refresh button + error states |
-| `/pmd/api/properties` | Canonical PMD API endpoint (Next.js route, GET = list all properties). Used by the client Refresh button to re-fetch |
+| Search | Substring match on `nickname + address`, case-insensitive |
+| City dropdown | Populated from dataset at render time; `__all__` = no city filter |
+| Active only | Checkbox — when checked, excludes `isActive === false` rows |
+| Reset button | Clears all filters and restores default sort (disabled when no filters active) |
 
-**Why split server/client:** `@/components/ui` (Card, PageHeader, etc.) transitively imports `@/lib/data`, which is server-only. A `'use client'` page that imports those UI components causes a Next.js build error (`node:module` externalization). Splitting the page into a server shell + a small client child keeps the data layer on the server.
+**Responsibilities:**
+- **Server (page.tsx):** Fetch initial rows from `@/lib/data`. Zero UI state.
+- **Client (PropertiesTable):** Sorting, filtering, refresh, error handling. Pure derivation via `useMemo` — no `useEffect` needed for filter/sort.
+- **API (`/api/properties`):** Used only for client-side refresh (Refresh button). Not used for initial render.
 
 ### Table columns + status (Card t_pmd_properties_table_v1_20260722)
 
-| Column | Source | Notes |
-|---|---|---|
-| Name | `property.nickname` (link to `/pmd/p/{id}`) | "—" if missing |
-| Address | `property.address` | Direct |
-| City | `property.city`, `property.state`, `property.zip` | Joined as "City, ST ZIP" |
-| Status | `property.isActive` | Active (success badge) or Inactive (muted) |
-| Rent | n/a | **Placeholder "—"** — `/pmd/api/properties` does not expose lease data. Will populate when a lease-aware endpoint is added. |
-| Next Due Date | n/a | **Placeholder "—"** — same reason as Rent |
-
-**Follow-up card (logged):** Add a `/pmd/api/leases` GET endpoint that returns `{ leases: [{ propertyId, monthlyRent, nextDueDate }] }`, then have the table cross-reference by propertyId to fill Rent + Next Due Date columns. This is a separate scope (writes new API route); not in v1.
+|| Column | Source | Notes |
+||---|---|---|
+|| Name | `property.nickname` (link to `/pmd/p/{id}`) | — |
+|| Address | `property.address` | Direct |
+|| City | `property.city`, `property.state` | "City, ST" |
+|| Status | `isActive` + `lease` | Active lease → Occupied (success); active prop, no lease → Vacant (warning); isActive=false → Inactive (neutral) |
+|| Rent | `lease.monthlyRent` via `leases.getActiveForProperty()` | "—" if no active lease |
+|| Next Due Date | `lease.end_date` + `daysUntil()` | "—" if no active lease; shows (Nd) countdown when ≤90d |
 
 ---
 
@@ -168,5 +190,11 @@ curl -sS -o /dev/null -w 'LOCAL:%{http_code}\n' http://localhost:7575/pmd/api/pr
 - **2026-06-23:** QA-FORENSIC-RECONSTRUCTION incident (see `QA-FORENSIC-RECONSTRUCTION-2026-06-23.md` in project root).
 
 ---
+
+---
+
+## PHASEREPORT
+
+- **2026-07-22** — PMD Properties table v1.1 (sorting + filtering) implemented. `PropertiesTable` client component wired to `page.tsx`. Sorting (Nickname/City/UpdatedAt with ↑/↓ indicators) + filtering (text search, city dropdown, active-only toggle, reset) all client-side. Server/client split preserved. `/pmd/properties` returns 200.
 
 **Status:** Permanent (refreshed 2026-07-22, Card t_pmd_web_next_build_and_whitelist_20260722).
