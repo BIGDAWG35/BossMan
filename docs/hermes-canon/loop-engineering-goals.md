@@ -189,6 +189,10 @@ Loop **does not** edit these files autonomously; Loop writes **proposals** as ka
 | Crypto Weekly Learning and Intel Review | Sunday 18:00 PT | — | `~/.hermes/knowledge/250k-income-engine/` |
 | PM2 Health Monitor weekly audit | weekly (cron `01dff7ff61e4`) | Ops (runtime), Loop (loop design) | `~/.hermes/skills/devops/pm2-health-check/` |
 | Hermes canon drift-check + drift-fix pattern | weekly (cron `b76b6d8fc4ff`) | knowledge-canon (drift-fix) | `~/.hermes/scripts/hermes-canon-drift-check.sh` |
+| **Travel OS Trip Reminder (consolidated, 6-stage)** | daily 08:00 PT | Travel (content), Loop (no-spam + lock windows) | cron `7f58cef97c80` |
+| **Travel OS External Watchdog** | every 15 min | Ops (runtime), Loop (loop design) | cron `b858e01bd089` |
+| **Travel OS Handoff Sync Drift Check** | weekly Sat 06:00 PT | knowledge-canon (drift-fix), Loop (no-spam) | cron `ab41f101c407` |
+| **Travel OS Weekly Review** (NEW 2026-07-23) | weekly Sun 18:00 PT | Loop (design + no-spam + state file), Ops (cron), Travel (content) | cron `5fced7f41345` — `~/.hermes/logs/travel-os-loop-design-20260723.md` |
 
 **Ownership semantics (no behavior changes):**
 

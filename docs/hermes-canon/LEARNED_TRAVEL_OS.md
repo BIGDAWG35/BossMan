@@ -61,3 +61,33 @@ This is the **canonical source** for cloning Travel OS onto any other machine (C
 - Tried `basePath: '/travel-os'` on Next.js → caused 404 on public URL (Tailscale strips prefix) → reverted
 
 See `~/.hermes/knowledge/TRAVEL_OS_HANDOFF_REPO.md` for full bootstrap instructions, identity rules, and handoff playbook.
+
+---
+
+## Loop Engineering integration — Travel OS Weekly Review (added 2026-07-23, Card t_travelos_trip-review-loop_v1_20260723)
+
+Travel OS is now Loop-owned for **loop design**. The Travel lane owns trip data + UX; Loop owns cron cadence / no-spam / lock-window state.
+
+**Travel OS crons (4 total):**
+
+| Cron id | Name | Schedule | Delivery | Lane design | Lane runtime |
+|---|---|---|---|---|---|
+| `7f58cef97c80` | Trip Reminder (consolidated, 6-stage) | daily 08:00 PT | telegram (pre-approved) | Loop | Travel |
+| `b858e01bd089` | External Watchdog | every 15 min | local | Loop (silent-by-default) | Ops |
+| `ab41f101c407` | Handoff Sync Drift Check | Sat 06:00 PT | local (silent) | Loop | knowledge-canon + Travel |
+| **`5fced7f41345`** | **Weekly Review (NEW)** | **Sun 18:00 PT** | **local (silent-by-default; Telegram on blockers only)** | **Loop** | **Ops (cron) + Travel (content)** |
+
+**Loop A (Weekly Review) design brief:** `~/.hermes/logs/travel-os-loop-design-20260723.md` (12.2 KB).
+
+**No-spam rules enforced by Loop A (Permanent):**
+- 7-day lock window (`~/.hermes/state/travel-os-weekly-review.state`).
+- One brief per cron run; re-runs within window stay silent.
+- Telegram escalation only when blockers detected (`exit 10` → marker file → cron prompt escalates).
+- PM2 Health Monitor already covers `travel-os` port 3537.
+
+**Travel-lane follow-ups (logged on kanban):**
+- `t_travelos_loop_a_trips_endpoint_20260723` — add `/trips` JSON endpoint for Loop A's brief.
+- `t_travelos_upcoming_trips_view_20260723` — Upcoming + Weekly-review UI views.
+- `t_travelos_loop_b_prompt_update_20260723` — tighten Trip Reminder prompt (12h send window + per-trip-per-day lock).
+
+**Lane profile reference (Travel):** `~/.hermes/knowledge/LEARNED_TRAVEL_OS.md` (this file). Per-lane Loop-integration note: see Travel lane profile after Loop-Engineering rollout card `t_subagent_loop_rollout_v1_20260723` creates it.
