@@ -194,6 +194,7 @@ Loop **does not** edit these files autonomously; Loop writes **proposals** as ka
 | **Travel OS Handoff Sync Drift Check** | weekly Sat 06:00 PT | knowledge-canon (drift-fix), Loop (no-spam) | cron `ab41f101c407` |
 | **Travel OS Weekly Review** (NEW 2026-07-23) | weekly Sun 18:00 PT | Loop (design + no-spam + state file), Ops (cron), Travel (content) | cron `5fced7f41345` — `~/.hermes/logs/travel-os-loop-design-20260723.md` |
 | **SquarePayouts Weekly Health Review** (NEW 2026-07-23) | weekly Mon 08:00 PT | Loop (design + no-spam + model-whitelist guard), Ops (cron), QA (verify), Knowledge Canon (captures) | cron `0209dcf24ee8` — `~/.hermes/logs/squarepayouts-loop-design-20260723.md`; model restriction per `LEARNED_SQUAREPAYOUTS.md` (M3 BLOCKED for SquarePayouts work) |
+| **Dominoes Verification Loop -- Hardening** (NEW 2026-07-23) | Tue 18:00 PT + Sat 10:00 PT (2x/week, reverts to weekly after 4 weeks) | Loop (design + Pass F brief), QA (Pass B + Pass E re-test), Builder (Pass D fixes), Knowledge Canon (canonical captures) | crons `70b9215bed25` (Tue) + `93f03c63496f` (Sat) -- `~/.hermes/logs/dominoes-loop-design-20260723.md`; matrix at `DOMINOES_VERIFICATION_MATRIX.md`; defects at `DOMINOES_KNOWN_ISSUES.md` |
 
 **Ownership semantics (no behavior changes):**
 
