@@ -349,6 +349,8 @@ Goal card `t_3e4a14d4`, monthly review cadence, 5-step loop. Every child card ca
 
 ## Project-Specific Content — Moved to LEARNED_*.md
 
+**MASTER INDEX:** `~/.hermes/knowledge/LEARNED_INDEX.md` — single map of all 24 `LEARNED_<DOMAIN>.md` files. The table below is a historical audit of moves FROM this file; the index has the current state.
+
 The following sections were extracted from this file on 2026-07-22:
 
 | Section | Moved to |

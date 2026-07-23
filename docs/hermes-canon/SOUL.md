@@ -556,7 +556,11 @@ Marcelo does NOT copy/paste between Perplexity and BossMan. If Marcelo shares a 
 
 ## Per-system Canon — Pointers (Permanent 2026-07-22)
 
-**Per `Scope of This File` (above), per-system ownership/architecture rules live in `~/.hermes/knowledge/LEARNED_<DOMAIN>.md`, NOT here.** Read these on-demand:
+**Per `Scope of This File` (above), per-system ownership/architecture rules live in `~/.hermes/knowledge/LEARNED_<DOMAIN>.md`, NOT here.**
+
+**MASTER INDEX:** `~/.hermes/knowledge/LEARNED_INDEX.md` — single map of all 24 `LEARNED_<DOMAIN>.md` files with scope, lane/owner, last-updated. **Always start here** when looking for a domain. The pointers below are a curated subset (most-frequently referenced); the index has the full list.
+
+Read these on-demand:
 
 - **PM2 Health Monitor detection/repair rules** → `LEARNED_PM2_HEALTH_MONITOR.md`
 - **PMD valuation/portfolio integration** → `LEARNED_PMD_VALUATION_INTEGRATION.md`
