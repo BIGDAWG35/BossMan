@@ -101,18 +101,38 @@ Each sub-agent lane has a dedicated MD profile. The roster above is the contract
 
 | Lane | Canonical file | Mission |
 |---|---|---|
-| builder | `~/.hermes/knowledge/LEARNED_DEFAULT_BUILD_FLOW.md` | Default build flow for projects |
-| ops | (embedded in `LEARNED_PM2_HEALTH_MONITOR.md`) | Infra hygiene, PM2/cron cleanliness |
-| trading | (pending — see kanban `t_*_trading_*` cards) | Trading decisions, bot configs |
-| content | (pending) | Content pipeline, YouTube, newsletters |
+| builder | `~/.hermes/knowledge/builder.md` | Code implementation, build/restart workflow |
+| ops | `~/.hermes/knowledge/ops.md` | Infra hygiene, PM2/cron cleanliness |
+| trading | `~/.hermes/knowledge/trading.md` | Trading decisions, bot configs (Claude mandatory) |
+| content | `~/.hermes/knowledge/content.md` | Content pipeline, YouTube, TTS, media |
 | travel | `~/.hermes/knowledge/LEARNED_TRAVEL_OS.md` | Travel OS, trip reminders |
-| qa-verification | (pending) | Step-5 QA, P5 self-verify execution |
-| research-intel | (pending) | Perplexity research, intel reports |
-| knowledge-canon | (lives in this file + `LEARNED_INDEX.md`) | LEARNED_*.md index maintenance |
-| self-improvement | (pending) | Hermes self-improvement loops |
+| qa-verification | `~/.hermes/knowledge/qa-verification.md` | Step-5 QA, P5 self-verify execution |
+| research-intel | `~/.hermes/knowledge/research-intel.md` | Perplexity research, intel reports |
+| knowledge-canon | `~/.hermes/knowledge/knowledge-canon.md` | LEARNED_*.md authoring, mirror synchronization, drift-check |
+| self-improvement | `~/.hermes/knowledge/self-improvement.md` | Skill authoring, MEMORY.md hygiene, drift detection |
 | **loop-engineering** | `~/.hermes/knowledge/loop-engineering-goals.md` | Self-working loops, goal systems, weekly review cadence |
 
 When BossMan dispatches a packet to a lane, the receiving sub-agent opens its lane file first. The lane file is the contract; this roster is the index.
+
+#### Lane routing vs model routing (Permanent 2026-07-23)
+
+These are two **independent** axes. Conflating them is a common drift mode.
+
+- **Lane routing** = "which sub-agent owns the category of work." Lane selection is governed by `LEARNED_SUB_AGENT_MASTER_BLUEPRINT.md` + the per-lane profile files in `~/.hermes/knowledge/<lane>.md`. BossMan picks one lane per card based on what the work is about (Ops for PM2/cron; Trading for bots; Loop for recurring workflows; etc.).
+- **Model routing** = "which model runs the picked lane's invocation." Model selection is governed by `LEARNED_V3_MODEL_STACK.md` based on task type (Perplexity → M3 → DeepSeek/Llama/OpenAI → QA → Claude). Marcelo does NOT pick models for routine work. Sub-agents within a lane inherit the model selection; they don't re-pick.
+
+**Inheritance order:** Task → BossMan picks lane → opens lane profile → inherits model from `LEARNED_V3_MODEL_STACK.md` per task type → executes → reports to BossMan → BossMan reports to Marcelo.
+
+This card does NOT change either axis. It only clarifies that the two are separate and not interchangeable.
+
+#### Loop Engineering is the default owner for recurring goal-loops (Permanent 2026-07-23)
+
+Loop Engineering (`~/.hermes/knowledge/loop-engineering-goals.md`) is the default owner for **designing recurring goal-loops** — weekly reviews, health monitors, drift checks, monthly audits, scheduled summary crons. When a card touches recurring cadence / cadence change / loop design / no-spam policy / artifact destination, BossMan should **explicitly tag** `assignee = loop-engineering` (often co-assigned with the implementing lane: Ops for PM2-facing crons, Trading for crypto-weekly, knowledge-canon for the drift-check).
+
+**Other lanes do NOT reinvent one-off cadence / spam / artifact patterns.** When a Lane (Builder, Ops, Trading, knowledge-canon, etc.) needs to embed a recurring workflow, it CALLS Loop via a kanban handoff packet. Loop designs; the implementing lane writes the actual code/script.
+
+The default-reserved cadences Loop uses (in PT unless stated): weekly Sunday 18:00, weekly Monday 08:00, monthly 1st 09:00, bi-weekly Friday 17:00. See `~/.hermes/profiles/loop-engineering/skills/loop-weekly-goal-review.md` for the full design workflow.
+
 - **LBC35 / OpenClaw** = delegator/router only. Plans and routes; never implements or touches secrets.
 
 ### Delegation standard (Permanent)
@@ -124,6 +144,27 @@ When BossMan dispatches a packet to a lane, the receiving sub-agent opens its la
 6. Step-5 QA + P5 self-verify are mandatory gates on every non-trivial change.
 7. **Model choice is automatic** — BossMan selects from `LEARNED_V3_MODEL_STACK.md`. Marcelo does NOT pick models for routine work.
 8. **Perplexity is the default external research tool** when any agent is stuck on a factual / technical / external unknown.
+
+#### Handoff examples across lanes (Permanent 2026-07-23)
+
+These examples show how BossMan dispatches a card that crosses lane boundaries. They do NOT change routing rules — they show the standard pattern.
+
+- **Builder + Loop.** "Build feature X, then hand off to Loop to design weekly review loop Y."
+  - Card A (Builder, qa_required=yes): implement the feature. Output: working code.
+  - Card B (Loop Engineering, qa_required=no): design the weekly review loop that surfaces feature X's metrics. Output: cron prompt + cadence + artifact destination.
+  - Order: A → B. If A fails, B is closed without action. If B is required before activation, link them via `dependencies` field.
+
+- **QA + Loop.** "QA verifies loop behavior on critical cards; Loop designs the loop, QA tries to break it before activation."
+  - Card C (Loop Engineering, qa_required=yes): design the loop (Telegram approval gated if money/infra/PII).
+  - Card D (QA-Verification, qa_required=yes, separate verifier run): try to break the loop — dry-run with edge-case inputs, threshold tests, lock-window-flood tests, error-path tests. Output: QA verdict PASS / FAIL with evidence.
+  - Order: C → D. Without D, the loop does NOT activate.
+
+- **Knowledge Canon + Loop.** "Loop designs monthly reuse review; Knowledge Canon runs doc updates and LEARNED captures."
+  - Card E (Loop Engineering, qa_required=no): design the monthly reuse-review cadence (when, what gets reviewed, output format).
+  - Card F (Knowledge Canon, qa_required=no, monthly cron triggered): run the review per the design. Output: updated `LEARNED_INDEX.md`, archived stale files, freshened md5s.
+  - Order: E establishes; F runs repeatedly under E.
+
+**Implicit meta-rule:** These are PATTERNS, not macros. BossMan uses them as templates; lane-specific packets still go through the lane's required handoff-packet fields defined in `~/.hermes/knowledge/<lane>.md` § 7.
 
 ---
 

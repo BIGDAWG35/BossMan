@@ -69,7 +69,7 @@
 ---
 
 **Maintained by:** knowledge-canon sub-agent on BossMan's behalf.
-**Last refresh:** 2026-07-23 (Card t_loop_engineering_profile_v1_20260723 — added loop-engineering-goals.md).
+**Last refresh:** 2026-07-23 (Card t_subagent_loop_rollout_v1_20260723 — 9 sub-agent lane profiles added: builder, content, ops, trading, self-improvement, qa-verification, research-intel, knowledge-canon, loop-engineering).
 **Next refresh:** quarterly (or on demand when a new domain is added).
 
 ---
@@ -81,7 +81,15 @@ These files are part of the hermes-canon even though they don't use the `LEARNED
 | File | Lane | Purpose |
 |---|---|---|
 | `~/.hermes/knowledge/loop-engineering-goals.md` | loop-engineering | Sub-agent profile + canon contract for the loop-engineering lane (loop design, weekly review cadence, recurring progress machinery). Mirrored 3 ways. |
+| `~/.hermes/knowledge/builder.md` | builder | Builder sub-agent profile: code implementation, build/restart workflow, verification standard. |
+| `~/.hermes/knowledge/content.md` | content | Content sub-agent profile: YouTube, TTS, media, publishing ops. |
+| `~/.hermes/knowledge/ops.md` | ops | Ops sub-agent profile: PM2, cron, Tailscale, service health, incident response. |
+| `~/.hermes/knowledge/trading.md` | trading | Trading sub-agent profile: Binance/Kraken bot configs, regime detection, risk rules. Claude mandatory. |
+| `~/.hermes/knowledge/self-improvement.md` | self-improvement | Self-improvement curriculum: skill authoring, MEMORY.md pruning, weekly health checks. |
+| `~/.hermes/knowledge/qa-verification.md` | qa-verification | QA-verification sub-agent profile: Step-5 verifier verdicts, cross-system regression tests, browser QA. |
+| `~/.hermes/knowledge/research-intel.md` | research-intel | Research-Intel sub-agent profile: Perplexity research, vendor comparisons, market intel. |
+| `~/.hermes/knowledge/knowledge-canon.md` | knowledge-canon | Knowledge Canon Reuse sub-agent profile: LEARNED_<DOMAIN>.md authoring, Obsidian mirroring, doc-hygiene. |
 
 The `LEARNED_INDEX.md` is the map of `LEARNED_*` canon files only. Per-sub-agent profile files (lives outside `LEARNED_*`) are listed in this section and cross-referenced from AGENTS.md §"Per-lane canonical files".
 
-**Drift detection:** These files are NOT auto-tracked by `hermes-canon-drift-check.sh` (which only handles the LEARNED set + AGENTS + SOUL). Loop Engineering profile updates register their own drift check manually when material.
+**Drift detection:** These files are NOT auto-tracked by `hermes-canon-drift-check.sh` (which only handles the LEARNED set + AGENTS + SOUL). Sub-agent profile updates register their own drift check manually when material.
