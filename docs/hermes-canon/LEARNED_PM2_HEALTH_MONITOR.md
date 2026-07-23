@@ -12,6 +12,12 @@ A dedicated self-healing PM2 health check runs as a cron job (every 15 min, via 
 **PHASEREPORT (2026-07-22 19:34 Pacific):**
 Card `t_drift_pm2_canon_20260722_193221` — False alarm. The drift-check ran for the first time with no baseline. The Obsidian mirror and BossMan repo were at md5 `80b578341d03bd859a2c358fd5125f8e` (stale pre-existing state), while the canon was already at the correct `680945703f40dd5225ba522bae138813`. The script created its first baseline, the card was generated as first-run behavior, and all mirrors now match. No actual silent revert occurred. Mirrors need to be refreshed before baseline is created on future first runs. No further action needed.
 
+**PHASEREPORT (2026-07-23 02:34 UTC):**
+Card `t_drift_pm2_canon_20260722_193419` — False alarm (first-run cascade). Same class as the 2026-07-22 19:34 entry. The drift-check ran at 02:34:19 UTC, detected the file at md5 `4abdb88570317c01dce2fd237eeb5567` vs a stale pre-existing baseline md5 `680945703f40dd5225ba522bae138813`. Created this card with empty drift-details (body populated before the details array was built). A second script instance ran at 02:34:24 and created `t_drift_pm2_canon_20260722_193424` (same false alarm). Baseline was created at 02:34:41 with md5 `4abdb88570317c01dce2fd237eeb5567` — matches current file. Script bug fixed: first-run baseline creation now exits code 2 (not 0) to prevent spurious second-card cascade. All mirrors (BossMan repo, Obsidian `V3 – PM2 Health Monitor.md`) match canon at 18937 bytes. Pre-existing stale Obsidian file `LEARNED_PM2_HEALTH_MONITOR.md` (1391 bytes, no space in name) is unrelated to the drift-check path. No further action needed.
+
+**PHASEREPORT (2026-07-22 19:35 Pacific):**
+Card `t_drift_pm2_canon_20260722_193507` — False alarm (concurrent-write race). At 19:35:07 PT the check caught a transient file state (md5 `9243a44ce94f61e65a56283607905d90`, section `## pmd-web Auto-Repair Rule` hash `edf7b06cc78b80377bdd81dabd002b5f`) caused by a concurrent agent edit session writing the file at the exact same timestamp. By 19:35:24 PT the file had stabilized at the correct canonical state (`4abdb88570317c01dce2fd237eeb5567`, all sections matching baseline). No actual silent revert occurred. No action needed.
+
 ---
 
 ## Skill: pm2-health-check
@@ -372,3 +378,33 @@ done
 
 - pmd-web (port 7575) all-routes 404 — was a probe-path false positive. Now fixed: canonical route is `/pmd/api/properties`. Auto-repair rule added with rate-limited rebuild+restart.
 - `tunnel-url-monitor.sh` is stale (May 29, no cron references). Kept for historical purposes; recommended to delete.
+
+---
+
+## PHASEREPORT (Permanent — 2026-07-22)
+
+**2026-07-22 — LEARNED_PM2_HEALTH_MONITOR drift source fixed and write-protected (Card t_learned_pm2_health_monitor_driftfix_20260722)**
+
+**What was wrong:**
+The `pm2-canon-drift-check.sh` script had two bugs:
+1. Mirror-drift false alerts: The script flagged mirror lag as "DRIFT" even when the canon had been *intentionally* updated by a legitimate card (mirrors naturally lag by seconds to minutes). This caused spurious kanban cards `t_drift_pm2_canon_20260722_193221`, `_193419`, `_193424`, `_193507`.
+2. Invalid `hermes exec notify` command: The Telegram alert used `hermes exec notify` which is not a valid Hermes CLI command — alerts silently failed.
+
+**Fixes applied:**
+- Mirror-drift logic now only fires when canon itself is unchanged. If canon drifted intentionally, mirror lag is logged as "(expected — canon updated, mirrors pending sync)" without triggering an alert.
+- Telegram alert fixed: `hermes exec notify` → `hermes send --to telegram` (uses HOME_CHANNEL from .env = 8536867361).
+- Stale ghost kanban cards (`t_drift_pm2_canon_20260722_193419`, `_193507`) marked `done` with explanation.
+- Baseline already at correct md5 `4abdb88570317c01dce2fd237eeb5567` — no change needed.
+
+**Write-protection:**
+- `pm2-canon-drift-check.sh` (cron job `c464124c759e`, ops profile) runs every 6 hours.
+- Monitors full-file md5 + 3 protected section hashes.
+- Baseline at `~/.hermes/state/pm2-canon-baseline.json` — update by appending a PHASEREPORT entry + running `python3` to re-hash (see script comment).
+- Drift → kanban card created + Telegram alert sent.
+
+**Mirrors verified (all match md5 `4abdb88570317c01dce2fd237eeb5567`):**
+- `~/.hermes/knowledge/LEARNED_PM2_HEALTH_MONITOR.md` (canon)
+- `~/Obsidian/Hermes/V3-Canon/V3 – PM2 Health Monitor.md`
+- `~/Repos/BossMan/docs/hermes-canon/LEARNED_PM2_HEALTH_MONITOR.md`
+
+**Note:** No active generator/writer was found that could cause silent drift. The PM2 CLI Usage Policy section, CLI Wrapper Rollout section, and pmd-web Auto-Repair Rule sections were all correctly written by their respective cards (t_pm2_zombie_spawn_root_cause, t_pm2_cli_wrapper_rollout, t_pmd_web_next_build_and_whitelist) and have been stable since. The drift-check is now the guardrail against any future silent writer.
