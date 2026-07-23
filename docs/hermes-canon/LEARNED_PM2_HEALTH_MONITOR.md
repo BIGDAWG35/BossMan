@@ -199,6 +199,81 @@ All hermes/agent scripts that call `pm2` CLI directly must be updated to use `~/
 
 **Permanent — 2026-07-22 (Card t_pm2_zombie_spawn_root_cause_20260722):** Any new script or agent that calls `pm2` CLI must use `pm2-hermes.sh` wrapper. This is the single canonical pattern.
 
+## CLI Wrapper Rollout Complete (Permanent — 2026-07-22, Card t_pm2_cli_wrapper_rollout_20260722)
+
+This card enforced `~/.hermes/scripts/pm2-hermes.sh` as the only PM2 CLI entrypoint across all active hermes scripts and cron prompts.
+
+**Scripts migrated (8 active, 1 legacy, 1 stale):**
+
+| Script | Before | After |
+|---|---|---|
+| `hermes-weekly-systems-review.sh` | `PM2_HOME=/Users/bigdawg/.pm2 pm2 jlist` | `~/.hermes/scripts/pm2-hermes.sh jlist` |
+| `v3_supplement_healthcheck.sh` | `PM2_HOME=/Users/bigdawg/.pm2 pm2 list` | `~/.hermes/scripts/pm2-hermes.sh list` |
+| `weekly-systems-improvement.sh` | `PM2_HOME=/Users/bigdawg/.pm2 pm2 jlist` | `~/.hermes/scripts/pm2-hermes.sh jlist` |
+| `security-pm2-monthly.sh` | `PM2_HOME=/Users/bigdawg/.pm2 pm2 jlist` + `pm2 ping` | `~/.hermes/scripts/pm2-hermes.sh jlist` + `ping` |
+| `pmd-watchdog.sh` | `PM2_HOME=/Users/bigdawg/.pm2 pm2 list` + `pm2 restart pmd-web` | `~/.hermes/scripts/pm2-hermes.sh list` + `restart pmd-web` |
+| `pmd-health-watchdog.sh` | `pm2 describe` + `pm2 restart` + `pm2 start` | `~/.hermes/scripts/pm2-hermes.sh describe` + `restart` + `start` |
+| `binance-bot-live-monitor.sh` | `PM2_HOME=/Users/bigdawg/.pm2 pm2 jlist` | `~/.hermes/scripts/pm2-hermes.sh jlist` |
+| `tunnel-url-monitor.sh` | `pm2 logs cloudflare-tunnel` | `~/.hermes/scripts/pm2-hermes.sh logs cloudflare-tunnel` (stale; no cron ref) |
+| `legacy/pm2-health-monitor.sh` | (retired 2026-06-08; not migrated) | — |
+| `offboard-audit.py` | (string pattern for security audit, not a real invocation) | — |
+
+**Cron prompts updated (4 crons, all in builder + content profiles):**
+
+| Cron | Profile | Change |
+|---|---|---|
+| `01dff7ff61e4` PM2 Health Monitor | bossman + builder + content | Added "PM2 CLI WRAPPER POLICY" section at top of prompt (1,031 chars) with examples |
+| `617757fbccff` pmd-watchdog | builder + content | Added short wrapper note (450 chars) |
+| `76956b7cafa7` CSDAWG 2.0 Weekly Intelligence | builder + content | Added short wrapper note (450 chars) |
+| `88eff3953480` Hermes Weekly Systems Review | builder + content | Added short wrapper note (450 chars) |
+
+**Verification (live, post-rollout):**
+
+- All 8 active scripts executed with no zombie leaks, canonical daemon (PID 30262) and 8 services remained healthy
+- PM2 Health Monitor at 18:51, 18:53, 19:12 PT — all returned `[SILENT]`
+- 30+ stress-test calls via wrapper — 0 zombies, 0 tmpdirs, 0 `~/.hermes/pro`
+- Backups preserved: `~/.hermes/profiles/*/cron/jobs.json.bak.20260722-pm2-wrapper[-others]`
+
+**Canonical usage examples:**
+
+```bash
+# Reading PM2 state
+~/.hermes/scripts/pm2-hermes.sh list
+~/.hermes/scripts/pm2-hermes.sh jlist | python3 -c "import json,sys; print(json.load(sys.stdin))"
+~/.hermes/scripts/pm2-hermes.sh desc pmd-web
+
+# Reading service logs
+~/.hermes/scripts/pm2-hermes.sh logs pmd-web --lines 50 --nostream
+~/.hermes/scripts/pm2-hermes.sh logs binance-bot --lines 100 --nostream
+
+# Lifecycle (restart/start/stop)
+~/.hermes/scripts/pm2-hermes.sh restart pmd-web
+~/.hermes/scripts/pm2-hermes.sh start --name pmd-web npm -- start
+~/.hermes/scripts/pm2-hermes.sh stop travel-os
+
+# Health checks
+~/.hermes/scripts/pm2-hermes.sh ping
+```
+
+**Forbidden patterns (anti-patterns):**
+
+```bash
+# BAD — touches ~/.hermes/pro daemon
+PM2_HOME=~/.hermes/pro pm2 list
+
+# BAD — pm2 kill does not respect env PM2_HOME override; kills canonical too
+PM2_HOME=$(mktemp -d) pm2 list && PM2_HOME=$(mktemp -d) pm2 kill
+
+# BAD — isolation alone, no cleanup
+PM2_HOME=$(mktemp -d) pm2 list  # leaks a zombie daemon in /tmp/pm2-hermes-XXXXX
+
+# BAD — direct invocation without wrapper
+pm2 list
+pm2 jlist
+pm2 restart pmd-web
+```
+
 ### Known Issues (logged 2026-07-22)
 
 - pmd-web (port 7575) all-routes 404 — stale `.next/` build artifact. Not in auto-repair whitelist; needs Marcelo decision (separate card).
+- `tunnel-url-monitor.sh` is stale (May 29, no cron references). Kept for historical purposes; recommended to delete.
