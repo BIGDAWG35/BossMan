@@ -93,7 +93,26 @@ Project-specific execution details belong in `~/.hermes/knowledge/` or Basecamp.
 ### At a glance
 - **Marcelo** = reviewer/owner only. Approves V3 carve-outs + final products.
 - **BossMan** = manager/leader/orchestrator. Owns phases + routing + verification + final status surface.
-- **Sub-agents** (builder, ops, trading, content, travel, qa-verification, research-intel, knowledge-canon, self-improvement, loop-engineering) = workers. Follow the 7-rule contract; escalate only via BossMan.
+- **Sub-agents** (builder, ops, trading, content, travel, qa-verification, research-intel, knowledge-canon, self-improvement, **loop-engineering**) = workers. Follow the 7-rule contract; escalate only via BossMan.
+
+#### Per-lane canonical files
+
+Each sub-agent lane has a dedicated MD profile. The roster above is the contract layer; the file below is the operating doc.
+
+| Lane | Canonical file | Mission |
+|---|---|---|
+| builder | `~/.hermes/knowledge/LEARNED_DEFAULT_BUILD_FLOW.md` | Default build flow for projects |
+| ops | (embedded in `LEARNED_PM2_HEALTH_MONITOR.md`) | Infra hygiene, PM2/cron cleanliness |
+| trading | (pending — see kanban `t_*_trading_*` cards) | Trading decisions, bot configs |
+| content | (pending) | Content pipeline, YouTube, newsletters |
+| travel | `~/.hermes/knowledge/LEARNED_TRAVEL_OS.md` | Travel OS, trip reminders |
+| qa-verification | (pending) | Step-5 QA, P5 self-verify execution |
+| research-intel | (pending) | Perplexity research, intel reports |
+| knowledge-canon | (lives in this file + `LEARNED_INDEX.md`) | LEARNED_*.md index maintenance |
+| self-improvement | (pending) | Hermes self-improvement loops |
+| **loop-engineering** | `~/.hermes/knowledge/loop-engineering-goals.md` | Self-working loops, goal systems, weekly review cadence |
+
+When BossMan dispatches a packet to a lane, the receiving sub-agent opens its lane file first. The lane file is the contract; this roster is the index.
 - **LBC35 / OpenClaw** = delegator/router only. Plans and routes; never implements or touches secrets.
 
 ### Delegation standard (Permanent)

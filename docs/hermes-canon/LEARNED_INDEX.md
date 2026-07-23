@@ -69,5 +69,19 @@
 ---
 
 **Maintained by:** knowledge-canon sub-agent on BossMan's behalf.
-**Last refresh:** 2026-07-22 (Card t_learned_domain_index_20260722).
+**Last refresh:** 2026-07-23 (Card t_loop_engineering_profile_v1_20260723 — added loop-engineering-goals.md).
 **Next refresh:** quarterly (or on demand when a new domain is added).
+
+---
+
+## Related non-`LEARNED_*` canon files (sub-agent profiles + lane contracts)
+
+These files are part of the hermes-canon even though they don't use the `LEARNED_` prefix. Listed here for navigation.
+
+| File | Lane | Purpose |
+|---|---|---|
+| `~/.hermes/knowledge/loop-engineering-goals.md` | loop-engineering | Sub-agent profile + canon contract for the loop-engineering lane (loop design, weekly review cadence, recurring progress machinery). Mirrored 3 ways. |
+
+The `LEARNED_INDEX.md` is the map of `LEARNED_*` canon files only. Per-sub-agent profile files (lives outside `LEARNED_*`) are listed in this section and cross-referenced from AGENTS.md §"Per-lane canonical files".
+
+**Drift detection:** These files are NOT auto-tracked by `hermes-canon-drift-check.sh` (which only handles the LEARNED set + AGENTS + SOUL). Loop Engineering profile updates register their own drift check manually when material.
