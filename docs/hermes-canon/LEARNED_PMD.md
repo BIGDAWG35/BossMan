@@ -114,6 +114,40 @@ curl -sS -o /dev/null -w 'LOCAL:%{http_code}\n' http://localhost:7575/pmd/api/pr
 
 ---
 
+## Pages + routes (added 2026-07-22, Card t_pmd_properties_table_v1_20260722)
+
+| Route | Page | Data source | Notes |
+|---|---|---|---|
+| `/pmd/` | Portfolio (dashboard home) | server-side data layer | Original landing page |
+| `/pmd/properties` | Properties table (read-only v1) | server-side `properties.listAll()` + `/pmd/api/properties` (client refresh) | New — Card t_pmd_properties_table_v1_20260722 |
+| `/pmd/p/:id` | Property detail | `properties.listAll()` | Per-property view |
+| `/pmd/renewals`, `/pmd/pnl`, `/pmd/repairs`, `/pmd/mortgages`, `/pmd/market-value`, `/pmd/documents`, `/pmd/settings` | Other nav pages | various | Pre-existing |
+
+### Properties page architecture
+
+| Component | Role |
+|---|---|
+| `web/app/(app)/properties/page.tsx` | Server component — fetches via `@/lib/data` (`properties.listAll().map(properties.toApi)`), passes to client component |
+| `web/components/PropertiesTable.tsx` | Client component — renders table, handles Refresh button + error states |
+| `/pmd/api/properties` | Canonical PMD API endpoint (Next.js route, GET = list all properties). Used by the client Refresh button to re-fetch |
+
+**Why split server/client:** `@/components/ui` (Card, PageHeader, etc.) transitively imports `@/lib/data`, which is server-only. A `'use client'` page that imports those UI components causes a Next.js build error (`node:module` externalization). Splitting the page into a server shell + a small client child keeps the data layer on the server.
+
+### Table columns + status (Card t_pmd_properties_table_v1_20260722)
+
+| Column | Source | Notes |
+|---|---|---|
+| Name | `property.nickname` (link to `/pmd/p/{id}`) | "—" if missing |
+| Address | `property.address` | Direct |
+| City | `property.city`, `property.state`, `property.zip` | Joined as "City, ST ZIP" |
+| Status | `property.isActive` | Active (success badge) or Inactive (muted) |
+| Rent | n/a | **Placeholder "—"** — `/pmd/api/properties` does not expose lease data. Will populate when a lease-aware endpoint is added. |
+| Next Due Date | n/a | **Placeholder "—"** — same reason as Rent |
+
+**Follow-up card (logged):** Add a `/pmd/api/leases` GET endpoint that returns `{ leases: [{ propertyId, monthlyRent, nextDueDate }] }`, then have the table cross-reference by propertyId to fill Rent + Next Due Date columns. This is a separate scope (writes new API route); not in v1.
+
+---
+
 ## Tools + automation
 
 | Tool | Cadence | Reference |
