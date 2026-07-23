@@ -7,6 +7,13 @@ A dedicated self-healing PM2 health check runs as a cron job (every 15 min, via 
 
 **Cron job ID:** `01dff7ff61e4` (bossman profile) — silent when healthy, reports to Marcelo/Telegram only on actual repair.
 
+---
+
+**PHASEREPORT (2026-07-22 19:34 Pacific):**
+Card `t_drift_pm2_canon_20260722_193221` — False alarm. The drift-check ran for the first time with no baseline. The Obsidian mirror and BossMan repo were at md5 `80b578341d03bd859a2c358fd5125f8e` (stale pre-existing state), while the canon was already at the correct `680945703f40dd5225ba522bae138813`. The script created its first baseline, the card was generated as first-run behavior, and all mirrors now match. No actual silent revert occurred. Mirrors need to be refreshed before baseline is created on future first runs. No further action needed.
+
+---
+
 ## Skill: pm2-health-check
 
 Located at `~/.hermes/skills/devops/pm2-health-check/SKILL.md`. Runbook covers all 8 detection rules and 5 repair playbooks.
