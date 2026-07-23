@@ -193,6 +193,7 @@ Loop **does not** edit these files autonomously; Loop writes **proposals** as ka
 | **Travel OS External Watchdog** | every 15 min | Ops (runtime), Loop (loop design) | cron `b858e01bd089` |
 | **Travel OS Handoff Sync Drift Check** | weekly Sat 06:00 PT | knowledge-canon (drift-fix), Loop (no-spam) | cron `ab41f101c407` |
 | **Travel OS Weekly Review** (NEW 2026-07-23) | weekly Sun 18:00 PT | Loop (design + no-spam + state file), Ops (cron), Travel (content) | cron `5fced7f41345` — `~/.hermes/logs/travel-os-loop-design-20260723.md` |
+| **SquarePayouts Weekly Health Review** (NEW 2026-07-23) | weekly Mon 08:00 PT | Loop (design + no-spam + model-whitelist guard), Ops (cron), QA (verify), Knowledge Canon (captures) | cron `0209dcf24ee8` — `~/.hermes/logs/squarepayouts-loop-design-20260723.md`; model restriction per `LEARNED_SQUAREPAYOUTS.md` (M3 BLOCKED for SquarePayouts work) |
 
 **Ownership semantics (no behavior changes):**
 
