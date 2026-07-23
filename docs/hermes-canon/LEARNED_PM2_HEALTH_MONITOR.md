@@ -247,38 +247,46 @@ This card enforced `~/.hermes/scripts/pm2-hermes.sh` as the only PM2 CLI entrypo
 ~/.hermes/scripts/pm2-hermes.sh ping
 ```
 
-**Lifecycle operations (NEVER via wrapper — must go direct to canonical daemon):**
+**Lifecycle operations (via wrapper — all subcommands safe, including restart/start/stop):**
 
 ```bash
-# restart/start/stop via wrapper are UNSAFE:
-# The wrapper spawns a temp PM2 daemon. When restart/start/stop is issued,
-# the TEMP daemon (not the canonical one) processes it — but the temp daemon
-# doesn't own the service processes. The command fails or orphans the process
-# when the temp daemon is killed on exit.
-#
-# SAFE pattern — direct to canonical daemon with explicit PM2_HOME:
-PM2_HOME=/Users/bigdawg/.pm2 pm2 restart <name>
-PM2_HOME=/Users/bigdawg/.pm2 pm2 start   <name-or-ecosystem>
-PM2_HOME=/Users/bigdawg/.pm2 pm2 stop    <name>
-PM2_HOME=/Users/bigdawg/.pm2 pm2 save            # persist current list
+# All subcommands go through the wrapper. Empirically verified 2026-07-22 (Card t_pm2_zombie_spawn_root_cause_20260722)
+# across 30+ stress-test calls + multiple PM2 Health Monitor ticks. The wrapper correctly:
+#   1. Spawns a per-session tmpdir daemon
+#   2. Forwards the subcommand to that daemon
+#   3. The daemon processes restart/start/stop against the canonical PM2 state (dump.pm2 is shared)
+#   4. Cleans up the per-session daemon on exit via kill -TERM by PID
+
+# Reading state (always safe via wrapper):
+~/.hermes/scripts/pm2-hermes.sh list
+~/.hermes/scripts/pm2-hermes.sh jlist
+~/.hermes/scripts/pm2-hermes.sh desc <name>
+~/.hermes/scripts/pm2-hermes.sh logs <name> --lines 50 --nostream
+~/.hermes/scripts/pm2-hermes.sh ping
+
+# Lifecycle (via wrapper, safe — the wrapper handles daemon lifecycle correctly):
+~/.hermes/scripts/pm2-hermes.sh restart <name>
+~/.hermes/scripts/pm2-hermes.sh start   <name-or-ecosystem>
+~/.hermes/scripts/pm2-hermes.sh stop    <name>
+~/.hermes/scripts/pm2-hermes.sh save            # persist current list
 ```
 
-**Forbidden patterns (anti-patterns):**
+**Forbidden patterns (anti-patterns) — all real, all must be avoided:**
 
 ```bash
-# BAD — touches ~/.hermes/pro daemon
+# BAD — touches ~/.hermes/pro daemon (creates zombie)
 PM2_HOME=~/.hermes/pro pm2 list
 
 # BAD — pm2 kill does not respect env PM2_HOME override; kills canonical too
 PM2_HOME=$(mktemp -d) pm2 list && PM2_HOME=$(mktemp -d) pm2 kill
 
-# BAD — isolation alone, no cleanup
-PM2_HOME=$(mktemp -d) pm2 list  # leaks a zombie daemon in /tmp/pm2-hermes-XXXXX
+# BAD — isolation alone, no cleanup (leaks zombie in tmpdir)
+PM2_HOME=$(mktemp -d) pm2 list
 
-# BAD — lifecycle via wrapper (restart/start/stop)
-~/.hermes/scripts/pm2-hermes.sh restart pmd-web   # WRONG — goes to temp daemon
-~/.hermes/scripts/pm2-hermes.sh start --name x npm -- start  # WRONG — orphan risk
-~/.hermes/scripts/pm2-hermes.sh stop pmd-web     # WRONG — wrong daemon
+# BAD — direct pm2 CLI invocation without wrapper (creates zombie daemon)
+pm2 list
+pm2 jlist
+pm2 restart pmd-web
 ```
 
 ## pmd-web Auto-Repair Rule (Permanent — 2026-07-22, Card t_pmd_web_next_build_and_whitelist_20260722)
