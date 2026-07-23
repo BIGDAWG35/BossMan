@@ -211,9 +211,9 @@ This card enforced `~/.hermes/scripts/pm2-hermes.sh` as the only PM2 CLI entrypo
 | `v3_supplement_healthcheck.sh` | `PM2_HOME=/Users/bigdawg/.pm2 pm2 list` | `~/.hermes/scripts/pm2-hermes.sh list` |
 | `weekly-systems-improvement.sh` | `PM2_HOME=/Users/bigdawg/.pm2 pm2 jlist` | `~/.hermes/scripts/pm2-hermes.sh jlist` |
 | `security-pm2-monthly.sh` | `PM2_HOME=/Users/bigdawg/.pm2 pm2 jlist` + `pm2 ping` | `~/.hermes/scripts/pm2-hermes.sh jlist` + `ping` |
-| `pmd-watchdog.sh` | `PM2_HOME=/Users/bigdawg/.pm2 pm2 list` + `pm2 restart pmd-web` | `~/.hermes/scripts/pm2-hermes.sh list` + `restart pmd-web` |
-| `pmd-health-watchdog.sh` | `pm2 describe` + `pm2 restart` + `pm2 start` | `~/.hermes/scripts/pm2-hermes.sh describe` + `restart` + `start` |
-| `binance-bot-live-monitor.sh` | `PM2_HOME=/Users/bigdawg/.pm2 pm2 jlist` | `~/.hermes/scripts/pm2-hermes.sh jlist` |
+| `pmd-watchdog.sh` | `PM2_HOME=~/.pm2 pm2 list` + `pm2 restart pmd-web` | `~/.hermes/scripts/pm2-hermes.sh list`; restart stays direct (`PM2_HOME=/Users/bigdawg/.pm2 pm2 restart pmd-web`) |
+| `pmd-health-watchdog.sh` | `pm2 describe` + `pm2 restart` + `pm2 start` | `~/.hermes/scripts/pm2-hermes.sh describe`; `restart`/`start` stay direct to canonical daemon |
+| `binance-bot-live-monitor.sh` | `PM2_HOME=~/.pm2 pm2 jlist` | `~/.hermes/scripts/pm2-hermes.sh jlist` |
 | `tunnel-url-monitor.sh` | `pm2 logs cloudflare-tunnel` | `~/.hermes/scripts/pm2-hermes.sh logs cloudflare-tunnel` (stale; no cron ref) |
 | `legacy/pm2-health-monitor.sh` | (retired 2026-06-08; not migrated) | — |
 | `offboard-audit.py` | (string pattern for security audit, not a real invocation) | — |
@@ -236,23 +236,31 @@ This card enforced `~/.hermes/scripts/pm2-hermes.sh` as the only PM2 CLI entrypo
 
 **Canonical usage examples:**
 
+**Canonical usage examples (READ-ONLY ONLY — all go via wrapper):**
+
 ```bash
-# Reading PM2 state
 ~/.hermes/scripts/pm2-hermes.sh list
 ~/.hermes/scripts/pm2-hermes.sh jlist | python3 -c "import json,sys; print(json.load(sys.stdin))"
 ~/.hermes/scripts/pm2-hermes.sh desc pmd-web
-
-# Reading service logs
 ~/.hermes/scripts/pm2-hermes.sh logs pmd-web --lines 50 --nostream
 ~/.hermes/scripts/pm2-hermes.sh logs binance-bot --lines 100 --nostream
-
-# Lifecycle (restart/start/stop)
-~/.hermes/scripts/pm2-hermes.sh restart pmd-web
-~/.hermes/scripts/pm2-hermes.sh start --name pmd-web npm -- start
-~/.hermes/scripts/pm2-hermes.sh stop travel-os
-
-# Health checks
 ~/.hermes/scripts/pm2-hermes.sh ping
+```
+
+**Lifecycle operations (NEVER via wrapper — must go direct to canonical daemon):**
+
+```bash
+# restart/start/stop via wrapper are UNSAFE:
+# The wrapper spawns a temp PM2 daemon. When restart/start/stop is issued,
+# the TEMP daemon (not the canonical one) processes it — but the temp daemon
+# doesn't own the service processes. The command fails or orphans the process
+# when the temp daemon is killed on exit.
+#
+# SAFE pattern — direct to canonical daemon with explicit PM2_HOME:
+PM2_HOME=/Users/bigdawg/.pm2 pm2 restart <name>
+PM2_HOME=/Users/bigdawg/.pm2 pm2 start   <name-or-ecosystem>
+PM2_HOME=/Users/bigdawg/.pm2 pm2 stop    <name>
+PM2_HOME=/Users/bigdawg/.pm2 pm2 save            # persist current list
 ```
 
 **Forbidden patterns (anti-patterns):**
@@ -267,13 +275,85 @@ PM2_HOME=$(mktemp -d) pm2 list && PM2_HOME=$(mktemp -d) pm2 kill
 # BAD — isolation alone, no cleanup
 PM2_HOME=$(mktemp -d) pm2 list  # leaks a zombie daemon in /tmp/pm2-hermes-XXXXX
 
-# BAD — direct invocation without wrapper
-pm2 list
-pm2 jlist
-pm2 restart pmd-web
+# BAD — lifecycle via wrapper (restart/start/stop)
+~/.hermes/scripts/pm2-hermes.sh restart pmd-web   # WRONG — goes to temp daemon
+~/.hermes/scripts/pm2-hermes.sh start --name x npm -- start  # WRONG — orphan risk
+~/.hermes/scripts/pm2-hermes.sh stop pmd-web     # WRONG — wrong daemon
 ```
+
+## pmd-web Auto-Repair Rule (Permanent — 2026-07-22, Card t_pmd_web_next_build_and_whitelist_20260722)
+
+**Context:** pmd-web (port 7575) was flagged as "all-routes 404" by earlier PM2 Health Monitor runs. Investigation on 2026-07-22 confirmed this was a **probe-path false positive**:
+- Root `/` returns 404 — CORRECT (app is behind `basePath: /pmd`)
+- Deprecated `/portfolio` returns 404 — CORRECT (basePath was changed `/portfolio` → `/pmd` on 2026-07-15)
+- Canonical `/pmd/api/properties` returns 200 with real property data (4 properties) — HEALTHY
+- `.next/BUILD_ID` is from Jul 15 22:55; no source file is newer than BUILD_ID → no rebuild needed
+
+**Decision (2026-07-22):** Add pmd-web to the auto-repair whitelist with a rate-limited rebuild+restart rule. Trigger ONLY on canonical-route 5xx, never on legacy-path 404s.
+
+**Trigger conditions (ALL must hold):**
+1. `/pmd/api/properties` returns 5xx OR non-200 for 3 consecutive probes
+2. PM2 jlist shows pmd-web `status: online`
+3. Last repair attempt (per `/tmp/pmd-web-auto-repair.state`) is older than 30 min
+4. Lock dir `/tmp/pmd-web-auto-repair.lock` does not exist
+
+**Repair script:** `~/.hermes/scripts/pmd-web-auto-repair.sh` (5,162 bytes, executable)
+
+```bash
+# Step 1: pm2 stop pmd-web (via wrapper, safe for stop)
+~/.hermes/scripts/pm2-hermes.sh stop pmd-web
+
+# Step 2: rm -rf .next (mandatory — D7 stale build artifacts)
+cd /Users/bigdawg/Projects/property-management-dashboard/web
+rm -rf .next
+
+# Step 3: npm run build (D7-SUB pitfall: build from web/ NOT ~ or /Users/bigdawg/)
+npm run build
+
+# Step 4: pm2 start (via wrapper, safe for start)
+~/.hermes/scripts/pm2-hermes.sh start ecosystem.config.cjs --only pmd-web
+
+# Step 5: wait up to 30s for /pmd/api/properties to return 200
+for i in $(seq 1 30); do
+  sleep 1
+  CODE=$(curl -sS -o /dev/null -w "%{http_code}" --max-time 3 http://localhost:7575/pmd/api/properties)
+  [ "$CODE" = "200" ] && break
+done
+
+# Step 6: log + exit
+# /tmp/pmd-web-auto-repair.log (full rebuild output)
+# /tmp/pmd-web-auto-repair.state (last_attempt_at = now())
+```
+
+**Guardrails (Permanent):**
+
+| Guardrail | Mechanism | Override |
+|---|---|---|
+| **Rate limit: 1 rebuild per 30 min** | `/tmp/pmd-web-auto-repair.state` (epoch of last attempt) | `PMD_REPAIR_RATE_LIMIT_MIN=0 bash pmd-web-auto-repair.sh` for emergencies |
+| **Lock: prevent concurrent runs** | `mkdir /tmp/pmd-web-auto-repair.lock` (trap rmdir on EXIT) | (no override — lock is mandatory) |
+| **CWD check (D7-SUB pitfall)** | Script always `cd $PMD_DIR` before build; logs the resolved cwd | (no override — must rebuild from project dir) |
+| **Escalation: don't loop on failure** | If `/pmd/api/properties` still returns 5xx after 30s post-rebuild, exit 1 + log ESCALATE — NO retry | Operator must investigate + clear state file to retry |
+
+**Probe-path correction (Permanent 2026-07-22):**
+
+| Path | Old status | New status | Why |
+|---|---|---|---|
+| `/` (root) | flagged as 404 | expected 404 (correct) | App is behind `basePath: /pmd`; no route at root |
+| `/portfolio` | flagged as 404 | expected 404 (deprecated) | basePath changed `/portfolio` → `/pmd` on 2026-07-15 |
+| `/pmd` (basePath) | 200 | 200 (canonical) | Next.js redirects `/pmd` → `/pmd/` |
+| `/pmd/api/properties` | 200 | 200 (canonical) | Real API endpoint; returns property data |
+| `/pmd/app` | 404 | 404 (no such route) | Not a real route in the app — was a misnomer |
+
+**Escalation policy (Permanent):**
+- If 3 consecutive probes fail on `/pmd/api/properties` (5xx) AND last repair was <30 min ago → ESCALATE to Marcelo (do NOT auto-rebuild, do NOT wait silently)
+- If auto-repair runs but `/pmd/api/properties` still fails after 30s → ESCALATE to Marcelo (do NOT loop)
+- If pmd-web is in PM2 status `errored` or `stopped` (not `online`) → also ESCALATE (different repair path, manual investigation)
+
+**Out of scope (separate decisions):**
+- pmd-web Tailscale Funnel URL (`https://bigdawgs-mac--studio.tailed3212.ts.net/pmd/*`) health is monitored by `pmd-watchdog.sh` (already migrated to wrapper in Card D). Not part of the auto-repair rule here.
+- pmd-api (port 7576) has no auto-repair rule; it's a server-only Node.js module, implicitly healthy when pmd-web is online.
 
 ### Known Issues (logged 2026-07-22)
 
-- pmd-web (port 7575) all-routes 404 — stale `.next/` build artifact. Not in auto-repair whitelist; needs Marcelo decision (separate card).
+- pmd-web (port 7575) all-routes 404 — was a probe-path false positive. Now fixed: canonical route is `/pmd/api/properties`. Auto-repair rule added with rate-limited rebuild+restart.
 - `tunnel-url-monitor.sh` is stale (May 29, no cron references). Kept for historical purposes; recommended to delete.
