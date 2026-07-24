@@ -225,3 +225,23 @@ A `GET /api/v1/tournaments/:id/status` returning:
 
 None blocking. Existing schema + bracket + services cover the structural
 foundation. The gaps are wiring + UI for the live tournament experience.
+
+---
+
+## 8. Payment architecture (cross-reference)
+
+The full payment architecture — manual Zelle/Venmo payment collection with host approval as source-of-truth — is documented separately in:
+
+  `~/.hermes/knowledge/dominoes/architecture/PAYMENTS_ARCHITECTURE_2026-07-23.md`
+
+Section summaries that this blueprint locks in:
+
+- Free tournaments require no payment row.
+- Paid tournaments auto-create a `payments` row per `(tournament_id, user_id)` at join time in `unpaid` status.
+- Player may submit a free-text reference + chosen rail; host reviews and approves/rejects.
+- Bracket lock at `start_time + checkin_window_minutes` is the gating rule. Players whose payment is not `approved` or `waived` by lock time are excluded from the bracket and recorded as `late_no_show`.
+- Co-hosts are opt-in via `tournaments.co_hosts_allowed`. The new `tournament_co_hosts` table grants per-tournament review permission.
+- No in-app money movement, no card forms, no platform custody. Host's payment_handle is shown to the player; the player sends money off-platform and marks "I paid".
+- Proof upload (image file storage) is **deferred to V1.1**. V1 accepts a free-text reference.
+
+This section is the **brief restatement**. The canonical design lives in the architecture doc.
