@@ -2,7 +2,7 @@
 
 **Source:** `~/.hermes/knowledge/`
 **Status:** Active — 26 files
-**Regenerated:** 2026-07-24 06:00
+**Regenerated:** 2026-07-26 06:00
 
 ---
 
@@ -15,8 +15,8 @@
 | `LEARNED_BASECAMP_WORKFLOW.md` | Basecamp Workflow — Permanent Operating Rules |
 | `LEARNED_BRAVE_PERPLEXITY_BRIDGE.md` | LEARNED — Brave Perplexity Bridge |
 | `LEARNED_CLIENT_REVIEW_PORTAL.md` | Client Review Portal + Helpdesk Ticket System — Permanent Operating Model |
+| `LEARNED_CONFIG-PATCH-OLLAMA-ROUTING-20260725.md` | CONFIG-PATCH — Ollama Routine-Cron Routing |
 | `LEARNED_DEFAULT_BUILD_FLOW.md` | LEARNED: Default Build Flow — V3 Stack (2026-07-15) |
-| `LEARNED_DOMINOES.md` | Dominoes -- Permanent Reference Card |
 | `LEARNED_HEALTH_OS_V3_DECISIONS.md` | Health OS V3 — Decision Logic / Architectural Choices |
 | `LEARNED_HEALTH_OS_V3_REPORTING.md` | Health OS V3 — Reporting Shape (Strict-grade shopping lists) |
 | `LEARNED_INDEX.md` | LEARNED_INDEX.md — Master Index of All `LEARNED_<DOMAIN>.md` Canon Files |
