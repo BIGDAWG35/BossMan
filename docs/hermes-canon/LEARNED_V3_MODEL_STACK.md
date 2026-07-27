@@ -148,6 +148,68 @@ If the issue requires external knowledge (new error pattern, vendor API change),
 
 ---
 
+## Routine cron routing — Ollama/local by default (Permanent 2026-07-25, card t_monitoring_ollama_default_v1_20260725)
+
+This sub-policy is **additive** to the V3 model stack above. Routine monitors,
+grinders, bulk-cleanup, and PM2/cron infra checks **default to Ollama/local**
+(`provider: custom`, `base_url: http://localhost:11434/v1`, model `qwen2.5:3b`
+or `qwen2.5:14b`) instead of falling through to Claude / DeepSeek.
+
+### What "routine" means here
+
+A cron job is **routine** if it satisfies ALL of:
+
+- Cadence is fixed-time (`*/N`, `0 H * * *`, weekly) and not event-driven.
+- It is non-strategic — i.e., failure does NOT directly move money / expose
+  credentials / delete user data.
+- The job's output is "silent when healthy" or "produce a small status row",
+  not a long-form artifact.
+- It is observable by a human (status row visible in cron output / Telegram)
+  rather than a blind autonomous feedback loop.
+
+Examples: PM2 Health Monitor, Brave CDP watchdog, CuaDriver health checks,
+backfill scans, canon drift checks, weekly ledger scans.
+
+### What stays on Claude / DeepSeek (NOT routine)
+
+- money/trading signals and bot state (binance-*, pmd-*, money-pipeline-*)
+- safety-sensitive paths (auth, PII, payments, SquarePayouts code paths)
+- jobs whose card explicitly pins Claude or DeepSeek per a v3 carve-out
+  (e.g., a kanban card writing "use Claude for the production rollout")
+
+### Per-card override
+
+If a kanban card's spec explicitly names a model, the cron job's per-job
+`provider` / `model` / `base_url` fields MUST be set to that model (overrides
+the cron-routing default). The PM2 Health Monitor's per-job `model` /
+`provider` / `base_url` always wins over the global fallback chain.
+
+### Config interaction
+
+`config.yaml` exposes two knobs:
+
+- `model.context_length: 65536` — keeps Hermes' 64K-context floor happy when
+  working with local Ollama tags that report <64K via /v1/models (qwen2.5:14b
+  reports 32k; the override fakes it to 65k for agent-init validation only).
+- `model.ollama_num_ctx: 65536` — what Ollama actually requests from the
+  daemon on each call. Sized to fit 14b-class Metal inference within
+  M4 Max unified memory budget.
+
+Cron jobs may also pin their own `ollama_num_ctx` in jobs.json if a tighter
+window is desired. Defaults are conservative for M-series hardware.
+
+### Fallback chain (updated 2026-07-25)
+
+Global `fallback_providers` in `config.yaml` has been trimmed to a
+single local entry: `custom` provider (Ollama). Routine cron jobs that
+fail Ollama inference now fail LOUD instead of silently burning Claude
+or DeepSeek tokens. Strategic cards that pin Claude/DeepSeek bypass
+this fallback chain via the per-job `provider` / `model` / `base_url`
+override (the cron scheduler prefers job-level settings over the
+global chain).
+
+---
+
 ## Routing config (lives in `config.yaml` + per-profile overrides)
 
 **Default** (BossMan profile): `MiniMax-M3` — chatty bulk work.
