@@ -1,8 +1,8 @@
 # LEARNED_*.md Files — Full Index
 
 **Source:** `~/.hermes/knowledge/`
-**Status:** Active — 26 files
-**Regenerated:** 2026-07-26 06:00
+**Status:** Active — 29 files
+**Regenerated:** 2026-07-28 06:00
 
 ---
 
@@ -26,16 +26,19 @@
 | `LEARNED_PMD.md` | LEARNED_PMD.md — PMD (Property Management Dashboard) Canon |
 | `LEARNED_PMD_DASHBOARDS.md` | PMD + Production Dashboards — Permanent Operating Rules |
 | `LEARNED_PMD_VALUATION_INTEGRATION.md` | PMD Valuation Integration — LEARNED (2026-07-21) |
+| `LEARNED_SNS_401K.md` | LEARNED — SNS 401K Retire-OS |
 | `LEARNED_SQUAREPAYOUTS.md` | SquarePayouts — Permanent Ownership Rule |
 | `LEARNED_STANDING_AUTHORITIES.md` | Standing Authorities & Health Monitors |
 | `LEARNED_STORIS_API.md` | LEARNED — STORIS API (durable takeaways) |
 | `LEARNED_SUB_AGENT_MASTER_BLUEPRINT.md` | LEARNED_SUB_AGENT_MASTER_BLUEPRINT.md — Sub-Agent Lane Discipline + Handoff Contracts |
+| `LEARNED_TAILSCALE_SERVE_NEXTJS_PROXY.md` | Tailscale Serve + Next.js: the `/_next/static/*` 404 trap |
 | `LEARNED_TRAVEL_OS.md` | Travel OS — Permanent Operating Rules |
 | `LEARNED_USER_PREFERENCES_AUTONOMOUS_MODE.md` | Marcelo — Autonomous Operator Mode (extended detail) |
 | `LEARNED_V3_BASELINE.md` | Health OS V3 — Supplement Baseline (V3) |
 | `LEARNED_V3_MODEL_STACK.md` | V3 Model Stack — Canonical Routing Map (Permanent 2026-07-20) |
 | `LEARNED_V3_TOKEN_ECONOMICS.md` | V3 Token Economics — Reuse, Don't Re-Pay (Permanent 2026-07-20) |
 | `LEARNED_V4_CANONICAL_LOCK.md` | LEARNED — V4 Canonical Lock Rule (2026-07-15) |
+| `LEARNED_VIDEO_RENDERING.md` |  |
 
 ---
 *Auto-generated — do not edit manually*
