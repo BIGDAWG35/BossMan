@@ -1,8 +1,8 @@
 # LEARNED_*.md Files — Full Index
 
 **Source:** `~/.hermes/knowledge/`
-**Status:** Active — 29 files
-**Regenerated:** 2026-07-28 06:00
+**Status:** Active — 32 files
+**Regenerated:** 2026-07-29 06:00
 
 ---
 
@@ -39,6 +39,9 @@
 | `LEARNED_V3_TOKEN_ECONOMICS.md` | V3 Token Economics — Reuse, Don't Re-Pay (Permanent 2026-07-20) |
 | `LEARNED_V4_CANONICAL_LOCK.md` | LEARNED — V4 Canonical Lock Rule (2026-07-15) |
 | `LEARNED_VIDEO_RENDERING.md` |  |
+| `LEARNED_YOUTUBE_CREATOR_RESOURCES.md` | YouTube Creator Resources — Vetted Free Resource Pack |
+| `LEARNED_YOUTUBE_DASHBOARD_V3.md` | LEARNED_YOUTUBE_DASHBOARD_V3.md — YouTube Dashboard v3.0 (ElevenLabs-only) |
+| `LEARNED_YOUTUBE_FREE_RESOURCES.md` | LEARNED — YouTube Free Stack Navigator v1 |
 
 ---
 *Auto-generated — do not edit manually*
