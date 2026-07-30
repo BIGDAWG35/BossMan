@@ -1,8 +1,8 @@
 # LEARNED_*.md Files — Full Index
 
 **Source:** `~/.hermes/knowledge/`
-**Status:** Active — 32 files
-**Regenerated:** 2026-07-29 06:00
+**Status:** Active — 34 files
+**Regenerated:** 2026-07-30 06:00
 
 ---
 
@@ -33,6 +33,7 @@
 | `LEARNED_SUB_AGENT_MASTER_BLUEPRINT.md` | LEARNED_SUB_AGENT_MASTER_BLUEPRINT.md — Sub-Agent Lane Discipline + Handoff Contracts |
 | `LEARNED_TAILSCALE_SERVE_NEXTJS_PROXY.md` | Tailscale Serve + Next.js: the `/_next/static/*` 404 trap |
 | `LEARNED_TRAVEL_OS.md` | Travel OS — Permanent Operating Rules |
+| `LEARNED_USER_OPERATIONAL_RULES.md` | Marcelo — Standing Operational Rules (Permanent) |
 | `LEARNED_USER_PREFERENCES_AUTONOMOUS_MODE.md` | Marcelo — Autonomous Operator Mode (extended detail) |
 | `LEARNED_V3_BASELINE.md` | Health OS V3 — Supplement Baseline (V3) |
 | `LEARNED_V3_MODEL_STACK.md` | V3 Model Stack — Canonical Routing Map (Permanent 2026-07-20) |
@@ -40,8 +41,9 @@
 | `LEARNED_V4_CANONICAL_LOCK.md` | LEARNED — V4 Canonical Lock Rule (2026-07-15) |
 | `LEARNED_VIDEO_RENDERING.md` |  |
 | `LEARNED_YOUTUBE_CREATOR_RESOURCES.md` | YouTube Creator Resources — Vetted Free Resource Pack |
-| `LEARNED_YOUTUBE_DASHBOARD_V3.md` | LEARNED_YOUTUBE_DASHBOARD_V3.md — YouTube Dashboard v3.0 (ElevenLabs-only) |
+| `LEARNED_YOUTUBE_DASHBOARD_V3.md` | LEARNED_YOUTUBE_DASHBOARD_V3.md — YouTube Dashboard v3.0 (Video Stack v3) |
 | `LEARNED_YOUTUBE_FREE_RESOURCES.md` | LEARNED — YouTube Free Stack Navigator v1 |
+| `LEARNED_YOUTUBE_V15_5_TOOLING_UPGRADE.md` | LEARNED — YouTube Production Stack v15.5 Tooling Upgrade (2026-07-29) |
 
 ---
 *Auto-generated — do not edit manually*
