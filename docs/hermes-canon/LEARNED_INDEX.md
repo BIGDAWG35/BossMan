@@ -1,6 +1,6 @@
 # LEARNED_INDEX.md — Master Index of All `LEARNED_<DOMAIN>.md` Canon Files
 
-**Status:** Permanent (refreshed 2026-07-22, Card t_learned_domain_index_20260722).
+**Status:** Permanent (refreshed 2026-07-30, Card t_blender_lts_5_20260730 — entry #29 added; file count 28→29).
 **Purpose:** Single map of all per-system / per-domain canon files. Kernel-docs (SOUL.md, AGENTS.md, ROUTING-RULES v3) point into `LEARNED_*` for ownership/architecture/repair details. This index is the map of all domains.
 
 ---
@@ -17,7 +17,7 @@
 
 ---
 
-## Master index (24 files)
+## Master index (29 files)
 
 | # | Domain | Path | Size | Scope summary | Lane / Owner | Last-updated |
 |---|--------|------|------|---------------|--------------|--------------|
@@ -25,6 +25,7 @@
 | 2 | **Altus Forensic** | `LEARNED_ALTUS_FORENSIC.md` | 0.9 KB | Altus Forensic ownership rule (extracted from SOUL.md 2026-07-22). | client-hub sub-agent | 2026-07-22 |
 | 3 | **Basecamp Workflow** | `LEARNED_BASECAMP_WORKFLOW.md` | 4.0 KB | Basecamp autonomous workflow + retirement rule (extracted from SOUL.md 2026-07-22). | Basecamp sub-agent | 2026-07-22 |
 | 4 | **Brave-Perplexity Bridge** | `LEARNED_BRAVE_PERPLEXITY_BRIDGE.md` | 4.6 KB | Brave browser ↔ Perplexity.ai integration (Cloudflare-bypass patterns). | research-intel sub-agent | 2026-06-24 |
+| 4b | **Tailscale + Next.js Proxy** | `LEARNED_TAILSCALE_SERVE_NEXTJS_PROXY.md` | 2.6 KB | Tailscale Serve `/_next/static/*` 404 trap + Caddy fix (extracted 2026-07-27 from SNS-401K incident). | BossMan (kernel) | 2026-07-27 |
 | 5 | **Client Review Portal** | `LEARNED_CLIENT_REVIEW_PORTAL.md` | 2.2 KB | Client review portal + helpdesk ticket system operating model. | client-hub sub-agent | 2026-07-22 |
 | 6 | **Default Build Flow** | `LEARNED_DEFAULT_BUILD_FLOW.md` | 6.5 KB | V3 default build flow: research → design → build → harden → QA → docs. | BossMan (kernel) | 2026-07-15 |
 | 7 | **Health OS V3 Decisions** | `LEARNED_HEALTH_OS_V3_DECISIONS.md` | 2.4 KB | Health OS V3 architectural decisions + decision logic. | health-os sub-agent | 2026-07-20 |
@@ -45,8 +46,13 @@
 | 22 | **V3 Model Stack** | `LEARNED_V3_MODEL_STACK.md` | 11.7 KB | V3 model roles + task-type routing (canonical model authority). | BossMan (kernel) | 2026-07-20 |
 | 23 | **V3 Token Economics** | `LEARNED_V3_TOKEN_ECONOMICS.md` | 6.5 KB | V3 token economics + cost tiers + fallback chains. | BossMan (kernel) | 2026-07-20 |
 | 24 | **V4 Canonical Lock** | `LEARNED_V4_CANONICAL_LOCK.md` | 6.0 KB | V4 Health OS canonical lock (do-not-modify rules). | health-os sub-agent | 2026-07-15 |
+| 25 | **YouTube Creator Resources** | `LEARNED_YOUTUBE_CREATOR_RESOURCES.md` | 35.2 KB | Vetted free YouTube production resource pack — 7 categories (slides, animation, SFX, music, motion graphics, stock footage, captions, learning), license-verified (Pexels, Pixabay, BBC, Mixkit, YT Audio Library, Freesound, Suno, Canva, Gamma, OBS, DaVinci, CapCut). Top-10 stack + `youtube-creator-stack` skill design. Companion: `~/.hermes/skills/youtube-creator-stack/SKILL.md` | content sub-agent | 2026-07-28 |
+| 26 | **YouTube Free Resources v1** | `LEARNED_YOUTUBE_FREE_RESOURCES.md` | 6.7 KB | v1 canonical bundle for `youtube-free-resources-skill` (Navigator). 8 categories w/ primary+fallback, license-named, quota-checked. Scope: faceless explainers + narrated slide videos for AI/crypto/finance. Hand-off → `slide-style-explainer-video`. Companion skill at `~/.hermes/skills/creative/youtube-free-resources-skill/SKILL.md` + project docs in `/Users/bigdawg/Projects/youtube-dashboard/{docs,prompts}/`. | content sub-agent | 2026-07-28 |
+| 27 | **YouTube Dashboard v3.0** | `LEARNED_YOUTUBE_DASHBOARD_V3.md` | 6.1 KB | YouTube dashboard hard separation (ElevenLabs-only). Live ElevenLabs subscription API wiring (`https://api.elevenlabs.io/v1/user/subscription`), 5-min cache, flat-file fallback. Validator warns-only (no fail-fast). Single 401 today: key lacks `user_read` scope. Companion flag card `t_520f0927` (bossman board). Server: `/Users/bigdawg/Projects/youtube-dashboard/server.js` on port 8140. | content sub-agent | 2026-07-28 |
+| 28 | **Apple Motion** | `LEARNED_APPLE_MOTION.md` | 31.2 KB | Apple Motion 6.3 in the Hermes stack — GUI-only 2D motion-graphics tool (titles, particles, behaviors, cameras, match-moving, FCP template publishing). 23 sections covering workflow, project settings, keyframing, behaviors, particles, cameras, tracking, templates, Image Playground (Apple Intelligence), supported media formats, export destinations, Apple-silicon perf, automation reality (no CLI scripting), v17 pipeline integration, sub-agent operating procedures. Source: Motion 6.3 User Guide PDF mirrored at `~/Projects/four-tool-video-stack/refs/motion_user_guide_6.3.pdf`. | content sub-agent | 2026-07-30 |
+| 29 | **Blender 5.2 LTS** | `LEARNED_BLENDER_LTS.md` | 31.2 KB | Blender 5.2 LTS in the Hermes stack — headless 3D scene renderer (P3 of v17 pipeline). 24 sections covering LTS behavior + version pin (`fbe6228777e7`, supported until July 2028), 5.2 release caveats (FFMPEG enum removed, GN API changes), canonical CLI invocation (`-b -noaudio --factory-startup -P`), render-config defaults (Eevee, 1920×1080, 30 fps, 90 frames), PNG→ffmpeg stitch workaround, performance budget (~10–17 s), hardware notes (Apple Silicon Metal only), open gaps from stack integration audit. Source: docs.blender.org/manual/en/5.2/ (107 URLs, 24 pages mirrored locally) + 3 verified 2025–2026 tutorials (Blender Studio, Polygon Runway, Ryan King Art). | content sub-agent | 2026-07-30 |
 
-**Total: 24 files / ~141 KB.**
+**Total: 29 files / ~252 KB.**
 
 ---
 
@@ -69,7 +75,7 @@
 ---
 
 **Maintained by:** knowledge-canon sub-agent on BossMan's behalf.
-**Last refresh:** 2026-07-23 (Card t_subagent_loop_rollout_v1_20260723 — 9 sub-agent lane profiles added: builder, content, ops, trading, self-improvement, qa-verification, research-intel, knowledge-canon, loop-engineering).
+**Last refresh:** 2026-07-30 (Card t_blender_lts_5_20260730 — entry #29 added; sibling to #28 Apple Motion for the four-tool stack).
 **Next refresh:** quarterly (or on demand when a new domain is added).
 
 ---
