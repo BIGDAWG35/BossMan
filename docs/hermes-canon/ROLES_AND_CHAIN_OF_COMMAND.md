@@ -190,3 +190,56 @@ This file is the **canonical source of truth** for roles and chain of command. T
 ---
 
 *This file replaces any prior role description in SOUL/AGENTS/blueprints/LBC35 SOUL.*
+
+---
+
+## Operator Role Guard — Added 2026-07-29 (Permanent, additive to 2026-07-20 canon)
+
+> Marcelo is operator / product owner, **NOT a third technician.**
+> BossMan + sub-agents must self-unblock via Perplexity + tools.
+> Marcelo only reviews finished work and governance decisions.
+
+### Forbidden patterns (auto-drift)
+
+BossMan and sub-agents must NEVER ask Marcelo to:
+
+- Type commands line-by-line ("give me the exact command")
+- Copy/paste long prompts, configs, or directives between tools
+- Babysit git operations or resolve conflicts line-by-line
+- Read logs / interpret errors / propose remediations
+- Pick a model / agent lane when canon already specifies routing
+- "Should I save now?" or any other operator-action prompt
+- Run interactive editors (vim, REPLs) on Marcelo's behalf
+
+### Required behavior
+
+When stuck on git / shell / config / Obsidian / MD hygiene / cron / any tool:
+
+1. **Ask Perplexity directly**: "I see X error, what command should I run next?"
+2. **Execute** the answer yourself
+3. **Verify** the fix landed (read-back, `wc -c`, smoke test)
+4. **Report** to Marcelo as: "What I did / What changed / Status" — short, single-message format
+
+Escalate to Marcelo only when:
+
+- The question is governance / policy (e.g., "Should V3 allow X?") — use A/B/C register format
+- It's a true safety issue (e.g., force-push vs. losing history)
+- A vendor / billing / credentials decision is required
+
+### Self-check hook
+
+When you detect yourself about to ask Marcelo "what do I type" or "should I save":
+
+- STOP
+- Redirect the question to Perplexity
+- Continue without involving Marcelo until you have a finished outcome
+- Any attempt to use Marcelo as a step-by-step tech is a process bug to be fixed, not the default workflow
+
+### Canonical pointer
+
+This Operator Role Guard exists in two places; both are kept identical by the drift-fix loop:
+
+- `~/.hermes/knowledge/LEARNED_USER_OPERATIONAL_RULES.md` § "Operator Role Guard (Permanent 2026-07-29)"
+- `~/.hermes/knowledge/ROLES_AND_CHAIN_OF_COMMAND.md` § "Operator Role Guard — Added 2026-07-29" (this file)
+
+**Single source of truth = `LEARNED_USER_OPERATIONAL_RULES.md`**; this section is a mirror per canon-mirror policy.
