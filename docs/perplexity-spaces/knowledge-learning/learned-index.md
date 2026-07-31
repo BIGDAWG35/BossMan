@@ -1,8 +1,8 @@
 # LEARNED_*.md Files — Full Index
 
 **Source:** `~/.hermes/knowledge/`
-**Status:** Active — 34 files
-**Regenerated:** 2026-07-30 06:00
+**Status:** Active — 41 files
+**Regenerated:** 2026-07-31 06:00
 
 ---
 
@@ -12,11 +12,15 @@
 |------|-------|
 | `LEARNED_7_RULE_CONTRACT.md` | The 7-Rule Contract — Marcelo's Operating Preferences for BossMan + Sub-agents |
 | `LEARNED_ALTUS_FORENSIC.md` | Altus Forensic — Permanent Ownership Rule |
+| `LEARNED_APPLE_MOTION.md` | LEARNED_APPLE_MOTION.md — Apple Motion 6.3 in the Hermes Stack |
 | `LEARNED_BASECAMP_WORKFLOW.md` | Basecamp Workflow — Permanent Operating Rules |
+| `LEARNED_BLENDER_LTS.md` | LEARNED_BLENDER_LTS.md |
 | `LEARNED_BRAVE_PERPLEXITY_BRIDGE.md` | LEARNED — Brave Perplexity Bridge |
 | `LEARNED_CLIENT_REVIEW_PORTAL.md` | Client Review Portal + Helpdesk Ticket System — Permanent Operating Model |
 | `LEARNED_CONFIG-PATCH-OLLAMA-ROUTING-20260725.md` | CONFIG-PATCH — Ollama Routine-Cron Routing |
+| `LEARNED_DAVINCI_RESOLVE_STUDIO.md` | DaVinci Resolve Studio — Hermes Knowledge (2026-07-30) |
 | `LEARNED_DEFAULT_BUILD_FLOW.md` | LEARNED: Default Build Flow — V3 Stack (2026-07-15) |
+| `LEARNED_FOUR_TOOL_VIDEO_STACK.md` | Four-Tool Video Stack — v17 (2026-07-30) |
 | `LEARNED_HEALTH_OS_V3_DECISIONS.md` | Health OS V3 — Decision Logic / Architectural Choices |
 | `LEARNED_HEALTH_OS_V3_REPORTING.md` | Health OS V3 — Reporting Shape (Strict-grade shopping lists) |
 | `LEARNED_INDEX.md` | LEARNED_INDEX.md — Master Index of All `LEARNED_<DOMAIN>.md` Canon Files |
@@ -35,15 +39,18 @@
 | `LEARNED_TRAVEL_OS.md` | Travel OS — Permanent Operating Rules |
 | `LEARNED_USER_OPERATIONAL_RULES.md` | Marcelo — Standing Operational Rules (Permanent) |
 | `LEARNED_USER_PREFERENCES_AUTONOMOUS_MODE.md` | Marcelo — Autonomous Operator Mode (extended detail) |
+| `LEARNED_V17PP_8_TO_12_MIN.md` | LEARNED — v17++ 8-to-12 min YouTube workflow (2026-07-30) |
 | `LEARNED_V3_BASELINE.md` | Health OS V3 — Supplement Baseline (V3) |
 | `LEARNED_V3_MODEL_STACK.md` | V3 Model Stack — Canonical Routing Map (Permanent 2026-07-20) |
 | `LEARNED_V3_TOKEN_ECONOMICS.md` | V3 Token Economics — Reuse, Don't Re-Pay (Permanent 2026-07-20) |
 | `LEARNED_V4_CANONICAL_LOCK.md` | LEARNED — V4 Canonical Lock Rule (2026-07-15) |
 | `LEARNED_VIDEO_RENDERING.md` |  |
+| `LEARNED_YOUTUBE_AUTOMATION_AUTHORITY.md` | YouTube Automation Authority — v17 Four-Tool Video Stack |
 | `LEARNED_YOUTUBE_CREATOR_RESOURCES.md` | YouTube Creator Resources — Vetted Free Resource Pack |
 | `LEARNED_YOUTUBE_DASHBOARD_V3.md` | LEARNED_YOUTUBE_DASHBOARD_V3.md — YouTube Dashboard v3.0 (Video Stack v3) |
 | `LEARNED_YOUTUBE_FREE_RESOURCES.md` | LEARNED — YouTube Free Stack Navigator v1 |
 | `LEARNED_YOUTUBE_V15_5_TOOLING_UPGRADE.md` | LEARNED — YouTube Production Stack v15.5 Tooling Upgrade (2026-07-29) |
+| `LEARNED_YOUTUBE_WORKFLOW.md` | YouTube Workflow — v17 four-tool video stack |
 
 ---
 *Auto-generated — do not edit manually*
