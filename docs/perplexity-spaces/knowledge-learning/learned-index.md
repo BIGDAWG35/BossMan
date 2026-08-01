@@ -1,8 +1,8 @@
 # LEARNED_*.md Files — Full Index
 
 **Source:** `~/.hermes/knowledge/`
-**Status:** Active — 41 files
-**Regenerated:** 2026-07-31 06:00
+**Status:** Active — 43 files
+**Regenerated:** 2026-08-01 06:00
 
 ---
 
@@ -40,10 +40,12 @@
 | `LEARNED_USER_OPERATIONAL_RULES.md` | Marcelo — Standing Operational Rules (Permanent) |
 | `LEARNED_USER_PREFERENCES_AUTONOMOUS_MODE.md` | Marcelo — Autonomous Operator Mode (extended detail) |
 | `LEARNED_V17PP_8_TO_12_MIN.md` | LEARNED — v17++ 8-to-12 min YouTube workflow (2026-07-30) |
+| `LEARNED_V22_AI_BROWSERS.md` | LEARNED_V22_AI_BROWSERS — 2026-07-31 |
 | `LEARNED_V3_BASELINE.md` | Health OS V3 — Supplement Baseline (V3) |
 | `LEARNED_V3_MODEL_STACK.md` | V3 Model Stack — Canonical Routing Map (Permanent 2026-07-20) |
 | `LEARNED_V3_TOKEN_ECONOMICS.md` | V3 Token Economics — Reuse, Don't Re-Pay (Permanent 2026-07-20) |
 | `LEARNED_V4_CANONICAL_LOCK.md` | LEARNED — V4 Canonical Lock Rule (2026-07-15) |
+| `LEARNED_VIDEO_LAYOUT_REFERENCES.md` | LEARNED_VIDEO_LAYOUT_REFERENCES — v22 (2026-07-31) |
 | `LEARNED_VIDEO_RENDERING.md` |  |
 | `LEARNED_YOUTUBE_AUTOMATION_AUTHORITY.md` | YouTube Automation Authority — v17 Four-Tool Video Stack |
 | `LEARNED_YOUTUBE_CREATOR_RESOURCES.md` | YouTube Creator Resources — Vetted Free Resource Pack |
