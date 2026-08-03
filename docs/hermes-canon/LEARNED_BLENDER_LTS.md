@@ -619,6 +619,12 @@ From the stack integration audit (2026-07-30):
 | **Bundle path** | `/Applications/Blender.app/Contents/MacOS/Blender` (macOS .app structure) |
 | **Splash / splash artwork** | The 5.2 release artwork "Panthera spelaea" by Joanna Kobierska |
 
+### v17 sibling tools (cross-references from Blender's perspective)
+
+- **Apple Motion 5 (overlay)** — Blender's PNG-stitched `scene_3d.mp4` is the V1 base. Motion 5 produces V2 overlay `.mov` files with alpha. Motion is **GUI-only**; when the pipeline is headless, fall back to ffmpeg `drawtext` with animated alpha. See `LEARNED_APPLE_MOTION.md` §15.
+- **DaVinci Resolve Studio (validator)** — Blender's PNG frames + ffmpeg-stitched mp4 land in Resolve Studio v21.0.3 (App Store variant) as V1 base. **Resolve validates the timeline**, not renders. Blender + ffmpeg produce the actual `final.mp4`. Resolve constructs the same V1/V2/A1 layout via `MediaPool.AppendToTimeline`; if the `.drp` project assembles, the ffmpeg composite is structurally valid. Full rationale in `LEARNED_DAVINCI_RESOLVE_STUDIO.md` §10.
+- **ffmpeg (composite + final encode)** — Blender outputs PNG frames, then ffmpeg stitches: `ffmpeg -framerate 30 -i frames/frame_%04d.png -c:v libx264 -pix_fmt yuv420p +faststart scene_3d.mp4`. The `+faststart` flag moves the moov atom to the front; without it YouTube buffering spikes 30–60%.
+
 ---
 
 ## 22. References (canonical URLs, all verified HTTP 200 on 2026-07-30)

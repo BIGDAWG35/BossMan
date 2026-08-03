@@ -1,6 +1,6 @@
 # LEARNED_INDEX.md — Master Index of All `LEARNED_<DOMAIN>.md` Canon Files
 
-**Status:** Permanent (refreshed 2026-07-30, Card t_blender_lts_5_20260730 — entry #29 added; file count 28→29).
+**Status:** Permanent (refreshed 2026-07-31, Card `t_video_layout_refspec_20260731` — added entry #35 (`LEARNED_VIDEO_LAYOUT_REFERENCES.md`, the 3-reference visual layout canon: Hermes Agent Masterclass / CryptoMetric / AI Labs). File count 34→35. Earlier 2026-07-31 patches on entries #31/#32/#33/#34 added v18 PiP overlay sections. Refresher 2026-07-30 entries #30–34: DaVinci Resolve Studio, Four-Tool Video Stack v17, Video Rendering ffmpeg, YouTube Workflow, YouTube Automation Authority; file count 29→34).
 **Purpose:** Single map of all per-system / per-domain canon files. Kernel-docs (SOUL.md, AGENTS.md, ROUTING-RULES v3) point into `LEARNED_*` for ownership/architecture/repair details. This index is the map of all domains.
 
 ---
@@ -17,7 +17,7 @@
 
 ---
 
-## Master index (29 files)
+## Master index (34 files)
 
 | # | Domain | Path | Size | Scope summary | Lane / Owner | Last-updated |
 |---|--------|------|------|---------------|--------------|--------------|
@@ -51,8 +51,13 @@
 | 27 | **YouTube Dashboard v3.0** | `LEARNED_YOUTUBE_DASHBOARD_V3.md` | 6.1 KB | YouTube dashboard hard separation (ElevenLabs-only). Live ElevenLabs subscription API wiring (`https://api.elevenlabs.io/v1/user/subscription`), 5-min cache, flat-file fallback. Validator warns-only (no fail-fast). Single 401 today: key lacks `user_read` scope. Companion flag card `t_520f0927` (bossman board). Server: `/Users/bigdawg/Projects/youtube-dashboard/server.js` on port 8140. | content sub-agent | 2026-07-28 |
 | 28 | **Apple Motion** | `LEARNED_APPLE_MOTION.md` | 31.2 KB | Apple Motion 6.3 in the Hermes stack — GUI-only 2D motion-graphics tool (titles, particles, behaviors, cameras, match-moving, FCP template publishing). 23 sections covering workflow, project settings, keyframing, behaviors, particles, cameras, tracking, templates, Image Playground (Apple Intelligence), supported media formats, export destinations, Apple-silicon perf, automation reality (no CLI scripting), v17 pipeline integration, sub-agent operating procedures. Source: Motion 6.3 User Guide PDF mirrored at `~/Projects/four-tool-video-stack/refs/motion_user_guide_6.3.pdf`. | content sub-agent | 2026-07-30 |
 | 29 | **Blender 5.2 LTS** | `LEARNED_BLENDER_LTS.md` | 31.2 KB | Blender 5.2 LTS in the Hermes stack — headless 3D scene renderer (P3 of v17 pipeline). 24 sections covering LTS behavior + version pin (`fbe6228777e7`, supported until July 2028), 5.2 release caveats (FFMPEG enum removed, GN API changes), canonical CLI invocation (`-b -noaudio --factory-startup -P`), render-config defaults (Eevee, 1920×1080, 30 fps, 90 frames), PNG→ffmpeg stitch workaround, performance budget (~10–17 s), hardware notes (Apple Silicon Metal only), open gaps from stack integration audit. Source: docs.blender.org/manual/en/5.2/ (107 URLs, 24 pages mirrored locally) + 3 verified 2025–2026 tutorials (Blender Studio, Polygon Runway, Ryan King Art). | content sub-agent | 2026-07-30 |
+| 30 | **DaVinci Resolve Studio 21** | `LEARNED_DAVINCI_RESOLVE_STUDIO.md` | 30.4 KB | DaVinci Resolve Studio v21.0.3 in the Hermes stack — the v17 **validator** tool (NOT the renderer). 24 sections covering bundle install path (`/Applications/DaVinci Resolve Studio.app` — note space; `com.blackmagic-design.DaVinciResolveAppStore` bundle id), Apple Silicon + Metal acceleration, **scripting API** (`scriptapp("Resolve")` returns `PyRemoteObject` on Studio, `None` on Lite — Lite wall documented), App Store sandbox constraints (ExternalScriptingEnabled toggle in `~/Library/Preferences/com.blackmagic-design.DaVinciResolveAppStore.plist`), IOXPC requirement (MUST run in GUI mode, NOT `-nogui`), ffmpeg filter graphs as the canonical sub-agent contract, the "Resolve-as-Validator" pattern (construct `.drp` with same V1/V2/A1 layout; ffmpeg produces final.mp4), render presets (H.264, H.265, ProRes), RenderQueue API + headless render prohibition, Python 3.12/3.13 interpreter mapping, the 9 canonical sub-agent patterns, drift-check contract, agent contract. Source: blackmagicdesign.com/developer (verified HTTP 200). Companion skill: `LEARNED_FOUR_TOOL_VIDEO_STACK.md`. | content sub-agent | 2026-07-30 |
+| 31 | **Four-Tool Video Stack (v17)** | `LEARNED_FOUR_TOOL_VIDEO_STACK.md` | 9.5 KB | v17 four-tool pipeline (ElevenLabs + Blender 5.2 + Apple Motion 5 + DaVinci Resolve Studio). 3 s 1080p30 final.mp4 on Mac Studio M4. Studio is the ONLY Resolve (Lite uninstalled). Layer spec (1920×1080, 30 fps, 90 frames, h264 +faststart). The Resolve-as-validator pattern with 5-stage reasoning. Canonical sub-agent contract: detect Studio, read all 4 sibling LEARNED_*.md files, write `.drp` project via `MediaPool.AppendToTimeline`, validate via `RenderQueue.AddJobFromTimeline`, run ffmpeg composite, return PASS. Cross-references to all 4 LEARNED docs. | content sub-agent | 2026-07-30 |
+| 32 | **Video Rendering (ffmpeg)** | `LEARNED_VIDEO_RENDERING.md` | 7.8 KB | ffmpeg composite spec for v17: `[1:v]overlay=0:0:format=auto[v]`, audio loop (`aloop=loop=-1:size=2e9`), final encode flags (`-shortest -c:v h264 -pix_fmt yuv420p -movflags +faststart -c:a aac -b:a 192k`). 26/26 PASS on Mac Studio M4. v17 tool-by-tool orchestrator reference (Blender / Motion / Resolve / ffmpeg roles). `+faststart` flag is mandatory for YouTube. | content sub-agent | 2026-07-30 |
+| 33 | **YouTube Workflow** | `LEARNED_YOUTUBE_WORKFLOW.md` | 3.0 KB | v17 single-script YouTube workflow wrapper — `bash build/youtube_workflow.sh <script.txt>` → `build/final.mp4` in one command. Patches: `tts_elevenlabs.py` accepts `SCRIPT_PATH`/`SCRIPT_TEXT` env override; `youtube_workflow.sh` runs P2-P6 end-to-end; `run_pipeline.sh` hardened with `set -u` PYTHONPATH safety. 26/26 PASS on a fresh narration (no re-discovery). YouTube-ready mp4 (h264/aac, 1920×1080, moov-at-front via `+faststart`). Companion: 5 video-stack LEARNED_* files (rows 28–32). | content sub-agent | 2026-07-30 |
+| 34 | **YouTube Automation Authority** | `LEARNED_YOUTUBE_AUTOMATION_AUTHORITY.md` | 4.8 KB | **Standing directive** from Marcelo (2026-07-30): v17 is canon for short YouTube. For any future short YouTube video: BossMan uses `youtube_workflow.sh` as default path, never re-discovers, never asks Marcelo to open UI, never improvises. Edge case → update LEARNED + drift-check. 6 forbidden patterns codified as V3 carve-out triggers. 6 video-stack LEARNED docs (rows 28–33) are the blueprint. Companion: `LEARNED_YOUTUBE_WORKFLOW.md`. | content sub-agent | 2026-07-30 |
 
-**Total: 29 files / ~252 KB.**
+**Total: 34 files / ~290 KB.**
 
 ---
 
@@ -75,7 +80,7 @@
 ---
 
 **Maintained by:** knowledge-canon sub-agent on BossMan's behalf.
-**Last refresh:** 2026-07-30 (Card t_blender_lts_5_20260730 — entry #29 added; sibling to #28 Apple Motion for the four-tool stack).
+**Last refresh:** 2026-07-30 (Card `t_video_stack_lockin_20260730` — entries #30 (DaVinci Resolve Studio), #31 (Four-Tool Video Stack v17), #32 (Video Rendering ffmpeg), #33 (YouTube Workflow), #34 (YouTube Automation Authority — Marcelo's standing directive) added; v17 four-tool video stack lock-in complete: 7 docs, all cross-linked, all 4 clauses (Resolve validator, Motion GUI-only, Blender 5.2 LTS, ffmpeg +faststart) present in every doc; YouTube workflow wrapper proven 26/26 PASS on a fresh script).
 **Next refresh:** quarterly (or on demand when a new domain is added).
 
 ---
