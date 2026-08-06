@@ -194,3 +194,139 @@ BossMan updates this file whenever the cron/LaunchAgent set changes. Every entry
 - 2026-07-22: **39 active** (after reconciliation + Build-Metrics Monthly cron `4e1e61cf6932`)
 
 **Status:** PHASED-IN. Next reconciliation recommended in 90 days or whenever a cron registration / retirement occurs.
+
+---
+
+## Travel OS Loop — added 2026-07-23 (Card t_travelos_trip-review-loop_v1_20260723)
+
+**Loop design lane:** Loop Engineering  
+**Runtime lane:** Ops (cron registration) + Travel (UX / trip data)  
+**PM2 health:** `travel-os` already in PM2 Health Monitor whitelist (8 services, port 3537).  
+**Design brief:** `~/.hermes/logs/travel-os-loop-design-20260723.md` (12.2 KB)  
+**Script:** `~/.hermes/scripts/travel-os-weekly-review.sh` (8.4 KB Python)  
+**State file:** `~/.hermes/state/travel-os-weekly-review.state` (lock window)
+
+### New cron entry
+
+| Cron id | Name | Schedule | Delivery | Owner (lane) | Cron-approval |
+|---|---|---|---|---|---|
+| `5fced7f41345` | Travel OS Weekly Review (NEW) | `0 1 * * 0` (Sunday 18:00 PT) | local (silent; script decides escalation) | Loop Engineering (design) + Ops (registration) + Travel (content) | `marcelo_approved=true` on card `t_travelos_trip-review-loop_v1_20260723` |
+
+### Prompt + script logic
+
+1. Cron runs the script; script enforces a 7-day lock window (`state.lask_brief_date`).
+2. Script fetches `/trips` from Travel OS (currently no-data fallback — Travel implements the endpoint in a follow-up card).
+3. Script writes the brief to `~/.hermes/logs/travel-os-weekly-review-YYYY-MM-DD.md`.
+4. Script exits `0` (silent, healthy) or `10` (escalate, blockers detected).
+5. Cron prompt:
+   - exit 0 → silent.
+   - exit 10 → deliver contents of `~/.hermes/logs/travel-os-weekly-review-ESCALATE.md` to Telegram.
+
+### No-spam rules (Permanent; Loop Engineering auditing)
+
+- 7-day lock window (state file).
+- Silent when no actionable items (no upcoming trips + no blockers + no follow-ups).
+- Telegram only when blockers detected + escalation marker exists.
+- One brief per cron run; no re-runs within window.
+
+### Existing crons unchanged by this loop
+
+- `b858e01bd089` Travel OS External Watchdog — already healthy (fixed 2026-07-22 Card `t_travel_os_tailscale_routes_cleanup_20260722`).
+- `ab41f101c407` Travel OS Handoff Sync — Sat 06:00 weekly, silent drift check.
+- `7f58cef97c80` Travel OS Trip Reminder (consolidated) — daily 08:00, pre-approved Telegram. **Future revision** (separate card `t_travelos_loop_b_prompt_update_20260723`) will tighten the prompt to add a 12-hour send window + per-trip-per-day lock window (NO new Telegram routes).
+
+### Cross-lane pattern
+
+Lane routing for this loop:
+
+- **Loop Engineering** owns cadence / no-spam / artifact destination / state file.
+- **Ops** owns PM2 process health, cron registration + PM2 whitelist cross-check.
+- **Travel** owns trip-data fetcher (`/trips` endpoint), per-trip UX (upcoming list, weekly review view), and content of brief.
+
+Per `~/.hermes/knowledge/loop-engineering-goals.md` § 5 + `~/.hermes/knowledge/ops.md` / `travel.md` "Loop Engineering integration" subsections.
+
+
+---
+
+## SquarePayouts Loop — added 2026-07-23 (Card t_squarepayouts_health-loop_v1_20260723)
+
+**Loop design lane:** Loop Engineering (uses M3 only for general loop-pattern design — SquarePayouts exec work is BLOCKED from M3 by LEARNED_SQUAREPAYOUTS.md)  
+**Runtime lane:** Ops (cron registration + model whitelist guard) + QA-Verification (Step-5 reviewer)  
+**Content lane:** Knowledge Canon (Loop Engineering captures durable lessons)  
+**PM2 health:** NONE — SquarePayouts is NOT a PM2 service (intentional; not added to whitelist until verified as a real PM2 process)  
+**Design brief:** `~/.hermes/logs/squarepayouts-loop-design-20260723.md` (13.2 KB)  
+**Script:** `~/.hermes/scripts/squarepayouts-weekly-review.sh` → `squarepayouts-weekly-review.py` (10.7 KB Python, stdlib-only)  
+**State files:**
+- `~/.hermes/state/squarepayouts-weekly-review.state` (lock window)
+- `~/.hermes/state/squarepayouts-model-allowed.json` (model whitelist — only Claude/DeepSeek/OpenAI; M3 BLOCKED)
+
+### New cron entry
+
+| Cron id | Name | Schedule | Delivery | Owner (lane) | Cron-approval |
+|---|---|---|---|---|---|
+| `0209dcf24ee8` | SquarePayouts Weekly Health Review (NEW) | `0 16 * * 1` (Monday 08:00 PT) | local (silent; script decides escalation) | Loop Engineering (design) + Ops (registration) + QA-Verification (verify) + Knowledge Canon (captures) | `marcelo_approved=true` on card `t_squarepayouts_health-loop_v1_20260723` |
+
+### Model restriction enforcement (Permanent)
+
+Per `LEARNED_SQUAREPAYOUTS.md §"Model Restriction (Permanent)"`:
+
+- The cron script enforces a JSON whitelist of allowed models at `~/.hermes/state/squarepayouts-model-allowed.json`.
+- Allowed: `claude-sonnet-4-6`, `deepseek-coder`, `openai-gpt-4o`.
+- BLOCKED: `minimax-m3` (any SquarePayouts work).
+- Cron prompt explicitly states "DO NOT invoke minimax-m3 for SquarePayouts work anywhere in this cron."
+- Test result (live): `HERMES_MODEL=minimax-m3 bash ~/.hermes/scripts/squarepayouts-weekly-review.sh` → exit 10 with `MODEL GUARD: HERMES_MODEL=minimax-m3 is BLOCKED for SquarePayouts work`.
+
+### No-spam rules (Permanent; Loop Engineering auditing)
+
+- 7-day lock window (state file).
+- Silent when no actionable items (no model-guard failure + Daily Exporter OK + LEARNED restriction text intact).
+- Telegram only when blockers detected (`exit 10` → marker file → cron prompt escalates).
+- Max 1 Telegram message per cron run.
+
+### Existing crons unchanged by this loop
+
+- `0561fcffeba1` SquaresPayouts Daily Exporter — daily 09:00 PT, local. Pre-existing; no change.
+
+### Cross-lane design pattern
+
+Lane routing for this loop:
+
+- **Loop Engineering** owns cadence / no-spam / artifact destination / state file / model whitelist guard.
+- **Ops** owns cron registration + Markdown edits to AUTOMATIONINVENTORY.
+- **QA-Verification** runs Step-5-style checks before activation + on each iteration.
+- **Knowledge Canon** captures the model-restriction + guard pattern into permanent canon if 6-month-durable.
+
+Per `~/.hermes/knowledge/loop-engineering-goals.md` § 5 + `~/.hermes/knowledge/ops.md` / `knowledge-canon.md` / `qa-verification.md` "Loop Engineering integration" subsections.
+
+
+---
+
+## Dominoes Verification Loop -- added 2026-07-23 (Card t_dominoes_verification_loop_v1_20260723)
+
+**Loop design lane:** Loop Engineering
+**Runtime lanes:** Loop Engineering (orchestration) + QA-Verification (Pass A/B/C/E) + Builder (Pass D) + Knowledge Canon (Pass F captures)
+**PM2 health:** new; registered crons `70b9215bed25` + `93f03c63496f`; PM2 processes `dominoes-server` (id 9) + `dominoes-client` (id 10) registered but currently CRASH-LOOP due to arm64 native-modules (defect D1.1)
+**Design brief:** `~/.hermes/logs/dominoes-loop-design-20260723.md`
+**Verification matrix:** `~/.hermes/knowledge/DOMINOES_VERIFICATION_MATRIX.md`
+**Known issues:** `~/.hermes/knowledge/DOMINOES_KNOWN_ISSUES.md`
+**Permanent reference card:** `~/.hermes/knowledge/LEARNED_DOMINOES.md`
+
+### New cron entries
+
+| Cron id | Name | Schedule (PT) | Delivery | Owner (lane) | Cron-approval |
+|---|---|---|---|---|---|
+| `70b9215bed25` | Dominoes Verification Loop -- Hardening (Tue) | Tue 18:00 PT (`0 1 * * 2` UTC) | local (silent; P0/P1/P2-blocker/99 escape hatch) | Loop Engineering (design) + Ops (registration) + QA (verify) + Builder (fixes) + Knowledge Canon (captures) | `marcelo_approved=true` on card `t_dominoes_verification_loop_v1_20260723` |
+| `93f03c63496f` | Dominoes Verification Loop -- Hardening (Sat) | Sat 10:00 PT (`0 17 * * 6` UTC) | local (silent; same escape hatch) | (same as above) | (same as above) |
+
+### State file
+`~/.hermes/state/dominoes-verification.state` (cycle counter, last_verdict, blockers_count, last_run_at).
+
+### Money / store boundaries (Permanent)
+- NO live payments
+- NO App Store / Google Play packaging
+- NO platform custody/payout
+- Host-managed contributions (Zelle/Venmo) STAY EXTERNAL
+
+### Cycle 1 verdict (2026-07-23)
+BLOCKED -- Pass A failed. P0 defect D1.1 logged: arm64 native-modules (`@rollup/rollup-darwin-arm64` missing). Fix card: `t_dominoes_defect_p0_arm64_native_modules_20260723` (assignee=builder). Re-test card: `t_dominoes_retest_smoke_after_arm64_fix_20260723` (assignee=qa-verification).
+
