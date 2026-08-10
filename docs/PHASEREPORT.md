@@ -737,3 +737,67 @@ Decisions: QUALIFY=9, DENY=6. No sub-75 rows. `next_action = human_review_or_app
 - new material finding: Stage 6 staleness crossed 30-day hard ceiling
 - cost: $0.00 (0 LLM calls — within ≤1-call weekly budget)
 - brief: ~/Obsidian/Hermes/40_Projects/Active/PROJ-2026-06_crypto-trading-intelligence/weekly-reviews/crypto-review-2026-07-19.md
+
+## 2026-07-26 — Weekly cron run #7 (auto, BossMan)
+
+- **Mode:** PAPER (env-level LIVE since 2026-06-15; runtime PAPER via INTEL_GATE + Stage 6 blocked + $75 cap)
+- **Regime:** MID_CYCLE (4 weeks held)
+- **Stage 6 staleness:** 37d 1h (was 30d 1h 58m, +7d slip; 23 days to 60d auto-skip threshold per Lesson #19)
+- **Daily pipeline:** 7/8 ok, 0 failed; daily_radar + pair_briefs + DAILY_MEMO all fresh; KAITOUSDT new top_struct[0] (HOT 0.92)
+- **New intel snapshot:** 2026-07-20 (6d 10h old; sector_rank [DeFi, Memecoins, L1, AI, Gaming]; funding basis -700%)
+- **N proposed / K created:** 0 / 0 (L-CRYPTO-14: no new approval-boundary items)
+- **Cost:** $0.00 (0 LLM calls)
+- **Bot online:** 14d continuous; pm2 restart count delta = 0; lastCheck 3m before cron time
+- **Lesson added:** #23 (60d threshold binding, not aspirational); #24 (sector concentration flag is new risk type — track in C4 if persists 2+ weeks)
+- **brief:** ~/Obsidian/Hermes/40_Projects/Active/PROJ-2026-06_crypto-trading-intelligence/weekly-reviews/crypto-review-2026-07-26.md
+
+## 2026-08-02 — Weekly cron run #8 (auto, BossMan)
+
+- **Mode:** PAPER (env-level LIVE since 2026-06-15; runtime PAPER via INTEL_GATE + Stage 6 blocked + $75 cap)
+- **Regime:** MID_CYCLE (5 weeks held)
+- **Stage 6 staleness:** 44d 1h 57m (was 37d 1h, +7d slip; **16 days to 60d auto-skip threshold per Lesson #19**)
+- **Bot status:** **OFFLINE ≥24h** — port 8104 ECONNREFUSED, no PM2 entry, no node process. Root cause: `health-check.js` spawns `pm2` without inheriting wrapper PATH (Lesson #25)
+- **Daily pipeline:** daily_radar + pair_briefs fresh; DAILY_MEMO alive; Stage 6 emitter stalled since 2026-06-19
+- **Funding basis:** +483% (was -700% week 7 — sign flip, Lesson #21 audit criterion MET)
+- **BTC:** $64,772; drawdown -48.6%; fear index 27; death cross 245w
+- **Decisions:** 0 emitted (Stage 6 hasn't fired since 2026-06-19)
+- **N proposed / K created:** 0 / 0
+- **Cost:** $0.00 (0 LLM calls)
+- **Lessons:** #25, #26, #27, #28, #29
+- **brief:** ~/Obsidian/Hermes/40_Projects/Active/PROJ-2026-06_crypto-trading-intelligence/weekly-reviews/crypto-review-2026-08-02.md
+
+## 2026-08-05 — Weekly cron run #9 (auto, BossMan)
+
+- **Mode:** PAPER (env-level LIVE since 2026-06-15; runtime PAPER via INTEL_GATE + Stage 6 blocked + $75 cap)
+- **Regime:** MID_CYCLE (6 weeks held)
+- **Stage 6 staleness:** 47d 1h 57m (was 44d 1h, +3d slip; **13 days to 60d auto-skip threshold per Lesson #19**)
+- **Bot status:** **OFFLINE ≥7 days** — port 8104 ECONNREFUSED, no PM2 entry, no node process. Root cause: PM2 PATH issue persists (Lesson #20). Auto-recovery attempted at 07:15 today but PM2 process not running
+- **Daily pipeline:** daily_radar + pair_briefs fresh; DAILY_MEMO alive; Stage 6 emitter stalled since 2026-06-19
+- **Funding basis:** +239% (was +483% week 8 — narrowing, no sign flip)
+- **BTC:** mid-range; drawdown -48.6%; fear index 27; death cross 245w
+- **Decisions:** 0 emitted (Stage 6 hasn't fired since 2026-06-19; gated on `t_bb2fd054`)
+- **N proposed / K created:** 0 / 0
+- **Cost:** $0.00 (0 LLM calls)
+- **Lessons:** #25 (bot offline recurring, week 2); #26 (Stage 6 60d countdown binding); #27 (digest = status report on the gap); #28 (sector concentration F1 promotion)
+- **brief:** ~/Obsidian/Hermes/40_Projects/Active/PROJ-2026-06_crypto-trading-intelligence/weekly-reviews/crypto-review-2026-08-05.md
+- **commit:** 4fce800
+
+## 2026-08-09 — Weekly cron run #10 (auto, BossMan)
+
+- **Mode:** PAPER (env-level LIVE since 2026-06-15, 56 days; runtime PAPER via INTEL_GATE + Stage 6 blocked + $75 cap)
+- **Regime:** MID_CYCLE / LOW confidence (memo); `regime_today=null` in staging JSON (3rd consecutive cycle schema regression, F1)
+- **Stage 6 staleness:** 50d 18h 56m (was 47d 1h, +3d slip; **9 days to 60d auto-skip threshold per Lesson #19**)
+- **Bot status:** **ONLINE ~4 days** (corrects run #9 "offline 7+ days" narrative — bot came back between 2026-08-05 12:03 and PM2 uptime origin). PID 45865, uptime 4D continuous. Lesson #25 drift-fix trigger does NOT apply (first non-trigger in 3 weeks)
+- **Daily pipeline:** daily_radar + pair_briefs + DAILY_MEMO fresh; Stage 6 emitter stalled since 2026-06-19
+- **Funding basis:** +239.4% (held same magnitude AND sign as week 9 — Lesson #21 trigger NOT met, reset)
+- **Regime-mapper conflict (Lesson #33):** 3rd consecutive cycle ACCUMULATION(HIGH) vs MID_CYCLE(LOW) — F1 PROMOTED
+- **Sector concentration (Lesson #24):** 60% top_struct in "Other" — 2nd consec week at ≥50% → F1 confirmed
+- **HOT-count drift (Lesson #30):** `top_struct` 1 HOT vs `coin_rankings` 4 HOT — 4th consecutive cycle
+- **UNSCORABLE predictions (Lesson #32):** 93.75% rate — 4th consecutive cycle
+- **BTC:** mid-range; funding +239.4% (annualized)
+- **Decisions:** 0 emitted (Stage 6 hasn't fired since 2026-06-19; gated on `t_bb2fd054`)
+- **N proposed / K created:** 0 / 0
+- **Cost:** $0.00 (0 LLM calls)
+- **Lessons:** #29 (bot offline narrative stale by next cycle); #30 (regime-mapper conflict F1, not F2); #31 (60d threshold real, not theoretical); #32 (Lessons #24 + #30 share root cause: top_struct vs coin_rankings divergence); #33 (cost ceiling held 10 consecutive runs, 0 LLM calls)
+- **brief:** ~/Obsidian/Hermes/40_Projects/Active/PROJ-2026-06_crypto-trading-intelligence/weekly-reviews/crypto-review-2026-08-09.md
+- **commit:** 30b1702
