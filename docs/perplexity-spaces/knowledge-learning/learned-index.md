@@ -1,8 +1,8 @@
 # LEARNED_*.md Files — Full Index
 
 **Source:** `~/.hermes/knowledge/`
-**Status:** Active — 48 files
-**Regenerated:** 2026-08-07 06:00
+**Status:** Active — 49 files
+**Regenerated:** 2026-08-11 06:00
 
 ---
 
@@ -41,6 +41,7 @@
 | `LEARNED_STORIS_API.md` | LEARNED — STORIS API (durable takeaways) |
 | `LEARNED_SUB_AGENT_MASTER_BLUEPRINT.md` | LEARNED_SUB_AGENT_MASTER_BLUEPRINT.md — Sub-Agent Lane Discipline + Handoff Contracts |
 | `LEARNED_TAILSCALE_SERVE_NEXTJS_PROXY.md` | Tailscale Serve + Next.js: the `/_next/static/*` 404 trap |
+| `LEARNED_TICKETFLOW.md` | LEARNED_TICKETFLOW |
 | `LEARNED_TRAVEL_OS.md` | Travel OS — Permanent Operating Rules |
 | `LEARNED_USER_OPERATIONAL_RULES.md` | Marcelo — Standing Operational Rules (Permanent) |
 | `LEARNED_USER_PREFERENCES_AUTONOMOUS_MODE.md` | Marcelo — Autonomous Operator Mode (extended detail) |
