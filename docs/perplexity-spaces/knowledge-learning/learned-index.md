@@ -1,8 +1,8 @@
 # LEARNED_*.md Files — Full Index
 
 **Source:** `~/.hermes/knowledge/`
-**Status:** Active — 49 files
-**Regenerated:** 2026-08-12 06:00
+**Status:** Active — 50 files
+**Regenerated:** 2026-08-13 06:00
 
 ---
 
@@ -28,6 +28,7 @@
 | `LEARNED_INDEX.md` | LEARNED_INDEX.md — Master Index of All `LEARNED_<DOMAIN>.md` Canon Files |
 | `LEARNED_LBC35_TELEGRAM_SPAM_INCIDENT.md` | LBC35 Telegram Spam Incident — 2026-07-20 (LEARNED) |
 | `LEARNED_MD_FILE_DRIFT_RUBRIC.md` | LEARNED_MD_FILE_DRIFT_RUBRIC.md — Classify Before Trim |
+| `LEARNED_N8N_INTEGRATION_REFERENCE.md` | n8n Integration Reference for TicketFlow |
 | `LEARNED_OPS_SELF_HEALING_POLICY.md` | LEARNED_OPS_SELF_HEALING_POLICY.md — PM2/cron Self-Healing Without Marcelo |
 | `LEARNED_PENTEST_REPORTING.md` | Pentest Reporting Standards — Permanent Operating Rule |
 | `LEARNED_PM2_HEALTH_MONITOR.md` | LEARNED_PM2_HEALTH_MONITOR.md — PM2 Health Monitor canon |
