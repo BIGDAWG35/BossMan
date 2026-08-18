@@ -1,8 +1,8 @@
 # LEARNED_*.md Files — Full Index
 
 **Source:** `~/.hermes/knowledge/`
-**Status:** Active — 50 files
-**Regenerated:** 2026-08-13 06:00
+**Status:** Active — 52 files
+**Regenerated:** 2026-08-18 06:00
 
 ---
 
@@ -35,9 +35,11 @@
 | `LEARNED_PMD.md` | LEARNED_PMD.md — PMD (Property Management Dashboard) Canon |
 | `LEARNED_PMD_DASHBOARDS.md` | PMD + Production Dashboards — Permanent Operating Rules |
 | `LEARNED_PMD_VALUATION_INTEGRATION.md` | PMD Valuation Integration — LEARNED (2026-07-21) |
+| `LEARNED_REVENUE_PROJECT_ARCHIVE_GUARDRAIL.md` | LEARNED_REVENUE_PROJECT_ARCHIVE_GUARDRAIL |
 | `LEARNED_SERVICES_MAP.md` | LEARNED_SERVICES_MAP.md — Canonical Source Rule for SERVICES_MAP |
 | `LEARNED_SNS_401K.md` | LEARNED — SNS 401K Retire-OS |
 | `LEARNED_SQUAREPAYOUTS.md` | SquarePayouts — Permanent Ownership Rule |
+| `LEARNED_SQUAREPAYOUTS_ACTIVE.md` | LEARNED_SQUAREPAYOUTS_ACTIVE |
 | `LEARNED_STANDING_AUTHORITIES.md` | Standing Authorities & Health Monitors |
 | `LEARNED_STORIS_API.md` | LEARNED — STORIS API (durable takeaways) |
 | `LEARNED_SUB_AGENT_MASTER_BLUEPRINT.md` | LEARNED_SUB_AGENT_MASTER_BLUEPRINT.md — Sub-Agent Lane Discipline + Handoff Contracts |
