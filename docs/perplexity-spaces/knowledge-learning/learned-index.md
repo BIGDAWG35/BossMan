@@ -1,8 +1,8 @@
 # LEARNED_*.md Files — Full Index
 
 **Source:** `~/.hermes/knowledge/`
-**Status:** Active — 52 files
-**Regenerated:** 2026-08-18 06:00
+**Status:** Active — 53 files
+**Regenerated:** 2026-08-25 06:01
 
 ---
 
@@ -16,6 +16,7 @@
 | `LEARNED_ALTUS_FORENSIC.md` | Altus Forensic — Permanent Ownership Rule |
 | `LEARNED_APPLE_MOTION.md` | LEARNED_APPLE_MOTION.md — Apple Motion 6.3 in the Hermes Stack |
 | `LEARNED_BASECAMP_WORKFLOW.md` | Basecamp Workflow — Permanent Operating Rules |
+| `LEARNED_BINANCE_BOT.md` | LEARNED_BINANCE_BOT.md |
 | `LEARNED_BLENDER_LTS.md` | LEARNED_BLENDER_LTS.md |
 | `LEARNED_BRAVE_PERPLEXITY_BRIDGE.md` | LEARNED — Brave Perplexity Bridge |
 | `LEARNED_CLIENT_REVIEW_PORTAL.md` | Client Review Portal + Helpdesk Ticket System — Permanent Operating Model |
