@@ -30,9 +30,18 @@ This inventory exists so:
 |---|---|---|---|---|
 | `~/.hermes/scripts/pm2-canon-drift-check.sh` | Validates PM2 process manifest matches canon; honors Ollama-routing restriction post-2026-07-25 patch. | ops | Cron + manual | 2026-08-05 |
 | `~/.hermes/scripts/computer-use-health.sh` | Per `LEARNED_CUADRIVER_HEALTH.md` — checks cua-driver daemon liveness + AX tree reachability. | ops | Cron (every 10min) | 2026-07-30 |
-| `~/.hermes/scripts/cuadriver-health-cron.sh` | Short-version cron wrapper for the CuaDriver health check (single-line verdict; no spam). | ops | Cron (every 10min) | 2026-07-30 |
+| `~/.hermes/scripts/cuadriver-health-cron.sh` | Short-version cron wrapper for the CuaDriver health check (single-line verdict; no spam). Path fixed 2026-08-24 to `~/.hermes/profiles/ops/scripts/`. | ops | Cron (every 10min) | 2026-08-24 |
 | `~/.hermes/scripts/gateway-health-check.sh` | Hermes gateway heartbeat; pinned for t_h_health_reporter card. | ops | Cron (every 5min) | 2026-07-15 |
-| `~/.hermes/scripts/binance-health-check.sh` | Trading bot health check (CSdawgbot). Trading lane enforces PAPER_MODE guardrail. | trading | Cron (every 60s) | 2026-07-22 |
+| `~/.hermes/scripts/binance-health-check.sh` | Trading bot health check (binance-bot). Trading lane enforces PAPER_MODE guardrail. | trading | Cron (every 60s) | 2026-07-22 |
+| `binance-bot/pre-start.js` | Safe-start architecture v1: 4-mode dispatcher (validate-only/health-only/paper/live). 7-signal LIVE gate. Only binance-bot-live in PM2. | trading | PM2 (binance-bot-live only) | 2026-08-25 |
+| `binance-bot/ecosystem.config.cjs` | PM2 config: only binance-bot-live defined (autorestart=false). validate/health/paper are one-shot CLI. | trading | PM2 ecosystem | 2026-08-25 |
+| `binance-bot/health-cron-wrapper.sh` | Safe health cron entry (9 AM + 9 PM PDT). Uses read-only health-check-real.js. Stale direct health-check.js entries retired 2026-08-25. | trading | Cron (9 AM/9 PM PDT) | 2026-08-25 |
+| `~/.hermes/scripts/claude-cost-guardian.sh` | Claude budget cap watchdog — enforces daily ($5/$10) and 7-day ($20/$35) thresholds; silent on healthy days, Telegram alert on breach. Created by t_claude_cost_spike_forensics_and_guardrail_v1_20260824. | ops | Cron (every 4h) | 2026-08-24 |
+| `~/.hermes/profiles/ops/scripts/provider_policy.py` | Provider firewall gate — blocks paid SDK init in non-interactive contexts (cron/pm2/launchagent/gateway-worker/self-heal); fails closed, auto-incident on violation. Created t_paid_model_background_regression_guard_v1_20260824. | ops | Called by all model-initializing jobs | 2026-08-24 |
+| `~/.hermes/profiles/ops/scripts/regression_test_suite.py` | 28-test regression matrix — proves no paid provider reachable from any background context. Zero cost delta, all results in `~/.hermes/logs/regression_test_results.json`. Created t_paid_model_background_regression_guard_v1_20260824. | ops | Manual + cron (on change) | 2026-08-24 |
+| `~/.hermes/profiles/ops/scripts/background_model_guard.py` | Drift scanner — scans cron jobs, PM2, LaunchAgents, env vars, scripts for prohibited providers or paid key exposure. Classifies: prohibited_provider, paid_key_exposed, direct_sdk_import, unpinned_route. Created t_paid_model_background_regression_guard_v1_20260824. | ops | Cron (daily) | 2026-08-24 |
+| `~/.hermes/profiles/ops/scripts/key_containment_check.py` | Paid key scanner — checks active env, .env files, logs, PM2 configs, LaunchAgents for leaked keys. Skips `~/.hermes/secrets/` (expected). Created t_paid_model_background_regression_guard_v1_20260824. | ops | Cron (daily) | 2026-08-24 |
+| `~/.hermes/profiles/ops/scripts/pre_change_scan.py` | Pre-change protection — runs before any change to protected files; auto-reverts if paid provider detected. Created t_paid_model_background_regression_guard_v1_20260824. | ops | Manual + card-driver | 2026-08-24 |
 | `~/.hermes/scripts/pmd-health-watchdog.sh.orphaned-20260731` | **Retired** 2026-07-31 — superseded by per-service watchdogs + PM2 canon guard. Kept in inventory for audit trail. | ops | (none) | 2026-07-31 |
 | `~/.hermes/scripts/gateway-health-monitor.sh.RETIRED-2026-05-21` | **Retired** 2026-05-21 — superseded by `gateway-health-check.sh`. | ops | (none) | 2026-05-21 |
 
@@ -57,6 +66,7 @@ This inventory exists so:
 ---
 
 ## How to add a new helper (Permanent 2026-08-06)
+
 1. Pick the section above (or open a new one if the script class isn't covered).
 2. Add a row with: name, one-line justification, lane owner, trigger, last-audit date.
 3. Justification MUST answer: "why is this script *needed* and *not* a one-shot terminal command?"
@@ -65,9 +75,11 @@ This inventory exists so:
 6. Mirror to Obsidian at the next `hermes-canon-sync.sh` run.
 
 ## How to retire a helper (Permanent)
+
 Rename the file to `original-name.RETIRED-<YYYY-MM-DD>`. Add a row under the appropriate section with the retirement date. Don't delete — preserve for at least 90 days in case the consumer still references it.
 
 ## Drift signals
+
 - New helper script appears in `~/.hermes/scripts/` with no row in this inventory → `t_drift_automation_inventory_<date>` card.
 - Cron entry references a helper not in inventory → same drift card.
 - A helper's last-audit date is > 90 days stale → knowledge-canon opens a `t_re-audit_<helper>` card.
@@ -76,3 +88,6 @@ Rename the file to `original-name.RETIRED-<YYYY-MM-DD>`. Add a row under the app
 ---
 
 *Owner: knowledge-canon lane. Mirror sync target: Obsidian `Hermes/automation-inventory.md`.*
+
+
+

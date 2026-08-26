@@ -5,9 +5,9 @@
 **Canonical source of truth:**
 > `/Users/bigdawg/Projects/boss-hub/registry/services-registry.yaml`
 
-**Last snapshot:** `SERVICES_MAP_SNAPSHOT_2026-08-22.md`
+**Last snapshot:** `SERVICES_MAP_SNAPSHOT_2026-08-25.md`
 **Snapshot SHA-256:** `883e0549471b2c752f4891e1a5362d3b5e0aa4fc724f0d3630b02f744abf9289`
-**Last heartbeat:** 2026-08-22T13:00:02Z
+**Last heartbeat:** 2026-08-25T13:00:59Z
 **Heartbeat cron:** `0 6 * * *` (daily 06:00 local, no-agent)
 
 See `/Users/bigdawg/.hermes/knowledge/SERVICES_MAP_SNAPSHOT_2026-08-06.md` for the full service inventory (auto-generated from the registry).
