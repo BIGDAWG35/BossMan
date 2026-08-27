@@ -1,8 +1,8 @@
 # LEARNED_*.md Files — Full Index
 
 **Source:** `~/.hermes/knowledge/`
-**Status:** Active — 53 files
-**Regenerated:** 2026-08-25 06:01
+**Status:** Active — 54 files
+**Regenerated:** 2026-08-27 06:00
 
 ---
 
@@ -63,6 +63,7 @@
 | `LEARNED_YOUTUBE_FREE_RESOURCES.md` | LEARNED — YouTube Free Stack Navigator v1 |
 | `LEARNED_YOUTUBE_V15_5_TOOLING_UPGRADE.md` | LEARNED — YouTube Production Stack v15.5 Tooling Upgrade (2026-07-29) |
 | `LEARNED_YOUTUBE_WORKFLOW.md` | YouTube Workflow — v17 four-tool video stack |
+| `LEARNED_YTDLP.md` | LEARNED_YTDLP.md — yt-dlp safe terminal use (macOS) |
 
 ---
 *Auto-generated — do not edit manually*
