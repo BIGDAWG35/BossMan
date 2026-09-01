@@ -1,8 +1,8 @@
 # LEARNED_*.md Files — Full Index
 
 **Source:** `~/.hermes/knowledge/`
-**Status:** Active — 54 files
-**Regenerated:** 2026-08-27 06:00
+**Status:** Active — 55 files
+**Regenerated:** 2026-09-01 06:00
 
 ---
 
@@ -21,6 +21,7 @@
 | `LEARNED_BRAVE_PERPLEXITY_BRIDGE.md` | LEARNED — Brave Perplexity Bridge |
 | `LEARNED_CLIENT_REVIEW_PORTAL.md` | Client Review Portal + Helpdesk Ticket System — Permanent Operating Model |
 | `LEARNED_CONFIG-PATCH-OLLAMA-ROUTING-20260725.md` | CONFIG-PATCH — Ollama Routine-Cron Routing |
+| `LEARNED_CRON_SAFETY.md` | LEARNED_CRON_SAFETY.md |
 | `LEARNED_DAVINCI_RESOLVE_STUDIO.md` | DaVinci Resolve Studio — Hermes Knowledge (2026-07-30) |
 | `LEARNED_DEFAULT_BUILD_FLOW.md` | LEARNED: Default Build Flow — V3 Stack (2026-07-15) |
 | `LEARNED_FOUR_TOOL_VIDEO_STACK.md` | Four-Tool Video Stack — v17 (2026-07-30) |
