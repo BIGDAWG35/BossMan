@@ -1,8 +1,8 @@
 # LEARNED_*.md Files — Full Index
 
 **Source:** `~/.hermes/knowledge/`
-**Status:** Active — 55 files
-**Regenerated:** 2026-09-01 06:00
+**Status:** Active — 56 files
+**Regenerated:** 2026-09-02 06:00
 
 ---
 
@@ -13,6 +13,7 @@
 | `LEARNED_2026-08-05_SELF_BACKUP_UPGRADE_HEALTHCHECK.md` | LEARNED — 2026-08-05 Self-Service Hermes Self-Backup + Self-Upgrade + Health Check |
 | `LEARNED_7_LAYER_ARCHITECTURE.md` | LEARNED_7_LAYER_ARCHITECTURE.md — The Hermes Seven-Layer Stack |
 | `LEARNED_7_RULE_CONTRACT.md` | The 7-Rule Contract — Marcelo's Operating Preferences for BossMan + Sub-agents |
+| `LEARNED_7_RULE_CONTRACT_RULES_10_11_12_ADDENDUM_2026-09-01.md` | LEARNED_7_RULE_CONTRACT.md — Rules #10, #11, #12 ADDENDUM (Permanent 2026-09-01) |
 | `LEARNED_ALTUS_FORENSIC.md` | Altus Forensic — Permanent Ownership Rule |
 | `LEARNED_APPLE_MOTION.md` | LEARNED_APPLE_MOTION.md — Apple Motion 6.3 in the Hermes Stack |
 | `LEARNED_BASECAMP_WORKFLOW.md` | Basecamp Workflow — Permanent Operating Rules |
