@@ -1,6 +1,6 @@
 # LEARNED_INDEX.md — Master Index of All `LEARNED_<DOMAIN>.md` Canon Files
 
-**Status:** Permanent (refreshed 2026-08-11, Card `t_ee4254f9` — added entry #36 `LEARNED_TICKETFLOW.md`, TicketFlow Property Wedge A canon. File count 35→36. Earlier 2026-07-31 entries: #35 LEARNED_VIDEO_LAYOUT_REFERENCES, #31-34 v18 PiP overlay patches).
+**Status:** Permanent (refreshed 2026-07-31, Card `t_video_layout_refspec_20260731` — added entry #35 (`LEARNED_VIDEO_LAYOUT_REFERENCES.md`, the 3-reference visual layout canon: Hermes Agent Masterclass / CryptoMetric / AI Labs). File count 34→35. Earlier 2026-07-31 patches on entries #31/#32/#33/#34 added v18 PiP overlay sections. Refresher 2026-07-30 entries #30–34: DaVinci Resolve Studio, Four-Tool Video Stack v17, Video Rendering ffmpeg, YouTube Workflow, YouTube Automation Authority; file count 29→34).
 **Purpose:** Single map of all per-system / per-domain canon files. Kernel-docs (SOUL.md, AGENTS.md, ROUTING-RULES v3) point into `LEARNED_*` for ownership/architecture/repair details. This index is the map of all domains.
 
 ---
@@ -17,7 +17,7 @@
 
 ---
 
-## Master index (36 files)
+## Master index (34 files)
 
 | # | Domain | Path | Size | Scope summary | Lane / Owner | Last-updated |
 |---|--------|------|------|---------------|--------------|--------------|
@@ -37,8 +37,6 @@
 | 13 | **PMD Dashboards** | `LEARNED_PMD_DASHBOARDS.md` | 4.3 KB | PMD + production dashboards autonomous-by-default operating model. | PMD sub-agent | 2026-07-22 |
 | 14 | **PMD Valuation Integration** | `LEARNED_PMD_VALUATION_INTEGRATION.md` | 5.7 KB | PMD valuation integration with portfolio analytics. | PMD sub-agent | 2026-07-21 |
 | 15 | **SquarePayouts** | `LEARNED_SQUAREPAYOUTS.md` | 2.6 KB | SquarePayouts ownership rule + Claude/DeepSeek/OpenAI model restriction (M3 BLOCKED). | BossMan (kernel) | 2026-07-22 |
-| 15a | **SquarePayouts ACTIVE Recovery** | `LEARNED_SQUAREPAYOUTS_ACTIVE.md` | 10.0 KB | **Permanent 2026-08-17 recovery record.** SquarePayouts/Opp-65 is ACTIVE revenue (NOT retired). Root-cause audit of the false-retirement classification (2026-07-22 PM2 drift-fix → t_squarepayouts_health-loop_v1_20260723 → t_2e18270c → t_8dcdae59). Canonical facts, restoration actions, future audit rule. Supersedes any prior tombstone/retirement classification. | BossMan (kernel) | 2026-08-17 |
-| 15b | **Revenue Project Archive Guardrail** | `LEARNED_REVENUE_PROJECT_ARCHIVE_GUARDRAIL.md` | 4.6 KB | **Permanent 2026-08-17 rule.** No revenue project may be archived/tombstoned automatically. 7-point archive check (runtime, GitHub, Basecamp, Kanban, Cron inventory, Mission Control, Marcelo approval). Classification vocabulary + STOP conditions for autonomous loops. | BossMan (kernel) | 2026-08-17 |
 | 16 | **Standing Authorities** | `LEARNED_STANDING_AUTHORITIES.md` | 6.7 KB | Standing authorities + health monitors (PM2 Health Monitor, Gateway + CuaDriver). | BossMan (kernel) | 2026-07-22 |
 | 17 | **Storis API** | `LEARNED_STORIS_API.md` | 7.6 KB | Storis API durable takeaways (OpenAPI 3.0.4, 239 paths, 1179 schemas). | Altus sub-agent | 2026-06-24 |
 | 18 | **Sub-Agent Master Blueprint** | `LEARNED_SUB_AGENT_MASTER_BLUEPRINT.md` | 10.6 KB | Sub-agent lane discipline + handoff contracts. | BossMan (kernel) | 2026-07-22 |
@@ -50,7 +48,6 @@
 | 24 | **V4 Canonical Lock** | `LEARNED_V4_CANONICAL_LOCK.md` | 6.0 KB | V4 Health OS canonical lock (do-not-modify rules). | health-os sub-agent | 2026-07-15 |
 | 25 | **YouTube Creator Resources** | `LEARNED_YOUTUBE_CREATOR_RESOURCES.md` | 35.2 KB | Vetted free YouTube production resource pack — 7 categories (slides, animation, SFX, music, motion graphics, stock footage, captions, learning), license-verified (Pexels, Pixabay, BBC, Mixkit, YT Audio Library, Freesound, Suno, Canva, Gamma, OBS, DaVinci, CapCut). Top-10 stack + `youtube-creator-stack` skill design. Companion: `~/.hermes/skills/youtube-creator-stack/SKILL.md` | content sub-agent | 2026-07-28 |
 | 26 | **YouTube Free Resources v1** | `LEARNED_YOUTUBE_FREE_RESOURCES.md` | 6.7 KB | v1 canonical bundle for `youtube-free-resources-skill` (Navigator). 8 categories w/ primary+fallback, license-named, quota-checked. Scope: faceless explainers + narrated slide videos for AI/crypto/finance. Hand-off → `slide-style-explainer-video`. Companion skill at `~/.hermes/skills/creative/youtube-free-resources-skill/SKILL.md` + project docs in `/Users/bigdawg/Projects/youtube-dashboard/{docs,prompts}/`. | content sub-agent | 2026-07-28 |
-| 27 | **TicketFlow Property** | `LEARNED_TICKETFLOW.md` | 9.6 KB | TicketFlow Wedge A canon: wedge rationale (mobile tenant portal + photo-required closure + property vertical — no incumbent combines), architecture (Next.js 15 + Tailwind 4 + mock-DB + RLS-ready DDL + Anthropic brief + Twilio SMS + PWA), pricing ($499 DFY / $79+ SaaS / $49 vendor-scorecard), 12-week roadmap with 4 phase QA gates, sub-agent kanban-comment firewall rule, postmortem of pre-reset build. Mirrors: project root `LEARNED.md` + kanban board root. | BossMan (kernel) + builder sub-agent | 2026-08-11 |
 | 27 | **YouTube Dashboard v3.0** | `LEARNED_YOUTUBE_DASHBOARD_V3.md` | 6.1 KB | YouTube dashboard hard separation (ElevenLabs-only). Live ElevenLabs subscription API wiring (`https://api.elevenlabs.io/v1/user/subscription`), 5-min cache, flat-file fallback. Validator warns-only (no fail-fast). Single 401 today: key lacks `user_read` scope. Companion flag card `t_520f0927` (bossman board). Server: `/Users/bigdawg/Projects/youtube-dashboard/server.js` on port 8140. | content sub-agent | 2026-07-28 |
 | 28 | **Apple Motion** | `LEARNED_APPLE_MOTION.md` | 31.2 KB | Apple Motion 6.3 in the Hermes stack — GUI-only 2D motion-graphics tool (titles, particles, behaviors, cameras, match-moving, FCP template publishing). 23 sections covering workflow, project settings, keyframing, behaviors, particles, cameras, tracking, templates, Image Playground (Apple Intelligence), supported media formats, export destinations, Apple-silicon perf, automation reality (no CLI scripting), v17 pipeline integration, sub-agent operating procedures. Source: Motion 6.3 User Guide PDF mirrored at `~/Projects/four-tool-video-stack/refs/motion_user_guide_6.3.pdf`. | content sub-agent | 2026-07-30 |
 | 29 | **Blender 5.2 LTS** | `LEARNED_BLENDER_LTS.md` | 31.2 KB | Blender 5.2 LTS in the Hermes stack — headless 3D scene renderer (P3 of v17 pipeline). 24 sections covering LTS behavior + version pin (`fbe6228777e7`, supported until July 2028), 5.2 release caveats (FFMPEG enum removed, GN API changes), canonical CLI invocation (`-b -noaudio --factory-startup -P`), render-config defaults (Eevee, 1920×1080, 30 fps, 90 frames), PNG→ffmpeg stitch workaround, performance budget (~10–17 s), hardware notes (Apple Silicon Metal only), open gaps from stack integration audit. Source: docs.blender.org/manual/en/5.2/ (107 URLs, 24 pages mirrored locally) + 3 verified 2025–2026 tutorials (Blender Studio, Polygon Runway, Ryan King Art). | content sub-agent | 2026-07-30 |
@@ -98,10 +95,53 @@
 ---
 
 **Maintained by:** knowledge-canon sub-agent on BossMan's behalf.
-**Last refresh:** 2026-07-30 (Card `t_video_stack_lockin_20260730` — entries #30 (DaVinci Resolve Studio), #31 (Four-Tool Video Stack v17), #32 (Video Rendering ffmpeg), #33 (YouTube Workflow), #34 (YouTube Automation Authority — Marcelo's standing directive) added; v17 four-tool video stack lock-in complete: 7 docs, all cross-linked, all 4 clauses (Resolve validator, Motion GUI-only, Blender 5.2 LTS, ffmpeg +faststart) present in every doc; YouTube workflow wrapper proven 26/26 PASS on a fresh script).
+**Last refresh:** 2026-08-31 (Card `t_v33_final_verification_and_promotion_v1_20260831` — V3.3 Master Blueprint promoted from PROPOSED to CANONICAL — ACTIVE; entry #0 added at line 109. All 8 Step-5 verification checks PASS. Pre-promotion snapshot at `~/.hermes/profiles/ops/cron/output/t_v33_final_verification_snapshot_20260831_233500/` byte-equal verified.)
 **Next refresh:** quarterly (or on demand when a new domain is added).
 
 ---
+
+## V3.3 Master Architecture Map (CANONICAL — ACTIVE)
+
+**Added 2026-08-31 via card `t_v33_final_verification_and_promotion_v1_20260831`.**
+
+| # | Domain | Path | Size | Scope summary | Lane / Owner | Last-updated |
+|---|--------|------|------|---------------|--------------|--------------|
+| **0** | **V3.3 Master Blueprint** | `~/.hermes/knowledge/V3_3_MASTER_BLUEPRINT_20260831.md` | 72,838+ B | **The current controlled Master Blueprint for Hermes Agent OS.** Single authoritative architecture map. Absorbs + points to Tier 1-3 canon. Eight parts: (I) Version identity and scope; (II) Authority and operating model; (III) Six-tier knowledge and canon system; (IV) V3 execution-routing layer; (V) Lane contracts and handoff discipline; (VI) Closed-loop autonomy (Layer-2); (VII) Tier 4-6 pointers; (VIII) Version governance and bounded follow-ups. **Read this file first.** Companion review summary at `~/.hermes/knowledge/V3_3_MASTER_BLUEPRINT_FINAL_REVIEW_SUMMARY_20260831.md`. | BossMan (kernel) | 2026-08-31 |
+
+> **Tier 0 entry.** Every new agent, sub-agent, skill, or session should read V3.3 first to understand Hermes Agent OS as of 2026-08-31. Underlying Tier 1-3 docs (`SOUL.md`, `AGENTS.md`, `ROUTING-RULES.md`, `LEARNED_V3_MODEL_STACK.md`, etc.) remain authoritative companion canon — they are the detailed rule bodies; V3.3 is the consolidated architecture map.
+
+## V3.3 Sub-Agent Blueprint Split (CANONICAL — ACTIVE)
+
+**Added 2026-08-31 via card `t_v33_full_install_v1_20260831`.**
+
+| File | Purpose | Size | Status |
+|------|---------|------|--------|
+| `HERMES_SUBAGENT_BLUEPRINT_INDEX.md` | Entry point; real roster (10 lanes); honest phase status; recovery | 5,424 B | ACTIVE |
+| `HERMES_SUBAGENT_BLUEPRINT_v3.3.md` | Live canon only — what to read; 11-section template; Rule #8/#9; split/freeze patterns | 14,850 B | ACTIVE |
+| `HERMES_SUBAGENT_BLUEPRINT_ARCHIVE_2026-08-31.md` | Frozen v3.0 phase plan + rollout history, verbatim byte-equal | 12,483 B | ARCHIVED |
+| `HERMES_SUBAGENT_BLUEPRINT_v3.0_ARCHIVE_INDEX_20260831.md` | Archive navigation; SHA + recovery commands | 3,075 B | ACTIVE |
+| `hermes-sub-agent-master-blueprint.md` | Thin pointer (replaces bloated original) | 1,797 B | ACTIVE |
+| `HERMES_SUBAGENT_BLUEPRINT_ARCHIVE_2026-09-01.md` | Date-stamped archive (byte-equal to snapshot + 2026-08-31 archive) | 12,483 B | ARCHIVED |
+| `HERMES_SUBAGENT_BLUEPRINT_v3.0_ARCHIVE_INDEX_20260901.md` | Date-stamped archive navigation; SHA + recovery commands | 2,342 B | ACTIVE |
+
+> **Read INDEX first.** The Layer 1 / Layer 2 separation rule (v3 execution routing vs sub-agent lane ownership) is preserved VERBATIM in the v3.3 LIVE file.
+
+## V3.4 Autonomy Enforcement (CANONICAL — ACTIVE 2026-09-01)
+
+**Added 2026-09-01 via card `t_v33_v34_verified_recovery_install_v1_20260901`.** Three new rules appended to the 7-Rule Contract as an additive addendum. The original `LEARNED_7_RULE_CONTRACT.md` is UNCHANGED (SHA `c7df82ab...`).
+
+| File | Purpose | Size | Status |
+|------|---------|------|--------|
+| `LEARNED_7_RULE_CONTRACT_RULES_10_11_12_ADDENDUM_2026-09-01.md` | Rules #10 (Operator Contract), #11 (Mandatory Escalation Ladder), #12 (Anti-Recursion Budget). Effective on this card's promotion. | 9,539 B | ACTIVE |
+| `QA_AUTO_INVOCATION_SPEC_v1_2026-09-01.md` | QA auto-invocation spec — `qa_required` triggers, state machine, closure block, model selection unchanged. | 3,596 B | ACTIVE |
+
+**Rule #10 — Operator Contract:** Marcelo is reviewer/owner only; A/B/C decision menus forbidden outside true V3 carve-outs; one final report is the only operator touchpoint; decide-and-flag is the default for ambiguity.
+
+**Rule #11 — Mandatory Escalation Ladder:** canon → Perplexity Search → Perplexity Computer → sub-agents → escalate. `BLOCKED` without a logged applicable rung attempt is a drift signal. Perplexity Computer remains a rare escalation requiring existing approval + credit controls.
+
+**Rule #12 — Anti-Recursion Budget:** default cap 12 investigation round-trips per inbound. Cap-hit → stop investigating, produce 4-section report, log event. Anti-deadlock clause: verification must never block the process/drain/restart it is verifying.
+
+**QA auto-invocation:** Cards touching money/auth/infra/PII/customer-facing/public-API require `qa_required: yes` at intake. `qa_status ∈ {pending, running}` blocks closure. Failure auto-creates a `drift-fix` card.
 
 ## Related non-`LEARNED_*` canon files (sub-agent profiles + lane contracts)
 

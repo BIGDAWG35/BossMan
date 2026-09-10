@@ -93,3 +93,42 @@ Rename the file to `original-name.RETIRED-<YYYY-MM-DD>`. Add a row under the app
 
 
 
+
+
+---
+
+# APPENDIX A — Cron Registry Migration Note (2026-08-31 21:25 PDT)
+
+**Issued by:** `t_cron_profile_registry_migration_v1_60831` (card `t_1ae9d761`) Step-5 PASS commit `40828ae`.
+
+This is an addendum only. The canonical rows above remain authoritative and are not rewritten.
+
+## A.1 Operational impact of the migration
+
+After the cron registry migration to Option B:
+- `~/.hermes/profiles/ops/cron/jobs.json` is now the SOLE runtime-authoritative cron registry for the running `--profile ops` gateway (PID 1945)
+- `~/.hermes/cron/jobs.json` is now a generated read-only mirror of the ops registry (NOT a hand-editable competing runtime source)
+- The two cron entries above (`memory-health-check.py` and `regenerate-services-map.py`) now ALSO exist as copies at `~/.hermes/profiles/ops/scripts/` (Step-5 E6 fix; symlinks were insufficient because `Path.resolve()` follows them outside the dispatcher's scripts_dir). The root scripts at `~/.hermes/scripts/` remain canonical sources.
+- `claude-cost-guardian.sh` now has only one active cron entry (canonical `6625a253955d`); the duplicate `e1d611d910df` was retired with state=retired (record preserved, enabled=false).
+
+## A.2 What did NOT change
+
+- Script contents (no business-logic changes)
+- Cron schedules (no expansion)
+- Telegram delivery paths (no new paths; only restoration of pre-existing broken paths)
+- Lane ownership (each script's lane column above remains correct)
+
+## A.3 Stable terminology
+
+| Term | Value |
+|---|---|
+| `historical-baseline-all-enabled` | 41 |
+| `live-default-registry-enabled` | N/A (mirror) |
+| `live-ops-profile-enabled` | 38 |
+| `post-migration-generated-default-enabled` | 38 |
+
+## A.4 V3.3 drafting status
+
+V3.3 drafting remains BLOCKED pending:
+- `t_6ae3e7a9` (4 absent baseline jobs + FREESCOUT cadence) execution + disposition
+- Rule #9 recovery items (per sub-agent Option C)
