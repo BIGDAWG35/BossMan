@@ -33,7 +33,7 @@ This is the **single canonical reference** for routing in Hermes. BossMan, every
 | **Claude** (Anthropic, default + deep) | Deep architectural reasoning, complex cross-system troubleshooting, safety-sensitive work (auth / encryption / audit logging / PII), Step-5 QA on non-trivial changes touching money paths. **Mandatory for live-trade enablement and auth flows.** |
 | **OpenAI** (GPT) | General reasoning, UI/marketing copy, polished prose, multi-modal tasks, Next.js/React/TypeScript code generation. |
 | **DeepSeek** | Low-cost deep reasoning, technical validation, edge-case analysis, coding assistance, math/SQL, second opinion on architecture. **Mandatory for money paths and PII as secondary.** |
-| **MiniMax-M3** | Default orchestrator + planner + router. Cheap bulk orchestration. **BLOCKED for SquarePayouts code.** |
+| **MiniMax-M3** | Default orchestrator + planner + router. Cheap bulk orchestration. **SquarePayouts model routing (Permanent 2026-09-14, Marcelo durable rule):** SquarePayouts model/tool routing is owned by BossMan. BossMan selects the best-fit tool and model per task type, risk, privacy, cost, and required quality. No blanket categorical block by AI model or by tool, EXCEPT the standing safety-sensitive and secrets carve-outs in the V3 task-type ledger: Claude is mandatory for auth, encryption, money-path, PII, and audit-logging work; production secrets, credentials, tokens, and .env content are Llama/local only and must never leave the host. Money-path/auth/PII/credentials/security/audit/public-financial work requires Step-5 red-team QA + strongest appropriate model; card does NOT move to done until verification passes. Production secrets and raw credentials remain local-only. |
 | **Llama / local (Ollama)** | Privacy-sensitive tasks, repeatable bulk work, summaries, first-pass code. Native Metal GPU acceleration on M4 Max. |
 
 Detailed policy lives in `LEARNED_V3_MODEL_STACK.md`. This doc references it.
@@ -51,6 +51,12 @@ Detailed policy lives in `LEARNED_V3_MODEL_STACK.md`. This doc references it.
 | Tier 5 — Perplexity Computer | Computer Use / MCP | Multi-step browser workflows that genuinely justify credits. Requires `escalate_to_computer: yes` flag + 10k credits/mo budget. | Credits — track per use in kanban |
 
 **Perplexity-first rule (permanent 2026-06-26):** "BossMan is stuck" means "BossMan needs Perplexity / search tools" — NOT "BossMan needs Marcelo." Apply to **every** agent in the stack.
+
+### 3.1 Runtime cron/PM2 closure (Permanent 2026-09-15)
+
+Unattended cron and PM2 jobs route to **M3 or Ollama only**. DeepSeek is helper-only and must NEVER be an automatic primary or fallback provider for cron/PM2. MiniMax must NEVER be an automatic fallback provider for cron/PM2 (M3 may be the explicit primary when chosen by BossMan, but the *fallback* chain for cron/PM2 runtime is Ollama-local only). Claude and OpenAI are interactive planning / architecture / quality / risk-gated review models — they are NOT unattended runtime defaults.
+
+Each job in `~/.hermes/cron/jobs.json` carries an explicit `provider` + `model` and `fallback_chain: []`. Unapproved / unavailable routes fail LOUD with a kanban alert rather than silently consuming paid tokens. Risk-gated jobs (money paths, security, SquarePayouts state, Binance, MoneyPipeline, pmd-watchdog) are pinned to Ollama because Ollama never goes down — failure there means true infrastructure failure, not token spend. `reasoning_effort` is `false` in every dispatching profile (core + ops). Full policy lives in `LEARNED_V3_MODEL_STACK.md` §Drift Closure 2026-09-15.
 
 ---
 
@@ -164,6 +170,17 @@ Review output lands in `~/.hermes/logs/loop-enforcement-review-YYYY-MM.md` and i
 - `~/.hermes/knowledge/LEARNED_7_RULE_CONTRACT.md` — the 7-rule contract that this doc extends
 - `~/.hermes/knowledge/LEARNED_SUB_AGENT_MASTER_BLUEPRINT.md` — per-lane discipline + handoff contracts
 - `~/.hermes/knowledge/PHASEREPORT.md` — aggregated phase-report log for canon-level changes
+- `~/.hermes/knowledge/LEARNED_7_LAYER_ARCHITECTURE.md` — seven-layer stack (Perplexity → M3 → DeepSeek/Llama/OpenAI → Llama → DeepSeek QA → Claude docs → Perplexity Computer)
+- `~/.hermes/skills/troubleshooting-backup-and-revert/SKILL.md` — Rule #8 executable form (snap → fix → verify → auto-revert)
+- `~/.hermes/knowledge/AUTOMATION_INVENTORY.md` — registered helper scripts + cron justifications
+
+---
+
+## §X. Pre-troubleshoot mandatory backup — Rule #8 cross-link (Permanent 2026-08-06)
+
+Every non-trivial mutation in this routing-rule's scope (config.yaml, cron/jobs.json, PM2 manifests, infra manifests, important scripts, governance canon) MUST be backed by a current git snapshot before the mutation. The full rule lives in `LEARNED_7_RULE_CONTRACT.md` Rule #8 and the executable form is the `troubleshooting-backup-and-revert` skill. Marcelo is never asked to retype configs or rerun commands — the git history is the source of truth.
+
+Drift signal: a sub-agent applies a non-trivial routing-rule fix without first running `git-snapshot-before-fix.sh` → `t_drift_snap_rule_violation_<date>` card.
 
 ---
 
