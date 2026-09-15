@@ -9,6 +9,71 @@
 
 ---
 
+## 2026-09-14 — Gap closure: durable-rule carve-out amendment, GitHub push, Spaces re-upload manifest
+
+**Scope:** Owner-directed closure of `t_ai_stack_cost_guardian_and_m3_squarepayouts_unblock_v1_20260914`. Three gaps: Gap 1 carve-out amendment, Gap 2 GitHub remote sync, Gap 3 Spaces re-upload.
+
+**Card:** `t_ai_stack_cost_guardian_and_m3_squarepayouts_unblock_v1_20260914`
+**Closure kanban card:** `t_0c520a75` (status=done, qa_status=passed, build_passes=4, rewrite_scope=major)
+
+**Gap 1 — Carve-out clause propagation**
+- Carve-out text: "No blanket categorical block by AI model or by tool, EXCEPT the standing safety-sensitive and secrets carve-outs in the V3 task-type ledger: Claude is mandatory for auth, encryption, money-path, PII, and audit-logging work; production secrets, credentials, tokens, and .env content are Llama/local only and must never leave the host."
+- BossMan task-fit routing preserved; exception only protects risk handling and local-only secrets; does NOT restore prior SquarePayouts M3 block.
+- Canonical files amended in place:
+  - `~/.hermes/knowledge/LEARNED_SQUAREPAYOUTS.md`
+  - `~/.hermes/knowledge/LEARNED_V3_MODEL_STACK.md`
+  - `~/.hermes/knowledge/ROUTING-RULES.md`
+  - `~/.hermes/knowledge/LEARNED_OPS_SELF_HEALING_POLICY.md`
+  - `~/.hermes/knowledge/LEARNED_SQUAREPAYOUTS_ACTIVE.md`
+  - `~/.hermes/knowledge/LEARNED_INDEX.md`
+  - `~/.hermes/OPERATINGBLUEPRINT_V3_POINTERS.md`
+  - `~/.hermes/profiles/ops/skills/devops/ops-runbook/references/ai-stack-cost-guardian-implementation-pattern-2026-09-14.md`
+  - `~/.hermes/profiles/builder/memories/MEMORY.md`
+- Mirrors amended: 64 files across Obsidian (24), GitHub repos (19), recovery worktree (15), local Spaces (5), Obsidian 60_Knowledge-Topics (3).
+- Recovery branch commit: `d0a272e` (13 files changed, +25 / -25).
+- Drift-scan grep pattern in ops-runbook reference preserved verbatim (forward-looking meta-documentation, not active restriction).
+
+**Gap 2 — GitHub remote sync**
+- Remote URL: `https://github.com/BIGDAWG35/BossMan.git` (read from `git remote -v`).
+- Branch: `recovery/ai-stack-cost-guardian-m3-unblock-2026-09-14`.
+- Push result: `* [new branch] recovery/ai-stack-cost-guardian-m3-unblock-2026-09-14 -> recovery/ai-stack-cost-guardian-m3-unblock-2026-09-14`.
+- Local HEAD: `d0a272e2b6bc1330b13c1841985f6a1df3325488`.
+- Remote HEAD: `d0a272e2b6bc1330b13c1841985f6a1df3325488` (verified via `git ls-remote --heads origin`).
+- `merge-base --is-ancestor 7aa04c0 origin/recovery/...` → YES.
+- `merge-base --is-ancestor 8430a2d origin/recovery/...` → YES.
+- Main BossMan working tree: 121 dirty entries preserved, HEAD `6ae1f91`, no merge commit from recovery.
+
+**Gap 3 — Spaces re-upload**
+- Local Spaces mirrors (5 files in `~/.hermes/spaces/agent-os/`): amended.
+- Obsidian Perplexity Spaces mirror (8 files): amended.
+- Obsidian 60_Knowledge-Topics/perplexity-spaces (3 files): amended.
+- GitHub docs/perplexity-spaces mirror (8 files): amended.
+- Recovery worktree mirrors: committed + pushed (commits `8430a2d`, `d0a272e`).
+- Desktop local source `/Users/bigdawg/Desktop/perplexity-spaces Hermes/`: BLOCKED by macOS TCC; cannot scan/modify from this profile.
+- Perplexity.ai uploaded content: NOT auto-synced (no API/CLI). Manifest at `/Users/bigdawg/.hermes/spaces/SPACES_REUPLOAD_MANIFEST_2026-09-14.md` documents V3 docs that need manual re-upload by Marcelo.
+- Uploaded-content drift scan (against local mirror that feeds Spaces): clean.
+
+**Final verification invariants**
+- BossMan-owned task-fit routing present everywhere: yes.
+- Old blanket SquarePayouts restriction in active policy: zero survivors (grep verified).
+- Safety/secrets exception clause present everywhere required: yes (67 files contain "EXCEPT the standing safety-sensitive").
+- Step-5 QA mandatory for critical work: yes (`LEARNED_7_RULE_CONTRACT.md`, `LEARNED_SQUAREPAYOUTS.md`, `ROUTING-RULES.md` all retain).
+- Local-only secrets handling intact: yes (verbatim text in `LEARNED_SQUAREPAYOUTS.md` + `LEARNED_OPS_SELF_HEALING_POLICY.md`).
+- LBC35/OpenClaw still delegator/router only: yes (`SOUL.md` + `LEARNED_7_RULE_CONTRACT.md`).
+- Main working tree untouched: yes (121 dirty entries preserved).
+- Frozen archives untouched: yes (`AGENTS_ARCHIVE_2026-08-06.md`, `OPERATINGBLUEPRINT_ARCHIVE_2026-08-06.md`, `~/Repos/BossMan/docs/archive/`, `~/Obsidian/Hermes/90_Archive/` all unchanged).
+- No tokens/credentials/secret URLs in committed files: yes (verified via `git show origin/...:docs/ROUTING-RULES.md | grep -iE "token=|password=|secret=|api[-_]?key="`).
+- Ops-runbook drift-scan pattern preserved: yes (line 193 unchanged).
+
+**Commits on recovery branch** (all on `recovery/ai-stack-cost-guardian-m3-unblock-2026-09-14`, pushed to `origin`):
+- `d0a272e` — Gap 1 carve-out amendment (13 files, +25 / -25).
+- `8430a2d` — Durable BossMan-owned task-fit routing rule (15 files, +37 / -35).
+- `7aa04c0` — Initial SquarePayouts M3-block removal + canon reconciliation (12 files, +73 / -50).
+
+**Verdict:** PASS-WITH-FIX. Three gaps closed: Gap 1 fully propagated; Gap 2 fully pushed + remote-verified; Gap 3 local mirrors clean (Perplexity.ai re-upload manifest pending Marcelo manual action via app.perplexity.ai).
+
+---
+
 
 ## 2026-09-14 — SquarePayouts M3 unblock + AI stack cost control + local grinder restoration
 
