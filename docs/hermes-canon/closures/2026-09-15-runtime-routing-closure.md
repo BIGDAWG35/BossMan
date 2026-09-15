@@ -4,7 +4,8 @@ date: 2026-09-15
 type: closure-record
 kanban: t_83288a97 (parent), t_248df694, t_c2c5923b
 hermes_commit: e1653bd94e16b4e03560e8cab66862af2112b1c1
-mirror_commit: fc5e89ab304b8888d9427ea502e3d11e743e4b39
+mirror_commit: fc5e89ab304b8888d9427ea502e3d11e743e4b39 (original-on-main) → 9af01ea (rewritten-on-closure-branch via cherry-pick onto base ce78a9f)
+closure_record_commit: 74460c3 (original-on-main) → 3c832f0 (rewritten-on-closure-branch, verified remote tip)
 sources_of_truth: ~/.hermes/knowledge/
 ---
 
@@ -12,7 +13,7 @@ sources_of_truth: ~/.hermes/knowledge/
 
 > **Status:** Evidence note. Canonical policy remains in `~/.hermes/knowledge/`. This note preserves verified closure evidence; it is NOT a competing source of truth.
 > **Card:** `t_83288a97` (closure parent; done). Children: `t_248df694` (cron provider coverage; done), `t_c2c5923b` (ops profile `reasoning_effort`; done).
-> **Commits:** Hermes canon `e1653bd94e16b4e03560e8cab66862af2112b1c1`. BossMan GitHub mirror `fc5e89ab304b8888d9427ea502e3d11e743e4b39`.
+> **Commits:** Hermes canon `e1653bd94e16b4e03560e8cab66862af2112b1c1`. BossMan GitHub mirror `fc5e89ab304b8888d9427ea502e3d11e743e4b39` (original-on-main) → `9af01ea` (rewritten-on-closure-branch via cherry-pick onto base `ce78a9f`). Closure-record commit `74460c3` (original-on-main) → `3c832f0` (rewritten-on-closure-branch, verified remote tip).
 
 ## Verdict
 
