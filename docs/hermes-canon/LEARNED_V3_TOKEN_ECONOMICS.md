@@ -128,4 +128,10 @@ Surface the review on the kanban board. If reuse rate < 50%, that's a `drift-fix
 
 ---
 
+## Runtime cron/PM2 closure (Permanent 2026-09-15, card `t_drift_closure_runtime_routing_v1_20260915`)
+
+Mirror sync: this section was added to the canonical doc on 2026-09-15. GitHub mirror is being kept current. Unattended cron and PM2 jobs MUST NOT reach the global `fallback_providers` chain. Each job in `~/.hermes/cron/jobs.json` carries an explicit `provider` + `model` (Ollama or M3 only) and `fallback_chain: []`. Unapproved or unavailable routes fail LOUD with a kanban alert; no silent paid fallback. Risk-gated jobs (money paths, security, SquarePayouts state, Binance, MoneyPipeline, pmd-watchdog) are pinned to Ollama because Ollama never goes down — failure there means true infrastructure failure, not token spend. `reasoning_effort` is `false` in every dispatching profile (core + ops) to prevent Ollama HTTP 400 ("model does not support thinking") from triggering silent paid fallback. Full canon: `LEARNED_V3_MODEL_STACK.md` §Drift Closure 2026-09-15.
+
+---
+
 *This file replaces any prior token-economics description. If a project violates these rules, create a `drift-fix: <project>` card.*

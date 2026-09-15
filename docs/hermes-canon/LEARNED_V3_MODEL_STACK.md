@@ -155,6 +155,47 @@ grinders, bulk-cleanup, and PM2/cron infra checks **default to Ollama/local**
 (`provider: custom`, `base_url: http://localhost:11434/v1`, model `qwen2.5:3b`
 or `qwen2.5:14b`) instead of falling through to Claude / DeepSeek.
 
+### Drift Closure 2026-09-15 (BossMan run, card `t_drift_closure_runtime_routing_v1_20260915`)
+
+**Standing policy (Permanent 2026-09-15, Marcelo directive):** Unattended cron
+and PM2 execution routes to **M3 or Ollama only**. DeepSeek is helper-only and
+must NEVER be an automatic primary or fallback provider for cron/PM2. MiniMax
+must NEVER be an automatic fallback provider for cron/PM2 (M3 may be the
+explicit primary when chosen by BossMan, but the *fallback* chain for cron/PM2
+runtime is Ollama-local only). Claude and OpenAI are interactive planning /
+architecture / quality / risk-gated review models — they are NOT unattended
+runtime defaults. Payment, auth, PII, security, audit-logging, and
+customer-facing financial work retain mandatory risk-based QA gates and must
+fail loudly or escalate if the approved route is unavailable.
+
+**Implementation (applied 2026-09-15):**
+1. Every job in `~/.hermes/cron/jobs.json` has an **explicit** `provider` +
+   `model`. No job may inherit the global `fallback_providers` chain.
+2. Every job's `fallback_chain` is `[]`. Unapproved / unavailable routes fail
+   LOUD (RuntimeError or fail-streak alert) instead of silently consuming
+   paid tokens.
+3. `reasoning_effort` is `false` in every profile that dispatches cron/PM2
+   jobs (core + ops profile). Prevents Ollama HTTP 400 ("model does not
+   support thinking") → silent paid fallback.
+4. Legacy non-approved pins are removed: the `pmd-watchdog` job was pinned to
+   `minimax/haiku` (haiku is not in the approved M3/Ollama set) and is now
+   `custom/qwen2.5:7b`.
+
+**Routing ledger for cron jobs:**
+- Routine cron (bulk, monitors, watchdog, scans, audits, sync, freshness):
+  `custom/qwen2.5:7b` (Ollama).
+- Chatty / brief jobs explicitly approved for M3: `minimax/MiniMax-M3`.
+- Risk-gated jobs (money paths, security, SquarePayouts state exporters,
+  Binance, MoneyPipeline): `custom/qwen2.5:7b` (Ollama) — Ollama never goes
+  down, so failure means true infrastructure failure, not silent paid
+  fallback. BossMan surfaces the failure via kanban alert.
+
+**Interactive session fallback (UNCHANGED):** The global `fallback_providers`
+chain in `~/.hermes/profiles/ops/config.yaml` (Ollama → DeepSeek → Claude →
+OpenAI) remains in place for **interactive** sessions where BossMan is
+actively orchestrating. Cron/PM2 jobs MUST NOT reach this chain because
+they have explicit per-job routes.
+
 ### What "routine" means here
 
 A cron job is **routine** if it satisfies ALL of:
@@ -223,7 +264,7 @@ global chain).
 - **qa-verification** (Step-5): default `claude-sonnet-4-6`; fallback `openai-codex gpt-5.4`; never MiniMax for safety audits.
 - **research-intel**: default `openai-codex gpt-5.4`; fallback `claude-sonnet-4-6`.
 
-**SquarePayouts hard restriction** (carried over from prior canon): M3 is permanently BLOCKED for SquarePayouts code paths. Use Claude → OpenAI → DeepSeek.
+**SquarePayouts model routing (Permanent 2026-09-14, Marcelo durable rule):** SquarePayouts model/tool routing is owned by BossMan. BossMan selects the best-fit tool and model per task type, risk, privacy, cost, and required quality. No blanket categorical block by AI model or by tool, EXCEPT the standing safety-sensitive and secrets carve-outs in the V3 task-type ledger: Claude is mandatory for auth, encryption, money-path, PII, and audit-logging work; production secrets, credentials, tokens, and .env content are Llama/local only and must never leave the host. Money-path/auth/PII/credentials/security/audit/public-financial work requires Step-5 red-team QA + strongest appropriate model; card does NOT move to done until verification passes. Production secrets and raw credentials remain local-only.
 
 ---
 
@@ -277,4 +318,159 @@ This file is the **canonical source of truth** for V3 model stack + routing. To 
 
 ---
 
+## §X. Pre-troubleshoot mandatory backup (Permanent 2026-08-06)
+
+Every non-trivial configuration mutation — config.yaml edits, `cron/jobs.json` changes, PM2 service definitions, infra manifests (Caddy / Tailscale / systemd / LaunchAgent), important scripts in `~/.hermes/scripts/`, governance canon (this file and `LEARNED_*`) — **MUST** be backed by a current git snapshot before the mutation. The reason is so the agent stack can revert automatically without ever asking Marcelo to retype a config or rerun a command from memory.
+
+- **Rule:** `LEARNED_7_RULE_CONTRACT.md` Rule #8.
+- **Executable form:** `~/.hermes/skills/troubleshooting-backup-and-revert/SKILL.md`.
+- **Helpers:** `~/.hermes/scripts/git-snapshot-before-fix.sh` (returns SHA), `~/.hermes/scripts/git-revert-last-fix.sh` (auto-revert on Step-5 FAIL).
+- **Inventory:** `~/.hermes/knowledge/AUTOMATION_INVENTORY.md` §A.
+- **Drift signal:** Sub-agent applies a non-trivial fix without first running the snap helper → `t_drift_snap_rule_violation_<date>` card.
+
+This applies to model-routing fixes in this doc itself: if you intend to amend the routing map or the M3-block on SquarePayouts, snap first, write the new version, run Step-5 verifier (Claude for safety-sensitive), and auto-revert on FAIL. Models don't get rerun. They snap → mutate → verify → land or auto-revert.
+
+### Pre-MD-trim mandatory classification (Permanent 2026-08-06)
+
+Every canon-MD trim, dedup, or shave — including this file, `LEARNED_7_LAYER_ARCHITECTURE.md`, `LEARNED_7_RULE_CONTRACT.md`, profile `SOUL.md` / `AGENTS.md`, `PHASEREPORT.md`, audit docs, and any `LEARNED_*.md` — **MUST** pass the 6-step Rule #9 loop: snapshot → classify → extract → trim → verify → report.
+
+- **Rule:** `LEARNED_7_RULE_CONTRACT.md` Rule #9.
+- **Rubric:** `~/.hermes/knowledge/LEARNED_MD_FILE_DRIFT_RUBRIC.md` (4-category classification: A=canonical rule, B=historical evidence, C=procedure, D=temp working context).
+- **Executable form:** `~/.hermes/skills/md-file-snapshot-before-trim/SKILL.md`.
+- **Helper:** `~/.hermes/scripts/git-snapshot-md-file.sh` (returns SHA, writes ledger to `~/.hermes/logs/md-trim-snapshots.log`).
+- **Drift signal:** Sub-agent trims a canon MD without first running `git-snapshot-md-file.sh` → `t_drift_md_trim_classification_<date>` card.
+
+**No section may be deleted without classification.** Class A/B/C content must be extracted to its proper destination before any trim. Class D requires a 7-day quarantine.
+
+---
+
+## HARD RULE — Scheduled/Background Automation (Permanent, 2026-08-24)
+
+> **Effective:** 2026-08-24
+> **Source:** Marcelo — P1 incident `t_cron_pm2_local_m3_only_enforcement_v1_20260824`
+> **Applies to:** ALL non-interactive execution surfaces — cron, PM2, LaunchAgents, daemons, background workers, self-healing wrappers, health monitors
+
+### Allowed surfaces (in order of preference)
+
+1. **`no_agent` deterministic scripts** — preferred wherever possible
+2. **Ollama / local models** — `custom/qwen2.5:3b` at `http://localhost:11434/v1`
+3. **MiniMax-M3** — only when reasoning/planning is genuinely required
+
+### Denied — deny-by-default regardless of balance
+
+- Claude / Anthropic
+- DeepSeek
+- OpenAI / Codex
+- Perplexity Computer
+- Any paid API provider
+
+### Why this matters
+
+A paid API key with $0 balance is still a policy violation if the background runtime can access it. The runtime environment must be isolated from paid credentials, not just balanced-out.
+
+### If local/Ollama is unavailable
+
+- **Do NOT escape to a paid model**
+- Fail closed
+- Write a local incident artifact
+- Use local-only self-heal/retry
+- Create a fix card if unresolved
+- Send one Telegram alert only after the persistent-failure threshold
+
+### Enforcement layers
+
+| Layer | Mechanism |
+|-------|-----------|
+| Config | `fallback_providers: [custom/qwen2.5:3b]` in ops profile |
+| Skill | Skill prompts must not reference paid providers |
+| Credential | Paid keys removed from ops .env |
+| Scheduler | Explicit `model: MiniMax-M3, provider: minimax` on all health monitors |
+| Guardian | `claude-cost-guardian.sh` detects and alerts on any Claude spend from cron/PM2 |
+
+### Cost guardian thresholds
+
+- Daily warning: $5 | hard-stop: $10
+- 7-day warning: $20 | hard-stop: $35
+- HARD-STOP: exits non-zero (cron job fails + escalates)
+- WARNING: exits 0 (logged only, one Telegram alert/day)
+
+### Credential isolation scope
+
+```
+~/.hermes/profiles/ops/.env  → MINIMAX_API_KEY ✅ | TELEGRAM_BOT_TOKEN ✅ | ANTHROPIC/DEEPSEEK/OPENAI ❌ REMOVED
+~/.hermes/.env               → ANTHROPIC/DEEPSEEK/OPENAI removed (2026-08-24)
+~/.hermes/secrets/          → interactive-paid-providers.env (mode 600, user-only)
+```
+
+### Cannonical files
+
+- Incident card: `~/.hermes/knowledge/incidents/t_cron_pm2_local_m3_only_enforcement_v1_20260824.md`
+- Incident card: `~/.hermes/knowledge/incidents/t_paid_model_background_regression_guard_v1_20260824.md`
+- Guardian script: `~/.hermes/profiles/ops/scripts/claude-cost-guardian.sh`
+- Cost ledger: `~/.hermes/logs/model-cost-ledger.jsonl`
+- Alert log: `~/.hermes/logs/claude-guardian-alerts.log`
+- Ops profile config: `~/.hermes/profiles/ops/config.yaml` (fallback_providers: Ollama only)
+- Provider policy gate: `~/.hermes/profiles/ops/scripts/provider_policy.py`
+- Regression test suite: `~/.hermes/profiles/ops/scripts/regression_test_suite.py`
+- Background model guard: `~/.hermes/profiles/ops/scripts/background_model_guard.py`
+- Interactive secrets: `~/.hermes/secrets/interactive-paid-providers.env` (mode 0600)
+
+
+---
+
+## H. Background Execution — Permanent Hard Rule (2026-08-24)
+
+**Card:** `t_paid_model_background_regression_guard_v1_20260824`
+
+### Policy
+
+Background execution (cron, PM2, LaunchAgent, gateway-worker, self-heal, no_agent, and all non-interactive contexts) may use **ONLY**:
+
+1. Deterministic/no_agent local scripts
+2. Ollama/local models (provider: `custom/`)
+3. MiniMax-M3 (provider: `minimax`) — only when reasoning/planning is actually required
+
+**All paid providers are deny-by-default in every non-interactive runtime**, regardless of:
+- API key being present or absent
+- Account balance being zero or non-zero
+- Future profile or config changes
+- Inherited fallback chains
+
+### Credential Architecture (2026-08-24)
+
+| Location | Contents | Background Access |
+|----------|----------|-----------------|
+| `~/.hermes/secrets/interactive-paid-providers.env` | ANTHROPIC, DEEPSEEK, OPENAI, REPLICATE, ATTOM | **Blocked** — file mode 0600, not sourced by background |
+| `~/.hermes/.env` | MINIMAX, TELEGRAM, chrome path | **Blocked** — no paid keys |
+| `~/.hermes/profiles/ops/.env` | MINIMAX, TELEGRAM | **Blocked** — no paid keys |
+| Interactive gateway processes | Loaded from secrets on demand | **Allowed** — interactive context only |
+
+### Enforcement Stack
+
+1. **provider_policy.py** — Provider firewall gate, called before any model/client init. Blocks paid providers in non-interactive contexts.
+2. **regression_test_suite.py** — 28-test matrix covering all contexts and all paid providers.
+3. **background_model_guard.py** — Drift scanner: cron jobs, PM2, LaunchAgent, env vars, scripts.
+4. **key_containment_check.py** — Paid key scanner: active envs, .env files, logs, PM2 configs, LaunchAgents.
+5. **claude-cost-guardian.sh** — Cost ledger monitor: HARD-STOP at $10/day, exits 2, Telegram alert.
+6. **pre_change_scan.py** — Pre-change protection: blocks config changes introducing paid providers.
+
+### Scanners Mark These as EXPECTED (not violations)
+
+- Paid keys in `~/.hermes/secrets/interactive-paid-providers.env`
+- Paid keys loaded into interactive gateway processes
+- `# REMOVED:` comment lines documenting key removal
+
+### Scanners Flag These as VIOLATIONS
+
+- Any paid key in a cron, PM2, LaunchAgent, or background environment
+- Any `fallback_providers` containing a paid provider in a non-interactive job
+- Any direct SDK import (anthropic, openai, deepseek, perplexity) in background scripts
+- Any background process environment variable containing a paid API key
+- Any active `.env` file with a paid key that is not the secrets store
+
+---
+
 *This file replaces any prior model routing description in SOUL/AGENTS/OPERATINGBLUEPRINT. If config.yaml or a profile yaml diverges, this file wins until config catches up.*
+
+
+
