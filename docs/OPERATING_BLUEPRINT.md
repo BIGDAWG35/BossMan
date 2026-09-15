@@ -72,16 +72,7 @@ Hermes — BossMan profile (primary orchestrator, MiniMax 2.7)
 
 ### SquarePayouts Model Restriction (Permanent — 2026-05-20)
 
-**MiniMax 2.7 is BLOCKED for all SquarePayouts work.** Use Claude, DeepSeek, or OpenAI only. Applies to all subagents and delegated executors.
-
-### Detailed Tool Strategy → AGENTS.md
-
-Tool-by-task strategy (Perplexity desktop app vs Hermes Computer Use vs Browser QA vs Terminal) is documented permanently in `AGENTS.md` under **Tool Strategy by Task Type**.
-
----
-
-## Kanban Board
-
+**SquarePayouts model routing (Permanent 2026-09-14, Marcelo policy):** No model is categorically blocked solely because the work is SquarePayouts. BossMan routes per the V3 task-fit matrix. For payment execution, auth, PII, security/audit logging, customer-facing financial changes, and money movement — mandatory Step-5 QA + strongest-appropriate-model review. For non-sensitive SquarePayouts work (planning, routine automation, research synthesis, card creation, normal orchestration, status export), the cheapest adequate tier is selected (M3 / Ollama local / DeepSeek). Active canonical home: `~/.hermes/knowledge/LEARNED_SQUAREPAYOUTS.md` § "Model Selection — Task-Fit Routing". Card: `t_ai_stack_cost_guardian_and_m3_squarepayouts_unblock_v1_20260914` (canon reconciliation).
 **Board:** `bossman`
 **DB:** `~/.hermes/kanban/boards/bossman/kanban.db`
 **Rule:** All work goes on the board. No work happens off-board.

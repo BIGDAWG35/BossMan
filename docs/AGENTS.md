@@ -215,11 +215,9 @@ Every build card must include:
 - **Fallback chain when a paid model fails:** Planning → M3 → Llama → DeepSeek; Code → DeepSeek → Llama → OpenAI; QA → DeepSeek → OpenAI → M3.
 - On every card that uses a paid model, log: which model(s) were used, rough usage, key output location.
 
-### SquarePayouts Model Restriction (permanent)
-SquarePayouts is restricted to **Claude, DeepSeek, and OpenAI only**. **M3 is BLOCKED** for all SquarePayouts work. See `~/.hermes/knowledge/LEARNED_SQUAREPAYOUTS.md`.
+### SquarePayouts Model Restriction (superseded 2026-09-14)
 
----
-
+> **SquarePayouts model routing (Permanent 2026-09-14, Marcelo policy):** No model is categorically blocked solely because the work is SquarePayouts. BossMan routes per the V3 task-fit matrix. For payment execution, auth, PII, security/audit logging, customer-facing financial changes, and money movement — mandatory Step-5 QA + strongest-appropriate-model review. For non-sensitive SquarePayouts work (planning, routine automation, research synthesis, card creation, normal orchestration, status export), the cheapest adequate tier is selected (M3 / Ollama local / DeepSeek). Active canonical home: `~/.hermes/knowledge/LEARNED_SQUAREPAYOUTS.md` § "Model Selection — Task-Fit Routing". Card: `t_ai_stack_cost_guardian_and_m3_squarepayouts_unblock_v1_20260914` (canon reconciliation).
 ## Deep-Dive Task Budget (All Agents)
 
 | Task Type | Budget | Approach |

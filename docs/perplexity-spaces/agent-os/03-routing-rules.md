@@ -393,3 +393,9 @@ v3.0, multi-model routing, the QA pass, Perplexity Computer
 escalation, and light build metrics. Updated by BossMan when model
 specializations, escalation patterns, cost tiers, or routing rules
 change. All mirrors kept in sync (spaces + GitHub).*
+
+
+---
+
+**SquarePayouts model routing (Permanent 2026-09-14, Marcelo policy):** No model is categorically blocked solely because the work is SquarePayouts. BossMan routes per the V3 task-fit matrix. For payment execution, auth, PII, security/audit logging, customer-facing financial changes, and money movement — mandatory Step-5 QA + strongest-appropriate-model review. For non-sensitive SquarePayouts work (planning, routine automation, research synthesis, card creation, normal orchestration, status export), the cheapest adequate tier is selected (M3 / Ollama local / DeepSeek). Active canonical home: `~/.hermes/knowledge/LEARNED_SQUAREPAYOUTS.md` § "Model Selection — Task-Fit Routing". Card: `t_ai_stack_cost_guardian_and_m3_squarepayouts_unblock_v1_20260914` (canon reconciliation).
+

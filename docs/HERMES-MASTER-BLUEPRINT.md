@@ -220,23 +220,14 @@ Paper trading, backtesting evidence, Marcelo approval required for live executio
 
 | Model | Role | Use Case |
 |-------|------|----------|
-| **MiniMax 2.7** | Primary brain | Everything, all day — BLOCKED for SquarePayouts |
+| **MiniMax 2.7 / M3** | Primary brain | Everything, all day — permitted for SquarePayouts (M3 block removed 2026-09-14); see `LEARNED_SQUAREPAYOUTS.md` § "Model Restriction — REMOVED 2026-09-14" |
 | **DeepSeek** | Analysis backup | Deep reasoning, technical validation, edge-case analysis |
 | **OpenAI** | Synthesis backup | Product framing, operational writing, summarization |
 | **Claude** | Architecture backup | Workflow design, prompt/agent design, structured planning |
 | **Perplexity** | Research | Live web research, Deep Research, Space content |
 
 ### SquarePayouts Model Restriction (Permanent — 2026-05-20)
-MiniMax 2.7 is **BLOCKED** for all SquarePayouts work. Use Claude/DeepSeek/OpenAI/Perplexity/Hermes Computer Use only.
-
-### Tool Strategy
-| Task | Tool |
-|------|------|
-| Perplexity desktop app | Hermes Computer Use (BLOCKED — zero-bounds bug) |
-| Perplexity in Brave browser | Browser QA (WORKING) |
-| Installed PWAs (Basecamp) | Hermes Computer Use |
-| Native Mac app UI | Hermes Computer Use |
-| Web research, Deep Research | Perplexity Pro → Browser QA |
+**SquarePayouts model routing (Permanent 2026-09-14, Marcelo policy):** No model is categorically blocked solely because the work is SquarePayouts. BossMan routes per the V3 task-fit matrix. For payment execution, auth, PII, security/audit logging, customer-facing financial changes, and money movement — mandatory Step-5 QA + strongest-appropriate-model review. For non-sensitive SquarePayouts work (planning, routine automation, research synthesis, card creation, normal orchestration, status export), the cheapest adequate tier is selected (M3 / Ollama local / DeepSeek). Active canonical home: `~/.hermes/knowledge/LEARNED_SQUAREPAYOUTS.md` § "Model Selection — Task-Fit Routing". Card: `t_ai_stack_cost_guardian_and_m3_squarepayouts_unblock_v1_20260914` (canon reconciliation).| Web research, Deep Research | Perplexity Pro → Browser QA |
 | Localhost web app QA | Browser QA |
 | Local code/CLI/DB | Terminal + tools |
 
@@ -412,7 +403,7 @@ Review covers: PM2 health log → Kanban backlog → Cron jobs → Service ports
 - General cloud work within its reset window
 - Orchestration, routing, routine operations
 - Standard task execution that doesn't require specialist capabilities
-- **BLOCKED for SquarePayouts** (see SquarePayouts Model Restriction below)
+- M3 permitted for SquarePayouts (block removed 2026-09-14, see `LEARNED_SQUAREPAYOUTS.md` § "Model Restriction — REMOVED 2026-09-14"); Step-5 QA retained for sensitive SquarePayouts changes
 
 **DeepSeek** — chosen for:
 - Low-cost deep reasoning
@@ -481,7 +472,7 @@ Review covers: PM2 health log → Kanban backlog → Cron jobs → Service ports
 
 ### SquarePayouts Model Restriction (Permanent — Updated 2026-05-27)
 
-- MiniMax 2.7 is **BLOCKED** for all SquarePayouts work
+- SquarePayouts M3 (MiniMax M3 / MiniMax 2.7) block REMOVED 2026-09-14; see `LEARNED_SQUAREPAYOUTS.md`
 - Use: Ollama (local), DeepSeek, OpenAI, Claude, Perplexity Search
 - This restriction applies to all sub-agents and delegated executors
 

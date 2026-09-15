@@ -9,6 +9,31 @@
 
 ---
 
+
+## 2026-09-14 — SquarePayouts M3 unblock + AI stack cost control + local grinder restoration
+
+**Scope:** Owner-authorized implementation of `t_ai_stack_cost_guardian_and_m3_squarepayouts_unblock_v1_20260914`. Three deliverables: remove the prior permanent SquarePayouts M3 block, restore the local Ollama grinder tier, instrument provider-neutral cost observability + bound unattended spend.
+
+**What was codified:**
+
+- **SquarePayouts M3 block removed** in active canon (`~/.hermes/knowledge/LEARNED_SQUAREPAYOUTS.md`, `LEARNED_V3_MODEL_STACK.md`, `LEARNED_7_LAYER_ARCHITECTURE.md`, `LEARNED_7_RULE_CONTRACT.md`, `LEARNED_SQUAREPAYOUTS_ACTIVE.md`, `OPERATINGBLUEPRINT_V3_POINTERS.md`, `LEARNED_INDEX.md`). Prior rule preserved verbatim at `~/.hermes/knowledge/archive/LEARNED_SQUAREPAYOUTS_2026-07-22_to_2026-09-14.md` with supersession note.
+- **Cron `0561fcff` SquaresPayouts Daily Exporter** pinned to explicit `deepseek-v4-flash` with `provider=deepseek`, `base_url=https://api.deepseek.com/v1`, `explicit_model_set=true`, `cost_policy_intent` provenance comment.
+- **Ollama restored** on `127.0.0.1:11434` (v0.34.0, brew-installed CLI; running daemon PID 95260). Models installed: `qwen2.5:7b` (4.7 GB, Q4_K_M, digest `845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e`) and `qwen2.5:3b` (1.9 GB). `qwen2.5:14b` install deferred (privacy_local primary repointed to `qwen2.5:7b` with deferred-install comment).
+- **Local-first fallback wired:** `~/.hermes/profiles/ops/config.yaml` `fallback_providers` chain begins with `custom/qwen2.5:7b → deepseek-v4-flash → claude-sonnet-4-6 → gpt-5.4`. `~/.hermes/config.yaml` role-specific routing sets Ollama primary for `bulk_formatting`, `chatty`, `privacy_local`.
+- **Provider-neutral cost observability:** `append_cost_row.sh` (canonical, atomic append with required-field enforcement, 15-field schema). Guardian `claude-cost-guardian.sh` rewritten — provider-neutral aggregation, per-provider breakdown, job-by-job top-5, three-state classification (WARNING / HARD-STOP / TELEMETRY-STALE), `ledger_age > 24h = unhealthy`.
+- **Per-job bounded cost policy:** All 13 enabled agent-mode cron jobs received `model`, `fallback_chain`, `fallback_chain_bounded_retries`, `daily_cost_cap_usd`, `per_run_token_cap`, `cost_policy_intent` fields. Daily cap totals ≤ \$5.40 across the agent-mode roster.
+- **LEARNED_V3_TOKEN_ECONOMICS.md** updated with permanent "Cost control instrumentation (Permanent 2026-09-14)" section documenting ledger schema, guardian contract, per-job policy schema, and local-first fallback.
+
+**Live proof (Phase 5):** 11 controlled tests — local Qwen selected before paid; local failure → bounded retry → intentional paid tier; paid dispatch writes complete ledger row; guardian aggregates 5 providers correctly; stale-ledger (Jan 2024 mtime, 23,705h old) → TELEMETRY-STALE; OK/WARNING/HARD-STOP/TELEMETRY-STALE all classified correctly; all 12 agent-mode jobs have explicit policy; SquarePayouts exporter routing + M3 permitted + zero active M3-block refs; Step-5 QA canon rule intact; SquarePayouts port 8030 down (V3 carve-out: `pm2 start` requires Marcelo approval — follow-up card `t_22115730` created); Travel port 3537 + all 8 active PM2 processes healthy.
+
+**Guardrails honored:** 121 dirty main entries on BossMan untouched. No new cron / PM2 / gateway / secret / public-exposure / autonomous-messaging. SquarePayouts application code, DB, payment logic, secrets, port 8030, customer data — none touched. Perplexity Computer not used. Parked card `t_6b8fefae` not touched.
+
+**Branch:** `recovery/ai-stack-cost-guardian-m3-unblock-2026-09-14` (off `ff5ce0f`). No commits made in this session — canonical local files modified in place on `~/.hermes/knowledge/`.
+
+**Follow-up cards (internally owned, created via `hermes kanban create`):**
+
+- `t_22115730` — SquarePayouts PM2 restart required (Marcelo V3 carve-out).
+
 ## 2026-06-23 — Doc Hygiene Goal Loop: Agent OS doc-hygiene lane registration
 
 **Scope:** Register the existing Phase 3 Doc Hygiene Goal Loop as a

@@ -813,3 +813,9 @@ Proven 2026-06-23 on the PMD + AI stack health check (parent goal card): zero cl
 ## Autonomous-By-Default Operating Model (2026-06-23)
 
 For non-trivial changes, see **`autonomous-change-pipeline` skill** and **`workflow-sanity-check` skill**. Five carve-out categories still require Marcelo approval: (1) infrastructure install/remove/upgrade, (2) public/VPN port changes, (3) security-relevant behavior, (4) vendor/API/billing, (5) true product-direction. Mirror: `~/Obsidian/Hermes/10_Operating-Blueprint/AUTONOMY_OPERATING_MODEL_v3.md`.
+
+
+---
+
+**SquarePayouts model routing (Permanent 2026-09-14, Marcelo policy):** No model is categorically blocked solely because the work is SquarePayouts. BossMan routes per the V3 task-fit matrix. For payment execution, auth, PII, security/audit logging, customer-facing financial changes, and money movement — mandatory Step-5 QA + strongest-appropriate-model review. For non-sensitive SquarePayouts work (planning, routine automation, research synthesis, card creation, normal orchestration, status export), the cheapest adequate tier is selected (M3 / Ollama local / DeepSeek). Active canonical home: `~/.hermes/knowledge/LEARNED_SQUAREPAYOUTS.md` § "Model Selection — Task-Fit Routing". Card: `t_ai_stack_cost_guardian_and_m3_squarepayouts_unblock_v1_20260914` (canon reconciliation).
+
