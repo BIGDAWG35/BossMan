@@ -72,7 +72,7 @@ Hermes — BossMan profile (primary orchestrator, MiniMax 2.7)
 
 ### SquarePayouts Model Restriction (Permanent — 2026-05-20)
 
-**SquarePayouts model routing (Permanent 2026-09-14, Marcelo durable rule):** SquarePayouts model/tool routing is owned by BossMan. BossMan selects the best-fit tool and model per task type, risk, privacy, cost, and required quality. No blanket categorical block by AI model or by tool. Money-path/auth/PII/credentials/security/audit/public-financial work requires Step-5 red-team QA + strongest appropriate model; card does NOT move to done until verification passes. Production secrets and raw credentials remain local-only.
+**SquarePayouts model routing (Permanent 2026-09-14, Marcelo durable rule):** SquarePayouts model/tool routing is owned by BossMan. BossMan selects the best-fit tool and model per task type, risk, privacy, cost, and required quality. No blanket categorical block by AI model or by tool, EXCEPT the standing safety-sensitive and secrets carve-outs in the V3 task-type ledger: Claude is mandatory for auth, encryption, money-path, PII, and audit-logging work; production secrets, credentials, tokens, and .env content are Llama/local only and must never leave the host. Money-path/auth/PII/credentials/security/audit/public-financial work requires Step-5 red-team QA + strongest appropriate model; card does NOT move to done until verification passes. Production secrets and raw credentials remain local-only.
 
 ### Detailed Tool Strategy → AGENTS.md
 
