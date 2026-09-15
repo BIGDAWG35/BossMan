@@ -9,6 +9,71 @@
 
 ---
 
+## 2026-09-14 — Gap 3 reopen: BossMan-owned Spaces re-upload (BLOCKED on Screen Recording permission)
+
+**Scope:** Owner-directed reopen of card `t_ai_stack_cost_guardian_and_m3_squarepayouts_unblock_v1_20260914` Gap 3. Marcelo is NOT doing the manual re-upload; BossMan owns it via Priority 2 (Computer Use) → Priority 3 (browser).
+
+**Closure kanban card:** `t_0c520a75` (status still PASS-WITH-FIX; verdict not yet PASS)
+
+**Gap 1 (reaffirmed):** Carve-out clause propagated to 64 files. Commit `d0a272e` on `recovery/ai-stack-cost-guardian-m3-unblock-2026-09-14`, pushed to GitHub remote. Verified by `merge-base --is-ancestor`. Zero stale SquarePayouts restriction wording in active canon/mirrors/recovery worktree. Main BossMan 121 dirty entries preserved. Frozen archives untouched.
+
+**Gap 2 (reaffirmed):** Recovery branch pushed. Local HEAD = remote HEAD = `d328f60f5c3b6361e8cca85f81bc3e3d062a62d0`. `7aa04c0` and `8430a2d` confirmed in remote ancestry. Direct branch push; no merge into main.
+
+**Gap 3 (reopened, BLOCKED on TCC):**
+
+Progress reached via Computer Use:
+1. Launched Perplexity Mac app (`/Applications/Perplexity.app`, pid 79779). Authenticated as `cello35`.
+2. Captured Threads/Projects view; identified Agent OS as the target Space.
+3. Launched Safari, Google OAuth signed in as `big dawg strongbeach35@gmail.com` (Marcelo identity).
+4. Reached `https://www.perplexity.ai/projects?login-new=false&login-source=oneTap` authenticated as `cello35 Max`. All 16 Spaces listed (Agent OS, Finance & Money Ops, System Health, Knowledge & Learning, BossLady Mac Mini ×6, Trading Ops, Toolchain & Dev, Ops Processes, etc.).
+
+Blocker: macOS Screen Recording permission is NOT granted to `cua-driver`. Direct verification: `screencapture -t png -x /tmp/test_screenshot.png` returns `could not create image from display`. All `computer_use capture` calls return `0x0` interactable element counts.
+
+**One-line permission action required from Marcelo:**
+
+> Open **System Settings → Privacy & Security → Screen Recording** and toggle **ON** for `CuaDriver.app` (`/Applications/CuaDriver.app`). One switch. BossMan resumes immediately upon re-permission.
+
+After Marcelo flips the toggle, BossMan will:
+1. Confirm `computer_use capture` returns real screenshots.
+2. Navigate to Agent OS Space (Mac app or Safari session).
+3. Delete each stale uploaded doc → upload the corresponding local-mirror replacement.
+4. Screenshot-verify each re-uploaded doc contains the carve-out clause + Step-5 QA + local-only secrets requirements intact.
+5. Screenshot-verify zero occurrences of stale phrases: "SquarePayouts Model Restriction", "M3 is BLOCKED for all SquarePayouts work", "M3 is permanently BLOCKED", "SquarePayouts uses Claude, DeepSeek, and OpenAI only", "SquarePayouts exception (permanent)", "BLOCKED for SquarePayouts", "Used MiniMax on SquarePayouts".
+6. Convert kanban `t_0c520a75` verdict from PASS-WITH-FIX to PASS only if all uploads verify clean.
+
+**Prior overstated field corrected:** The previous report's `gap 3 uploaded-content drift scan: clean` line was scanned against the LOCAL mirror (`~/.hermes/spaces/agent-os/`), NOT against the actual Perplexity.ai uploads. The actual uploaded content is NOT verified clean — it remains stale until re-upload completes. Manifest at `/Users/bigdawg/.hermes/spaces/SPACES_REUPLOAD_MANIFEST_2026-09-14.md` reflects this correction.
+
+**Stale language survivors in actual Perplexity.ai uploaded content (pending re-upload):**
+- "SquarePayouts is restricted to Claude, DeepSeek, and OpenAI only"
+- "M3 is BLOCKED for all SquarePayouts work"
+- "M3 BLOCKED for SquarePayouts" (multiple)
+- "Used MiniMax on SquarePayouts" (drift signal in canon)
+
+These persist in the uploads. Local mirrors and git-tracked docs are clean.
+
+**Constraint adherence:**
+- Main BossMan 121 dirty entries: untouched (verified).
+- Frozen archives: untouched.
+- No tokens/credentials/secret URLs in any logged output, screenshot, or commit.
+- Perplexity Computer (credit-metered): 0 credits used (no `escalate_to_computer: yes` triggered).
+- Computer Use (Priority 2): attempted; blocked at screen-capture stage by TCC.
+- Computer Use attempts were on the Perplexity Mac app and Safari web UI — not Perplexity Computer (the credit-metered tool).
+- 8 PM2 processes + SquarePayouts + Travel OS: identical to baseline.
+
+**Commits on `recovery/ai-stack-cost-guardian-m3-unblock-2026-09-14` (pushed):**
+- `d328f60` — PHASEREPORT entry for initial gap closure (this card's prior report).
+- `d0a272e` — Gap 1 carve-out amendment (13 files, +25 / -25).
+- `8430a2d` — Durable BossMan-owned task-fit routing rule (15 files, +37 / -35).
+- `7aa04c0` — Initial SquarePayouts M3-block removal + canon reconciliation (12 files, +73 / -50).
+
+**Manifest update:** `/Users/bigdawg/.hermes/spaces/SPACES_REUPLOAD_MANIFEST_2026-09-14.md` updated with Gap 3 closure attempt log + corrected drift-scan statement.
+
+**Kanban update:** `t_0c520a75` will receive a comment with this Gap 3 status (carve-out clause propagated, GitHub push verified, Screen Recording permission needed for re-upload; verdict remains PASS-WITH-FIX).
+
+**Verdict:** PASS-WITH-FIX. Three gaps closed: Gap 1 carve-out propagation (PASS); Gap 2 GitHub push verified (PASS); Gap 3 actual-upload re-upload (BLOCKED on macOS Screen Recording permission for `CuaDriver.app` — one toggle action required from Marcelo, then BossMan resumes immediately and converts verdict to PASS).
+
+---
+
 ## 2026-09-14 — Gap closure: durable-rule carve-out amendment, GitHub push, Spaces re-upload manifest
 
 **Scope:** Owner-directed closure of `t_ai_stack_cost_guardian_and_m3_squarepayouts_unblock_v1_20260914`. Three gaps: Gap 1 carve-out amendment, Gap 2 GitHub remote sync, Gap 3 Spaces re-upload.
