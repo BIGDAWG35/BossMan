@@ -180,8 +180,8 @@ Full per-card template in `~/.hermes/knowledge/ROUTING-RULES.md` §3.
 
 ### SquarePayouts Model Restriction (permanent until Marcelo removes it)
 
-- SquarePayouts is restricted to **Claude, DeepSeek, and OpenAI only**.
-- **M3 is BLOCKED for all SquarePayouts work**: bug investigation, code fixes, Basecamp workflow automation, cron/PM2/Hermes monitor work, invite flow, pricing workflow, auth/session issues, UI/UX bug analysis, architecture review, testing review, implementation planning.
+- **SquarePayouts model routing (Permanent 2026-09-14, Marcelo durable rule):** SquarePayouts model/tool routing is owned by BossMan. BossMan selects the best-fit tool and model per task type, risk, privacy, cost, and required quality. No blanket categorical block by AI model or by tool. Money-path/auth/PII/credentials/security/audit/public-financial work requires Step-5 red-team QA + strongest appropriate model; card does NOT move to done until verification passes. Production secrets and raw credentials remain local-only.
+- **SquarePayouts model routing (Permanent 2026-09-14, Marcelo durable rule):** SquarePayouts model/tool routing is owned by BossMan. BossMan selects the best-fit tool and model per task type, risk, privacy, cost, and required quality. No blanket categorical block by AI model or by tool. Money-path/auth/PII/credentials/security/audit/public-financial work requires Step-5 red-team QA + strongest appropriate model; card does NOT move to done until verification passes. Production secrets and raw credentials remain local-only.
 - This restriction applies to all subagents and delegated executors working on SquarePayouts.
 - Perplexity Search, Llama, and Claude remain approved for SquarePayouts research and review.
 - Perplexity Computer requires the same `escalate_to_computer: yes` approval as everywhere else.
@@ -208,7 +208,7 @@ Full per-card template in `~/.hermes/knowledge/ROUTING-RULES.md` §3.
 
 ### Legacy framing (deprecated, kept only for traceback)
 
-- "MiniMax 2.7 primary brain" and "MiniMax 2.7 BLOCKED for SquarePayouts" — replaced by the M3 / DeepSeek / Llama / OpenAI / Claude / Perplexity roles above.
+- "MiniMax 2.7 primary brain" and "MiniMax-M3 — BossMan-owned task-fit routing (durable rule)" — replaced by the M3 / DeepSeek / Llama / OpenAI / Claude / Perplexity roles above.
 - `model.default = MiniMax-M2.7` → migrated to `MiniMax-M3` on 2026-06-03 (commit `c2e703b`). Existing references to "M2.7" elsewhere in the canon are descriptive legacy and will be cleaned on the next routine doc-sync pass.
 
 ### Deep-Dive Task Budget (All Agents)
@@ -254,8 +254,9 @@ Full per-card template in `~/.hermes/knowledge/ROUTING-RULES.md` §3.
 | Specialist | Perplexity Search / Deep Research | Web research, Deep Research, process analysis, crypto research, verification. |
 
 **SquarePayouts Model Restriction (permanent until Marcelo removes it):**
-- SquarePayouts is restricted to **Claude, DeepSeek, and OpenAI only**.
-- **M3 is BLOCKED** for all SquarePayouts work: bug investigation, code fixes, Basecamp workflow automation, cron/PM2/Hermes monitor work, invite flow, pricing workflow, auth/session issues, UI/UX bug analysis, architecture review, testing review, implementation planning.
+- **SquarePayouts model routing (Permanent 2026-09-14, Marcelo durable rule):** SquarePayouts model/tool routing is owned by BossMan. BossMan selects the best-fit tool and model per task type, risk, privacy, cost, and required quality. No blanket categorical block by AI model or by tool. Money-path/auth/PII/credentials/security/audit/public-financial work requires Step-5 red-team QA + strongest appropriate model; card does NOT move to done until verification passes. Production secrets and raw credentials remain local-only.
+- **SquarePayouts model routing (Permanent 2026-09-14, Marcelo durable rule):** SquarePayouts model/tool routing is owned by BossMan. BossMan selects the best-fit tool and model per task type, risk, privacy, cost, and required quality. No blanket categorical block by AI model or by tool. Money-path/auth/PII/credentials/security/audit/public-financial work requires Step-5 red-team QA + strongest appropriate model; card does NOT move to done until verification passes. Production secrets and raw credentials remain local-only.
+
 - This restriction applies to all subagents and delegated executors working on SquarePayouts.
 - Perplexity Computer requires the same `escalate_to_computer: yes` approval as everywhere else.
 
@@ -264,7 +265,7 @@ Full per-card template in `~/.hermes/knowledge/ROUTING-RULES.md` §3.
 | Model | Role | Notes |
 |---|---|---|
 | **Perplexity Search (Pro)** | First-step research, current docs, API references, gotchas | Always Step 1 of the Default Build Flow. Browser/Brave QA path. |
-| **M3 (MiniMax M3)** | Primary orchestrator, planner, architect, Kanban card author, thinking brain | Default for routine work. BLOCKED for SquarePayouts. |
+| **M3 (MiniMax M3)** | Primary orchestrator, planner, architect, Kanban card author, thinking brain | **SquarePayouts model routing (Permanent 2026-09-14, Marcelo durable rule):** SquarePayouts model/tool routing is owned by BossMan. BossMan selects the best-fit tool and model per task type, risk, privacy, cost, and required quality. No blanket categorical block by AI model or by tool. Money-path/auth/PII/credentials/security/audit/public-financial work requires Step-5 red-team QA + strongest appropriate model; card does NOT move to done until verification passes. Production secrets and raw credentials remain local-only. |
 | **DeepSeek** | Heavy coding, complex logic, debugging, edge cases, **and Step 5 QA (red-team)** | Primary builder for backend logic, data work, debugging. **Default Step-5 QA model.** |
 | **Llama (Ollama local)** | Bulk transforms, scaffolding, refactors, test generation, cleanup | Step 4 of the Default Build Flow. Free, local, no per-call cost. |
 | **OpenAI** | Production polish, user-facing copy, final code finishing | Primary builder when output is user-facing or high-risk. **Step 5 QA fallback** (after DeepSeek). |

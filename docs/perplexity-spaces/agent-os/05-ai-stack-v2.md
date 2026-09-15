@@ -95,7 +95,7 @@ Everything starts at L1 MiniMax — escalate as needed
 
 ## Key Rules
 
-**MiniMax 2.7 is BLOCKED for SquarePayouts** — use Claude/DeepSeek/OpenAI only for that product.
+**SquarePayouts model routing (Permanent 2026-09-14, Marcelo durable rule):** SquarePayouts model/tool routing is owned by BossMan. BossMan selects the best-fit tool and model per task type, risk, privacy, cost, and required quality. No blanket categorical block by AI model or by tool. Money-path/auth/PII/credentials/security/audit/public-financial work requires Step-5 red-team QA + strongest appropriate model; card does NOT move to done until verification passes. Production secrets and raw credentials remain local-only.
 
 **Local Ollama is PREFERRED for drafts** — zero cost, fast, private. Use cloud models for final outputs or when local models can't handle the task.
 

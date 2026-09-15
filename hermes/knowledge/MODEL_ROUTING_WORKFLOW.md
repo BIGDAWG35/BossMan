@@ -86,7 +86,7 @@ This document is the **single source of truth for model routing, cost management
 
 ### SquarePayouts Model Restriction (Permanent)
 
-**M3 is BLOCKED for all SquarePayouts work.** Use Claude / DeepSeek / OpenAI / Perplexity / Llama for SquarePayouts. Perplexity Search, Llama, and Claude remain approved for SquarePayouts research and review. Perplexity Computer requires the same `escalate_to_computer: yes` approval as everywhere else.
+**SquarePayouts model routing (Permanent 2026-09-14, Marcelo durable rule):** SquarePayouts model/tool routing is owned by BossMan. BossMan selects the best-fit tool and model per task type, risk, privacy, cost, and required quality. No blanket categorical block by AI model or by tool. Money-path/auth/PII/credentials/security/audit/public-financial work requires Step-5 red-team QA + strongest appropriate model; card does NOT move to done until verification passes. Production secrets and raw credentials remain local-only.
 
 ---
 

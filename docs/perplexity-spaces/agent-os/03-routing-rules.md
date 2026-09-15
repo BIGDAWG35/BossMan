@@ -39,7 +39,7 @@ Cross-references:
 | Model | Role |
 |---|---|
 | **Perplexity Search (Pro)** | Step 1 — research. Always the first step for any non-trivial build or troubleshooting. Pulls current docs, best practices, API references, and gotchas so we never guess when we can read. |
-| **M3 (MiniMax M3)** | Step 2 — design. Marcelo's thinking and planning brain. Understands the request, defines architecture, breaks work into Kanban cards, writes acceptance criteria. Default for routine work. BLOCKED for SquarePayouts. |
+| **M3 (MiniMax M3)** | Step 2 — design. **SquarePayouts model routing (Permanent 2026-09-14, Marcelo durable rule):** SquarePayouts model/tool routing is owned by BossMan. BossMan selects the best-fit tool and model per task type, risk, privacy, cost, and required quality. No blanket categorical block by AI model or by tool. Money-path/auth/PII/credentials/security/audit/public-financial work requires Step-5 red-team QA + strongest appropriate model; card does NOT move to done until verification passes. Production secrets and raw credentials remain local-only. |
 | **DeepSeek** | Step 3 — heavy coding. Primary builder for complex or critical backend logic, data work, or debugging. Also the preferred **Step 5 — QA pass** model (red-team mindset). |
 | **Llama (Ollama local)** | Step 4 — cheap grinder. Bulk transforms, scaffolding, refactors, test generation, cleanup. |
 | **OpenAI** | Step 3 — production finisher. Primary builder when output is user-facing, high-risk, or needs polished style. Final polish only. |
@@ -48,7 +48,7 @@ Cross-references:
 | **OpenClaw / LBC35** | Delegated executor — does **not** choose models, does **not** trigger Perplexity Computer. Executes the `model_plan:` and `escalate_to_computer:` flags from the handoff packet. |
 
 **SquarePayouts exception (permanent):** SquarePayouts uses Claude, DeepSeek,
-and OpenAI only. M3 is BLOCKED. Perplexity Search, Llama, and Claude remain
+**SquarePayouts model routing (Permanent 2026-09-14, Marcelo durable rule):** SquarePayouts model/tool routing is owned by BossMan. BossMan selects the best-fit tool and model per task type, risk, privacy, cost, and required quality. No blanket categorical block by AI model or by tool. Money-path/auth/PII/credentials/security/audit/public-financial work requires Step-5 red-team QA + strongest appropriate model; card does NOT move to done until verification passes. Production secrets and raw credentials remain local-only.
 approved for SquarePayouts research and review. Perplexity Computer requires
 the same `escalate_to_computer: yes` approval as everywhere else.
 

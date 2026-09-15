@@ -220,7 +220,7 @@ Paper trading, backtesting evidence, Marcelo approval required for live executio
 
 | Model | Role | Use Case |
 |-------|------|----------|
-| **MiniMax 2.7 / M3** | Primary brain | Everything, all day — permitted for SquarePayouts (M3 block removed 2026-09-14); see `LEARNED_SQUAREPAYOUTS.md` § "Model Restriction — REMOVED 2026-09-14" |
+| **MiniMax-M3** | Primary brain | Everything, all day — BossMan-owned task-fit routing per durable rule (Permanent 2026-09-14); see `LEARNED_SQUAREPAYOUTS.md` § "Model Selection — Task-Fit Routing" |
 | **DeepSeek** | Analysis backup | Deep reasoning, technical validation, edge-case analysis |
 | **OpenAI** | Synthesis backup | Product framing, operational writing, summarization |
 | **Claude** | Architecture backup | Workflow design, prompt/agent design, structured planning |
@@ -403,7 +403,7 @@ Review covers: PM2 health log → Kanban backlog → Cron jobs → Service ports
 - General cloud work within its reset window
 - Orchestration, routing, routine operations
 - Standard task execution that doesn't require specialist capabilities
-- M3 permitted for SquarePayouts (block removed 2026-09-14, see `LEARNED_SQUAREPAYOUTS.md` § "Model Restriction — REMOVED 2026-09-14"); Step-5 QA retained for sensitive SquarePayouts changes
+- M3 permitted for SquarePayouts (block removed 2026-09-14, see `LEARNED_SQUAREPAYOUTS.md` § "Model Selection — Task-Fit Routing" (Permanent 2026-09-14, Marcelo durable rule)); Step-5 QA retained for sensitive SquarePayouts changes
 
 **DeepSeek** — chosen for:
 - Low-cost deep reasoning
@@ -472,7 +472,7 @@ Review covers: PM2 health log → Kanban backlog → Cron jobs → Service ports
 
 ### SquarePayouts Model Restriction (Permanent — Updated 2026-05-27)
 
-- SquarePayouts M3 (MiniMax M3 / MiniMax 2.7) block REMOVED 2026-09-14; see `LEARNED_SQUAREPAYOUTS.md`
+- SquarePayouts Model Routing (durable rule, Permanent 2026-09-14, Marcelo authorization): BossMan-owned task-fit routing; see `LEARNED_SQUAREPAYOUTS.md` § "Model Selection — Task-Fit Routing"
 - Use: Ollama (local), DeepSeek, OpenAI, Claude, Perplexity Search
 - This restriction applies to all sub-agents and delegated executors
 

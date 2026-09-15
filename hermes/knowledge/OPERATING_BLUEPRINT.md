@@ -72,7 +72,7 @@ Hermes — BossMan profile (primary orchestrator, MiniMax 2.7)
 
 ### SquarePayouts Model Restriction (Permanent — 2026-05-20)
 
-**MiniMax 2.7 is BLOCKED for all SquarePayouts work.** Use Claude, DeepSeek, or OpenAI only. Applies to all subagents and delegated executors.
+**SquarePayouts model routing (Permanent 2026-09-14, Marcelo durable rule):** SquarePayouts model/tool routing is owned by BossMan. BossMan selects the best-fit tool and model per task type, risk, privacy, cost, and required quality. No blanket categorical block by AI model or by tool. Money-path/auth/PII/credentials/security/audit/public-financial work requires Step-5 red-team QA + strongest appropriate model; card does NOT move to done until verification passes. Production secrets and raw credentials remain local-only.
 
 ### Detailed Tool Strategy → AGENTS.md
 
