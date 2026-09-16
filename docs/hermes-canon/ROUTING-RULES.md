@@ -33,7 +33,7 @@ This is the **single canonical reference** for routing in Hermes. BossMan, every
 | **Claude** (Anthropic, default + deep) | Deep architectural reasoning, complex cross-system troubleshooting, safety-sensitive work (auth / encryption / audit logging / PII), Step-5 QA on non-trivial changes touching money paths. **Mandatory for live-trade enablement and auth flows.** |
 | **OpenAI** (GPT) | General reasoning, UI/marketing copy, polished prose, multi-modal tasks, Next.js/React/TypeScript code generation. |
 | **DeepSeek** | Low-cost deep reasoning, technical validation, edge-case analysis, coding assistance, math/SQL, second opinion on architecture. **Mandatory for money paths and PII as secondary.** |
-| **MiniMax-M3** | Default orchestrator + planner + router. Cheap bulk orchestration. **SquarePayouts model routing (Permanent 2026-09-14, Marcelo durable rule):** SquarePayouts model/tool routing is owned by BossMan. BossMan selects the best-fit tool and model per task type, risk, privacy, cost, and required quality. No blanket categorical block by AI model or by tool, EXCEPT the standing safety-sensitive and secrets carve-outs in the V3 task-type ledger: Claude is mandatory for auth, encryption, money-path, PII, and audit-logging work; production secrets, credentials, tokens, and .env content are Llama/local only and must never leave the host. Money-path/auth/PII/credentials/security/audit/public-financial work requires Step-5 red-team QA + strongest appropriate model; card does NOT move to done until verification passes. Production secrets and raw credentials remain local-only. |
+| **MiniMax-M3** | Default orchestrator + planner + router. Cheap bulk orchestration. SquarePayouts model/tool routing is owned by BossMan (see `LEARNED_SQUAREPAYOUTS.md` § "Model Selection — Task-Fit Routing", Permanent 2026-09-14): BossMan selects best-fit per task type, risk, privacy, cost, and quality; money-path/auth/PII/credentials/security/audit/public-financial work uses strongest appropriate model + Step-5 red-team QA. |
 | **Llama / local (Ollama)** | Privacy-sensitive tasks, repeatable bulk work, summaries, first-pass code. Native Metal GPU acceleration on M4 Max. |
 
 Detailed policy lives in `LEARNED_V3_MODEL_STACK.md`. This doc references it.
@@ -158,7 +158,7 @@ A monthly loop-enforcement review (the "closed-loop audit") runs to confirm:
 
 Review output lands in `~/.hermes/logs/loop-enforcement-review-YYYY-MM.md` and is mirrored to `50_Phase-Reports/` in Obsidian.
 
-**Build-metrics integration (Permanent 2026-07-22, Card B):** The closed-loop health data above is also surfaced as a per-month "Loop Health" section in `~/.hermes/knowledge/BUILDMETRICSYYYY-MM.md`, derived by parsing the `routing_ledger` block in kanban card bodies. Four additive keys (`loop_complete`, `missing_stages`, `perplexity_first`, `knowledge_capture`) are documented in PHASEREPORT and parsed by `~/.hermes/scripts/build-metrics-monthly.sh`. Existing cards without these keys remain valid (parsers report "unknown", not failure).
+**Build-metrics integration (Permanent 2026-07-22, Card B):** The closed-loop health data above is also surfaced as a per-month "Loop Health" section in `~/.hermes/knowledge/BUILDMETRICSYYYY-MM.md`, derived by parsing the `routing_ledger` block in kanban card bodies. Four additive keys (`loop_complete`, `missing_stages`, `perplexity_first`, `knowledge_capture`) are documented in the historical PHASEREPORT (archived 2026-08-31 at `~/.hermes/profiles/ops/cron/output/t_rule9_archive_untracked_knowledge_20260831/`) and parsed by `~/.hermes/scripts/build-metrics-monthly.sh`. Existing cards without these keys remain valid (parsers report "unknown", not failure).
 
 ---
 
@@ -169,7 +169,7 @@ Review output lands in `~/.hermes/logs/loop-enforcement-review-YYYY-MM.md` and i
 - `~/.hermes/knowledge/LEARNED_V3_TOKEN_ECONOMICS.md` — reuse, don't re-pay
 - `~/.hermes/knowledge/LEARNED_7_RULE_CONTRACT.md` — the 7-rule contract that this doc extends
 - `~/.hermes/knowledge/LEARNED_SUB_AGENT_MASTER_BLUEPRINT.md` — per-lane discipline + handoff contracts
-- `~/.hermes/knowledge/PHASEREPORT.md` — aggregated phase-report log for canon-level changes
+- `~/.hermes/knowledge/PHASEREPORT.md` — archived 2026-08-31 to `~/.hermes/profiles/ops/cron/output/t_rule9_archive_untracked_knowledge_20260831/`; preserved byte-equal; NOT ACTIVE CANON
 - `~/.hermes/knowledge/LEARNED_7_LAYER_ARCHITECTURE.md` — seven-layer stack (Perplexity → M3 → DeepSeek/Llama/OpenAI → Llama → DeepSeek QA → Claude docs → Perplexity Computer)
 - `~/.hermes/skills/troubleshooting-backup-and-revert/SKILL.md` — Rule #8 executable form (snap → fix → verify → auto-revert)
 - `~/.hermes/knowledge/AUTOMATION_INVENTORY.md` — registered helper scripts + cron justifications

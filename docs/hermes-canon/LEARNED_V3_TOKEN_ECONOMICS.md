@@ -116,6 +116,23 @@ If a `t_*` kanban card comment or sub-agent output shows:
 
 ---
 
+## Cost control instrumentation (Permanent 2026-09-14)
+
+**Card:** `t_ai_stack_cost_guardian_and_m3_squarepayouts_unblock_v1_20260914`
+
+Every model dispatch that can incur a paid cost appends one structured row to the active cost ledger at `~/.hermes/logs/model-cost-ledger.jsonl`. Use `~/.hermes/profiles/ops/scripts/append_cost_row.sh` (canonical). Schema fields: `timestamp, card, attended, profile, lane, provider, model, task_class, tokens_in, tokens_out, tokens_cached, tokens_total, cost_usd, fallback_reason, outcome`. Local Ollama calls log `cost_usd: 0.0` for routing visibility.
+
+The watchdog is `~/.hermes/profiles/ops/scripts/claude-cost-guardian.sh` — provider-neutral (was Claude-only; renamed in spirit, script path preserved for cron compatibility). Aggregates spend across `anthropic`, `deepseek`, `openai-codex`, `minimax`, `custom`/`ollama`, `system`, and any other paid provider. Thresholds: daily WARN \$5 / HARD-STOP \$10; weekly WARN \$20 / HARD-STOP \$35. **TELEMETRY-STALE** fires when ledger mtime > 24h — treated as unhealthy, not OK. Cron job `6625a253` (every 4h) runs the guardian.
+
+Per-job cost policy lives in `~/.hermes/profiles/ops/cron/jobs.json` fields: `model`, `fallback_chain`, `fallback_chain_bounded_retries`, `daily_cost_cap_usd`, `per_run_token_cap`, `cost_policy_intent`. Dispatcher wrapper: `~/.hermes/profiles/ops/scripts/dispatch_with_guard.sh`.
+
+**Local-first fallback (Permanent 2026-09-14):** the active ops profile `~/.hermes/profiles/ops/config.yaml` `fallback_providers` chain begins with `custom/qwen2.5:7b` (Ollama local) before any paid model. The core `~/.hermes/config.yaml` role-specific routing sets Ollama primary for `bulk_formatting`, `chatty`, and `privacy_local`. Paid models remain available for work that exceeds local capability.
+
+**Runtime cron/PM2 closure (Permanent 2026-09-15, card `t_drift_closure_runtime_routing_v1_20260915`):** Unattended cron and PM2 jobs MUST NOT reach the global `fallback_providers` chain. Each job in `~/.hermes/cron/jobs.json` carries an explicit `provider` + `model` (Ollama or M3 only) and `fallback_chain: []`. Unapproved or unavailable routes fail LOUD with a kanban alert; no silent paid fallback. Risk-gated jobs (money paths, security, SquarePayouts state, Binance, MoneyPipeline, pmd-watchdog) are pinned to Ollama because Ollama never goes down — failure there means true infrastructure failure, not token spend. `reasoning_effort` is `false` in every dispatching profile (core + ops) to prevent Ollama HTTP 400 ("model does not support thinking") from triggering silent paid fallback.
+
+---
+
+
 ## Quarterly review
 
 Every quarter, BossMan runs a token-economics review:
@@ -125,12 +142,6 @@ Every quarter, BossMan runs a token-economics review:
 - Top 5 expensive calls that could have been reused
 
 Surface the review on the kanban board. If reuse rate < 50%, that's a `drift-fix`.
-
----
-
-## Runtime cron/PM2 closure (Permanent 2026-09-15, card `t_drift_closure_runtime_routing_v1_20260915`)
-
-Mirror sync: this section was added to the canonical doc on 2026-09-15. GitHub mirror is being kept current. Unattended cron and PM2 jobs MUST NOT reach the global `fallback_providers` chain. Each job in `~/.hermes/cron/jobs.json` carries an explicit `provider` + `model` (Ollama or M3 only) and `fallback_chain: []`. Unapproved or unavailable routes fail LOUD with a kanban alert; no silent paid fallback. Risk-gated jobs (money paths, security, SquarePayouts state, Binance, MoneyPipeline, pmd-watchdog) are pinned to Ollama because Ollama never goes down — failure there means true infrastructure failure, not token spend. `reasoning_effort` is `false` in every dispatching profile (core + ops) to prevent Ollama HTTP 400 ("model does not support thinking") from triggering silent paid fallback. Full canon: `LEARNED_V3_MODEL_STACK.md` §Drift Closure 2026-09-15.
 
 ---
 
