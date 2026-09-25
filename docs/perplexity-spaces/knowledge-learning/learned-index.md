@@ -1,8 +1,8 @@
 # LEARNED_*.md Files — Full Index
 
 **Source:** `~/.hermes/knowledge/`
-**Status:** Active — 57 files
-**Regenerated:** 2026-09-23 06:00
+**Status:** Active — 58 files
+**Regenerated:** 2026-09-25 06:00
 
 ---
 
@@ -30,6 +30,7 @@
 | `LEARNED_HEALTH_OS_V3_REPORTING.md` | Health OS V3 — Reporting Shape (Strict-grade shopping lists) |
 | `LEARNED_IDEA_TO_PRODUCT.md` | LEARNED_IDEA_TO_PRODUCT.md — Idea-to-Product Engine v2 (Permanent 2026-09-15) |
 | `LEARNED_INDEX.md` | LEARNED_INDEX.md — Master Index of All `LEARNED_<DOMAIN>.md` Canon Files |
+| `LEARNED_KALSHI.md` | LEARNED_KALSHI.md — Kalshi Sports +EV Edge System |
 | `LEARNED_LBC35_TELEGRAM_SPAM_INCIDENT.md` | LBC35 Telegram Spam Incident — 2026-07-20 (LEARNED) |
 | `LEARNED_MD_FILE_DRIFT_RUBRIC.md` | LEARNED_MD_FILE_DRIFT_RUBRIC.md — Classify Before Trim |
 | `LEARNED_N8N_INTEGRATION_REFERENCE.md` | n8n Integration Reference for TicketFlow |
