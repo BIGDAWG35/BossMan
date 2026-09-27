@@ -1,249 +1,148 @@
-# AI Orchestration Blueprint
-**Version:** 1.1
-**Date:** 2026-05-22
-**Owner:** BossMan (Hermes orchestrator)
-**Status:** Canonical — governs all AI stack decisions
+# V3 Token Economics — Reuse, Don't Re-Pay (Permanent 2026-07-20)
+
+> **CANONICAL SOURCE OF TRUTH** for V3 token economics.
+> All mirrors (Obsidian `Hermes/V3-Canon/V3 – Token Economics.md`, GitHub `BIGDAWG35/BossMan` → `docs/hermes-canon/LEARNED_V3_TOKEN_ECONOMICS.md`) are read-only views of this content.
+> **Edit this file in `~/.hermes/knowledge/` only.**
+
+**Date locked**: 2026-07-20
+**Source directive**: Marcelo — V3 Model Stack + routing + Perplexity policy update
+**Status**: CANON — applies to every BossMan + sub-agent + model call
+
+Token spend is the largest variable cost in this stack. The goal of this doc is simple: **never pay twice for work we already did.** Every expensive analysis, spec, troubleshooting write-up, or model comparison must end up reusable, not throwaway.
 
 ---
 
-## Command Hierarchy
+## The 4 rules
 
-- **BossMan** is the only top-level orchestrator.
-- **Marcelo** is the approver/strategist — not a relay between tools.
-- **LBC35 / OpenClaw / subagents** are the execution layer only.
+### Rule 1 — Expensive work gets saved as `LEARNED_*` docs
 
----
+After any of the following, the output MUST be saved into `~/.hermes/knowledge/LEARNED_<DOMAIN>.md` or the relevant project repo:
+- Deep multi-model analysis
+- Architecture review or decision
+- Troubleshooting write-up
+- Spec / blueprint for a feature
+- Model comparison (Claude vs DeepSeek vs OpenAI for a task type)
+- Vendor evaluation
+- Postmortem from an incident
 
-## Perplexity Access (Updated 2026-05-22)
+**Save location rules:**
+- Cross-project / cross-stack knowledge → `~/.hermes/knowledge/LEARNED_<DOMAIN>.md`
+- Project-specific knowledge → in the project's repo (e.g., `~/Projects/pmd-web/docs/`)
+- Incident postmortems → kanban card body + project repo `docs/postmortems/`
 
-### Primary Access Path — Brave CDP Bridge
+The save step is part of the task. It's not optional cleanup.
 
-**Perplexity is accessed via Hermes Browser QA using a Brave browser instance with remote debugging enabled.**
+### Rule 2 — Check `LEARNED_*` BEFORE doing heavy work
 
-- Brave is launched with `--remote-debugging-port=9222` + isolated `--user-data-dir=/tmp/brave-debug`
-- Hermes config: `browser.cdp_url: http://localhost:9222` in `~/.hermes/config.yaml`
-- This bypasses Cloudflare challenges entirely — Brave handles auth transparently
-- CuaDriver handles all macOS-level screen capture and interaction
+Before any heavy multi-model or deep-analysis call, the agent MUST check for existing artifacts:
 
-### Perplexity Desktop App — DEPRECATED
+1. `~/.hermes/knowledge/LEARNED_<DOMAIN>.md` (global canon)
+2. `~/.hermes/knowledge/` (other project knowledge)
+3. Project blueprint + runbook
+4. Kanban card `body` and `comments` on the active card (and prior cards with the same tag)
+5. `session_search` for past transcripts
 
-The Perplexity Mac app (`perplexity-ai.desktop`) has a **zero-bounds bug** that causes `capture` failures. Do NOT use Computer Use on the Perplexity desktop app.
+If a valid prior artifact exists → reuse it. Only redo the work if the requirements changed.
 
-### Perplexity Spaces Access Priority (2026-05-22)
+### Rule 3 — Prefer cached / saved work over recomputing
 
-**Priority 1 — File-first via local mirrors (CANONICAL):**
-`~/.hermes/spaces/[folder]/` is the primary source. All Spaces maintenance uses local files as canonical state. Changes sync to Perplexity Spaces via browser automation.
+When the same prompt would be sent to a model twice:
+- If the prompt + context is identical → the model's prompt cache should hit (cheaper than re-paying)
+- If the answer exists in a `LEARNED_*` doc → read the doc, don't call the model
 
-**Priority 2 — Brave browser via CDP (PRIMARY automation path):**
-`curl localhost:9222/json/version` → verify bridge is up → `browser_navigate` to `https://perplexity.ai` or `https://app.perplexity.ai/spaces/[id]`
+**Don't recompute the same analysis "to be sure"** unless something changed. Trust the saved work; verify it if needed; update it if outdated.
 
-**Priority 3 — Mac app assisted (visual verification only):**
-Use Hermes Computer Use on the Perplexity Mac app for visual verification when needed — not for automation.
+### Rule 4 — Confirm Hermes prompt-cache + context compression are enabled
 
-### Perplexity-BossMan Handoff
+These settings minimize token re-spend automatically:
 
-- BossMan pulls context from local Space mirrors (`~/.hermes/spaces/`)
-- Browser automation via Brave CDP handles all Perplexity web interactions
-- Marcelo does not manually copy/paste between Perplexity and BossMan
+**Prompt caching** (provider-side):
+- `MiniMax-M3` — Anthropic-compatible prompt caching: ON by default for repeated prefixes
+- `claude-sonnet-4-6` — Anthropic prompt caching: ON by default
+- `openai-codex gpt-5.4` — OpenAI automatic caching: ON by default
+- `deepseek-v4-flash` — DeepSeek has cache hits on repeated prefixes: ON by default
 
----
+BossMan and all sub-agents benefit from these automatically. **Don't break the cache** by:
+- Mutating past conversation context mid-loop
+- Swapping toolsets mid-conversation
+- Rebuilding the system prompt mid-conversation
+- Injecting synthetic user messages mid-loop (rare exception: context compression)
 
-## Perplexity Role
+**Context compression** (Hermes-side):
+- Enabled in `config.yaml` via `context_compression.enabled: true` (default)
+- When the conversation gets long, Hermes compresses older turns into a summary block
+- The summary still counts toward token cost, but at a much lower rate than raw history
 
-- **Perplexity Search / Spaces / Deep Research** = default external research and context layer
-- **Perplexity Computer** = premium delegated specialist for deep multi-step work (reverse engineering, complex research, investigations)
-
----
-
-## Computer Use Ownership
-
-- BossMan is the **ONLY** owner of Hermes Computer Use on the Mac mini.
-- Other agents must not directly start Computer Use.
-- Any agent needing Computer-mediated actions on the Mac must route the request through BossMan.
-- **CuaDriver TCC fix (2026-05-22):** `tccutil reset ScreenCapture com.trycua.driver` + re-grant in System Settings → Screen Recording. SOM mode confirmed working (151 elements captured).
-- **CuaDriver status (2026-05-22):** Running (PID 74248), SOM capture working, full display capture needs TCC fix if not already granted.
-
----
-
-## Perplexity Computer Usage Policy
-
-**Use Computer only when:**
-- Research is deep/complex
-- Reverse engineering or cross-system investigation is needed
-- Report/blueprint generation requires multi-step workflows
-
-**Do NOT use Computer for simple one-off queries or routine tasks.**
-
-**Fallback if Perplexity limits are hit:**
-- Internal stack (BossMan + LBC35 + subagents)
-- Local Spaces files for maintenance (Priority 1 path)
-- Brave CDP browser automation for web research
+**Verify both are on** at the start of every new session.
 
 ---
 
-## Model Pool Roles (Permanent — 2026-06-03, v3.0 "10/10")
+## Cost tiers (rough, for planning)
 
-| Model | Role | Notes |
-|-------|------|-------|
-| **Perplexity Search (Pro)** | First-step research | Step 1 of every non-trivial build. Current docs, API references, gotchas. |
-| **M3 (MiniMax M3)** | Primary thinking and planning brain | Step 2 design + Step 3 routing/architecture. Default for routine work. BLOCKED for SquarePayouts. |
-| **DeepSeek** | Heavy-duty coder, reasoning engine, **and Step 5 QA (red-team)** | Primary builder for complex or critical backend logic, data, or debugging. **Default Step-5 QA model.** |
-| **Llama (Ollama local)** | Cheap grinder | Step 4 harden and clean up. Bulk transforms, scaffolding, refactors, tests, cleanup. |
-| **OpenAI** | Production finisher | Primary builder when output is user-facing or high-risk. Final polish only. **Step 5 QA fallback** (after DeepSeek). |
-| **Claude** | Long-form documentation writer | **Step 6 only** — after the code is stable AND QA passes. Runbooks, handoff docs. |
-| **Perplexity Deep Research** | Multi-source synthesis on complex topics | When Step 1 needs deeper research than a single search. |
-| **Perplexity Computer** | Multi-step Mac/browser workflows | **Rare escalation only.** 10,000 credits/month cap. `escalate_to_computer: yes` flag, Marcelo approval. NOT part of the everyday default path. |
+| Tier | Model | Cost per 1M tokens (input/output) | When to use |
+|---|---|---|---|
+| Cheap | MiniMax-M3 / Llama-3B | $0.05–0.50 / $0.20–1.50 | Bulk, formatting, chatty |
+| Mid | deepseek-v4-flash | $0.30 / $1.20 | Coding, mathy, SQL, infra |
+| Mid-High | openai-codex gpt-5.4 | $2.50 / $10.00 | General reasoning, polished prose |
+| High | claude-sonnet-4-6 | $3.00 / $15.00 | Architecture, safety, audits |
+| Very High | claude-opus-4-7 | $15.00 / $75.00 | Hardest cases, only when Sonnet fails |
 
-### SquarePayouts Model Restriction (Permanent)
+(Rates approximate; check provider pricing page for current.)
 
-**M3 is BLOCKED for all SquarePayouts work.** Use Claude, DeepSeek, or OpenAI only. Perplexity Search, Llama, and Claude remain approved for SquarePayouts research and review. Perplexity Computer requires the same `escalate_to_computer: yes` approval as everywhere else.
-
-### Full policy
-
-The 6-step Default Build Flow (Perplexity → M3 → primary builder → Llama cleanup → DeepSeek QA → Claude docs) and the multi-model rules are in:
-
-- `~/.hermes/AGENTS.md` — Model Routing (parent policy)
-- `~/.hermes/knowledge/ROUTING-RULES.md` — Default Build Flow rules (v3.0 canonical)
-- `~/.hermes/knowledge/MODEL-STACK-WORKFLOWS.md` — End-to-end worked examples (v3.0)
-- `~/.hermes/knowledge/MODEL_ROUTING_WORKFLOW.md` — Cost tiers + Routing Ledger (v3.0)
+**Budget posture**: prefer cheap tier first, escalate only when needed. Default to mid (DeepSeek) for implementation work, not mid-high (OpenAI) unless UI/prose is involved.
 
 ---
 
-## Project Kickoff Protocol — Default Build Flow v3.0 "10/10" (Permanent — 2026-06-03)
+## Token-saving patterns (proven)
 
-For every new project or significant work item, BossMan follows the **6-step Default Build Flow v3.0** from `~/.hermes/knowledge/ROUTING-RULES.md`:
-
-**Step 1 — Research (Perplexity Search):**
-- Perplexity Search pulls current docs, best practices, API references, and gotchas
-- Never guess when we can read
-- Key sources linked into the main project card
-
-**Step 2 — Design (M3):**
-- M3 designs the architecture, defines the main components, and breaks work into Kanban cards with clear acceptance criteria
-- Saved in the main project card body, not in chat
-- References the Perplexity sources from Step 1
-
-**Step 3 — Build (Primary builder, one per card):**
-- For each build card, pick exactly one primary builder:
-  - **DeepSeek** for complex or critical backend logic, data, or debugging
-  - **Llama** for repetitive scaffolding, refactors, or large-volume code edits
-  - **OpenAI** when output is user-facing, high-risk, or needs polished style
-- Note the primary builder under a `model_plan:` line in the card body
-- Marcelo reviews the AI Stack Recommendation (which model for which card) and approves before build starts
-
-**Step 4 — Harden and clean up:**
-- Llama handles bulk cleanup and test generation
-- DeepSeek or OpenAI only as a final sanity pass on critical components
-- Do NOT rewrite large chunks that are already acceptable
-
-**Step 5 — QA PASS (DeepSeek red-team) — new in v3.0:**
-- **Mandatory for critical cards** (money, PII, infra, trading, auth, public APIs)
-- Marcelo's standing rule: include Step 5 for high-impact or sensitive work unless explicitly told to skip
-- DeepSeek uses red-team mindset: edge cases, security, performance, failure modes
-- Default QA model: **DeepSeek**. Fallback: OpenAI → M3
-- Findings logged as card comments and/or QA sub-cards
-- Card's `qa_status` updated: `pending` → `passed` / `failed` / `logged`
-
-**Step 6 — Docs and handoff (Claude):**
-- Claude writes long-form docs and runbooks only after the code is stable AND QA has passed (or every QA issue is logged as a sub-card and tracked)
-- Claude reads the final code, M3's design notes, the acceptance criteria, and the QA findings
-- Output: concise but complete docs, saved to `~/.hermes/knowledge/`, Obsidian, and GitHub
-
-**After the 6 steps:**
-- Card → `done`
-- Set metrics fields on the card:
-  - `build_passes:` (`1` / `2` / `3+`)
-  - `rewrite_scope:` (`none` / `minor` / `major`)
-- Update Routing Ledger with which model produced what
-- Self-audit: Was deliverable achieved? Was Marcelo's time used well? Follow-up needed?
-
-**Per-card fields (v3.0):**
-```yaml
-model_plan: ...
-qa_required: yes | no
-qa_model: DeepSeek | OpenAI | M3
-qa_status: pending | passed | failed | logged
-escalate_to_computer: yes | no
-escalate_to_computer_reason: ...
-build_passes: 1 | 2 | 3+
-rewrite_scope: none | minor | major
-```
-
-**Approval gates:** Marcelo reviews and approves:
-- The architecture from Step 2 (before any build cards are assigned)
-- The `model_plan:` field for each build card (before Step 3 starts)
-- The `escalate_to_computer: yes` flag, when proposed (before Step 3 starts)
-- The final docs from Step 6 (before marking the card done)
-
-**Perplexity Computer — escalation (v3.0):**
-- Allowed only on projects matching the §4 patterns: (1) greenfield full-stack SaaS builds, (2) large cross-service refactors/migrations, (3) complex multi-domain research
-- Requires `escalate_to_computer: yes` flag on the main project card, approved by Marcelo
-- Hard cap: **10,000 credits/month.** BossMan pre-warns if a project would consume more than ~3,000
-- LBC35 does NOT trigger Perplexity Computer; it only follows the flag in the handoff packet
+1. **Pre-summarize with Llama before sending to Claude.** Don't send 50K tokens of raw logs to Claude. Llama pre-summarizes to ~2K tokens; Claude gets the digest.
+2. **Reuse `LEARNED_*` docs across projects.** The first time we documented "Next.js 15 basePath routing with Tailscale Funnel" that knowledge goes into `LEARNED_V3_BASE_PATH_ROUTING.md`. Next time any project hits the same issue, we read the doc, not call a model.
+3. **Cache the system prompt.** Every BossMan session starts with the same SOUL/AGENTS/OPERATINGBLUEPRINT prefix. Provider prompt caching makes that prefix free after the first call.
+4. **Compress aggressively.** Hermes context compression kicks in around 60% of context budget. Let it run.
+5. **Sub-agents return summaries, not raw transcripts.** Sub-agent returns a structured summary; raw transcript stays in the sub-agent's session memory, not in BossMan's main context.
+6. **Don't re-call for "just to verify."** Trust the saved work. If verification is needed, run a small targeted check, not a full re-analysis.
 
 ---
 
-## Knowledge Flywheel
+## Anti-patterns (drift signals)
 
-Important prompts, workflows, debug patterns, architecture decisions, and research conclusions must be saved to:
-- `~/.hermes/knowledge/` — primary canonical store
-- Obsidian: `/Users/bigdawg/Obsidian/Hermes/Systems/`
-- GitHub: `BIGDAWG35/BossMan/docs/`
-- Project-specific Perplexity Space
+If a `t_*` kanban card comment or sub-agent output shows:
+- "Let me re-run the same analysis to make sure" — wrong, reuse the saved `LEARNED_*` doc
+- "Marcelo, which model should I use here?" — wrong, model choice is in the stack doc
+- "I forgot to save the postmortem" — wrong, save is part of the task
+- "We paid for this analysis last week, let's do it again" — wrong, read the prior `LEARNED_*` doc
 
----
-
-## Tool Strategy by Task Type
-
-| Task | Tool |
-|------|------|
-| Perplexity web research | Browser QA → Brave CDP |
-| Perplexity Spaces maintenance | Browser QA → Brave CDP + local file mirrors |
-| macOS UI interaction | Hermes Computer Use (CuaDriver) |
-| Localhost web app QA | Browser QA |
-| Code/CLI/DB inspection | Terminal |
-| Live sports/market data | Perplexity Search |
-| Deep multi-source research | Perplexity Deep Research |
-| Complex cross-system investigation | Perplexity Computer |
-| Simple one-off research | Perplexity Search (no Computer) |
+`drift-fix` cards auto-remediate.
 
 ---
 
-## Spaces Maintenance
+## Cost control instrumentation (Permanent 2026-09-14)
 
-- Daily sync via `sync_perplexity_spaces.sh` (cron job `7203f2330d92`, 6 AM daily)
-- Monitors: `~/.hermes/knowledge/` + OpenClaw Brain files
-- Syncs to: `~/.hermes/spaces/[space]/` → Obsidian + GitHub
-- Telegram notification only if changes detected; silent if clean
-- Event-driven audits after major system/project/blueprint changes
-- Auto-verified = silent watchdog. Issues found = approval request to Marcelo
-- Approval format:
-  ```
-  Space: [name]
-  Detected changes: [list]
-  Reason: [why needed]
-  Proposed action: [exact plan]
-  ```
+**Card:** `t_ai_stack_cost_guardian_and_m3_squarepayouts_unblock_v1_20260914`
+
+Every model dispatch that can incur a paid cost appends one structured row to the active cost ledger at `~/.hermes/logs/model-cost-ledger.jsonl`. Use `~/.hermes/profiles/ops/scripts/append_cost_row.sh` (canonical). Schema fields: `timestamp, card, attended, profile, lane, provider, model, task_class, tokens_in, tokens_out, tokens_cached, tokens_total, cost_usd, fallback_reason, outcome`. Local Ollama calls log `cost_usd: 0.0` for routing visibility.
+
+The watchdog is `~/.hermes/profiles/ops/scripts/claude-cost-guardian.sh` — provider-neutral (the "claude-" prefix is a historical artifact; the script has aggregated across all providers since 2026-08-15). Aggregates spend across `anthropic`, `deepseek`, `openai-codex`, `minimax`, `custom`/`ollama`, `system`, and any other paid provider. Thresholds: daily WARN \$5 / HARD-STOP \$10; weekly WARN \$20 / HARD-STOP \$35. **TELEMETRY-STALE** fires when ledger mtime > 24h — treated as unhealthy, not OK. Cron job `6625a253` (every 4h) runs the guardian.
+
+Per-job cost policy lives in `~/.hermes/profiles/ops/cron/jobs.json` fields: `model`, `fallback_chain`, `fallback_chain_bounded_retries`, `daily_cost_cap_usd`, `per_run_token_cap`, `cost_policy_intent`. Dispatcher wrapper: `~/.hermes/profiles/ops/scripts/dispatch_with_guard.sh`.
+
+**Local-first fallback (Permanent 2026-09-14; reconciled 2026-09-16):** the active ops profile `~/.hermes/profiles/ops/config.yaml` `fallback_providers` chain begins with `custom/qwen2.5:7b` (Ollama local, arm64 Metal-accelerated on M4 Max) before any paid model. The core `~/.hermes/config.yaml` role-specific routing sets Ollama primary for `bulk_formatting`, `chatty`, and `privacy_local`. The canonical local-model name is `qwen2.5:7b` — older references to `qwen2.5:3b` and `qwen2.5:14b` in `LEARNED_CONFIG-PATCH-OLLAMA-ROUTING-20260725.md` and `LEARNED_ALTUS_FORENSIC.md` are archived/historical context only. Card `t_ollama_canon_reconcile_20260916`. Paid models remain available for work that exceeds local capability.
+
+**Runtime cron/PM2 closure (Permanent 2026-09-15, card `t_drift_closure_runtime_routing_v1_20260915`):** Unattended cron and PM2 jobs MUST NOT reach the global `fallback_providers` chain. Each job in `~/.hermes/cron/jobs.json` carries an explicit `provider` + `model` (Ollama or M3 only) and `fallback_chain: []`. Unapproved or unavailable routes fail LOUD with a kanban alert; no silent paid fallback. Risk-gated jobs (money paths, security, SquarePayouts state, Binance, MoneyPipeline, pmd-watchdog) are pinned to Ollama because Ollama never goes down — failure there means true infrastructure failure, not token spend. `reasoning_effort` is `false` in every dispatching profile (core + ops) to prevent Ollama HTTP 400 ("model does not support thinking") from triggering silent paid fallback.
 
 ---
 
-## Key Paths
 
-| Copy | Path |
-|------|------|
-| Local knowledge | `~/.hermes/knowledge/ai-orchestration-blueprint.md` |
-| Obsidian | `/Users/bigdawg/Obsidian/Hermes/Systems/ai-orchestration-blueprint.md` |
-| GitHub | `BIGDAWG35/BossMan/docs/ai-orchestration-blueprint.md` |
-| Spaces sync script | `~/.hermes/scripts/sync_perplexity_spaces.sh` |
-| Spaces file mapping | `~/.hermes/config/spaces_file_mapping.json` |
-| Daily sync log | `~/.hermes/logs/spaces-sync-YYYY-MM-DD.md` |
-| Spaces source | `~/.hermes/spaces/[folder]/` |
+## Quarterly review
+
+Every quarter, BossMan runs a token-economics review:
+- Total token spend by model tier
+- Cache hit rates
+- Number of `LEARNED_*` docs created vs reused
+- Top 5 expensive calls that could have been reused
+
+Surface the review on the kanban board. If reuse rate < 50%, that's a `drift-fix`.
 
 ---
 
-## Version History
-
-| Version | Date | Change |
-|---------|------|--------|
-| 1.0 | 2026-05-14 | Initial — Perplexity Computer policy, model pool roles, project kickoff protocol |
-| 1.1 | 2026-05-22 | Perplexity access updated to Brave CDP bridge; desktop app deprecated; Spaces priority updated; Project Kickoff Protocol expanded to 7-step standard workflow; Tool Strategy table added |
+*This file replaces any prior token-economics description. If a project violates these rules, create a `drift-fix: <project>` card.*

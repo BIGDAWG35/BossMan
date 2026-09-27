@@ -1,5 +1,5 @@
 # LEARNED_PM2_HEALTH_MONITOR.md — PM2 Health Monitor canon
-**Permanent 2026-05-28, refreshed 2026-07-22. Cron:** `01dff7ff61e4` (bossman, every 15 min) — silent healthy; alerts only on repair.
+**Permanent 2026-05-28, upd 2026-07-22, pruned 2026-09-23 (t_86e6d0f0): 5,065 → ~5 KB. Cron:** `01dff7ff61e4` (bossman, every 15 min) — silent healthy; alerts only on repair.
 
 ## Skill: pm2-health-check
 Runbook: `~/.hermes/skills/devops/pm2-health-check/SKILL.md`.
@@ -22,7 +22,7 @@ pm2 stop <svc> && rm -rf .next && npm run build && pm2 start <svc>
 PM2 online ✓ · curl canonical route 200/307 ✓ · pm2 save ✓
 
 ### Drift Surfaces + Security Watch
-Non-trivial incidents require **2 of {Claude, DeepSeek, OpenAI}** to agree before executing. Goal loop card `t_e56d53cd` (`GOAL-LOOP-SECURITY_PM2.md`). **STOPs:** No PM2 deletes, port changes, service restarts, SOUL/AGENTS/ROUTING-RULES edits. P1+ → separate fix card.
+Non-trivial incidents require **2 of {Claude, DeepSeek, OpenAI}** to agree before executing. Card `t_e56d53cd` (`GOAL-LOOP-SECURITY_PM2.md`). **STOPs:** No PM2 deletes, port changes, service restarts, SOUL/AGENTS/ROUTING-RULES edits. P1+ → separate fix card.
 
 ---
 
@@ -48,11 +48,11 @@ Non-trivial incidents require **2 of {Claude, DeepSeek, OpenAI}** to agree befor
 
 ## PM2 CLI Usage Policy (Permanent — 2026-07-22)
 
-**All PM2 CLI calls → `~/.hermes/scripts/pm2-hermes.sh`** (isolation + kill-by-PID). Never `pm2 kill` (kills canonical daemon). Never call `pm2` directly.
+**All PM2 CLI calls → `~/.hermes/scripts/pm2-hermes.sh`** (isolation + kill-by-PID). Never `pm2 kill` (kills canonical daemon).
 
 **Wrapper:** (1) `PM2_HOME=$(mktemp -d -t pm2-hermes-XXXXXX)` daemon in tmpdir; (2) `pm2 <subcommand>`; (3) find PID via `lsof $PM2_TMP/rpc.sock`, `kill -TERM <pid>` (never `pm2 kill`), wait 1s → SIGKILL → `rm -rf $PM2_TMP`.
 
-**Migration:** `pm2 <subcommand>` (any) → `~/.hermes/scripts/pm2-hermes.sh <subcommand>` · All active hermes scripts migrated (8 scripts + 4 cron prompts).
+**Migration:** `pm2 <subcommand>` → `~/.hermes/scripts/pm2-hermes.sh <subcommand>`.
 
 **Forbidden (all create zombies or kill canonical):**
 ```bash

@@ -1,161 +1,148 @@
-# Automation Inventory — Cron Jobs + LaunchAgents
+# V3 Token Economics — Reuse, Don't Re-Pay (Permanent 2026-07-20)
 
-**Snapshot:** 2026-06-19 (updated: Browser QA / Perplexity via CDP restored, no new crons needed)
-**Owner:** BossMan Hermes
-**Source of truth:** `hermes cron list` (cron) + `launchctl list` (LaunchAgents)
-**Codified in:** `~/.hermes/SOUL.md § Cron + Automation Policy — No Spam, High Signal`
+> **CANONICAL SOURCE OF TRUTH** for V3 token economics.
+> All mirrors (Obsidian `Hermes/V3-Canon/V3 – Token Economics.md`, GitHub `BIGDAWG35/BossMan` → `docs/hermes-canon/LEARNED_V3_TOKEN_ECONOMICS.md`) are read-only views of this content.
+> **Edit this file in `~/.hermes/knowledge/` only.**
 
-**Recent changes (2026-06-19):**
-- Browser QA / Perplexity path restored via raw WebSocket CDP — see
-  `~/.hermes/knowledge/LEARNED_BRAVE_PERPLEXITY_BRIDGE.md` (mirrored at
-  `/Users/bigdawg/Repos/BossMan/docs/LEARNED_BRAVE_PERPLEXITY_BRIDGE.md`).
-- Stage 2/7 capture updated: `~/.hermes/knowledge/crypto-intel/STAGE_2_7_CAPTURE_2026-06-19.md`.
-- `daily_pipeline.sh` prefers `--source browserqa`; internal-only derivation is now
-  the last-resort fallback, not the default. Per-symbol fallback chain:
-  `browserqa -> brave text search -> internal-only`.
-- No new crons registered; the existing `2141a756a0aa` (daily_pipeline.sh @ 12:00 PT)
-  continues to do the work.
+**Date locked**: 2026-07-20
+**Source directive**: Marcelo — V3 Model Stack + routing + Perplexity policy update
+**Status**: CANON — applies to every BossMan + sub-agent + model call
 
-BossMan updates this file whenever the cron/LaunchAgent set changes. Every entry below must justify its existence in one line. Jobs that no longer serve a real purpose get archived (not deleted — keep audit trail).
+Token spend is the largest variable cost in this stack. The goal of this doc is simple: **never pay twice for work we already did.** Every expensive analysis, spec, troubleshooting write-up, or model comparison must end up reusable, not throwaway.
 
 ---
 
-## Cron Jobs (28 active, all `hermes cron list`)
+## The 4 rules
 
-| # | ID | Name | Schedule | Deliver | Mode | One-line justification |
-|---|---|---|---|---|---|---|
-| 1 | `0561fcffeba1` | SquaresPayouts Daily Exporter | `0 9 * * *` | local | agent | Dumps SquarePayouts order/transaction data to local file once a day for the morning brief. |
-| 2 | `c6d759d2b561` | BakeryOps Daily Exporter | `5 9 * * *` | local | agent | Same as above for BakeryOps — daily export for morning brief. |
-| 3 | `7203f2330d92` | perplexity-spaces-sync | `0 6 * * *` | origin | no-agent | Pulls canonical docs from Perplexity Spaces once a day to keep the local mirror current. Silent on success, origin only on failure. |
-| 4 | `5f3569ba2813` | Morning Pipeline Brief | `0 8 * * 1-5` | origin | agent | Weekday morning digest of pipeline, blockers, and alerts. High signal, low frequency. |
-| 5 | `d7baa1737ba8` | Basecamp Monitor (cron) | `*/15 * * * *` | local | no-agent | Polls Basecamp for new feedback messages every 15 min; silent unless there's a new message. |
-| 6 | `e8c2a1f3d419` | Hermes Monthly Deep-Audit | `0 9 1 * *` | origin | no-agent | First of the month: deep audit of board hygiene, MEMORY size, cron health, model usage. Once monthly, deliberate signal. |
-| 7 | `88eff3953480` | Hermes Weekly Systems Review — Monday 8 AM | `0 8 * * 1` | telegram | agent | Weekly board health, alerts, and project progress sent to Marcelo's Telegram. Replaces ad-hoc reviews. |
-| 8 | `76956b7cafa7` | CSDAWG 2.0 Weekly Intelligence | `0 15 * * 1` | origin | agent | Weekly Binance/regime intel brief. Important but not urgent. |
-| 9 | `2ba797d7ccfa` | Phase 12 — Weekly Systems Improvement Audit | `0 8 * * 1` | local | no-agent | Generates `weekly-systems-improvement-report.md` to local file for Monday review. |
-| 10 | `c77d492c5b6d` | MoneyPipeline Morning Research | `0 5 * * *` | local | no-agent | Daily Money Pipeline opportunity research; output is the morning brief input. |
-| 11 | `8fb30e332d6d` | MoneyPipeline Auto-Enrich V2 | `0 6 * * *` | local | no-agent | Daily enrichment of the opportunity pipeline from public sources. |
-| 12 | `84896b15c68b` | CuaDriver Health Monitor | `*/5 * * * *` | local | no-agent | Self-heal watchdog for CuaDriver. Silent unless degraded. |
-| 13 | `8d04ee3f0227` | Client Hub Feedback Queue Processor | `*/5 * * * *` | local | no-agent | Drains the Client Hub feedback queue every 5 min. Silent unless there's input. |
-| 14 | `fed3553cf244` | binance-health-check-am | `0 9 * * *` | telegram | agent | Morning Binance bot health ping to Marcelo. |
-| 15 | `4d4552dc85c9` | binance-health-check-pm | `0 21 * * *` | telegram | agent | Evening Binance bot health ping to Marcelo. |
-| 16 | `21ddf2bf5690` | Travel OS — T-14 Pre-Trip Reminder | `0 8 * * *` | telegram | agent | 2-week-before-trip reminder. Wall-clock event, not request-driven. |
-| 17 | `dee58753bbad` | Travel OS — T-7 Pre-Trip Reminder | `0 8 * * *` | telegram | agent | 1-week-before reminder. Wall-clock event. |
-| 18 | `c6055f4fe568` | Travel OS — T-3 Pre-Trip Reminder | `0 8 * * *` | telegram | agent | 3-day-before reminder. |
-| 19 | `97f7cbf776b9` | Travel OS — T-1 Day Before Reminder | `0 8 * * *` | telegram | agent | 1-day-before reminder. |
-| 20 | `126ac0b0c8a9` | Travel OS — Post-Trip Close-Out | `30 8 * * *` | telegram | agent | Post-trip debrief trigger. |
-| 21 | `6f310d2f4c42` | Travel OS — Trip-Start Bundle (T-3 to T-0) | `0 7 * * *` | telegram | agent | Daily trip-start bundle delivery 3 days out. |
-| 22 | `ff0b6860cba5` | Weekly Hermes → Perplexity Spaces Refresh | `0 7 * * 6` | origin | agent | Weekly Saturday push to Perplexity Spaces for cross-device access. |
-| 23 | `b858e01bd089` | Travel OS External Watchdog | `*/5 * * * *` | local | no-agent | 5-min watchdog for Travel OS external reachability. Silent unless down. |
-| 24 | `ab41f101c407` | Travel OS Handoff Sync — Weekly Drift Check | `0 6 * * 6` | local | no-agent | Weekly drift check between local Travel OS and the handoff repo. Silent unless drift detected. |
-| 25 | `378ef14a305b` | Hermes Weekly MEMORY Health Check — Monday 9:05 AM | `5 9 * * 1` | origin | agent | Codified enforcement of the MEMORY hygiene hard rule. Opens kanban card if MEMORY > 1,800 chars. |
-| 26 | `0613ba1877bc` | Obsidian Vault Monthly Audit — 1st 09:00 PT | `0 9 1 * *` | local | no-agent | 8-check vault hygiene; silent when healthy. |
-| 27 | `ee1f669efb1e` | Obsidian Vault Bi-Monthly Review — 1st 10:00 PT (even months) | `0 10 1 */2 *` | origin | no-agent | 5-task vault review; surfaces to Telegram by design. |
-| 28 | `ea0157d715fa` | Crypto Weekly Learning & Intel Review — Sunday 6pm PT | `0 18 * * 0` | telegram | agent | Sunday-evening review: 3-5 questions for Marcelo + 3-5 for CSDAWGBOT (DeepSeek + OpenAI), writes brief, single Telegram ping. Per 2026-06-13 Marcelo approval. Bound: ≤1 DeepSeek + ≤1 OpenAI call per run. |
+### Rule 1 — Expensive work gets saved as `LEARNED_*` docs
+
+After any of the following, the output MUST be saved into `~/.hermes/knowledge/LEARNED_<DOMAIN>.md` or the relevant project repo:
+- Deep multi-model analysis
+- Architecture review or decision
+- Troubleshooting write-up
+- Spec / blueprint for a feature
+- Model comparison (Claude vs DeepSeek vs OpenAI for a task type)
+- Vendor evaluation
+- Postmortem from an incident
+
+**Save location rules:**
+- Cross-project / cross-stack knowledge → `~/.hermes/knowledge/LEARNED_<DOMAIN>.md`
+- Project-specific knowledge → in the project's repo (e.g., `~/Projects/pmd-web/docs/`)
+- Incident postmortems → kanban card body + project repo `docs/postmortems/`
+
+The save step is part of the task. It's not optional cleanup.
+
+### Rule 2 — Check `LEARNED_*` BEFORE doing heavy work
+
+Before any heavy multi-model or deep-analysis call, the agent MUST check for existing artifacts:
+
+1. `~/.hermes/knowledge/LEARNED_<DOMAIN>.md` (global canon)
+2. `~/.hermes/knowledge/` (other project knowledge)
+3. Project blueprint + runbook
+4. Kanban card `body` and `comments` on the active card (and prior cards with the same tag)
+5. `session_search` for past transcripts
+
+If a valid prior artifact exists → reuse it. Only redo the work if the requirements changed.
+
+### Rule 3 — Prefer cached / saved work over recomputing
+
+When the same prompt would be sent to a model twice:
+- If the prompt + context is identical → the model's prompt cache should hit (cheaper than re-paying)
+- If the answer exists in a `LEARNED_*` doc → read the doc, don't call the model
+
+**Don't recompute the same analysis "to be sure"** unless something changed. Trust the saved work; verify it if needed; update it if outdated.
+
+### Rule 4 — Confirm Hermes prompt-cache + context compression are enabled
+
+These settings minimize token re-spend automatically:
+
+**Prompt caching** (provider-side):
+- `MiniMax-M3` — Anthropic-compatible prompt caching: ON by default for repeated prefixes
+- `claude-sonnet-4-6` — Anthropic prompt caching: ON by default
+- `openai-codex gpt-5.4` — OpenAI automatic caching: ON by default
+- `deepseek-v4-flash` — DeepSeek has cache hits on repeated prefixes: ON by default
+
+BossMan and all sub-agents benefit from these automatically. **Don't break the cache** by:
+- Mutating past conversation context mid-loop
+- Swapping toolsets mid-conversation
+- Rebuilding the system prompt mid-conversation
+- Injecting synthetic user messages mid-loop (rare exception: context compression)
+
+**Context compression** (Hermes-side):
+- Enabled in `config.yaml` via `context_compression.enabled: true` (default)
+- When the conversation gets long, Hermes compresses older turns into a summary block
+- The summary still counts toward token cost, but at a much lower rate than raw history
+
+**Verify both are on** at the start of every new session.
 
 ---
 
-## LaunchAgents (7 active, 4 disabled)
+## Cost tiers (rough, for planning)
 
-### Active
-
-| # | Plist | PID | One-line justification |
+| Tier | Model | Cost per 1M tokens (input/output) | When to use |
 |---|---|---|---|
-| 1 | `ai.hermes.gateway.plist` | 1679 | BossMan Telegram gateway — single status surface (Permanent — 2026-05-18 rule). |
-| 2 | `ai.hermes.gateway-health.plist` | — | Self-heal watchdog for the gateway above. Silent unless degraded. |
-| 3 | `com.bigdawg.pm2-resurrect.plist` | — | PM2 resurrect at boot — keeps all managed services up across reboots. |
-| 4 | `com.local.tailscale-funnel-travel-os.plist` | — | Tailscale funnel listener for Travel OS remote access. |
-| 5 | `com.local.mission-control.plist` | — | Mission Control dashboard on port 8001 (internal only). |
-| 6 | `com.local.quickstats.plist` | — | Quick Stats dashboard on port 8102 (internal only). |
-| 7 | `com.local.teamstandup.plist` | 1685 | Team Standup dashboard on port 8003 (internal only). |
+| Cheap | MiniMax-M3 / Llama-3B | $0.05–0.50 / $0.20–1.50 | Bulk, formatting, chatty |
+| Mid | deepseek-v4-flash | $0.30 / $1.20 | Coding, mathy, SQL, infra |
+| Mid-High | openai-codex gpt-5.4 | $2.50 / $10.00 | General reasoning, polished prose |
+| High | claude-sonnet-4-6 | $3.00 / $15.00 | Architecture, safety, audits |
+| Very High | claude-opus-4-7 | $15.00 / $75.00 | Hardest cases, only when Sonnet fails |
 
-### Disabled (kept for audit trail — never delete without explicit Marcelo approval)
+(Rates approximate; check provider pricing page for current.)
 
-| Plist | Why disabled |
-|---|---|
-| `ai.openclaw.gateway.plist.disabled-2026-05-18` | LBC35 / OpenClaw violated Single Status Surface rule (2026-06-12 incident). Re-enable requires 3-bucket approval. |
-| `com.local.pm2-watchdog.plist.disabled-2026-05-18` | Superseded by BossMan PM2 health monitor cron. Re-enable requires kanban card. |
-| `com.local.bakery.plist.disabled-2026-05-18` | BakeryOps now runs under PM2; LaunchAgent was redundant. Re-enable requires kanban card. |
-| `com.local.squarepayouts.plist.disabled-2026-05-18` | SquarePayouts now runs under PM2; LaunchAgent was redundant. Re-enable requires kanban card. |
+**Budget posture**: prefer cheap tier first, escalate only when needed. Default to mid (DeepSeek) for implementation work, not mid-high (OpenAI) unless UI/prose is involved.
 
 ---
 
-## Scripts in `~/.hermes/scripts/` (operationally wired, not in cron)
+## Token-saving patterns (proven)
 
-These are referenced by BossMan or by hand, not scheduled:
-
-| Script | Wired into | Justification |
-|---|---|---|
-| `telegram-intake-gate.py` | Every Telegram intake (inline) | Codified first step of "all work on the board" rule. <50ms decision. |
-| `kanban-snapshot.py` | `kanban-snapshot.sh` + on-demand | Cross-project board report. Use any time. |
-| `kanban-status-migration.py` | On-demand (one-shot) | Idempotent illegal-status sweeper. Re-run if status drift returns. |
-| `kanban-project-backfill.py` | On-demand (one-shot) | Idempotent project tagger for new cards. |
-| `kanban-runs-gc.py` | On-demand (one-shot) | Idempotent stale task_runs terminator. |
-| `memory-health-check.py` | Cron `378ef14a305b` | Weekly MEMORY hygiene enforcement. |
-| `obsidian-vault-audit.sh` | Cron `0613ba1877bc` | Monthly Obsidian vault hygiene (8 checks, silent when healthy). |
-| `obsidian-vault-review.sh` | Cron `ee1f669efb1e` | Bi-monthly Obsidian vault review (5 tasks, surfaces to Telegram). |
-| `spaces-audit.sh` / `spaces-audit-cron.sh` | (Review — not currently in cron) | Perplexity Spaces mirror audit. **Recommend deprecating; the new `telegram-intake-gate.py` covers same surface.** |
-| `cuadriver-health.sh` / `cuadriver-health-cron.sh` | Cron `84896b15c68b` | CuaDriver 4-layer self-heal. |
-| `gateway-health-check.sh` | (Review — not currently in cron) | Gateway health one-shot. **Recommend deprecating; superseded by `ai.hermes.gateway-health` LaunchAgent.** |
-| `gateway-health-monitor.sh.RETIRED-2026-05-21` | Retired (already renamed) | Old gateway monitor with restart-storm bug. Don't re-enable. |
-| `computer-use-health.sh` | (Review — not currently in cron) | Computer Use self-heal. **Review for reactivation if Computer Use becomes regular.** |
-| `travel-os-external-watchdog.sh` | Cron `b858e01bd089` | Travel OS 5-min external reachability. |
-| `tunnel-url-monitor.sh` | (Review — not currently in cron) | Caddy tunnel URL monitor. **Review; may be subsumed by travel-os-external-watchdog.** |
-| `weekly-spaces-refresh.sh` | (Review — not currently in cron) | Weekly Spaces refresh. **May be subsumed by cron `ff0b6860cba5`.** |
-| `weekly-systems-improvement.sh` | Cron `2ba797d7ccfa` | Weekly systems improvement report. |
-| `weekly-travel-os-handoff-sync.sh` | Cron `ab41f101c407` | Weekly Travel OS drift check. |
-| `money-pipeline-morning-research.sh` | Cron `c77d492c5b6d` | MP morning research. |
-| `money-pipeline-auto-enrich-v2.sh` | Cron `8fb30e332d6d` | MP auto-enrich. |
-| `deep-audit-cron.sh` | Cron `e8c2a1f3d419` | Monthly deep audit. |
-| `process-feedback-queue.sh` | Cron `8d04ee3f0227` | Client Hub feedback drain. |
-| `basecamp-monitor-cron.sh` | Cron `d7baa1737ba8` | Basecamp feedback monitor. |
-| `sync_perplexity_spaces.sh` | Cron `7203f2330d92` | Daily Spaces sync. |
-| `portal-ticket-reminder.sh` | (Review — not currently in cron) | Portal ticket reminder. **Review for retention.** |
-| `spaces-audit-cron.sh` | (Review — not currently in cron) | Spaces audit. **Recommend deprecating.** |
-
-### Scripts in `node_modules/` subdirectory (money-pipeline / crypto-intel)
-
-These are Node.js apps used by the cron jobs above. Not in scope for daily operations; they're owned by the Money Pipeline and CSDAWG projects.
-
-### Scripts in `legacy/`
-
-`gateway-health-monitor.sh.RETIRED-2026-05-21` and similar retired scripts. **Do not re-enable without explicit Marcelo approval.**
+1. **Pre-summarize with Llama before sending to Claude.** Don't send 50K tokens of raw logs to Claude. Llama pre-summarizes to ~2K tokens; Claude gets the digest.
+2. **Reuse `LEARNED_*` docs across projects.** The first time we documented "Next.js 15 basePath routing with Tailscale Funnel" that knowledge goes into `LEARNED_V3_BASE_PATH_ROUTING.md`. Next time any project hits the same issue, we read the doc, not call a model.
+3. **Cache the system prompt.** Every BossMan session starts with the same SOUL/AGENTS/OPERATINGBLUEPRINT prefix. Provider prompt caching makes that prefix free after the first call.
+4. **Compress aggressively.** Hermes context compression kicks in around 60% of context budget. Let it run.
+5. **Sub-agents return summaries, not raw transcripts.** Sub-agent returns a structured summary; raw transcript stays in the sub-agent's session memory, not in BossMan's main context.
+6. **Don't re-call for "just to verify."** Trust the saved work. If verification is needed, run a small targeted check, not a full re-analysis.
 
 ---
 
-## Cron jobs NOT approved under the new "no spam" rule
+## Anti-patterns (drift signals)
 
-None of the 28 active cron jobs violate the new policy. All meet the three-criteria test (narrow case, one-sentence explainable, silent output by default — or single Telegram ping if approved for Telegram delivery).
+If a `t_*` kanban card comment or sub-agent output shows:
+- "Let me re-run the same analysis to make sure" — wrong, reuse the saved `LEARNED_*` doc
+- "Marcelo, which model should I use here?" — wrong, model choice is in the stack doc
+- "I forgot to save the postmortem" — wrong, save is part of the task
+- "We paid for this analysis last week, let's do it again" — wrong, read the prior `LEARNED_*` doc
 
-## Recommended follow-ups (carry as separate kanban cards, not auto-fixed)
-
-1. **Re-evaluate the 4 Travel OS trip reminder crons** — they all run at 8 AM and only differ by offset. Could be consolidated to a single daily check that decides which reminder to send.
-2. **Re-evaluate `basecamp-monitor-cron.sh` at `*/15`** — if Basecamp feedback is rarely <15min old, downgrade to `*/30` or `0 *`.
-3. **Review `cuadriver-health-cron.sh` at `*/5`** — same logic; 5-min is aggressive if CuaDriver is stable.
-4. **3 scripts not in cron and probably orphaned** — `spaces-audit.sh`, `gateway-health-check.sh`, `tunnel-url-monitor.sh`. Decide: keep as one-shot or archive.
-
-These are recommendations only — not auto-actions. Each requires Marcelo's `Approved` per Rule 1.
+`drift-fix` cards auto-remediate.
 
 ---
 
-## 2026-06-15 — binance-bot live ops package (t_0f9f7820)
+## Cost control instrumentation (Permanent 2026-09-14)
 
-Two new cron jobs added to support LIVE binance-bot:
+**Card:** `t_ai_stack_cost_guardian_and_m3_squarepayouts_unblock_v1_20260914`
 
-| Cron | Schedule | Script | Deliver | Notes |
-|---|---|---|---|---|
-| `binance-bot-live-monitor` | `*/5 * * * *` | `binance-bot-live-monitor.sh` | local (silent when healthy) | 5 checks: PM2 state, /api/status, mode, balance vs exchange, health-check, PM2 error log |
-| `binance-bot-auto-ticket` | `*/5 * * * *` | `binance-bot-auto-ticket.sh` | local (silent when healthy) | Comments on `t_0f9f7820` when monitor writes FAIL file; idempotent (4-min dedup) |
+Every model dispatch that can incur a paid cost appends one structured row to the active cost ledger at `~/.hermes/logs/model-cost-ledger.jsonl`. Use `~/.hermes/profiles/ops/scripts/append_cost_row.sh` (canonical). Schema fields: `timestamp, card, attended, profile, lane, provider, model, task_class, tokens_in, tokens_out, tokens_cached, tokens_total, cost_usd, fallback_reason, outcome`. Local Ollama calls log `cost_usd: 0.0` for routing visibility.
 
-Plus re-enabled cron: `PM2 Health Monitor` (`01dff7ff61e4`, was disabled).
+The watchdog is `~/.hermes/profiles/ops/scripts/claude-cost-guardian.sh` — provider-neutral (the "claude-" prefix is a historical artifact; the script has aggregated across all providers since 2026-08-15). Aggregates spend across `anthropic`, `deepseek`, `openai-codex`, `minimax`, `custom`/`ollama`, `system`, and any other paid provider. Thresholds: daily WARN \$5 / HARD-STOP \$10; weekly WARN \$20 / HARD-STOP \$35. **TELEMETRY-STALE** fires when ledger mtime > 24h — treated as unhealthy, not OK. Cron job `6625a253` (every 4h) runs the guardian.
 
-**New scripts in `~/.hermes/scripts/`:**
-- `binance-bot-live-monitor.sh` — 5-check watchdog, writes FAIL file on any problem
-- `binance-bot-auto-ticket.sh` — reads FAIL file, comments on t_0f9f7820 via `hermes kanban comment`
+Per-job cost policy lives in `~/.hermes/profiles/ops/cron/jobs.json` fields: `model`, `fallback_chain`, `fallback_chain_bounded_retries`, `daily_cost_cap_usd`, `per_run_token_cap`, `cost_policy_intent`. Dispatcher wrapper: `~/.hermes/profiles/ops/scripts/dispatch_with_guard.sh`.
 
-**New code in `~/Projects/binance-bot/`:**
-- `pre-start.js` — PM2 fail-closed wrapper (safe-start + LIVE_PILOT check + DB write-test + pre-trade-hook load + PAPER_MODE check, then require server.js in-process)
+**Local-first fallback (Permanent 2026-09-14; reconciled 2026-09-16):** the active ops profile `~/.hermes/profiles/ops/config.yaml` `fallback_providers` chain begins with `custom/qwen2.5:7b` (Ollama local, arm64 Metal-accelerated on M4 Max) before any paid model. The core `~/.hermes/config.yaml` role-specific routing sets Ollama primary for `bulk_formatting`, `chatty`, and `privacy_local`. The canonical local-model name is `qwen2.5:7b` — older references to `qwen2.5:3b` and `qwen2.5:14b` in `LEARNED_CONFIG-PATCH-OLLAMA-ROUTING-20260725.md` and `LEARNED_ALTUS_FORENSIC.md` are archived/historical context only. Card `t_ollama_canon_reconcile_20260916`. Paid models remain available for work that exceeds local capability.
 
-**Updated `ecosystem.config.cjs`** with 100% uptime hardening (min_uptime/max_restarts/restart_delay/kill_timeout/max_memory_restart).
+**Runtime cron/PM2 closure (Permanent 2026-09-15, card `t_drift_closure_runtime_routing_v1_20260915`):** Unattended cron and PM2 jobs MUST NOT reach the global `fallback_providers` chain. Each job in `~/.hermes/cron/jobs.json` carries an explicit `provider` + `model` (Ollama or M3 only) and `fallback_chain: []`. Unapproved or unavailable routes fail LOUD with a kanban alert; no silent paid fallback. Risk-gated jobs (money paths, security, SquarePayouts state, Binance, MoneyPipeline, pmd-watchdog) are pinned to Ollama because Ollama never goes down — failure there means true infrastructure failure, not token spend. `reasoning_effort` is `false` in every dispatching profile (core + ops) to prevent Ollama HTTP 400 ("model does not support thinking") from triggering silent paid fallback.
 
-**Total cron count:** 30 → 32
+---
+
+
+## Quarterly review
+
+Every quarter, BossMan runs a token-economics review:
+- Total token spend by model tier
+- Cache hit rates
+- Number of `LEARNED_*` docs created vs reused
+- Top 5 expensive calls that could have been reused
+
+Surface the review on the kanban board. If reuse rate < 50%, that's a `drift-fix`.
+
+---
+
+*This file replaces any prior token-economics description. If a project violates these rules, create a `drift-fix: <project>` card.*
