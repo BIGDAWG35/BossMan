@@ -1,249 +1,166 @@
-# AI Orchestration Blueprint
-**Version:** 1.1
-**Date:** 2026-05-22
-**Owner:** BossMan (Hermes orchestrator)
-**Status:** Canonical — governs all AI stack decisions
+# LEARNED_INDEX.md — Master Index of All `LEARNED_<DOMAIN>.md` Canon Files
+
+**Status:** Permanent (refreshed 2026-07-31, Card `t_video_layout_refspec_20260731` — added entry #35 (`LEARNED_VIDEO_LAYOUT_REFERENCES.md`, the 3-reference visual layout canon: Hermes Agent Masterclass / CryptoMetric / AI Labs). File count 34→35. Earlier 2026-07-31 patches on entries #31/#32/#33/#34 added v18 PiP overlay sections. Refresher 2026-07-30 entries #30–34: DaVinci Resolve Studio, Four-Tool Video Stack v17, Video Rendering ffmpeg, YouTube Workflow, YouTube Automation Authority; file count 29→34).
+**Purpose:** Single map of all per-system / per-domain canon files. Kernel-docs (SOUL.md, AGENTS.md, ROUTING-RULES v3) point into `LEARNED_*` for ownership/architecture/repair details. This index is the map of all domains.
 
 ---
 
-## Command Hierarchy
+## How to use this index
 
-- **BossMan** is the only top-level orchestrator.
-- **Marcelo** is the approver/strategist — not a relay between tools.
-- **LBC35 / OpenClaw / subagents** are the execution layer only.
+1. **Find a domain:** look for the row matching your system (PMD, PM2 Health Monitor, Travel OS, etc.).
+2. **Read the file:** open the listed `LEARNED_<DOMAIN>.md` for the canonical rules, ownership model, and repair playbooks.
+3. **Add a new domain:** write `LEARNED_<DOMAIN>.md` under `~/.hermes/knowledge/`, mirror to Obsidian + BossMan repo, add a row here.
 
----
+**Mirrors:** This file lives in 3 places — `~/.hermes/knowledge/LEARNED_INDEX.md` (canonical), `~/Obsidian/Hermes/V3-Canon/V3 – LEARNED_INDEX.md`, `~/Repos/BossMan/docs/hermes-canon/LEARNED_INDEX.md`. All 3 must md5-match (verified by `~/.hermes/scripts/hermes-canon-drift-check.sh`).
 
-## Perplexity Access (Updated 2026-05-22)
-
-### Primary Access Path — Brave CDP Bridge
-
-**Perplexity is accessed via Hermes Browser QA using a Brave browser instance with remote debugging enabled.**
-
-- Brave is launched with `--remote-debugging-port=9222` + isolated `--user-data-dir=/tmp/brave-debug`
-- Hermes config: `browser.cdp_url: http://localhost:9222` in `~/.hermes/config.yaml`
-- This bypasses Cloudflare challenges entirely — Brave handles auth transparently
-- CuaDriver handles all macOS-level screen capture and interaction
-
-### Perplexity Desktop App — DEPRECATED
-
-The Perplexity Mac app (`perplexity-ai.desktop`) has a **zero-bounds bug** that causes `capture` failures. Do NOT use Computer Use on the Perplexity desktop app.
-
-### Perplexity Spaces Access Priority (2026-05-22)
-
-**Priority 1 — File-first via local mirrors (CANONICAL):**
-`~/.hermes/spaces/[folder]/` is the primary source. All Spaces maintenance uses local files as canonical state. Changes sync to Perplexity Spaces via browser automation.
-
-**Priority 2 — Brave browser via CDP (PRIMARY automation path):**
-`curl localhost:9222/json/version` → verify bridge is up → `browser_navigate` to `https://perplexity.ai` or `https://app.perplexity.ai/spaces/[id]`
-
-**Priority 3 — Mac app assisted (visual verification only):**
-Use Hermes Computer Use on the Perplexity Mac app for visual verification when needed — not for automation.
-
-### Perplexity-BossMan Handoff
-
-- BossMan pulls context from local Space mirrors (`~/.hermes/spaces/`)
-- Browser automation via Brave CDP handles all Perplexity web interactions
-- Marcelo does not manually copy/paste between Perplexity and BossMan
+**Size budget:** target ≤ 8 KB (a single index table; per-domain detail lives in the `LEARNED_*.md` files themselves).
 
 ---
 
-## Perplexity Role
+## Master index (34 files)
 
-- **Perplexity Search / Spaces / Deep Research** = default external research and context layer
-- **Perplexity Computer** = premium delegated specialist for deep multi-step work (reverse engineering, complex research, investigations)
+| # | Domain | Path | Size | Scope summary | Lane / Owner | Last-updated |
+|---|--------|------|------|---------------|--------------|--------------|
+| 1 | **7-Rule Contract** | `LEARNED_7_RULE_CONTRACT.md` | 9.8 KB | Marcelo's operating preferences for BossMan + sub-agents (Rule #0–#7a, V3 governance). | BossMan (kernel) | 2026-07-22 |
+| 2 | **Altus Forensic** | `LEARNED_ALTUS_FORENSIC.md` | 0.9 KB | Altus Forensic ownership rule (extracted from SOUL.md 2026-07-22). | client-hub sub-agent | 2026-07-22 |
+| 3 | **Basecamp Workflow** | `LEARNED_BASECAMP_WORKFLOW.md` | 4.0 KB | Basecamp autonomous workflow + retirement rule (extracted from SOUL.md 2026-07-22). | Basecamp sub-agent | 2026-07-22 |
+| 4 | **Brave-Perplexity Bridge** | `LEARNED_BRAVE_PERPLEXITY_BRIDGE.md` | 4.6 KB | Brave browser ↔ Perplexity.ai integration (Cloudflare-bypass patterns). | research-intel sub-agent | 2026-06-24 |
+| 4b | **Tailscale + Next.js Proxy** | `LEARNED_TAILSCALE_SERVE_NEXTJS_PROXY.md` | 2.6 KB | Tailscale Serve `/_next/static/*` 404 trap + Caddy fix (extracted 2026-07-27 from SNS-401K incident). | BossMan (kernel) | 2026-07-27 |
+| 5 | **Client Review Portal** | `LEARNED_CLIENT_REVIEW_PORTAL.md` | 2.2 KB | Client review portal + helpdesk ticket system operating model. | client-hub sub-agent | 2026-07-22 |
+| 6 | **Default Build Flow** | `LEARNED_DEFAULT_BUILD_FLOW.md` | 6.5 KB | V3 default build flow: research → design → build → harden → QA → docs. | BossMan (kernel) | 2026-07-15 |
+| 7 | **Health OS V3 Decisions** | `LEARNED_HEALTH_OS_V3_DECISIONS.md` | 2.4 KB | Health OS V3 architectural decisions + decision logic. | health-os sub-agent | 2026-07-20 |
+| 8 | **Health OS V3 Reporting** | `LEARNED_HEALTH_OS_V3_REPORTING.md` | 2.0 KB | Health OS V3 strict-grade shopping list reporting shape. | health-os sub-agent | 2026-07-20 |
+| 9 | **LBC35 Telegram Spam Incident** | `LEARNED_LBC35_TELEGRAM_SPAM_INCIDENT.md` | 5.3 KB | LBC35 Telegram spam incident (2026-07-20) — rule: no autonomous Telegram. | BossMan (kernel) | 2026-07-21 |
+| 10 | **Pentest Reporting** | `LEARNED_PENTEST_REPORTING.md` | 3.7 KB | Pentest reporting standards for all security audits (extracted from AGENTS.md 2026-07-22). | qa-verification sub-agent | 2026-07-22 |
+| 11 | **PM2 Health Monitor** | `LEARNED_PM2_HEALTH_MONITOR.md` | 22.8 KB | PM2 detection rules (D1–D9b), auto-repair playbooks (R1–R5), CLI wrapper policy, pmd-web auto-repair. **Write-protected** by `pm2-canon-drift-check.sh`. | ops sub-agent | 2026-07-22 |
+| 12 | **PMD (Property Management Dashboard)** | `LEARNED_PMD.md` | 6.8 KB | PMD architecture, basePath history, build/start commands, health expectations. | PMD sub-agent | 2026-07-22 |
+| 13 | **PMD Dashboards** | `LEARNED_PMD_DASHBOARDS.md` | 4.3 KB | PMD + production dashboards autonomous-by-default operating model. | PMD sub-agent | 2026-07-22 |
+| 14 | **PMD Valuation Integration** | `LEARNED_PMD_VALUATION_INTEGRATION.md` | 5.7 KB | PMD valuation integration with portfolio analytics. | PMD sub-agent | 2026-07-21 |
+| 15 | **SquarePayouts** | `LEARNED_SQUAREPAYOUTS.md` | 2.6 KB | SquarePayouts ownership rule + BossMan-owned task-fit model routing (Permanent 2026-09-14, Marcelo durable rule: BossMan selects best-fit tool/model per task type, risk, privacy, cost, quality; risk-gated Step-5 QA + strongest appropriate model for money-path/auth/PII/credentials/security/audit/public-financial; production secrets local-only). | BossMan (kernel) | 2026-07-22 |
+| 16 | **Standing Authorities** | `LEARNED_STANDING_AUTHORITIES.md` | 6.7 KB | Standing authorities + health monitors (PM2 Health Monitor, Gateway + CuaDriver). | BossMan (kernel) | 2026-07-22 |
+| 17 | **Storis API** | `LEARNED_STORIS_API.md` | 7.6 KB | Storis API durable takeaways (OpenAPI 3.0.4, 239 paths, 1179 schemas). | Altus sub-agent | 2026-06-24 |
+| 18 | **Sub-Agent Master Blueprint** | `LEARNED_SUB_AGENT_MASTER_BLUEPRINT.md` | 10.6 KB | Sub-agent lane discipline + handoff contracts. | BossMan (kernel) | 2026-07-22 |
+| 19 | **Travel OS** | `LEARNED_TRAVEL_OS.md` | 3.8 KB | Travel OS Tailscale/PM2/watchdogs canon + canonical handoff repo. | travel sub-agent | 2026-07-22 |
+| 20 | **User Preferences — Autonomous Mode** | `LEARNED_USER_PREFERENCES_AUTONOMOUS_MODE.md` | 2.4 KB | Marcelo's autonomous-only operator preference (extended detail). | BossMan (kernel) | 2026-07-20 |
+| 21 | **V3 Baseline** | `LEARNED_V3_BASELINE.md` | 2.1 KB | V3 baseline: governance, model roles, escalation rules. | BossMan (kernel) | 2026-07-20 |
+| 22 | **V3 Model Stack** | `LEARNED_V3_MODEL_STACK.md` | 11.7 KB | V3 model roles + task-type routing (canonical model authority). | BossMan (kernel) | 2026-07-20 |
+| 23 | **V3 Token Economics** | `LEARNED_V3_TOKEN_ECONOMICS.md` | 6.5 KB | V3 token economics + cost tiers + fallback chains. | BossMan (kernel) | 2026-07-20 |
+| 24 | **V4 Canonical Lock** | `LEARNED_V4_CANONICAL_LOCK.md` | 6.0 KB | V4 Health OS canonical lock (do-not-modify rules). | health-os sub-agent | 2026-07-15 |
+| 25 | **YouTube Creator Resources** | `LEARNED_YOUTUBE_CREATOR_RESOURCES.md` | 35.2 KB | Vetted free YouTube production resource pack — 7 categories (slides, animation, SFX, music, motion graphics, stock footage, captions, learning), license-verified (Pexels, Pixabay, BBC, Mixkit, YT Audio Library, Freesound, Suno, Canva, Gamma, OBS, DaVinci, CapCut). Top-10 stack + `youtube-creator-stack` skill design. Companion: `~/.hermes/skills/youtube-creator-stack/SKILL.md` | content sub-agent | 2026-07-28 |
+| 26 | **YouTube Free Resources v1** | `LEARNED_YOUTUBE_FREE_RESOURCES.md` | 6.7 KB | v1 canonical bundle for `youtube-free-resources-skill` (Navigator). 8 categories w/ primary+fallback, license-named, quota-checked. Scope: faceless explainers + narrated slide videos for AI/crypto/finance. Hand-off → `slide-style-explainer-video`. Companion skill at `~/.hermes/skills/creative/youtube-free-resources-skill/SKILL.md` + project docs in `/Users/bigdawg/Projects/youtube-dashboard/{docs,prompts}/`. | content sub-agent | 2026-07-28 |
+| 27 | **YouTube Dashboard v3.0** | `LEARNED_YOUTUBE_DASHBOARD_V3.md` | 6.1 KB | YouTube dashboard hard separation (ElevenLabs-only). Live ElevenLabs subscription API wiring (`https://api.elevenlabs.io/v1/user/subscription`), 5-min cache, flat-file fallback. Validator warns-only (no fail-fast). Single 401 today: key lacks `user_read` scope. Companion flag card `t_520f0927` (bossman board). Server: `/Users/bigdawg/Projects/youtube-dashboard/server.js` on port 8140. | content sub-agent | 2026-07-28 |
+| 28 | **Apple Motion** | `LEARNED_APPLE_MOTION.md` | 31.2 KB | Apple Motion 6.3 in the Hermes stack — GUI-only 2D motion-graphics tool (titles, particles, behaviors, cameras, match-moving, FCP template publishing). 23 sections covering workflow, project settings, keyframing, behaviors, particles, cameras, tracking, templates, Image Playground (Apple Intelligence), supported media formats, export destinations, Apple-silicon perf, automation reality (no CLI scripting), v17 pipeline integration, sub-agent operating procedures. Source: Motion 6.3 User Guide PDF mirrored at `~/Projects/four-tool-video-stack/refs/motion_user_guide_6.3.pdf`. | content sub-agent | 2026-07-30 |
+| 29 | **Blender 5.2 LTS** | `LEARNED_BLENDER_LTS.md` | 31.2 KB | Blender 5.2 LTS in the Hermes stack — headless 3D scene renderer (P3 of v17 pipeline). 24 sections covering LTS behavior + version pin (`fbe6228777e7`, supported until July 2028), 5.2 release caveats (FFMPEG enum removed, GN API changes), canonical CLI invocation (`-b -noaudio --factory-startup -P`), render-config defaults (Eevee, 1920×1080, 30 fps, 90 frames), PNG→ffmpeg stitch workaround, performance budget (~10–17 s), hardware notes (Apple Silicon Metal only), open gaps from stack integration audit. Source: docs.blender.org/manual/en/5.2/ (107 URLs, 24 pages mirrored locally) + 3 verified 2025–2026 tutorials (Blender Studio, Polygon Runway, Ryan King Art). | content sub-agent | 2026-07-30 |
+| 30 | **DaVinci Resolve Studio 21** | `LEARNED_DAVINCI_RESOLVE_STUDIO.md` | 30.4 KB | DaVinci Resolve Studio v21.0.3 in the Hermes stack — the v17 **validator** tool (NOT the renderer). 24 sections covering bundle install path (`/Applications/DaVinci Resolve Studio.app` — note space; `com.blackmagic-design.DaVinciResolveAppStore` bundle id), Apple Silicon + Metal acceleration, **scripting API** (`scriptapp("Resolve")` returns `PyRemoteObject` on Studio, `None` on Lite — Lite wall documented), App Store sandbox constraints (ExternalScriptingEnabled toggle in `~/Library/Preferences/com.blackmagic-design.DaVinciResolveAppStore.plist`), IOXPC requirement (MUST run in GUI mode, NOT `-nogui`), ffmpeg filter graphs as the canonical sub-agent contract, the "Resolve-as-Validator" pattern (construct `.drp` with same V1/V2/A1 layout; ffmpeg produces final.mp4), render presets (H.264, H.265, ProRes), RenderQueue API + headless render prohibition, Python 3.12/3.13 interpreter mapping, the 9 canonical sub-agent patterns, drift-check contract, agent contract. Source: blackmagicdesign.com/developer (verified HTTP 200). Companion skill: `LEARNED_FOUR_TOOL_VIDEO_STACK.md`. | content sub-agent | 2026-07-30 |
+| 31 | **Four-Tool Video Stack (v17)** | `LEARNED_FOUR_TOOL_VIDEO_STACK.md` | 9.5 KB | v17 four-tool pipeline (ElevenLabs + Blender 5.2 + Apple Motion 5 + DaVinci Resolve Studio). 3 s 1080p30 final.mp4 on Mac Studio M4. Studio is the ONLY Resolve (Lite uninstalled). Layer spec (1920×1080, 30 fps, 90 frames, h264 +faststart). The Resolve-as-validator pattern with 5-stage reasoning. Canonical sub-agent contract: detect Studio, read all 4 sibling LEARNED_*.md files, write `.drp` project via `MediaPool.AppendToTimeline`, validate via `RenderQueue.AddJobFromTimeline`, run ffmpeg composite, return PASS. Cross-references to all 4 LEARNED docs. | content sub-agent | 2026-07-30 |
+| 32 | **Video Rendering (ffmpeg)** | `LEARNED_VIDEO_RENDERING.md` | 7.8 KB | ffmpeg composite spec for v17: `[1:v]overlay=0:0:format=auto[v]`, audio loop (`aloop=loop=-1:size=2e9`), final encode flags (`-shortest -c:v h264 -pix_fmt yuv420p -movflags +faststart -c:a aac -b:a 192k`). 26/26 PASS on Mac Studio M4. v17 tool-by-tool orchestrator reference (Blender / Motion / Resolve / ffmpeg roles). `+faststart` flag is mandatory for YouTube. | content sub-agent | 2026-07-30 |
+| 28 | **YouTube Workflow** | `LEARNED_YOUTUBE_WORKFLOW.md` | 3.0 KB | v17 single-script YouTube workflow wrapper — `bash build/youtube_workflow.sh <script.txt>` → `build/final.mp4` in one command. Patches: `tts_elevenlabs.py` accepts `SCRIPT_PATH`/`SCRIPT_TEXT` env override; `youtube_workflow.sh` runs P2-P6 end-to-end; `run_pipeline.sh` hardened with `set -u` PYTHONPATH safety. 26/26 PASS on a fresh narration (no re-discovery). YouTube-ready mp4 (h264/aac, 1920×1080, moov-at-front via `+faststart`). Companion: 5 video-stack LEARNED_* files (rows 28–32). | content sub-agent | 2026-07-30 |
+| 28a | **Seven-Layer Architecture** | `LEARNED_7_LAYER_ARCHITECTURE.md` | NEW | Canonical seven-layer stack: Perplexity → M3 → DeepSeek/Llama/OpenAI → Llama → DeepSeek QA → Claude docs → Perplexity Computer. Handoff contracts + lane-vs-model independence. | BossMan (kernel) | 2026-08-06 |
+| 28b | **Seven Rule Contract (incl. Rule #8)** | `LEARNED_7_RULE_CONTRACT.md` | NEW-RULE #8 | Rule #8 (Permanent 2026-08-06): GitHub backup before any non-trivial troubleshoot/fix. Snap → mutate → Step-5 verify → auto-revert or pass. Companion skill `~/.hermes/skills/troubleshooting-backup-and-revert/`. | BossMan (kernel) | 2026-08-06 |
+| 28c | **Automation Inventory** | `AUTOMATION_INVENTORY.md` | NEW | All helper scripts that drive cron / watchdog / self-healing flows under `~/.hermes/scripts/`. Snap + revert helpers + canonicalized retired entries. | knowledge-canon | 2026-08-06 |
+| 28d | **2026-08-06 Self-Backup Upgrade** | `LEARNED_2026-08-05_SELF_BACKUP_UPGRADE_HEALTHCHECK.md` | NEW | Self-backup posture upgrade — companion to Rule #8. | BossMan (kernel) | 2026-08-06 |
+| 28e | **Ops Self-Healing Policy** | `LEARNED_OPS_SELF_HEALING_POLICY.md` | NEW | 5-tier ops self-healing flow: observe → snap+fix → multi-service → vendor-blocked → terminate. Tier 0/1/2/3 agent-owned; Tier 4 surfaces as V3 carve-out; Tier 5 stops and writes a postmortem. Snap+revert (Rule #8) is mandatory at every tier. | ops sub-agent | 2026-08-06 |
+| 28f | **MD-File Drift Rubric (Rule #9)** | `LEARNED_MD_FILE_DRIFT_RUBRIC.md` | NEW | 4-category classification rubric for canon-MD trim/dedup: A=canonical durable rule, B=historical evidence, C=procedure/workflow, D=temp working context. Used by `~/.hermes/skills/md-file-snapshot-before-trim/`. Companion to Rule #8 but MD-targeted. | knowledge-canon | 2026-08-06 |
+| 28g | **OPERATINGBLUEPRINT Pointer Index** | `~/.hermes/OPERATINGBLUEPRINT_INDEX.md` | NEW | Thin pointer overview for the 2026-08-06 split of `OPERATINGBLUEPRINT.md` (1,382 lines → 4 files). Cross-refs to `OPERATINGBLUEPRINT_V3_POINTERS.md`, `OPERATINGBLUEPRINT_OPERATIONAL_PROCEDURES.md`, `OPERATINGBLUEPRINT_ARCHIVE_2026-08-06.md`. Card `t_operatingblueprint_split_v1_20260806`. | BossMan (kernel) | 2026-08-06 |
+| 28h | **OPERATINGBLUEPRINT V3 Pointers** | `~/.hermes/OPERATINGBLUEPRINT_V3_POINTERS.md` | NEW | A-bucket canonical rules from the operating blueprint: V3 governance, roles, models, infra approval, Space usage, Basecamp/SquarePayouts/Binance/Travel/Health/PM2/PMD/Pentest. Each entry points to the canonical LEARNED_* home. | BossMan (kernel) | 2026-08-06 |
+| 28i | **OPERATINGBLUEPRINT Operational Procedures** | `~/.hermes/OPERATINGBLUEPRINT_OPERATIONAL_PROCEDURES.md` | NEW | C-bucket procedures: Build Verification loop, Browser QA vs Computer Use decision matrix, Perplexity Workflow, Default 6-Step Build Flow, Deep Dive Checkpoint rule, failure modes, recovery. | BossMan (kernel) | 2026-08-06 |
+| 28j | **OPERATINGBLUEPRINT Archive (2026-08-06)** | `~/.hermes/OPERATINGBLUEPRINT_ARCHIVE_2026-08-06.md` | NEW | Frozen verbatim original of `OPERATINGBLUEPRINT.md` at commit `4ec7541525` (SHA-256 `f7286c9...0425cd`, 1,382 lines / 74,820 bytes). Safety net for the 2026-08-06 split. Recovery: `cp ~/.hermes/OPERATINGBLUEPRINT_ARCHIVE_2026-08-06.md ~/.hermes/OPERATINGBLUEPRINT.md`. | BossMan (kernel) | 2026-08-06 |
+| 28k | **AGENTS.md (Thin Pointer)** | `~/.hermes/AGENTS.md` | NEW | Thin pointer for the 2026-08-06 split of `AGENTS.md` (433 lines → 4 files). ~30 lines, ~2 KB. Cross-refs to `AGENTS_INDEX.md`, `AGENTS_ROSTER.md`, `AGENTS_ARCHIVE_2026-08-06.md`. Card `t_agents_split_v1_20260806`. | BossMan (kernel) | 2026-08-06 |
+| 28l | **AGENTS Section Map** | `~/.hermes/AGENTS_INDEX.md` | NEW | Section map (24 sections → destinations) for the AGENTS.md split. Each original section classified A/B/C/D and routed to canonical home or archive. | BossMan (kernel) | 2026-08-06 |
+| 28m | **AGENTS Live Roster** | `~/.hermes/AGENTS_ROSTER.md` | NEW | § Roles & Chain of Command **preserved verbatim** + delegation standard + lane-vs-model routing rule. ~250 lines, ~8 KB. | BossMan (kernel) | 2026-08-06 |
+| 28n | **AGENTS Archive (2026-08-06)** | `~/.hermes/AGENTS_ARCHIVE_2026-08-06.md` | NEW | Frozen verbatim original of `AGENTS.md` at pre-split SHA-256 `683015cd5b774bdfdf24afbc7fe6452ef3b4013ab2237498a7b8b50ffde7eeca` (raw, 26,170 bytes / 433 lines). Safety net. Recovery: `cp ~/.hermes/AGENTS_ARCHIVE_2026-08-06.md ~/.hermes/AGENTS.md`. | BossMan (kernel) | 2026-08-06 |
+| 28o | **SERVICES_MAP Canonical Source Rule** | `~/.hermes/knowledge/LEARNED_SERVICES_MAP.md` | NEW | SERVICES_MAP canonical source = Boss Hub registry (`~/Projects/boss-hub/registry/services-registry.yaml`). SERVICES_MAP.md is now a regeneratable thin index (~10 lines), never hand-edited. Frozen historical snapshots live in `SERVICES_MAP_SNAPSHOT_<date>.md`. Heartbeat design documented; cron wiring is a true V3 carve-out pending Marcelo approval. Companion: `~/.hermes/scripts/regenerate-services-map.sh`. Card `t_services_map_freeze_and_index_v1_20260806`. | BossMan (kernel) | 2026-08-06 |
+| 34 | **YouTube Automation Authority** | `LEARNED_YOUTUBE_AUTOMATION_AUTHORITY.md` | 4.8 KB | **Standing directive** from Marcelo (2026-07-30): v17 is canon for short YouTube. For any future short YouTube video: BossMan uses `youtube_workflow.sh` as default path, never re-discovers, never asks Marcelo to open UI, never improvises. Edge case → update LEARNED + drift-check. 6 forbidden patterns codified as V3 carve-out triggers. 6 video-stack LEARNED docs (rows 28–33) are the blueprint. Companion: `LEARNED_YOUTUBE_WORKFLOW.md`. | content sub-agent | 2026-07-30 |
+| 35 | **Idea-to-Product Engine v2** | `LEARNED_IDEA_TO_PRODUCT.md` | 12.8 KB | Permanent 2026-09-15. 6-stage engine (IDEA-0 trigger → IDEA-1 interrogation ≤7 Q → IDEA-2 parallel recon → IDEA-3 one-page PDF proposal → IDEA-4 autonomous build → IDEA-5 delivery → IDEA-6 weekly anti-drift). Replaces IDEASDAWGBOT v1 intake half. Trigger phrases "I have an idea" / "idea:" / "business idea" / "what about…" auto-arm BossMan. Reuses Money Pipeline v2 crons + pmd-api/pmd-web. V3-conformant: cron/PM2 = M3/Ollama only, DeepSeek helper-only, SquarePayouts paths = Claude mandatory. Companion: `~/.hermes/skills/ideas/SKILL.md\`. Card `t_idea_to_product_engine_v2_20260915`. | BossMan (kernel) | 2026-09-15 |
 
----
-
-## Computer Use Ownership
-
-- BossMan is the **ONLY** owner of Hermes Computer Use on the Mac mini.
-- Other agents must not directly start Computer Use.
-- Any agent needing Computer-mediated actions on the Mac must route the request through BossMan.
-- **CuaDriver TCC fix (2026-05-22):** `tccutil reset ScreenCapture com.trycua.driver` + re-grant in System Settings → Screen Recording. SOM mode confirmed working (151 elements captured).
-- **CuaDriver status (2026-05-22):** Running (PID 74248), SOM capture working, full display capture needs TCC fix if not already granted.
-
----
-
-## Perplexity Computer Usage Policy
-
-**Use Computer only when:**
-- Research is deep/complex
-- Reverse engineering or cross-system investigation is needed
-- Report/blueprint generation requires multi-step workflows
-
-**Do NOT use Computer for simple one-off queries or routine tasks.**
-
-**Fallback if Perplexity limits are hit:**
-- Internal stack (BossMan + LBC35 + subagents)
-- Local Spaces files for maintenance (Priority 1 path)
-- Brave CDP browser automation for web research
-
----
-
-## Model Pool Roles (Permanent — 2026-06-03, v3.0 "10/10")
-
-| Model | Role | Notes |
-|-------|------|-------|
-| **Perplexity Search (Pro)** | First-step research | Step 1 of every non-trivial build. Current docs, API references, gotchas. |
-| **M3 (MiniMax M3)** | Primary thinking and planning brain | Step 2 design + Step 3 routing/architecture. Default for routine work. BLOCKED for SquarePayouts. |
-| **DeepSeek** | Heavy-duty coder, reasoning engine, **and Step 5 QA (red-team)** | Primary builder for complex or critical backend logic, data, or debugging. **Default Step-5 QA model.** |
-| **Llama (Ollama local)** | Cheap grinder | Step 4 harden and clean up. Bulk transforms, scaffolding, refactors, tests, cleanup. |
-| **OpenAI** | Production finisher | Primary builder when output is user-facing or high-risk. Final polish only. **Step 5 QA fallback** (after DeepSeek). |
-| **Claude** | Long-form documentation writer | **Step 6 only** — after the code is stable AND QA passes. Runbooks, handoff docs. |
-| **Perplexity Deep Research** | Multi-source synthesis on complex topics | When Step 1 needs deeper research than a single search. |
-| **Perplexity Computer** | Multi-step Mac/browser workflows | **Rare escalation only.** 10,000 credits/month cap. `escalate_to_computer: yes` flag, Marcelo approval. NOT part of the everyday default path. |
-
-### SquarePayouts Model Restriction (Permanent)
-
-**M3 is BLOCKED for all SquarePayouts work.** Use Claude, DeepSeek, or OpenAI only. Perplexity Search, Llama, and Claude remain approved for SquarePayouts research and review. Perplexity Computer requires the same `escalate_to_computer: yes` approval as everywhere else.
-
-### Full policy
-
-The 6-step Default Build Flow (Perplexity → M3 → primary builder → Llama cleanup → DeepSeek QA → Claude docs) and the multi-model rules are in:
-
-- `~/.hermes/AGENTS.md` — Model Routing (parent policy)
-- `~/.hermes/knowledge/ROUTING-RULES.md` — Default Build Flow rules (v3.0 canonical)
-- `~/.hermes/knowledge/MODEL-STACK-WORKFLOWS.md` — End-to-end worked examples (v3.0)
-- `~/.hermes/knowledge/MODEL_ROUTING_WORKFLOW.md` — Cost tiers + Routing Ledger (v3.0)
-
----
-
-## Project Kickoff Protocol — Default Build Flow v3.0 "10/10" (Permanent — 2026-06-03)
-
-For every new project or significant work item, BossMan follows the **6-step Default Build Flow v3.0** from `~/.hermes/knowledge/ROUTING-RULES.md`:
-
-**Step 1 — Research (Perplexity Search):**
-- Perplexity Search pulls current docs, best practices, API references, and gotchas
-- Never guess when we can read
-- Key sources linked into the main project card
-
-**Step 2 — Design (M3):**
-- M3 designs the architecture, defines the main components, and breaks work into Kanban cards with clear acceptance criteria
-- Saved in the main project card body, not in chat
-- References the Perplexity sources from Step 1
-
-**Step 3 — Build (Primary builder, one per card):**
-- For each build card, pick exactly one primary builder:
-  - **DeepSeek** for complex or critical backend logic, data, or debugging
-  - **Llama** for repetitive scaffolding, refactors, or large-volume code edits
-  - **OpenAI** when output is user-facing, high-risk, or needs polished style
-- Note the primary builder under a `model_plan:` line in the card body
-- Marcelo reviews the AI Stack Recommendation (which model for which card) and approves before build starts
-
-**Step 4 — Harden and clean up:**
-- Llama handles bulk cleanup and test generation
-- DeepSeek or OpenAI only as a final sanity pass on critical components
-- Do NOT rewrite large chunks that are already acceptable
-
-**Step 5 — QA PASS (DeepSeek red-team) — new in v3.0:**
-- **Mandatory for critical cards** (money, PII, infra, trading, auth, public APIs)
-- Marcelo's standing rule: include Step 5 for high-impact or sensitive work unless explicitly told to skip
-- DeepSeek uses red-team mindset: edge cases, security, performance, failure modes
-- Default QA model: **DeepSeek**. Fallback: OpenAI → M3
-- Findings logged as card comments and/or QA sub-cards
-- Card's `qa_status` updated: `pending` → `passed` / `failed` / `logged`
-
-**Step 6 — Docs and handoff (Claude):**
-- Claude writes long-form docs and runbooks only after the code is stable AND QA has passed (or every QA issue is logged as a sub-card and tracked)
-- Claude reads the final code, M3's design notes, the acceptance criteria, and the QA findings
-- Output: concise but complete docs, saved to `~/.hermes/knowledge/`, Obsidian, and GitHub
-
-**After the 6 steps:**
-- Card → `done`
-- Set metrics fields on the card:
-  - `build_passes:` (`1` / `2` / `3+`)
-  - `rewrite_scope:` (`none` / `minor` / `major`)
-- Update Routing Ledger with which model produced what
-- Self-audit: Was deliverable achieved? Was Marcelo's time used well? Follow-up needed?
-
-**Per-card fields (v3.0):**
-```yaml
-model_plan: ...
-qa_required: yes | no
-qa_model: DeepSeek | OpenAI | M3
-qa_status: pending | passed | failed | logged
-escalate_to_computer: yes | no
-escalate_to_computer_reason: ...
-build_passes: 1 | 2 | 3+
-rewrite_scope: none | minor | major
-```
-
-**Approval gates:** Marcelo reviews and approves:
-- The architecture from Step 2 (before any build cards are assigned)
-- The `model_plan:` field for each build card (before Step 3 starts)
-- The `escalate_to_computer: yes` flag, when proposed (before Step 3 starts)
-- The final docs from Step 6 (before marking the card done)
-
-**Perplexity Computer — escalation (v3.0):**
-- Allowed only on projects matching the §4 patterns: (1) greenfield full-stack SaaS builds, (2) large cross-service refactors/migrations, (3) complex multi-domain research
-- Requires `escalate_to_computer: yes` flag on the main project card, approved by Marcelo
-- Hard cap: **10,000 credits/month.** BossMan pre-warns if a project would consume more than ~3,000
-- LBC35 does NOT trigger Perplexity Computer; it only follows the flag in the handoff packet
+**Total: 40 files / ~317 KB.** (Plus 4 split `OPERATINGBLUEPRINT_*` files at `~/.hermes/` root — rows 28g–28j — total ~108 KB. Plus 4 split `AGENTS_*` files at `~/.hermes/` root — rows 28k–28n — total ~36 KB.)
 
 ---
 
-## Knowledge Flywheel
+## Cross-references
 
-Important prompts, workflows, debug patterns, architecture decisions, and research conclusions must be saved to:
-- `~/.hermes/knowledge/` — primary canonical store
-- Obsidian: `/Users/bigdawg/Obsidian/Hermes/Systems/`
-- GitHub: `BIGDAWG35/BossMan/docs/`
-- Project-specific Perplexity Space
-
----
-
-## Tool Strategy by Task Type
-
-| Task | Tool |
-|------|------|
-| Perplexity web research | Browser QA → Brave CDP |
-| Perplexity Spaces maintenance | Browser QA → Brave CDP + local file mirrors |
-| macOS UI interaction | Hermes Computer Use (CuaDriver) |
-| Localhost web app QA | Browser QA |
-| Code/CLI/DB inspection | Terminal |
-| Live sports/market data | Perplexity Search |
-| Deep multi-source research | Perplexity Deep Research |
-| Complex cross-system investigation | Perplexity Computer |
-| Simple one-off research | Perplexity Search (no Computer) |
+- **SOUL.md** `§"Per-system Canon — Pointers"` references this index as the master list.
+- **AGENTS.md** `§"Project-Specific Content — Moved to LEARNED_*.md"` documents historical moves; this index is the current state.
+- **ROUTING-RULES v3** uses these LEARNED files for sub-agent lane assignments and standing authorities.
+- **hermes-canon-drift-check.sh** (weekly) checks 5 of these + AGENTS.md + SOUL.md for md5 drift. **pm2-canon-drift-check.sh** (per-section) protects 3 sections of `LEARNED_PM2_HEALTH_MONITOR.md`.
 
 ---
 
-## Spaces Maintenance
+## Maintenance
 
-- Daily sync via `sync_perplexity_spaces.sh` (cron job `7203f2330d92`, 6 AM daily)
-- Monitors: `~/.hermes/knowledge/` + OpenClaw Brain files
-- Syncs to: `~/.hermes/spaces/[space]/` → Obsidian + GitHub
-- Telegram notification only if changes detected; silent if clean
-- Event-driven audits after major system/project/blueprint changes
-- Auto-verified = silent watchdog. Issues found = approval request to Marcelo
-- Approval format:
-  ```
-  Space: [name]
-  Detected changes: [list]
-  Reason: [why needed]
-  Proposed action: [exact plan]
-  ```
+- **Adding a new domain:** write `LEARNED_<DOMAIN>.md` → mirror to 3 locations → add a row here → register in `hermes-canon-drift-check.sh` if size > 2 KB.
+- **Renaming a domain:** create new file, redirect old file (use markdown link), update SOUL/AGENTS/ROUTING-RULES pointers, update this index.
+- **Deprecating a domain:** mark file with `# DEPRECATED YYYY-MM-DD` header, do NOT delete (audit trail), keep row here with `Deprecated: YYYY-MM-DD`.
+- **Drift detection:** the weekly `hermes-canon-drift-check.sh` checks size + md5 of the 5 registered files. If you add a new LEARNED file, register it there too (or accept that it won't be drift-checked until the next quarterly audit).
 
 ---
 
-## Key Paths
-
-| Copy | Path |
-|------|------|
-| Local knowledge | `~/.hermes/knowledge/ai-orchestration-blueprint.md` |
-| Obsidian | `/Users/bigdawg/Obsidian/Hermes/Systems/ai-orchestration-blueprint.md` |
-| GitHub | `BIGDAWG35/BossMan/docs/ai-orchestration-blueprint.md` |
-| Spaces sync script | `~/.hermes/scripts/sync_perplexity_spaces.sh` |
-| Spaces file mapping | `~/.hermes/config/spaces_file_mapping.json` |
-| Daily sync log | `~/.hermes/logs/spaces-sync-YYYY-MM-DD.md` |
-| Spaces source | `~/.hermes/spaces/[folder]/` |
+**Maintained by:** knowledge-canon sub-agent on BossMan's behalf.
+**Last refresh:** 2026-08-31 (Card `t_v33_final_verification_and_promotion_v1_20260831` — V3.3 Master Blueprint promoted from PROPOSED to CANONICAL — ACTIVE; entry #0 added at line 109. All 8 Step-5 verification checks PASS. Pre-promotion snapshot at `~/.hermes/profiles/ops/cron/output/t_v33_final_verification_snapshot_20260831_233500/` byte-equal verified.)
+**Next refresh:** quarterly (or on demand when a new domain is added).
 
 ---
 
-## Version History
+## V3.3 Master Architecture Map (CANONICAL — ACTIVE)
 
-| Version | Date | Change |
-|---------|------|--------|
-| 1.0 | 2026-05-14 | Initial — Perplexity Computer policy, model pool roles, project kickoff protocol |
-| 1.1 | 2026-05-22 | Perplexity access updated to Brave CDP bridge; desktop app deprecated; Spaces priority updated; Project Kickoff Protocol expanded to 7-step standard workflow; Tool Strategy table added |
+**Added 2026-08-31 via card `t_v33_final_verification_and_promotion_v1_20260831`.**
+
+| # | Domain | Path | Size | Scope summary | Lane / Owner | Last-updated |
+|---|--------|------|------|---------------|--------------|--------------|
+| **0** | **V3.3 Master Blueprint** | `~/.hermes/knowledge/V3_3_MASTER_BLUEPRINT_20260831.md` | 72,838+ B | **The current controlled Master Blueprint for Hermes Agent OS.** Single authoritative architecture map. Absorbs + points to Tier 1-3 canon. Eight parts: (I) Version identity and scope; (II) Authority and operating model; (III) Six-tier knowledge and canon system; (IV) V3 execution-routing layer; (V) Lane contracts and handoff discipline; (VI) Closed-loop autonomy (Layer-2); (VII) Tier 4-6 pointers; (VIII) Version governance and bounded follow-ups. **Read this file first.** Companion review summary at `~/.hermes/knowledge/V3_3_MASTER_BLUEPRINT_FINAL_REVIEW_SUMMARY_20260831.md`. | BossMan (kernel) | 2026-08-31 |
+
+> **Tier 0 entry.** Every new agent, sub-agent, skill, or session should read V3.3 first to understand Hermes Agent OS as of 2026-08-31. Underlying Tier 1-3 docs (`SOUL.md`, `AGENTS.md`, `ROUTING-RULES.md`, `LEARNED_V3_MODEL_STACK.md`, etc.) remain authoritative companion canon — they are the detailed rule bodies; V3.3 is the consolidated architecture map.
+
+## V3.3 Sub-Agent Blueprint Split (CANONICAL — ACTIVE)
+
+**Added 2026-08-31 via card `t_v33_full_install_v1_20260831`.**
+
+| File | Purpose | Size | Status |
+|------|---------|------|--------|
+| `HERMES_SUBAGENT_BLUEPRINT_INDEX.md` | Entry point; real roster (10 lanes); honest phase status; recovery | 5,424 B | ACTIVE |
+| `HERMES_SUBAGENT_BLUEPRINT_v3.3.md` | Live canon only — what to read; 11-section template; Rule #8/#9; split/freeze patterns | 14,850 B | ACTIVE |
+| `HERMES_SUBAGENT_BLUEPRINT_ARCHIVE_2026-08-31.md` | Frozen v3.0 phase plan + rollout history, verbatim byte-equal | 12,483 B | ARCHIVED |
+| `HERMES_SUBAGENT_BLUEPRINT_v3.0_ARCHIVE_INDEX_20260831.md` | Archive navigation; SHA + recovery commands | 3,075 B | ACTIVE |
+| `hermes-sub-agent-master-blueprint.md` | Thin pointer (replaces bloated original) | 1,797 B | ACTIVE |
+| `HERMES_SUBAGENT_BLUEPRINT_ARCHIVE_2026-09-01.md` | Date-stamped archive (byte-equal to snapshot + 2026-08-31 archive) | 12,483 B | ARCHIVED |
+| `HERMES_SUBAGENT_BLUEPRINT_v3.0_ARCHIVE_INDEX_20260901.md` | Date-stamped archive navigation; SHA + recovery commands | 2,342 B | ACTIVE |
+
+> **Read INDEX first.** The Layer 1 / Layer 2 separation rule (v3 execution routing vs sub-agent lane ownership) is preserved VERBATIM in the v3.3 LIVE file.
+
+## V3.4 Autonomy Enforcement (CANONICAL — ACTIVE 2026-09-01)
+
+**Added 2026-09-01 via card `t_v33_v34_verified_recovery_install_v1_20260901`.** Three new rules appended to the 7-Rule Contract as an additive addendum. The original `LEARNED_7_RULE_CONTRACT.md` is UNCHANGED (SHA `c7df82ab...`).
+
+| File | Purpose | Size | Status |
+|------|---------|------|--------|
+| `LEARNED_7_RULE_CONTRACT_RULES_10_11_12_ADDENDUM_2026-09-01.md` | Rules #10 (Operator Contract), #11 (Mandatory Escalation Ladder), #12 (Anti-Recursion Budget). Effective on this card's promotion. | 9,539 B | ACTIVE |
+| `QA_AUTO_INVOCATION_SPEC_v1_2026-09-01.md` | QA auto-invocation spec — `qa_required` triggers, state machine, closure block, model selection unchanged. | 3,596 B | ACTIVE |
+
+**Rule #10 — Operator Contract:** Marcelo is reviewer/owner only; A/B/C decision menus forbidden outside true V3 carve-outs; one final report is the only operator touchpoint; decide-and-flag is the default for ambiguity.
+
+**Rule #11 — Mandatory Escalation Ladder:** canon → Perplexity Search → Perplexity Computer → sub-agents → escalate. `BLOCKED` without a logged applicable rung attempt is a drift signal. Perplexity Computer remains a rare escalation requiring existing approval + credit controls.
+
+**Rule #12 — Anti-Recursion Budget:** default cap 12 investigation round-trips per inbound. Cap-hit → stop investigating, produce 4-section report, log event. Anti-deadlock clause: verification must never block the process/drain/restart it is verifying.
+
+**QA auto-invocation:** Cards touching money/auth/infra/PII/customer-facing/public-API require `qa_required: yes` at intake. `qa_status ∈ {pending, running}` blocks closure. Failure auto-creates a `drift-fix` card.
+
+## Related non-`LEARNED_*` canon files (sub-agent profiles + lane contracts)
+
+These files are part of the hermes-canon even though they don't use the `LEARNED_` prefix. Listed here for navigation.
+
+| File | Lane | Purpose |
+|---|---|---|
+| `~/.hermes/knowledge/loop-engineering-goals.md` | loop-engineering | Sub-agent profile + canon contract for the loop-engineering lane (loop design, weekly review cadence, recurring progress machinery). Mirrored 3 ways. |
+| `~/.hermes/knowledge/builder.md` | builder | Builder sub-agent profile: code implementation, build/restart workflow, verification standard. |
+| `~/.hermes/knowledge/content.md` | content | Content sub-agent profile: YouTube, TTS, media, publishing ops. |
+| `~/.hermes/knowledge/ops.md` | ops | Ops sub-agent profile: PM2, cron, Tailscale, service health, incident response. |
+| `~/.hermes/knowledge/trading.md` | trading | Trading sub-agent profile: Binance/Kraken bot configs, regime detection, risk rules. Claude mandatory. |
+| `~/.hermes/knowledge/self-improvement.md` | self-improvement | Self-improvement curriculum: skill authoring, MEMORY.md pruning, weekly health checks. |
+| `~/.hermes/knowledge/qa-verification.md` | qa-verification | QA-verification sub-agent profile: Step-5 verifier verdicts, cross-system regression tests, browser QA. |
+| `~/.hermes/knowledge/research-intel.md` | research-intel | Research-Intel sub-agent profile: Perplexity research, vendor comparisons, market intel. |
+| `~/.hermes/knowledge/knowledge-canon.md` | knowledge-canon | Knowledge Canon Reuse sub-agent profile: LEARNED_<DOMAIN>.md authoring, Obsidian mirroring, doc-hygiene. |
+| `~/.hermes/skills/md-file-snapshot-before-trim/SKILL.md` | knowledge-canon | Executable form of `LEARNED_7_RULE_CONTRACT.md` Rule #9. 6-step loop: snapshot → classify → extract → trim → verify → report. Companion to Rule #8 but for canon-MD cleanup. |
+
+The `LEARNED_INDEX.md` is the map of `LEARNED_*` canon files only. Per-sub-agent profile files (lives outside `LEARNED_*`) are listed in this section and cross-referenced from AGENTS.md §"Per-lane canonical files".
+
+**Drift detection:** These files are NOT auto-tracked by `hermes-canon-drift-check.sh` (which only handles the LEARNED set + AGENTS + SOUL). Sub-agent profile updates register their own drift check manually when material.

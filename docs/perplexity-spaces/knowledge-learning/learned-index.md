@@ -1,8 +1,8 @@
 # LEARNED_*.md Files — Full Index
 
 **Source:** `~/.hermes/knowledge/`
-**Status:** Active — 58 files
-**Regenerated:** 2026-09-25 06:00
+**Status:** Active — 59 files
+**Regenerated:** 2026-09-29 06:00
 
 ---
 
@@ -37,6 +37,7 @@
 | `LEARNED_OPS_SELF_HEALING_POLICY.md` | LEARNED_OPS_SELF_HEALING_POLICY.md — PM2/cron Self-Healing Without Marcelo |
 | `LEARNED_PENTEST_REPORTING.md` | Pentest Reporting Standards — Permanent Operating Rule |
 | `LEARNED_PM2_HEALTH_MONITOR.md` | LEARNED_PM2_HEALTH_MONITOR.md — PM2 Health Monitor canon |
+| `LEARNED_PM2_HEALTH_MONITOR_INCIDENTS.md` | LEARNED_PM2_HEALTH_MONITOR_INCIDENTS.md — Per-Incident Canon (Sibling) |
 | `LEARNED_PMD.md` | LEARNED_PMD.md — PMD (Property Management Dashboard) Canon |
 | `LEARNED_PMD_DASHBOARDS.md` | PMD + Production Dashboards — Permanent Operating Rules |
 | `LEARNED_PMD_VALUATION_INTEGRATION.md` | PMD Valuation Integration — LEARNED (2026-07-21) |
