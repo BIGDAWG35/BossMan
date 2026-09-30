@@ -1,8 +1,8 @@
 # LEARNED_*.md Files — Full Index
 
 **Source:** `~/.hermes/knowledge/`
-**Status:** Active — 59 files
-**Regenerated:** 2026-09-29 06:00
+**Status:** Active — 60 files
+**Regenerated:** 2026-09-30 07:28
 
 ---
 
@@ -28,6 +28,7 @@
 | `LEARNED_FOUR_TOOL_VIDEO_STACK.md` | Four-Tool Video Stack — v17 (2026-07-30) |
 | `LEARNED_HEALTH_OS_V3_DECISIONS.md` | Health OS V3 — Decision Logic / Architectural Choices |
 | `LEARNED_HEALTH_OS_V3_REPORTING.md` | Health OS V3 — Reporting Shape (Strict-grade shopping lists) |
+| `LEARNED_HERMES_SELF_UPGRADE_STRUCTURAL_MIGRATION.md` | LEARNED — Hermes self-upgrade is a structural migration, not a version bump |
 | `LEARNED_IDEA_TO_PRODUCT.md` | LEARNED_IDEA_TO_PRODUCT.md — Idea-to-Product Engine v2 (Permanent 2026-09-15) |
 | `LEARNED_INDEX.md` | LEARNED_INDEX.md — Master Index of All `LEARNED_<DOMAIN>.md` Canon Files |
 | `LEARNED_KALSHI.md` | LEARNED_KALSHI.md — Kalshi Sports +EV Edge System |
