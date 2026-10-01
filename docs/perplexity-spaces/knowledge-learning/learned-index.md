@@ -1,10 +1,8 @@
 # LEARNED_*.md Files — Full Index
-> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
-
 
 **Source:** `~/.hermes/knowledge/`
-**Status:** Active — 60 files
-**Regenerated:** 2026-09-30 09:29
+**Status:** Active — 62 files
+**Regenerated:** 2026-10-01 06:00
 
 ---
 
@@ -14,13 +12,14 @@
 |------|-------|
 | `LEARNED_2026-08-05_SELF_BACKUP_UPGRADE_HEALTHCHECK.md` | LEARNED — 2026-08-05 Self-Service Hermes Self-Backup + Self-Upgrade + Health Check |
 | `LEARNED_7_LAYER_ARCHITECTURE.md` | LEARNED_7_LAYER_ARCHITECTURE.md — The Hermes Seven-Layer Stack |
-| `LEARNED_7_RULE_CONTRACT_RULES_10_11_12_ADDENDUM_2026-09-01.md` | LEARNED_7_RULE_CONTRACT.md — Rules #10, #11, #12 ADDENDUM (Permanent 2026-09-01) |
 | `LEARNED_7_RULE_CONTRACT.md` | The 7-Rule Contract — Marcelo's Operating Preferences for BossMan + Sub-agents |
+| `LEARNED_7_RULE_CONTRACT_RULES_10_11_12_ADDENDUM_2026-09-01.md` | LEARNED_7_RULE_CONTRACT.md — Rules #10, #11, #12 ADDENDUM (Permanent 2026-09-01) |
 | `LEARNED_ALTUS_FORENSIC.md` | Altus Forensic — Permanent Ownership Rule |
 | `LEARNED_APPLE_MOTION.md` | LEARNED_APPLE_MOTION.md — Apple Motion 6.3 in the Hermes Stack |
 | `LEARNED_BASECAMP_WORKFLOW.md` | Basecamp Workflow — Permanent Operating Rules |
 | `LEARNED_BINANCE_BOT.md` | LEARNED_BINANCE_BOT.md |
 | `LEARNED_BLENDER_LTS.md` | LEARNED_BLENDER_LTS.md |
+| `LEARNED_BOSSMAN_TELEGRAM_BRIDGE.md` | LEARNED — BossMan ↔ Perplexity Telegram Bridge (Phase 1 + Phase 2) |
 | `LEARNED_BRAVE_PERPLEXITY_BRIDGE.md` | LEARNED — Brave Perplexity Bridge |
 | `LEARNED_CLIENT_REVIEW_PORTAL.md` | Client Review Portal + Helpdesk Ticket System — Permanent Operating Model |
 | `LEARNED_CONFIG-PATCH-OLLAMA-ROUTING-20260725.md` | CONFIG-PATCH — Ollama Routine-Cron Routing |
@@ -28,29 +27,26 @@
 | `LEARNED_DAVINCI_RESOLVE_STUDIO.md` | DaVinci Resolve Studio — Hermes Knowledge (2026-07-30) |
 | `LEARNED_DEFAULT_BUILD_FLOW.md` | LEARNED: Default Build Flow — V3 Stack (2026-07-15) |
 | `LEARNED_FOUR_TOOL_VIDEO_STACK.md` | Four-Tool Video Stack — v17 (2026-07-30) |
-| `LEARNED_HEALTH_OS_V3_DECISIONS.md` | Health OS V3 — Decision Logic / Architectural Choices |
-| `LEARNED_HEALTH_OS_V3_REPORTING.md` | Health OS V3 — Reporting Shape (Strict-grade shopping lists) |
 | `LEARNED_HERMES_SELF_UPGRADE_STRUCTURAL_MIGRATION.md` | LEARNED — Hermes self-upgrade is a structural migration, not a version bump |
 | `LEARNED_IDEA_TO_PRODUCT.md` | LEARNED_IDEA_TO_PRODUCT.md — Idea-to-Product Engine v2 (Permanent 2026-09-15) |
 | `LEARNED_INDEX.md` | LEARNED_INDEX.md — Master Index of All `LEARNED_<DOMAIN>.md` Canon Files |
 | `LEARNED_KALSHI.md` | LEARNED_KALSHI.md — Kalshi Sports +EV Edge System |
-> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
-
-- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
+| `LEARNED_LBC35_TELEGRAM_SPAM_INCIDENT.md` | LBC35 Telegram Spam Incident — 2026-07-20 (LEARNED) |
 | `LEARNED_MD_FILE_DRIFT_RUBRIC.md` | LEARNED_MD_FILE_DRIFT_RUBRIC.md — Classify Before Trim |
 | `LEARNED_N8N_INTEGRATION_REFERENCE.md` | n8n Integration Reference for TicketFlow |
 | `LEARNED_OPS_SELF_HEALING_POLICY.md` | LEARNED_OPS_SELF_HEALING_POLICY.md — PM2/cron Self-Healing Without Marcelo |
 | `LEARNED_PENTEST_REPORTING.md` | Pentest Reporting Standards — Permanent Operating Rule |
-| `LEARNED_PM2_HEALTH_MONITOR_INCIDENTS.md` | LEARNED_PM2_HEALTH_MONITOR_INCIDENTS.md — Per-Incident Canon (Sibling) |
 | `LEARNED_PM2_HEALTH_MONITOR.md` | LEARNED_PM2_HEALTH_MONITOR.md — PM2 Health Monitor canon |
+| `LEARNED_PM2_HEALTH_MONITOR_INCIDENTS.md` | LEARNED_PM2_HEALTH_MONITOR_INCIDENTS.md — Per-Incident Canon (Sibling) |
+| `LEARNED_PMD.md` | LEARNED_PMD.md — PMD (Property Management Dashboard) Canon |
 | `LEARNED_PMD_DASHBOARDS.md` | PMD + Production Dashboards — Permanent Operating Rules |
 | `LEARNED_PMD_VALUATION_INTEGRATION.md` | PMD Valuation Integration — LEARNED (2026-07-21) |
-| `LEARNED_PMD.md` | LEARNED_PMD.md — PMD (Property Management Dashboard) Canon |
 | `LEARNED_REVENUE_PROJECT_ARCHIVE_GUARDRAIL.md` | LEARNED_REVENUE_PROJECT_ARCHIVE_GUARDRAIL |
 | `LEARNED_SERVICES_MAP.md` | LEARNED_SERVICES_MAP.md — Canonical Source Rule for SERVICES_MAP |
 | `LEARNED_SNS_401K.md` | LEARNED — SNS 401K Retire-OS |
-| `LEARNED_SQUAREPAYOUTS_ACTIVE.md` | LEARNED_SQUAREPAYOUTS_ACTIVE |
+| `LEARNED_SOUL_DETAILS.md` | SOUL.md — Detailed Standing Rules (Permanent — extracted 2026-09-30) |
 | `LEARNED_SQUAREPAYOUTS.md` | SquarePayouts — Permanent Ownership Rule |
+| `LEARNED_SQUAREPAYOUTS_ACTIVE.md` | LEARNED_SQUAREPAYOUTS_ACTIVE |
 | `LEARNED_STANDING_AUTHORITIES.md` | Standing Authorities & Health Monitors |
 | `LEARNED_STORIS_API.md` | LEARNED — STORIS API (durable takeaways) |
 | `LEARNED_SUB_AGENT_MASTER_BLUEPRINT.md` | LEARNED_SUB_AGENT_MASTER_BLUEPRINT.md — Sub-Agent Lane Discipline + Handoff Contracts |
@@ -63,6 +59,8 @@
 | `LEARNED_V22_AI_BROWSERS.md` | LEARNED_V22_AI_BROWSERS — 2026-07-31 |
 | `LEARNED_V3_BASELINE.md` | Health OS V3 — Supplement Baseline (V3) |
 | `LEARNED_V3_MODEL_STACK.md` | V3 Model Stack — Canonical Routing Map (Permanent 2026-07-20) |
+| `LEARNED_V3_PAID_MODEL_ROUTING.md` | LEARNED — V3 Paid-Model Routing (permanent, 2026-09-30) |
+| `LEARNED_V3_STACK_GAP_ANALYSIS_2026-09-30.md` | LEARNED: V3 AI Stack Gap Analysis (2026-09-30) |
 | `LEARNED_V3_TOKEN_ECONOMICS.md` | V3 Token Economics — Reuse, Don't Re-Pay (Permanent 2026-07-20) |
 | `LEARNED_V4_CANONICAL_LOCK.md` | LEARNED — V4 Canonical Lock Rule (2026-07-15) |
 | `LEARNED_VIDEO_LAYOUT_REFERENCES.md` | LEARNED_VIDEO_LAYOUT_REFERENCES — v22 (2026-07-31) |

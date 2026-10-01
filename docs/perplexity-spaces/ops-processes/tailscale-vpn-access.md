@@ -1,6 +1,4 @@
 # Tailscale VPN — Money Pipeline Access
-> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
-
 
 **Source:** Phase 1 audit, OPERATING_BLUEPRINT.md
 **Status:** Active — Tailscale running for remote access
@@ -15,9 +13,7 @@ Tailscale provides a VPN that allows Marcelo to access the Money Pipeline dashbo
 
 ## Current Status
 
-> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
-
-- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
+**Tailscale is running** on this machine (from Phase 1 audit — OpenClaw gateway on port 18789 showed Tailscale was running).
 
 **MagicDNS name:** Should be visible in `tailscale status`
 

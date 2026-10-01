@@ -1,6 +1,4 @@
 # AUTOMATION_INVENTORY.md — Hermes Automation Helper-Script Inventory
-> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
-
 
 > **CANONICAL SOURCE OF TRUTH** for all helper scripts that drive cron jobs, watchdogs, drift checks, or backup/repair flows under `~/.hermes/scripts/`.
 > Mirrors: Obsidian `Hermes/automation-inventory.md` (read-only) + GitHub `BIGDAWG35/Hermes` mirror.
@@ -21,9 +19,7 @@ This inventory exists so:
 | `~/.hermes/scripts/git-snapshot-before-fix.sh` | Snap a repo's working tree before a non-trivial mutation; enforces `LEARNED_7_RULE_CONTRACT.md` Rule #8; returns SHA on stdout. | ops, builder, trading | Manual + card-driver | 2026-08-06 |
 | `~/.hermes/scripts/git-revert-last-fix.sh` | Auto-revert a non-trivial mutation when Step-5 verdict is FAIL or regression appears; default `git revert`, ops-only `--hard-reset` for declarative config. | ops, builder, trading | Manual + card-driver + Step-5 FAIL | 2026-08-06 |
 | `~/.hermes/scripts/git-snapshot-md-file.sh` | Snap ONE MD file before any trim/dedup/shave; enforces `LEARNED_7_RULE_CONTRACT.md` Rule #9; writes ledger entry to `~/.hermes/logs/md-trim-snapshots.log`; return SHA on stdout. Companion to Rule #8 but MD-targeted + idempotent on no-op (rc=2). | knowledge-canon, ops | Manual + card-driver | 2026-08-06 |
-> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
-
-- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
+| `~/.hermes/scripts/openclaw-backup.sh` | Weekly LBC35/OpenClaw state backup; required by V3 SOUL §6 historical context (LBC35 gateway was disabled but residual state still needs weekly snap). | ops | Cron (weekly, see cron/jobs.json) | 2026-07-22 |
 | `~/.hermes/scripts/critical-repos-weekly-backup.sh` | Weekly tar+rsync of designated critical repos to the secondary backup tree at `~/.hermes/state/critical-repo-backups/`. | ops | Cron (weekly Sun 03:00 PT) | 2026-08-01 |
 | `~/.hermes/scripts/kanban-snapshot.sh` + `kanban-snapshot.py` | Daily dump of kanban DB to `~/.hermes/state/kanban-snapshots/` for offline review + postmortem. | knowledge-canon | Cron (daily 04:00 PT) | 2026-07-29 |
 | `~/.hermes/scripts/hermes-canon-drift-check.sh` | Drift-check the canon mirror (Obsidian + GitHub); 90-day GC of stale `state/git-snapshots/`. | knowledge-canon | Cron (weekly Sun 05:00 PT) | 2026-08-05 |

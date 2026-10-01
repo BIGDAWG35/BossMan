@@ -1,6 +1,4 @@
 # AUTOMATION_INVENTORY.md — Hermes Automation Helper-Script Inventory
-> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
-
 
 > **CANONICAL SOURCE OF TRUTH** for all helper scripts that drive cron jobs, watchdogs, drift checks, or backup/repair flows under `~/.hermes/scripts/`.
 > Mirrors: Obsidian `Hermes/automation-inventory.md` (read-only) + GitHub `BIGDAWG35/Hermes` mirror.
@@ -21,9 +19,7 @@ This inventory exists so:
 | `~/.hermes/scripts/git-snapshot-before-fix.sh` | Snap a repo's working tree before a non-trivial mutation; enforces `LEARNED_7_RULE_CONTRACT.md` Rule #8; returns SHA on stdout. | ops, builder, trading | Manual + card-driver | 2026-08-06 |
 | `~/.hermes/scripts/git-revert-last-fix.sh` | Auto-revert a non-trivial mutation when Step-5 verdict is FAIL or regression appears; default `git revert`, ops-only `--hard-reset` for declarative config. | ops, builder, trading | Manual + card-driver + Step-5 FAIL | 2026-08-06 |
 | `~/.hermes/scripts/git-snapshot-md-file.sh` | Snap ONE MD file before any trim/dedup/shave; enforces `LEARNED_7_RULE_CONTRACT.md` Rule #9; writes ledger entry to `~/.hermes/logs/md-trim-snapshots.log`; return SHA on stdout. Companion to Rule #8 but MD-targeted + idempotent on no-op (rc=2). | knowledge-canon, ops | Manual + card-driver | 2026-08-06 |
-> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
-
-- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
+| `~/.hermes/scripts/openclaw-backup.sh` | Weekly LBC35/OpenClaw state backup; required by V3 SOUL §6 historical context (LBC35 gateway was disabled but residual state still needs weekly snap). | ops | Cron (weekly, see cron/jobs.json) | 2026-07-22 |
 | `~/.hermes/scripts/critical-repos-weekly-backup.sh` | Weekly tar+rsync of designated critical repos to the secondary backup tree at `~/.hermes/state/critical-repo-backups/`. | ops | Cron (weekly Sun 03:00 PT) | 2026-08-01 |
 | `~/.hermes/scripts/kanban-snapshot.sh` + `kanban-snapshot.py` | Daily dump of kanban DB to `~/.hermes/state/kanban-snapshots/` for offline review + postmortem. | knowledge-canon | Cron (daily 04:00 PT) | 2026-07-29 |
 | `~/.hermes/scripts/hermes-canon-drift-check.sh` | Drift-check the canon mirror (Obsidian + GitHub); 90-day GC of stale `state/git-snapshots/`. | knowledge-canon | Cron (weekly Sun 05:00 PT) | 2026-08-05 |
@@ -40,7 +36,7 @@ This inventory exists so:
 | `binance-bot/pre-start.js` | Safe-start architecture v1: 4-mode dispatcher (validate-only/health-only/paper/live). 7-signal LIVE gate. Only binance-bot-live in PM2. | trading | PM2 (binance-bot-live only) | 2026-08-25 |
 | `binance-bot/ecosystem.config.cjs` | PM2 config: only binance-bot-live defined (autorestart=false). validate/health/paper are one-shot CLI. | trading | PM2 ecosystem | 2026-08-25 |
 | `binance-bot/health-cron-wrapper.sh` | Safe health cron entry (9 AM + 9 PM PDT). Uses read-only health-check-real.js. Stale direct health-check.js entries retired 2026-08-25. | trading | Cron (9 AM/9 PM PDT) | 2026-08-25 |
-| `~/.hermes/profiles/ops/scripts/claude-cost-guardian.sh` | Cost Guardian — provider-neutral (the "claude-" prefix is a historical artifact; aggregates across all paid providers, with TELEMETRY-STALE detection at 24h and formatted per-provider alerts). Enforces daily ($5/$10) and 7-day ($20/$35) thresholds; silent on healthy days, Telegram alert on breach. Created by t_claude_cost_spike_forensics_and_guardrail_v1_20260824. | ops | Cron (every 4h) | 2026-08-24 |
+| `~/.hermes/scripts/claude-cost-guardian.sh` | Claude budget cap watchdog — enforces daily ($5/$10) and 7-day ($20/$35) thresholds; silent on healthy days, Telegram alert on breach. Created by t_claude_cost_spike_forensics_and_guardrail_v1_20260824. | ops | Cron (every 4h) | 2026-08-24 |
 | `~/.hermes/profiles/ops/scripts/provider_policy.py` | Provider firewall gate — blocks paid SDK init in non-interactive contexts (cron/pm2/launchagent/gateway-worker/self-heal); fails closed, auto-incident on violation. Created t_paid_model_background_regression_guard_v1_20260824. | ops | Called by all model-initializing jobs | 2026-08-24 |
 | `~/.hermes/profiles/ops/scripts/regression_test_suite.py` | 28-test regression matrix — proves no paid provider reachable from any background context. Zero cost delta, all results in `~/.hermes/logs/regression_test_results.json`. Created t_paid_model_background_regression_guard_v1_20260824. | ops | Manual + cron (on change) | 2026-08-24 |
 | `~/.hermes/profiles/ops/scripts/background_model_guard.py` | Drift scanner — scans cron jobs, PM2, LaunchAgents, env vars, scripts for prohibited providers or paid key exposure. Classifies: prohibited_provider, paid_key_exposed, direct_sdk_import, unpinned_route. Created t_paid_model_background_regression_guard_v1_20260824. | ops | Cron (daily) | 2026-08-24 |
@@ -113,7 +109,7 @@ After the cron registry migration to Option B:
 - `~/.hermes/profiles/ops/cron/jobs.json` is now the SOLE runtime-authoritative cron registry for the running `--profile ops` gateway (PID 1945)
 - `~/.hermes/cron/jobs.json` is now a generated read-only mirror of the ops registry (NOT a hand-editable competing runtime source)
 - The two cron entries above (`memory-health-check.py` and `regenerate-services-map.py`) now ALSO exist as copies at `~/.hermes/profiles/ops/scripts/` (Step-5 E6 fix; symlinks were insufficient because `Path.resolve()` follows them outside the dispatcher's scripts_dir). The root scripts at `~/.hermes/scripts/` remain canonical sources.
-- `claude-cost-guardian.sh` now has only one active cron entry (canonical `6625a253955d`); the duplicate `e1d611d910df` was retired with state=retired (record preserved, enabled=false). Script path is canonical and locked (V3 canon: `references/ai-stack-cost-guardian-implementation-pattern-2026-09-14.md` — "keep `claude-cost-guardian.sh` as the filename forever").
+- `claude-cost-guardian.sh` now has only one active cron entry (canonical `6625a253955d`); the duplicate `e1d611d910df` was retired with state=retired (record preserved, enabled=false).
 
 ## A.2 What did NOT change
 

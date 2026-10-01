@@ -1,6 +1,4 @@
 # MEMORY_CAPTURE_LOG.md — Master Index
-> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
-
 **Owner:** BossMan
 **Last updated:** 2026-05-22
 **Purpose:** Central index for all durable memory entries. Search by tag, project, or date.
@@ -33,9 +31,7 @@
 | Binance Bot | `[PROJECT:BinanceBot]` | `memory/memory-trading-intelligence.md` (ISOLATED) |
 | SquarePayouts | `[PROJECT:SquarePayouts]` | `LEARNED_FOOTBALL_SQUARES.md` |
 | BakeryOps | `[PROJECT:BakeryOps]` | `LEARNED_BAKERY_HOUSTON.md` |
-> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
-
-- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
+| OpenClaw/LBC35 | `[PROJECT:OpenClaw]` | `LBC35_SOUL_v2_delegated_executor.md` |
 
 ---
 
@@ -594,14 +590,10 @@ BinanceBot: HIGH → MEDIUM (fix deployed and verified, LIVE trading stable)
 
 ## Phase 17 — MoneyPipeline V2 Research Rebuild (2026-05-21)
 
-> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
-
-- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
+**Trigger:** Phase 15 audit — MoneyPipeline research automation broken (OpenClaw daemon disabled)
 
 ### What Was Found
-> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
-
-- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
+- OpenClaw daemon NOT running → all OpenClaw cron jobs inactive
 - `money-morning-research` (IDEASDAWG) enabled but never fires — no new research since 2026-05-17
 - `money-pipeline-auto-enrich-v2` (main) enabled but never fires — manually triggered once per Hermes session
 - `auto-enrich-v2.js`: no retry logic, no locking, no health tracking
@@ -610,9 +602,7 @@ BinanceBot: HIGH → MEDIUM (fix deployed and verified, LIVE trading stable)
 ### What Changed
 - `scripts/auto-enrich-v2.js`: hardened with PID locking + 3-retry + backoff + health file + verification
 - `server.js`: added `const fs = require('fs')` + `GET /api/health/pipeline` (research + enrichment status)
-> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
-
-- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
+- Created 2 Hermes cron jobs replacing OpenClaw:
   - `MoneyPipeline Morning Research` (c77d492c5b6d) — 5 AM PDT
   - `MoneyPipeline Auto-Enrich V2` (8fb30e332d6d) — 6 AM PDT
 - Created 2 wrapper scripts in `~/.hermes/scripts/`
@@ -621,21 +611,13 @@ BinanceBot: HIGH → MEDIUM (fix deployed and verified, LIVE trading stable)
 - Resilient to failure: auto-enrich retries, locks, verifies completion
 - Monitorable: weekly-systems-improvement.sh reads `/api/health/pipeline` + health file
 - No more silent failures: Telegram delivers on failure (no spam on success)
-> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
-
-- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
+- Research automation restored via Hermes (OpenClaw bypass)
 
 ### Key Insight [DECISION][PROJECT:MoneyPipeline]
-> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
-
-- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
-> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
-
-- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
+- OpenClaw daemon was disabled to stop autonomous Telegram spam (Phase 13)
+- But this killed all 4 OpenClaw cron jobs: research, enrichment, morning summary, obsidian sync
 - Solution: Hermes cron is the replacement — owned by BossMan, no spam, reliable delivery
-> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
-
-- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
+- OpenClaw workspace (IDEASDAWG) is separate — still usable for manual research sessions
 
 ### Tools Used
 - Hermes/local scripts: ✅ (PM2, DB, file edit, curl, python3)
@@ -665,20 +647,14 @@ BinanceBot: HIGH → MEDIUM (fix deployed and verified, LIVE trading stable)
 
 ## [PROJECT:CryptoIntel][PROJECT:BinanceBot][LEARNING][RESEARCH][WORKFLOW][2026-05-21]
 **Phase:** P9C-v2a — CSDAWG Weekly Analysis & Learning Layer (Build Now items)
-> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
-
-- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
+**Action:** Implement structured regime classification, LBC35 question generation, prediction tracking, and funding rate signal in CSDAWG 2.0 engine
 **Build items completed:**
 1. **Regime classification fixed:** `CONFIDENCE_THRESHOLD=0.5` in engine — ≥0.5 = CONFIRMED, <0.5 = UNCERTAINTY. UNCERTAINTY generates advisory flag "reduce sizing, double-check manually" and is NOT treated as a real regime. Engine version bumped to 1.2.
-> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
-
-- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
+2. **Structured LBC35 questions:** `generateQuestions()` added to engine — exactly 7 per week: 2 T1/2 (factual/analytical), 2 T3 (predictive, tracked), 2 T4 (contrarian), 1 BROKEN (what broke my prior prediction). Questions are delta-driven: tied to band changes, sector rotation, regime shifts.
 3. **Prediction tracking log:** `CSDAWG_PREDICTIONS_LOG.json` created at `~/.hermes/knowledge/crypto-intel/CSDAWG_PREDICTIONS_LOG.json`. Schema: question_id, tier, type, text, coin_sector, regime_at_time, prediction_summary, date_predicted, outcome_date, outcome (null→SCORED), outcome_score. Weekly: score expired predictions before generating new ones. T3 questions auto-added to log.
 4. **Funding rate input:** `fetchFundingRate()` — uses Binance US 1h klines basis proxy (annualized). Triggers `PUMP_AND_DUMP_RISK` at annualized basis >100%, `NEGATIVE_FUNDING_BIAS` at <−100%. Stored in `funding_basis` field of intelligence.json.
 5. **Single-model:** Only DeepSeek used for v2a synthesis (per multi-model review). Claude/OpenAI deferred to v2b.
-> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
-
-- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
+6. **Weekly summary format updated:** `buildMarkdownReport()` now includes UNCERTAINTY advisory blockquote, "Regime — **CONFIRMED/UNCERTAINTY** (confidence)" label, Signal→Action notes for band changes, full LBC35 question section by tier.
 7. **Curriculum updated:** CSDAWG_CURRICULUM.md updated with: CONFIRMED/UNCERTAINTY classification rules, prediction tracking framework, funding rate signal interpretation.
 **Current week example (2026-05-21):**
 - Regime label: MID_CYCLE — **UNCERTAINTY** (confidence 0.45)
@@ -706,9 +682,7 @@ BinanceBot: HIGH → MEDIUM (fix deployed and verified, LIVE trading stable)
 4. **Weekly summary integration:** `prediction_review` object added to intelligence.json (v1.2). Report section renders in CRYPTO_INTEL_YYYY-MM-DD.md as table with outcomes and lessons.
 5. **Engine version bumped to v1.2:** `crypto-intel-weekly.js` — all P9C-v2b mechanics wired, no changes to cron schedule, INTEL_GATE, or BinanceBot safety rails.
 **Current state (2026-05-21):**
-> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
-
-- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
+- 2 predictions tracked (LBC35-20260521-T3-01: OCEAN to maintain HOT band outcome 2026-07-02, LBC35-20260521-T3-02: WARM count to expand to 11+ outcome 2026-06-18)
 - Both pending — outcome dates in the future, no scoring possible this week
 - Question quality feedback flagged both T3 questions as `[MISSING INVALIDATION CONDITION]` — logged to console at runtime
 - PREDICTION REVIEW section in weekly report correctly shows "No predictions were scored this week" (expected behavior with fresh predictions)

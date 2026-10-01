@@ -1,6 +1,4 @@
 # Money Pipeline V2 — System Architecture
-> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
-
 **Version:** 1.0
 **Date:** 2026-06-18
 **Owner:** BossMan (bossman profile)
@@ -44,7 +42,7 @@
 ║         │  reads/writes              reads              reads      │        ║
 ║         ▼                            ▲                   ▲          ▼        ║
 ║  ┌────────────────┐                  │                   │   ┌───────────┐ ║
-# RETIRED 2026-09-30 — service removed
+║  │  money.db      │◄─────────────────┼───────────────────┘   │ LBC35      │ ║
 ║  │  (SQLite)      │                  │                       │ (delegated │ ║
 ║  │  data/         │                  │                       │  executor  │ ║
 ║  │  money.db      │                  │                       │ via Kanban │ ║
@@ -105,9 +103,7 @@
 | `ops` | PM2, ports, runtime, infra | Executes what bossman assigns |
 | `trading` | Market research, signals (crypto) | Executes what bossman assigns |
 | `content` | YouTube, scripts, docs | Executes what bossman assigns |
-> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
-
-- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
+| `lbc35` | Legacy delegated executor only | RECEIVES via Kanban handoff ONLY |
 
 ### 2.2 Task → Profile Routing
 
@@ -121,9 +117,7 @@
 | Deep-dive workflow, pricing worksheet | `content` | MP6-07 (done), MP6-08 (done) |
 | Outreach workflow design | `content` | MP6-10 |
 | Basecamp automation templates | `builder` | MP6-12 |
-> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
-
-- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
+| LBC35 verification | `bossman` | MP6-14 |
 | Full workflow test | `bossman` | MP6-11 |
 
 ### 2.3 Data Layer Routing
@@ -236,7 +230,7 @@ discovery ──► scoring ──► aging ──► promotion_requested
     │           │          │         (bossman profile)
     │           │          │              │
     │           │          │              ▼
-    # RETIRED 2026-09-30 — service removed
+    │           │          │         LBC35 executes via
     │           │          │         handoff packet
     │           │          │              │
     │           │          │              ▼
@@ -264,21 +258,13 @@ Fantasy bucket (deprioritize):
 
 ---
 
-> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+## 4. Handoff Packet Format for LBC35
 
-- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
+> LBC35 is a **delegated executor only**. It receives work exclusively through Kanban handoff packets created by BossMan. No autonomous actions. No direct money.db access. No PM2/cron changes.
 
-> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+### 4.1 Kanban Card Handoff (standard BossMan → LBC35)
 
-- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
-
-> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
-
-- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
-
-> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
-
-- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
+When BossMan creates a card for LBC35 to execute, the card body follows this format:
 
 ```
 project: money-pipeline
@@ -288,7 +274,7 @@ project: money-pipeline
 **Created by:** bossman        <!-- BossMan profile only -->
 **Created at:** <ISO timestamp>
 **Priority:** P1/P2/P3
-# RETIRED 2026-09-30 — service removed
+**LBC35 role:** DELEGATED EXECUTOR
 
 ---
 
@@ -324,9 +310,7 @@ If blocked: comment on this Kanban card with the blocker detail.
 Do NOT stop work and leave the card in running without comment.
 ```
 
-> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
-
-- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
+### 4.2 LBC35 Action Checklist (what LBC35 may do when assigned)
 
 | Action | Allowed? | Notes |
 |--------|---------|-------|
@@ -342,9 +326,7 @@ Do NOT stop work and leave the card in running without comment.
 
 ### 4.3 Handoff for Deep-Dive / Pricing Worksheet (MP6-07 / MP6-08 deliverables)
 
-> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
-
-- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
+When BossMan hands off a deep-dive or pricing worksheet task to LBC35:
 
 ```
 ## Deep-Dive Handoff Fields
@@ -431,9 +413,7 @@ Post findings as a comment on this Kanban card with:
 | t_d521bfe0 | MP6-11 Test Full Workflow | running | bossman |
 | t_661bc282 | MP6-12 Basecamp Templates | running | content |
 | t_f3009e4b | MP6-13 Intake Parser | running | trading |
-> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
-
-- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
+| t_162f7a6c | MP6-14 LBC35 Handoff Audit | running | bossman |
 
 ---
 
@@ -442,13 +422,9 @@ Post findings as a comment on this Kanban card with:
 | Gate | Where | Who Approves | Required For |
 |------|-------|-------------|-------------|
 | Phase 6 Epic start | Kanban card t_9f22b48f | Marcelo | Any Phase 6 sub-card execution |
-> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
-
-- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
+| New Kanban card | Kanban board | BossMan (auto) | LBC35 to act |
 | Promotion to Kanban | POST /api/kanban-promote | BossMan | Opportunity enters execution |
-> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
-
-- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
+| LBC35 handoff | Kanban card with handoff packet | BossMan | LBC35 executes |
 | Build/test/pricing lifecycle | Kanban card MP6-08 | Marcelo | Going to "ready to sell" |
 | Live trading (Binance) | SEPARATE system | Marcelo explicitly | Phase 11 only |
 | Infrastructure changes | PM2/cron changes | HUMAN_ONLY | PM2, cron, LaunchAgents |
@@ -470,9 +446,7 @@ Post findings as a comment on this Kanban card with:
 
 | Version | Date | Change |
 |---------|------|--------|
-> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
-
-- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
+| 1.0 | 2026-06-18 | Initial — MP6-01 architecture defined: 5-layer topology, role routing, data flow, LBC35 handoff packet format, Phase 6 card status |
 
 ---
 
