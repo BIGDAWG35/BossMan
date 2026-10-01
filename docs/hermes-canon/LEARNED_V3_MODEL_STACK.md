@@ -12,6 +12,33 @@ This is the **single canonical reference** for which model to use for which task
 
 ---
 
+## MiniMax family lane map (Marcelo directive 2026-09-30)
+
+**Roles (locked):** BossMan / Hermes = manager + orchestrator. LBC35 / OpenClaw = delegator (designs the plan, routes work; never implements, never messages Marcelo). Sub-agents = workers.
+
+**MiniMax-M3 is the default everywhere.** How Hermes actually enforces models: each lane is a profile with its own `model.default` + `fallback_providers`; BossMan picks the model by picking the lane. (The old per-task routing table that sat under `terminal:` in config.yaml was never read by Hermes and was removed 2026-09-30; the policy lives here.)
+
+| Lane | Model | Why (MiniMax official docs / Artificial Analysis) |
+|---|---|---|
+| default / BossMan (orchestrator) | MiniMax-M3 | Highest MiniMax intelligence (AA index 29 vs 23 for M2.7/M2.5), best agentic tool use (MCP Atlas 74.2%), 1M context, ~108 tok/s, same price as M2.7 ($0.30 in / $1.20 out per M tokens) |
+| builder | MiniMax-M3 | Frontier coding: SWE-Bench Pro 59.0%, Terminal-Bench 2.1 66.0% |
+| ops, loop-engineering | MiniMax-M3 | Terminal + multi-step agentic work, long logs fit in 1M context |
+| trading | MiniMax-M3 | Strongest reasoning in the family; numeric work stays on-provider (no DeepSeek spend) |
+| travel | MiniMax-M3 | Search-heavy + native image input for listing screenshots |
+| content | MiniMax-M2.7 | Best MiniMax model for professional office delivery (Word/PPT/Excel, GDPval-AA ELO 1495) and character-rich writing |
+| qa-verification | MiniMax-M2.7 | Independent QA: a different model from the builder avoids shared blind spots; M2.7 is strong at log analysis, bug hunting and code security |
+| LBC35 / OpenClaw (delegator) | MiniMax-M2.7 | MiniMax reports M2.7 is markedly better inside OpenClaw than M2.5 and keeps 97% skill adherence across 40 complex skills, which fits a plan-and-route role |
+| Automatic fallback | M3 lanes -> Ollama qwen2.5:7b; M2.7 lanes -> M3 -> Ollama qwen2.5:7b | DeepSeek and Claude are NOT automatic fallbacks (cost control) |
+| **All crons + PM2 automated runs** | **MiniMax-M3 or Ollama only** | Marcelo directive 2026-09-30. `cron.model: MiniMax-M3` is set in every profile; per-job pins may only be M3 or Ollama (qwen2.5:3b/7b). PM2 apps that call Claude/OpenAI/DeepSeek on a schedule must be moved to M3 (MiniMax exposes an Anthropic-compatible API at https://api.minimax.io/anthropic) |
+
+**Not used:** MiniMax-M2.5 and M2.1 are listed as Legacy by MiniMax; neither beats M3 at anything we run and the price is the same. `-highspeed` variants cost 2x and are slower than M3. Revisit when MiniMax-M3.1 leaves preview.
+
+**Task-based model choice still applies to project work (build / review / troubleshoot):** BossMan classifies every card and writes a `model_plan:` using the per-model sections below, and sub-agents use the model named there. Claude = architecture, safety-sensitive, money paths, code audits. OpenAI gpt-5.4 (ChatGPT sign-in) = general reasoning, UI copy. DeepSeek = heavy math / numeric / trading-signal analysis. Llama/Ollama = privacy-sensitive + bulk pre-summaries. MiniMax-M3 = default, Telegram/Discord chat, orchestration, everything else. These premium models are chosen on purpose per task; they are never silent fallbacks and never run from crons or PM2.
+
+Sources: https://platform.minimax.io/docs/guides/text-generation · https://platform.minimax.io/docs/guides/pricing-paygo · https://www.minimax.io/blog/minimax-m3 · https://www.minimax.io/models/text/m27 · https://artificialanalysis.ai/providers/minimax
+
+---
+
 ## Models in the stack (5)
 
 ### 1. Claude (Anthropic) — `claude-sonnet-4-6` (default) / `claude-opus-4-7` (deep)
@@ -30,13 +57,7 @@ This is the **single canonical reference** for which model to use for which task
 - TTS, image gen, or simple transformations (no tool support)
 - Real-time market decisions under <5s (use pre-computed signals + MiniMax)
 
-### 2. OpenAI — `gpt-5.5` (default; reconciled 2026-09-17, card t_stack_f5_squarespayouts_exporter_fix_20260917)
-
-> **MODEL UPDATE 2026-09-17:** The Hermes ChatGPT account tier rejects `gpt-5.4` with HTTP 400
-> "The 'gpt-5.4' model is not supported when using Codex with a ChatGPT account". `gpt-5.5` is
-> supported by the same account and was verified to return HTTP 200 against the Codex Responses
-> endpoint (live test, 1.4s response). All references in this canon and all profile configs
-> have been aligned to `gpt-5.5` per card `t_stack_f5_routing_canon_reconciliation_20260917`.
+### 2. OpenAI — `gpt-5.4` (default)
 
 **When to use:**
 - General reasoning (broad-scope tasks, ambiguous requests)
@@ -52,7 +73,9 @@ This is the **single canonical reference** for which model to use for which task
 - Privacy-sensitive code that must NEVER leave the host (use Llama/local)
 - Hard reasoning chains where Claude or DeepSeek outperform
 
-### 3. DeepSeek — `deepseek-v4-flash` (default) / `deepseek-v4-thinking` (deep)
+### 3. DeepSeek — `deepseek-flash` (default) / `deepseek-v4-pro` (deep)
+
+> 2026-09-30 live check: the DeepSeek API now lists only `deepseek-flash` and `deepseek-v4-pro`. `deepseek-v4-flash` / `deepseek-v4-thinking` are NOT available; read every older `deepseek-v4-flash` mention in this file as `deepseek-flash`.
 
 **When to use:**
 - Mathy / numeric analysis (statistics, projections, crypto P&L)
@@ -90,7 +113,7 @@ This is the **single canonical reference** for which model to use for which task
 - Offline tasks (Perplexity unreachable, no internet)
 - Cheap experiments / background helpers (bulk pre-summaries, pattern scans)
 - Pre-summary step before sending logs to Claude/DeepSeek for final diagnosis
-- Mac Studio M4 Max available models: `qwen2.5:3b`, `qwen2.5:14b` (responsive on Metal)
+- Mac Studio M4 Max available models: `qwen2.5:3b`, `qwen2.5:7b` (native arm64 Ollama.app since 2026-09-30; `qwen2.5:14b` is NOT installed)
 
 **Avoid for:**
 - Anything requiring precision (small models hallucinate more)
@@ -260,15 +283,15 @@ global chain).
 ## Routing config (lives in `config.yaml` + per-profile overrides)
 
 **Default** (BossMan profile): `MiniMax-M3` — chatty bulk work.
-**Fallback chain** (global): `deepseek-v4-flash` → `claude-sonnet-4-6` → `openai-codex gpt-5.5`.
+**Fallback chain** (SUPERSEDED 2026-09-30 — see MiniMax lane map at top: M3 lanes → Ollama qwen2.5:7b; M2.7 lanes → M3 → Ollama. No DeepSeek/Claude/OpenAI silent fallback.)
 
 **Per-profile overrides** (apply on top of global default):
 - **builder**: default `MiniMax-M3`; for implementation tasks, override to `deepseek-v4-flash` (cheap coding); escalate to `claude-sonnet-4-6` for safety-sensitive (SquarePayouts, money paths).
 - **ops**: default `MiniMax-M3`; for PM2/cron/infra debugging, override to `deepseek-v4-flash`; escalate to `claude-sonnet-4-6` for cross-system debugging.
 - **trading**: default `MiniMax-M3`; for signal analysis, override to `deepseek-v4-flash`; for trade decisions touching live money, escalate to `claude-sonnet-4-6`.
-- **content**: default `MiniMax-M3`; for polished prose, override to `openai-codex gpt-5.5`; escalate to `claude-sonnet-4-6` for high-stakes voice/tone.
-- **qa-verification** (Step-5): default `claude-sonnet-4-6`; fallback `openai-codex gpt-5.5`; never MiniMax for safety audits.
-- **research-intel**: default `openai-codex gpt-5.5`; fallback `claude-sonnet-4-6`.
+- **content**: default `MiniMax-M3`; for polished prose, override to `openai-codex gpt-5.4`; escalate to `claude-sonnet-4-6` for high-stakes voice/tone.
+- **qa-verification** (Step-5): default `claude-sonnet-4-6`; fallback `openai-codex gpt-5.4`; never MiniMax for safety audits.
+- **research-intel**: default `openai-codex gpt-5.4`; fallback `claude-sonnet-4-6`.
 
 **SquarePayouts model routing (Permanent 2026-09-14, Marcelo policy — durable rule):** SquarePayouts model/tool routing is owned by BossMan. For every card, BossMan selects the best-fit tool and model using the V3 task-type routing ledger, current task risk, privacy constraints, and required quality. Money-path, auth, PII, credentials, security, audit, and public financial behavior remain critical work: use the strongest appropriate model, require Step-5 red-team QA, and do not mark Done until verification passes. Production secrets and raw credentials remain local-only. **No blanket categorical block by AI model or by tool, EXCEPT the standing safety-sensitive and secrets carve-outs in the V3 task-type ledger: Claude is mandatory for auth, encryption, money-path, PII, and audit-logging work; production secrets, credentials, tokens, and .env content are Llama/local only and must never leave the host. BossMan picks per task.** See `~/.hermes/knowledge/LEARNED_SQUAREPAYOUTS.md` § "Model Selection — Task-Fit Routing" + `~/.hermes/knowledge/ROUTING-RULES.md`.
 

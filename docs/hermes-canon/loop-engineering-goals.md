@@ -1,6 +1,7 @@
 # Loop Engineering Goals — v1.0
-> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
 
+
+> **[RETIRED 2026-09-30]** LBC35/OpenClaw delegator + OpenClaw gateway retired per card `t_735da189`. Delegation is now BossMan via Kanban + `~/.hermes/bin/route-card.sh`. Historical references preserved for context.
 
 **Status:** Approved v1.0 (under BossMan), active as of 2026-07-23.
 **Source card:** `t_loop_engineering_profile_v1_20260723`.
@@ -92,22 +93,12 @@ If a loop would touch any of the above, escalate to BossMan per §10.
 
 ---
 
-> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+## 6. Relationship to LBC35 (delegator-router)
 
-- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
-
-> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
-
-- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
-> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
-
-- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
-> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
-
-- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
-> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
-
-- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
+- LBC35 designs multi-step plans that include loops ("intake → decompose → execute → review → done").
+- Loop **implements the loop machinery** per LBC35's plan: cron entries, scripts, kanban card templates, prompts.
+- LBC35 does **NOT** implement or touch secrets. Loop follows the same boundary — implementation only, secrets stay with Ops / BossMan.
+- Loop only changes automation when BossMan explicitly assigns it. LBC35's plan is a *prompt*, not an autonomous mandate.
 
 ---
 
@@ -188,9 +179,7 @@ Loop inherits from and obeys the following canon. If any canon changes, Loop re-
 - `LEARNED_SUB_AGENT_MASTER_BLUEPRINT.md` (this lane's contract blueprint)
 - `LEARNED_7_RULE_CONTRACT.md` (7-rule execution contract)
 - `LEARNED_V3_MODEL_STACK.md` (model selection per task type)
-> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
-
-- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
+- `LBC35_SOUL_v3.md` (delegator-router boundaries — Loop implements but does not cross)
 
 Loop **does not** edit these files autonomously; Loop writes **proposals** as kanban cards and asks BossMan to assign the canon-edit lane.
 
@@ -207,7 +196,7 @@ Loop **does not** edit these files autonomously; Loop writes **proposals** as ka
 | **Travel OS External Watchdog** | every 15 min | Ops (runtime), Loop (loop design) | cron `b858e01bd089` |
 | **Travel OS Handoff Sync Drift Check** | weekly Sat 06:00 PT | knowledge-canon (drift-fix), Loop (no-spam) | cron `ab41f101c407` |
 | **Travel OS Weekly Review** (NEW 2026-07-23) | weekly Sun 18:00 PT | Loop (design + no-spam + state file), Ops (cron), Travel (content) | cron `5fced7f41345` — `~/.hermes/logs/travel-os-loop-design-20260723.md` |
-| **SquarePayouts Weekly Health Review** (NEW 2026-07-23) | weekly Mon 08:00 PT | Loop (design + no-spam + model-whitelist guard), Ops (cron), QA (verify), Knowledge Canon (captures) | cron `0209dcf24ee8` — `~/.hermes/logs/squarepayouts-loop-design-20260723.md`; model restriction per `LEARNED_SQUAREPAYOUTS.md` **SquarePayouts model routing (Permanent 2026-09-14, Marcelo durable rule):** SquarePayouts model/tool routing is owned by BossMan. BossMan selects the best-fit tool and model per task type, risk, privacy, cost, and required quality. No blanket categorical block by AI model or by tool, EXCEPT the standing safety-sensitive and secrets carve-outs in the V3 task-type ledger: Claude is mandatory for auth, encryption, money-path, PII, and audit-logging work; production secrets, credentials, tokens, and .env content are Llama/local only and must never leave the host. Money-path/auth/PII/credentials/security/audit/public-financial work requires Step-5 red-team QA + strongest appropriate model; card does NOT move to done until verification passes. Production secrets and raw credentials remain local-only. |
+| **SquarePayouts Weekly Health Review** (NEW 2026-07-23) | weekly Mon 08:00 PT | Loop (design + no-spam + model-whitelist guard), Ops (cron), QA (verify), Knowledge Canon (captures) | cron `0209dcf24ee8` — `~/.hermes/logs/squarepayouts-loop-design-20260723.md`; model restriction per `LEARNED_SQUAREPAYOUTS.md` (M3 BLOCKED for SquarePayouts work) |
 | **Dominoes Verification Loop -- Hardening** (NEW 2026-07-23) | Tue 18:00 PT + Sat 10:00 PT (2x/week, reverts to weekly after 4 weeks) | Loop (design + Pass F brief), QA (Pass B + Pass E re-test), Builder (Pass D fixes), Knowledge Canon (canonical captures) | crons `70b9215bed25` (Tue) + `93f03c63496f` (Sat) -- `~/.hermes/logs/dominoes-loop-design-20260723.md`; matrix at `DOMINOES_VERIFICATION_MATRIX.md`; defects at `DOMINOES_KNOWN_ISSUES.md` |
 
 **Ownership semantics (no behavior changes):**

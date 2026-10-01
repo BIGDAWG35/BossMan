@@ -1,6 +1,7 @@
 # Roles & Chain of Command — Canonical (Permanent)
-> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
 
+
+> **[RETIRED 2026-09-30]** LBC35/OpenClaw delegator + OpenClaw gateway retired per card `t_735da189`. Delegation is now BossMan via Kanban + `~/.hermes/bin/route-card.sh`. Historical references preserved for context.
 
 > **CANONICAL SOURCE OF TRUTH** for roles + chain of command.
 > All mirrors (Obsidian `Hermes/V3-Canon/V3 – Roles and Chain of Command.md`, GitHub `BIGDAWG35/BossMan` → `docs/hermes-canon/ROLES_AND_CHAIN_OF_COMMAND.md`) are read-only views of this content.
@@ -8,9 +9,7 @@
 
 **Date locked**: 2026-07-20
 **Source directive**: Marcelo — orchestration + roles audit
-> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
-
-- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
+**Status**: CANON — overrides any prior role description in SOUL/AGENTS/blueprints/LBC35 SOUL
 
 This is the **single canonical reference** for who does what in the stack. When any other doc conflicts, this one wins. When a sub-agent, skill, or future session is unsure of its role, this file is the answer.
 
@@ -34,9 +33,7 @@ This is the **single canonical reference** for who does what in the stack. When 
 - Make routine technical decisions
 - Serve as a relay for Perplexity → BossMan or sub-agents
 
-> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
-
-- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
+**Communication surface**: BossMan (via Telegram/Perplexity only). LBC35/OpenClaw and sub-agents NEVER message Marcelo directly.
 
 ---
 
@@ -56,9 +53,7 @@ This is the **single canonical reference** for who does what in the stack. When 
 **Communicates with**:
 - Marcelo via Telegram (single verdict: PASS / PASS-WITH-FIX / CHANGE-RECOMMENDED / BLOCKED-ON-MARCELO)
 - Sub-agents via handoff packets + comments on shared cards
-> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
-
-- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
+- LBC35/OpenClaw for routing/coordinate-level only (NOT for handoff-to-implement)
 
 **Escalates to Marcelo ONLY when**:
 - True V3 carve-out blocks
@@ -100,9 +95,7 @@ This is the **single canonical reference** for who does what in the stack. When 
 
 ---
 
-> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
-
-- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
+## 4. LBC35 / OpenClaw (Delegator / Router)
 
 **Role**: delegator/orchestrator-only. NOT a worker. NOT an implementer.
 
@@ -120,18 +113,10 @@ This is the **single canonical reference** for who does what in the stack. When 
 - Send direct Telegram messages to Marcelo (single status surface rule)
 - Make routine technical decisions visible to Marcelo (delegates decision-routing to BossMan)
 
-> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
-
-- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
-> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
-
-- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
-> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
-
-- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
-> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
-
-- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
+**LBC35's relationship to BossMan**:
+- LBC35 designs plans and routes work; BossMan validates the plan and assigns execution to the right sub-agent
+- LBC35 does **NOT** become a worker under BossMan — it's a peer-level router, not a subordinate worker
+- When in doubt about whether something is "design" (LBC35's job) vs "execute" (sub-agent's job), BossMan decides
 
 ---
 
@@ -147,7 +132,7 @@ This is the **single canonical reference** for who does what in the stack. When 
                   │              │
                   │              │ routes
                   │              ▼
-                  # RETIRED 2026-09-30 — service removed
+                  │       LBC35 / OpenClaw (delegator / router)
                   │              │
                   │              │ routes
                   ▼              ▼
@@ -158,12 +143,8 @@ This is the **single canonical reference** for who does what in the stack. When 
         └─────────────────────────────────┘
 ```
 
-> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
-
-- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
-> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
-
-- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
+**Authority flows DOWN** (Marcelo → BossMan → LBC35/sub-agents).
+**Reports flow UP** (sub-agents → BossMan → Marcelo; LBC35 routes plans up via BossMan).
 
 ---
 
@@ -172,9 +153,7 @@ This is the **single canonical reference** for who does what in the stack. When 
 | Pattern | Drift source |
 |---|---|
 | Sub-agent messaging Marcelo directly | Single-status-surface violation |
-> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
-
-- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
+| LBC35 implementing code itself | Role violation — LBC35 is delegator not worker |
 | BossMan asking Marcelo for technical decisions | Reviewer-only violation |
 | Marcelo running a command | Owner-only violation |
 | Two agents claiming to be the manager | Chain-of-command violation |
@@ -186,9 +165,7 @@ This is the **single canonical reference** for who does what in the stack. When 
 
 When a role changes:
 1. Edit this file (single source of truth)
-> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
-
-- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
+2. Patch any references in SOUL.md / AGENTS.md / OPERATINGBLUEPRINT.md / LBC35 SOUL.md / blueprints to align
 3. Update profile MEMORY.md files if affected
 4. Commit + log to kanban
 
@@ -196,9 +173,7 @@ When a role changes:
 
 This file is the **canonical source of truth** for roles and chain of command. To prevent drift:
 
-> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
-
-- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
+1. **config.yaml, profiles, Obsidian/GitHub mirrors MUST NOT introduce conflicting defaults** (e.g., re-characterizing LBC35 as a worker, changing the chain of authority, redefining who can message Marcelo).
 2. **Any future change to roles, hierarchy, or authority MUST follow this order:**
    1. Update the canonical `LEARNED_*` doc first (`~/.hermes/knowledge/ROLES_AND_CHAIN_OF_COMMAND.md`).
    2. Then update the canon docs (SOUL.md, AGENTS.md, OPERATINGBLUEPRINT.md) to reference the change.
@@ -210,18 +185,14 @@ This file is the **canonical source of truth** for roles and chain of command. T
    - If drift is detected, a `t_drift_fix_roles_…` kanban card is created. **The loop never silently rewrites a mirror.**
 
 **Drift symptoms** (auto-remediated via `drift-fix` cards):
-> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
-
-- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
+- LBC35 SOUL says "delegated executor" or "worker" — should be "delegator/router"
 - Profile `MEMORY.md` says "I am the primary manager" — only BossMan owns that
 - A sub-agent message routed to Marcelo directly — single-status-surface violation
 - A change to roles/authority not reflected in this file within 24h
 
 ---
 
-> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
-
-- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
+*This file replaces any prior role description in SOUL/AGENTS/blueprints/LBC35 SOUL.*
 
 ---
 

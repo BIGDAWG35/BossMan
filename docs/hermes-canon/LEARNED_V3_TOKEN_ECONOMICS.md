@@ -82,14 +82,27 @@ BossMan and all sub-agents benefit from these automatically. **Don't break the c
 | Tier | Model | Cost per 1M tokens (input/output) | When to use |
 |---|---|---|---|
 | Cheap | MiniMax-M3 / Llama-3B | $0.05–0.50 / $0.20–1.50 | Bulk, formatting, chatty |
-| Mid | deepseek-v4-flash | $0.30 / $1.20 | Coding, mathy, SQL, infra |
-| Mid-High | openai-codex gpt-5.4 | $2.50 / $10.00 | General reasoning, polished prose |
-| High | claude-sonnet-4-6 | $3.00 / $15.00 | Architecture, safety, audits |
-| Very High | claude-opus-4-7 | $15.00 / $75.00 | Hardest cases, only when Sonnet fails |
+| Mid | deepseek-v4-pro | $0.30 / $1.20 | Coding, mathy, SQL, infra (qa, troubleshoot) |
+| Mid-High | openai gpt-5.5 | $2.50 / $10.00 | BUILD: implementation, refactors |
+| High | claude-sonnet-4-6 | $3.00 / $15.00 | Architecture, safety, money-path, audits |
 
 (Rates approximate; check provider pricing page for current.)
 
 **Budget posture**: prefer cheap tier first, escalate only when needed. Default to mid (DeepSeek) for implementation work, not mid-high (OpenAI) unless UI/prose is involved.
+
+**Build lane model (Permanent 2026-10-01):** `OpenAI gpt-5.5` is the current default for `build-impl` cards (Codex OAuth plan quota exhausted until ~2026-10-16 — switched to OpenAI API key from `profiles/builder/.env`). gpt-5.5-codex is not a real model name (Codex OAuth plan label only — returns 404). Restore `openai-codex/gpt-5.4` after 2026-10-16. `deepseek-v4-flash` has been retired from the build lane; it was the cheap-mid option in the V3 first cut and is no longer routable. **The `claude-opus-4-7` tier was deleted entirely on 2026-09-30** — `claude-sonnet-4-6` is the only Claude tier the stack pays for, and only when a card is tagged `deep` by Marcelo.
+
+## Enforcement (2026-09-30, stack-008 PART B)
+
+The 4 rules above are doc-only; the discipline is enforced by the stack:
+
+- **B1 REUSE PRE-FLIGHT in `~/.hermes/bin/route-card.sh`** — before any paid card create, pull 5-8 keywords from title+body, score `LEARNED_*.md` / `BUILD_LIBRARY.md` / `~/Repos/BossMan/docs` / project docs / done kanban cards / `state.db` sessions, and prepend a `REUSE CANDIDATES (check first; cite REUSED <path> or NEW-WORK <why>):` block to the body file. Free lanes skip this.
+- **B2 `~/.hermes/scripts/build-library.py`** regenerates `~/knowledge/BUILD_LIBRARY.md` nightly at 03:00 (cron id pattern `12-hex`; current job `a6a47cee60cb`). The library enumerates every done card whose `model_override` is in `claude-*` / `deepseek-*` / `gpt-*` / `openai-*` or whose body references a paid task type, and emits a markdown table the next worker can cite.
+- **B3 SAVE GATE in `~/.hermes/scripts/paid-model-guard.py`** alerts `SAVE-MISSING <card_id> <title>` on the daily Telegram rollup for any paid card that completes without a comment starting with `LEARNED:` or `ARTIFACT:`. Before marking a paid card done, post a comment line `LEARNED: <path>` or `ARTIFACT: <path>` referencing the saved work.
+- **B4 `~/.hermes/logs/model-cost-ledger.jsonl` is now auto-appended** by `paid-model-guard.py` after every daily rollup — one row per paid session in the last 24h that isn't already in the ledger. Fields: `ts`, `card_id`, `session_id`, `provider`, `model`, `cost_usd`, `project_tag`, `date_utc`. Manual append is no longer required.
+- **B5 Monthly reuse-rate line on the 1st** of each month — `paid-model-guard.py` appends `REUSE-RATE (last month): <cited>/<total> paid cards cited REUSED (<pct>%)` to the Telegram rollup. Cards with `REUSED <path>` in body or comments count as cited.
+
+See also: `~/.hermes/profiles/{builder,qa-verification,bossman,loop-engineering,travel}/SOUL.md` for the per-lane enforcement reminders.
 
 ---
 
@@ -122,11 +135,11 @@ If a `t_*` kanban card comment or sub-agent output shows:
 
 Every model dispatch that can incur a paid cost appends one structured row to the active cost ledger at `~/.hermes/logs/model-cost-ledger.jsonl`. Use `~/.hermes/profiles/ops/scripts/append_cost_row.sh` (canonical). Schema fields: `timestamp, card, attended, profile, lane, provider, model, task_class, tokens_in, tokens_out, tokens_cached, tokens_total, cost_usd, fallback_reason, outcome`. Local Ollama calls log `cost_usd: 0.0` for routing visibility.
 
-The watchdog is `~/.hermes/profiles/ops/scripts/claude-cost-guardian.sh` — provider-neutral (the "claude-" prefix is a historical artifact; the script has aggregated across all providers since 2026-08-15). Aggregates spend across `anthropic`, `deepseek`, `openai-codex`, `minimax`, `custom`/`ollama`, `system`, and any other paid provider. Thresholds: daily WARN \$5 / HARD-STOP \$10; weekly WARN \$20 / HARD-STOP \$35. **TELEMETRY-STALE** fires when ledger mtime > 24h — treated as unhealthy, not OK. Cron job `6625a253` (every 4h) runs the guardian.
+The watchdog is `~/.hermes/profiles/ops/scripts/claude-cost-guardian.sh` — provider-neutral (was Claude-only; renamed in spirit, script path preserved for cron compatibility). Aggregates spend across `anthropic`, `deepseek`, `openai-codex`, `minimax`, `custom`/`ollama`, `system`, and any other paid provider. Thresholds: daily WARN \$5 / HARD-STOP \$10; weekly WARN \$20 / HARD-STOP \$35. **TELEMETRY-STALE** fires when ledger mtime > 24h — treated as unhealthy, not OK. Cron job `6625a253` (every 4h) runs the guardian.
 
 Per-job cost policy lives in `~/.hermes/profiles/ops/cron/jobs.json` fields: `model`, `fallback_chain`, `fallback_chain_bounded_retries`, `daily_cost_cap_usd`, `per_run_token_cap`, `cost_policy_intent`. Dispatcher wrapper: `~/.hermes/profiles/ops/scripts/dispatch_with_guard.sh`.
 
-**Local-first fallback (Permanent 2026-09-14; reconciled 2026-09-16):** the active ops profile `~/.hermes/profiles/ops/config.yaml` `fallback_providers` chain begins with `custom/qwen2.5:7b` (Ollama local, arm64 Metal-accelerated on M4 Max) before any paid model. The core `~/.hermes/config.yaml` role-specific routing sets Ollama primary for `bulk_formatting`, `chatty`, and `privacy_local`. The canonical local-model name is `qwen2.5:7b` — older references to `qwen2.5:3b` and `qwen2.5:14b` in `LEARNED_CONFIG-PATCH-OLLAMA-ROUTING-20260725.md` and `LEARNED_ALTUS_FORENSIC.md` are archived/historical context only. Card `t_ollama_canon_reconcile_20260916`. Paid models remain available for work that exceeds local capability.
+**Local-first fallback (Permanent 2026-09-14):** the active ops profile `~/.hermes/profiles/ops/config.yaml` `fallback_providers` chain begins with `custom/qwen2.5:7b` (Ollama local) before any paid model. The core `~/.hermes/config.yaml` role-specific routing sets Ollama primary for `bulk_formatting`, `chatty`, and `privacy_local`. Paid models remain available for work that exceeds local capability.
 
 **Runtime cron/PM2 closure (Permanent 2026-09-15, card `t_drift_closure_runtime_routing_v1_20260915`):** Unattended cron and PM2 jobs MUST NOT reach the global `fallback_providers` chain. Each job in `~/.hermes/cron/jobs.json` carries an explicit `provider` + `model` (Ollama or M3 only) and `fallback_chain: []`. Unapproved or unavailable routes fail LOUD with a kanban alert; no silent paid fallback. Risk-gated jobs (money paths, security, SquarePayouts state, Binance, MoneyPipeline, pmd-watchdog) are pinned to Ollama because Ollama never goes down — failure there means true infrastructure failure, not token spend. `reasoning_effort` is `false` in every dispatching profile (core + ops) to prevent Ollama HTTP 400 ("model does not support thinking") from triggering silent paid fallback.
 

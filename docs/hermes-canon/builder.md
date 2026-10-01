@@ -1,6 +1,7 @@
 # Builder — v1.0
-> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
 
+
+> **[RETIRED 2026-09-30]** LBC35/OpenClaw delegator + OpenClaw gateway retired per card `t_735da189`. Delegation is now BossMan via Kanban + `~/.hermes/bin/route-card.sh`. Historical references preserved for context.
 
 **Status:** Approved v1.0 (under BossMan), active as of 2026-07-23.
 **Source card:** `t_subagent_loop_rollout_v1_20260723` (Phase 1).
@@ -67,22 +68,12 @@ If the work would touch any of the above, escalate to BossMan per §10.
 
 ---
 
-> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+## 6. Relationship to LBC35 (delegator-router)
 
-- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
-
-> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
-
-- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
-> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
-
-- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
-> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
-
-- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
-> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
-
-- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
+- LBC35 designs multi-step plans that may include the Builder lane.
+- Builder **implements** within its lane per LBC35's plan.
+- LBC35 does **NOT** implement or touch secrets. Builder follows the same boundary — implementation only within its own lane, secrets stay with Ops / BossMan.
+- Builder only takes action when BossMan explicitly assigns it. LBC35's plan is a *prompt*, not an autonomous mandate.
 
 ---
 

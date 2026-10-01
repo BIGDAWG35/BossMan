@@ -9,12 +9,6 @@
 **Archive size:** 224,043 bytes (original content)
 **Card:** t_rule9_untracked_knowledge_batch2_archive_v1_20260831 (Batch 2B)
 
-## 2026-09-30 — LBC35/OpenClaw Retirement (stack-009-lbc35)
-- Marked LBC35/OpenClaw RETIRED across canon + spaces sources; deleted binaries, ~/.openclaw, Desktop OpenClaw dirs, npm packages; preserved live Obsidian vault.
-- Backup at ~/backups/openclaw-lbc35-final-20260930.tar.gz (777MB, 39624 entries); cron job 18590c4c63be ('openclaw-backup-final-delete') purges it 2026-10-30 09:00.
-- Delegation is now done by BossMan via kanban + route-card.sh.
-- Card: t_735da189.
-
 ## Why archived
 
 PHASEREPORT.md was the aggregated phase-report log for canon-level changes. It grew to 224 KB / 3,349 lines over many months. It is referenced by:

@@ -1,6 +1,7 @@
 # LEARNED_SUB_AGENT_MASTER_BLUEPRINT.md — Sub-Agent Lane Discipline + Handoff Contracts
-> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
 
+
+> **[RETIRED 2026-09-30]** LBC35/OpenClaw delegator + OpenClaw gateway retired per card `t_735da189`. Delegation is now BossMan via Kanban + `~/.hermes/bin/route-card.sh`. Historical references preserved for context.
 
 > **CANONICAL SOURCE OF TRUTH** for sub-agent lane ownership and handoff contracts.
 > All mirrors (Obsidian `Hermes/20_Agents/sub-agent-v3/`, GitHub `BIGDAWG35/BossMan` → `docs/hermes-canon/LEARNED_SUB_AGENT_MASTER_BLUEPRINT.md`) are read-only views of this content.
@@ -8,9 +9,7 @@
 
 **Date locked:** 2026-07-22 (Layer-2 closed-loop autonomy formalization)
 **Source directive:** Marcelo — formalize sub-agent lane discipline under the new closed-loop autonomy layer
-> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
-
-- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
+**Status:** CANON — overrides any prior sub-agent charter in `~/.openclaw/`, `LEARNED_DEFAULT_BUILD_FLOW.md`, or any per-agent SOUL file
 
 This doc defines what each sub-agent lane **owns**, what each lane **must NOT do**, and how handoffs between lanes (and between lanes + BossMan + Perplexity) are formatted. It is the contract that the Layer-2 closed-loop autonomy rule relies on.
 
@@ -35,20 +34,14 @@ This doc defines what each sub-agent lane **owns**, what each lane **must NOT do
 
 ---
 
-> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
-
-- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
+## 2. LBC35 / OpenClaw — delegator/router only (locked 2026-07-20)
 
 - **Role:** Plan + route work to the right sub-agent lane.
 - **May NOT:** Implement code, run tests, modify production secrets, modify PM2/cron, send Telegram directly to Marcelo, become a worker.
 - **Output:** Plans, decomposition, lane recommendations. Plans reference the 7-rule contract and `ROUTING-RULES.md`.
-> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+- **Ownership isolation:** Computer Use is BossMan-only. LBC35/OpenClaw may not operate Computer Use without explicit assignment.
 
-- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
-
-> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
-
-- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
+`ai.openclaw.gateway` LaunchAgent is **disabled** as of 2026-05-18. Re-enabling requires a BossMan kanban card + Marcelo approval.
 
 ---
 
@@ -91,9 +84,7 @@ The handoff packet is the **only** output sub-agents return. BossMan synthesizes
 
 - ❌ Send Telegram / Slack / email / push notifications to Marcelo. All status flows through BossMan.
 - ❌ Create independent workstreams outside the assigned kanban card.
-> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
-
-- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
+- ❌ Treat LBC35/OpenClaw as a worker. LBC35 is a delegator/router; you execute its plans, you don't serve it.
 - ❌ Skip Step-5 verification because "it's a small change" or "it's a hot-fix."
 - ❌ Skip kanban. Even 5-minute tasks live on a card.
 - ❌ Modify `SOUL.md`, `AGENTS.md`, `ROUTING-RULES.md`, `LEARNED_V3_MODEL_STACK.md`, `LEARNED_7_RULE_CONTRACT.md`, `LEARNED_SUB_AGENT_MASTER_BLUEPRINT.md` without explicit BossMan assignment + Marcelo approval.
