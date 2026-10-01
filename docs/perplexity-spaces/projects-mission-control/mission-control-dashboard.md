@@ -1,4 +1,6 @@
 # Mission Control Dashboard — Port 8001
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
 
 **Source:** Phase 1 audit, SERVICES_MAP.md
 **Status:** ✅ Active — Overview dashboard
@@ -23,11 +25,15 @@
 
 The SERVICES_MAP.md shows:
 - Overview dashboard: port **8100** (PM2 name: `overview`)
-- Port 8001 is referenced in OpenClaw TOOLS.md but is NOT in the current SERVICES_MAP
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 
 **Actual Mission Control:** Port 8100 (`overview` dashboard)
 
-This may be a naming inconsistency from the OpenClaw era. The `overview` dashboard at port 8100 appears to be what was referred to as "Mission Control" or "Overview" in older docs.
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 
 ---
 

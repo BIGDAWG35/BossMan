@@ -1,4 +1,6 @@
 # Computer Use Fix — Hermes Gateway (2026-05-14)
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
 
 ## Problem
 
@@ -70,15 +72,27 @@ except Exception as e:
 
 ---
 
-## OpenClaw Config Change
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
 
-**File:** `~/.openclaw/openclaw.json`
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 
-No OpenClaw config change was needed. The cua-driver skill path issue reported by the subagent (OpenClaw skill loader blocking `~/.openclaw/skills/cua-driver` → `/Applications/CuaDriver.app/Contents/Resources/Skills/cua-driver`) was traced to a **symlink** at `~/.openclaw/skills/cua-driver` that already exists and is being used. The actual failure was the stale session issue, not a missing skill.
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
 
-If OpenClaw skill loading becomes problematic in the future, the fix is:
-- Option A (preferred): `ln -s /Applications/CuaDriver.app/Contents/Resources/Skills ~/.openclaw/skills/cua-driver`
-- Option B: Add `"/Applications/CuaDriver.app/Contents/Resources/Skills"` to OpenClaw's allowed skill roots in `openclaw.json`
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
+
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
+
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 
 ---
 
@@ -145,8 +159,12 @@ Expected: `list_apps: 16 apps — ok: True` + `capture: Perplexity 425 elements 
 
 - `computer_use` tool is registered with toolset `computer_use` in `config.yaml`
 - `config.yaml` has `toolsets: [computer_use]` scoped to BossMan's gateway profile only
-- No other agent profile (LBC35, ops, builder) has `computer_use` in their `toolsets` list
-- OpenClaw agents use a different tool path (their own MCP servers)
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 - The Computer Use backend (`cua_backend.py`) has no multi-agent locking — ownership is enforced by config, not by the code
 
 To verify isolation:

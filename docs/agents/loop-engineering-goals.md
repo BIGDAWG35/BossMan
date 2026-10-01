@@ -1,4 +1,6 @@
 # Loop Engineering / Goals — Hermes Sub-Agent (v3)
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
 
 **Lane:** loop-engineering-goals
 **Status:** ACTIVE
@@ -50,9 +52,13 @@ If a card lands in Loop Engineering / Goals that belongs elsewhere, this lane fl
 - **This lane NEVER routes to another lane.** Escalate via Kanban comment + return-to-BossMan.
 - **This lane reports completion** with: loop name, schedule, model route, deliver target, expected payload, no-spam behavior.
 
-## 6. Relationship to LBC35 and Delegated Executors
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
 
-- LBC35 may run **assigned** loop steps (e.g., execute a cron tick, advance a card, generate a brief).
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
+
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 - Delegated executors do **not** decide loop structure, do not pick schedules, do not pick models.
 - This lane specifies the **handoff packet** (§7). BossMan decides whether to dispatch a delegated executor.
 - This lane does NOT invoke Computer Use directly (Computer Use is BossMan-only per AGENTS v3).

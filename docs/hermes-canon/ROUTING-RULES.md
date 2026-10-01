@@ -1,4 +1,6 @@
 # ROUTING-RULES.md — Hermes Routing Authority (V3 + Layer-2 closed-loop autonomy)
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
 
 > **CANONICAL SOURCE OF TRUTH** for Hermes routing.
 > All mirrors (Obsidian `Hermes/V3-Canon/V3 – Model Stack and Routing.md`, GitHub `BIGDAWG35/BossMan` → `docs/hermes-canon/ROUTING-RULES.md`) are read-only views of this content.
@@ -8,7 +10,9 @@
 **Source directive:** Marcelo — formalize the missing closed-loop autonomy layer; non-breaking canon update
 **Status:** CANON — overrides any prior routing description in SOUL/AGENTS/OPERATINGBLUEPRINT where the topic overlaps
 
-This is the **single canonical reference** for routing in Hermes. BossMan, every sub-agent, LBC35/OpenClaw, and every cron-driven workflow must read this before acting. V3 model roles + Perplexity Computer approval rules are unchanged; the new Layer-2 loop-enforcement sits on top of them.
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 
 ---
 
@@ -17,7 +21,9 @@ This is the **single canonical reference** for routing in Hermes. BossMan, every
 | Layer | Owner | Does |
 |---|---|---|
 | Routing authority | **BossMan / Hermes** | ONLY orchestration authority. Routes work. Picks sub-agent lane. Picks model from V3 stack. |
-| Delegator / router | **LBC35 / OpenClaw** | Designs plans, routes work — does NOT implement, test, or touch production secrets. |
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 | Lane owners | **builder, ops, trading, content, travel, qa-verification, research-intel, knowledge-canon, self-improvement, loop-engineering** | Execute tasks assigned by BossMan. Stay in their lane. Follow the 7-rule contract. Never pull Marcelo into the loop directly. |
 | External intelligence | **Perplexity Search + Perplexity Computer** | Live web research, current facts, citations, multi-step browser workflows. Routed via `escalate_to_computer: yes` for Computer (10k credits/mo budget). |
 | Single status surface | **BossMan only** | All operational updates, research summaries, opportunity alerts flow through BossMan to Marcelo. No other agent, cron, or LaunchAgent messages Marcelo directly. |
@@ -62,7 +68,9 @@ Each job in `~/.hermes/cron/jobs.json` carries an explicit `provider` + `model` 
 
 ## 4. The Layer-2 closed-loop autonomy rule (NEW — Permanent 2026-07-22)
 
-This rule is **additive**. It does not change V3 model roles, Perplexity Computer approval, or LBC35's delegator-only role. It formalizes the closed-loop pattern that V3 already implies, so future agents don't drift back to "ask Marcelo to interpret" or "ask Marcelo to relay."
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 
 ### 4.1 The enforced 7-stage loop
 
@@ -112,7 +120,9 @@ Sub-agents **must** stay in their assigned lane and report back via BossMan. The
 - Skip Step-5 verification because "it's small"
 - Push findings directly to Marcelo (use the kanban card)
 - Recreate or replace any layer of the loop (research, plan, build, verify, capture, deliver)
-- Treat LBC35/OpenClaw as a worker (it's a delegator/router)
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 - Send Telegram messages outside the BossMan routing layer
 
 If a sub-agent discovers a gap in the loop (missing skill, missing tool, missing playbook entry), it opens a `drift-fix: <gap>` kanban card. BossMan addresses the gap. The work continues.

@@ -1,4 +1,6 @@
 # Loop Engineering Goals — v1.0
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
 
 **Status:** Approved v1.0 (under BossMan), active as of 2026-07-23.
 **Source card:** `t_loop_engineering_profile_v1_20260723`.
@@ -90,12 +92,22 @@ If a loop would touch any of the above, escalate to BossMan per §10.
 
 ---
 
-## 6. Relationship to LBC35 (delegator-router)
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
 
-- LBC35 designs multi-step plans that include loops ("intake → decompose → execute → review → done").
-- Loop **implements the loop machinery** per LBC35's plan: cron entries, scripts, kanban card templates, prompts.
-- LBC35 does **NOT** implement or touch secrets. Loop follows the same boundary — implementation only, secrets stay with Ops / BossMan.
-- Loop only changes automation when BossMan explicitly assigns it. LBC35's plan is a *prompt*, not an autonomous mandate.
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
+
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 
 ---
 
@@ -176,7 +188,9 @@ Loop inherits from and obeys the following canon. If any canon changes, Loop re-
 - `LEARNED_SUB_AGENT_MASTER_BLUEPRINT.md` (this lane's contract blueprint)
 - `LEARNED_7_RULE_CONTRACT.md` (7-rule execution contract)
 - `LEARNED_V3_MODEL_STACK.md` (model selection per task type)
-- `LBC35_SOUL_v3.md` (delegator-router boundaries — Loop implements but does not cross)
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 
 Loop **does not** edit these files autonomously; Loop writes **proposals** as kanban cards and asks BossMan to assign the canon-edit lane.
 

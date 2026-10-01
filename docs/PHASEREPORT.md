@@ -801,3 +801,23 @@ Decisions: QUALIFY=9, DENY=6. No sub-75 rows. `next_action = human_review_or_app
 - **Lessons:** #29 (bot offline narrative stale by next cycle); #30 (regime-mapper conflict F1, not F2); #31 (60d threshold real, not theoretical); #32 (Lessons #24 + #30 share root cause: top_struct vs coin_rankings divergence); #33 (cost ceiling held 10 consecutive runs, 0 LLM calls)
 - **brief:** ~/Obsidian/Hermes/40_Projects/Active/PROJ-2026-06_crypto-trading-intelligence/weekly-reviews/crypto-review-2026-08-09.md
 - **commit:** 30b1702
+
+## 2026-08-19 — Weekly cron run #11 (auto, BossMan) [STATUS REPORT — AUTO-SKIP RUNG]
+
+- **Mode:** PAPER (env-level LIVE since 2026-06-15, 63 days; runtime PAPER via INTEL_GATE + Stage 6 blocked + $75 cap)
+- **Regime:** MID_CYCLE / UNCERTAINTY / confidence 0.45 / death_cross / BTC $68,271 / Fear 27
+- **Stage 6 staleness:** **60d 19h 57m — CROSSED 60d HARD CEILING (first time)** (2026-06-19 16:02 → 2026-08-19 12:00). **AUTO-SKIP rung triggered per Lesson #19.** Digest = status report only. Local-only commit (no push).
+- **Bot status:** **ONLINE** (PM2 PID 59462, uptime 42h, 0% CPU, 92.4mb RAM)
+- **Daily pipeline:** daily_radar + pair_briefs + DAILY_MEMO fresh through 2026-08-18; intelligence.json FRESH (2026-08-19 08:39)
+- **Funding basis:** **+7,499% annualized** (was +239% last week; +7,260pp spike = Lesson #21 trigger MET, F1)
+- **Regime-mapper conflict:** 4th consecutive cycle — ACCUMULATION(HIGH) vs MID_CYCLE(UNCERTAINTY)
+- **Sector concentration:** 7 of 10 in "Other" sector (3rd consecutive cycle at ≥50%)
+- **Intelligence schema regression:** RESOLVED this cycle (regime_today and hot_count back to structured values)
+- **BOT balance:** $0.18 (<< $75 floor, 63 days)
+- **Decisions:** 0 emitted (Stage 6 60d+ stale, gated)
+- **N proposed / K created:** 0 / 1 (drift-fix card t_cb302274: "Stage 6 emitter stuck 60d")
+- **Cost:** $0.00 (0 LLM calls)
+- **Lessons:** #34 (60d hard ceiling crossed first time, auto-skip rung); #35 (funding basis spike +7,499%, Lesson #21 trigger MET, F1); #36 (schema regression resolved); #37 (cost ceiling held 11 consecutive runs)
+- **brief:** ~/Obsidian/Hermes/40_Projects/Active/PROJ-2026-06_crypto-trading-intelligence/weekly-reviews/crypto-review-2026-08-19.md
+- **commit:** 57bd5ac (local only — no push per Lesson #19 60d+ rung)
+- **kanban:** t_cb302274 (ready)

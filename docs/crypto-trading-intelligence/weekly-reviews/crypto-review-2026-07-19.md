@@ -1,4 +1,6 @@
 # Crypto Weekly Review — 2026-07-19
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
 
 **Date:** 2026-07-19 (Sunday, 6pm PT cron — sixth automated run)
 **Mode detected:** LIVE-configured (`.env` says `PAPER_MODE=false`; runtime behavior remains effectively PAPER via `INTEL_GATE=true` + BossMan-gated Stage 6 not emitting + `LIVE_PILOT_MAX_NOTIONAL=75` cap)

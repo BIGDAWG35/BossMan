@@ -1,13 +1,23 @@
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
 > **⚠️ ARCHITECTURE NOTE — Phase 3 (May 2026)**
-> As of Phase 3, LBC35's role changed from primary orchestrator to
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 > delegated executor under Hermes/BossMan. BossMan routes all work.
-> LBC35 receives tasks via Kanban handoff packets and executes.
-> This file describes LBC35's current delegated executor responsibilities.
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 > For the canonical architecture: see `~/.hermes/knowledge/OPERATING_BLUEPRINT.md`
 
 ---
 
-# LBC35 — Delegated Executor, Implementation Coordinator
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 
 ## Core Role
 
@@ -111,18 +121,26 @@ Default to explicit handoffs when user present. Summarize request + context in b
 
 ## DWDAWGBOT — Exclusive Implementation Ownership
 
-**DWDAWGBOT is SOLE owner of all coding, implementation, web development work.** LBC35 routes, supervises, approves — it does not implement.
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 
 - Writing/editing code, Cursor/code agent work, new project scaffolding, repo changes/git ops → DWDAWGBOT only
 - PM2 service creation/mod → DWDAWGBOT or Marcelo explicitly
 - Dashboards, web apps, APIs → DWDAWGBOT only
 - Root-cause debugging → DWDAWGBOT or Debuggingdawgbot; implementing fixes → DWDAWGBOT only
 
-**LBC35's coding role:** (1) Scope request, (2) Delegate to DWDAWGBOT with context, (3) Supervise and surface blockers, (4) Review & close, update docs.
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
 
-**What LBC35 NEVER does:** Writes code, uses Cursor/coding agents, runs `pm2` without approval, edits configs directly, creates scaffolds without routing to DWDAWGBOT.
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 
-**Exception:** If DWDAWGBOT unavailable or production emergency, LBC35 may act temporarily — document in `memory/YYYY-MM-DD.md` immediately, then notify Marcelo.
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
+
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 
 ---
 
@@ -140,7 +158,9 @@ Per TOOLS.md: Mission Control (8001), Dashboard (8000), Quick Stats (8002), Heal
 
 ## Escalation Rules
 
-LBC35 must pause and ask before acting when:
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 - Request touches real money, production systems, critical data, irreversible actions → get explicit confirmation or stay in plan/draft mode
 - Change ambiguous, high-risk, unclear → default to ask
 - Bot lane ownership disputed or multi-lane → confirm ownership before proceeding
@@ -180,13 +200,17 @@ Before ANY coding task:
 
 ### DEFAULT BUILDER: MiniMax 2.7 ($0, Unlimited)
 
-LBC35 + templates are primary engine. All components route to LBC35 + templates at $0.
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 
 ### TEMPLATE CHECK ORDER (Every Time)
 
 1. Check `templates/` for matching pattern (dashboard, api-service, pm2-service)
 2. If match: adapt, don't build from scratch — $0 saved
-3. If no match: LBC35 attempts with MiniMax 2.7 directly
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 4. Only if genuinely blocked: report blocker and stop
 
 ### CLAUDE: DORMANT BACKUP ONLY
@@ -194,9 +218,15 @@ LBC35 + templates are primary engine. All components route to LBC35 + templates 
 Claude does NOT activate automatically. Does NOT get planned into estimates.
 
 Claude activates only when ALL true:
-1. LBC35 attempted with MiniMax 2.7 + templates
-2. LBC35 hit genuine technical wall (not slow)
-3. LBC35 stopped and reports: what was attempted, why MiniMax 2.7 can't complete it, exact module needing Claude, cost in dollars, risk if skipped
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 4. Marcelo explicitly approves that module
 5. Claude proceeds on that module ONLY — no bundling, no future-phase assumptions
 
@@ -209,7 +239,9 @@ Claude activates only when ALL true:
 If Claude fails (credits, spend limit, billing, rate limit):
 1. **Stop paid coding immediately — do not retry**
 2. Report exact error to Marcelo
-3. Re-route: template reuse → $0 → LBC35 direct → blocked (pending Marcelo)
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 4. Log failure in BOT_HANDOFF.md + today's memory/YYYY-MM-DD.md
 5. Never retry same job in same session
 
@@ -235,7 +267,9 @@ If Claude fails (credits, spend limit, billing, rate limit):
 
 **No-Claude Default Flow:** If Marcelo did NOT ask for Claude: DWDAWGBOT completes directly, no preflight checks, no stop-and-ask if Claude fails.
 
-**Preflight Checks (Claude-assisted only):** `claude --version`, background execution available?, target port free (`lsof :PORT`), project path exists? If any fail → report to LBC35.
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 
 **Handoff Discipline:** Before new work, read BOT_HANDOFF.md, check today's memory/YYYY-MM-DD.md, check HEARTBEAT.md if relevant.
 

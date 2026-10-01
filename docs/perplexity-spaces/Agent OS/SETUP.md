@@ -1,4 +1,6 @@
 # Agent OS — SETUP
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
 **Hermes Space — MiniMax 2.7 primary**
 **Sub-agent:** BossMan
 **Last updated:** 2026-05-07
@@ -25,10 +27,16 @@ System hub for Hermes — routing, profiles, services, and system architecture.
 
 
 
-## HERMES_NOT_OPENCLAW
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 > ⚠️ This Space is for Hermes only.
-> Do not reuse OpenClaw prompts or instructions unless they have been rewritten for Hermes.
-> OpenClaw is a separate system. Never mix the two.
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 > Docs: `/Users/bigdawg/Desktop/perplexity-spaces Hermes/`
 > Model policy: `HERMES_MODEL_POLICY.md`
 

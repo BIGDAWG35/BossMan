@@ -1,4 +1,6 @@
 # Hermes Governance V3 — Consolidated Mirror (2026-06-26)
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
 
 **Status:** Permanent canon, in force from 2026-06-26 onward.
 **Origin:** Marcelo's four directives on 2026-06-26: (1) V3 rollout, (2) V3 extension to troubleshooting, (3) Silent-execution amendment, (4) Completion-enforcement rule.
@@ -123,7 +125,9 @@ BossMan owns the Perplexity research engine for Hermes. Marcelo is approval gate
 
 ## Layer-2 Closed-Loop Autonomy (Permanent 2026-07-22) — ADDITIVE TO V3
 
-**This section sits on top of V3 governance above. It does NOT change V3 model roles, Perplexity Computer approval rules, LBC35's delegator-only role, or any V3 carve-out. It formalizes the closed loop that V3 already implies.**
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 
 Every non-trivial request runs the 7-stage loop end-to-end:
 

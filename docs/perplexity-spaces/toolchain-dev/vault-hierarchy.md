@@ -1,5 +1,11 @@
-# Vault Hierarchy — Hermes vs OpenClaw Brain
-**Source:** OpenClaw TOOLS.md
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 **Updated:** 2026-05-22
 
 ## Hierarchy
@@ -8,6 +14,8 @@
 | Vault | Path | Role |
 |-------|------|------|
 | Hermes knowledge | `~/.hermes/knowledge/` | PRIMARY |
-| OpenClaw Brain | `~/Desktop/Openclaw Brain/` | Secondary/archive |
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 
 *Regenerated from TOOLS.md — do not edit manually*

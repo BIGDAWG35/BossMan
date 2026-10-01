@@ -1,4 +1,6 @@
 # LEARNED_INDEX.md — Master Index of All `LEARNED_<DOMAIN>.md` Canon Files
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
 
 **Status:** Permanent (refreshed 2026-07-31, Card `t_video_layout_refspec_20260731` — added entry #35 (`LEARNED_VIDEO_LAYOUT_REFERENCES.md`, the 3-reference visual layout canon: Hermes Agent Masterclass / CryptoMetric / AI Labs). File count 34→35. Earlier 2026-07-31 patches on entries #31/#32/#33/#34 added v18 PiP overlay sections. Refresher 2026-07-30 entries #30–34: DaVinci Resolve Studio, Four-Tool Video Stack v17, Video Rendering ffmpeg, YouTube Workflow, YouTube Automation Authority; file count 29→34).
 **Purpose:** Single map of all per-system / per-domain canon files. Kernel-docs (SOUL.md, AGENTS.md, ROUTING-RULES v3) point into `LEARNED_*` for ownership/architecture/repair details. This index is the map of all domains.
@@ -30,7 +32,9 @@
 | 6 | **Default Build Flow** | `LEARNED_DEFAULT_BUILD_FLOW.md` | 6.5 KB | V3 default build flow: research → design → build → harden → QA → docs. | BossMan (kernel) | 2026-07-15 |
 | 7 | **Health OS V3 Decisions** | `LEARNED_HEALTH_OS_V3_DECISIONS.md` | 2.4 KB | Health OS V3 architectural decisions + decision logic. | health-os sub-agent | 2026-07-20 |
 | 8 | **Health OS V3 Reporting** | `LEARNED_HEALTH_OS_V3_REPORTING.md` | 2.0 KB | Health OS V3 strict-grade shopping list reporting shape. | health-os sub-agent | 2026-07-20 |
-| 9 | **LBC35 Telegram Spam Incident** | `LEARNED_LBC35_TELEGRAM_SPAM_INCIDENT.md` | 5.3 KB | LBC35 Telegram spam incident (2026-07-20) — rule: no autonomous Telegram. | BossMan (kernel) | 2026-07-21 |
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 | 10 | **Pentest Reporting** | `LEARNED_PENTEST_REPORTING.md` | 3.7 KB | Pentest reporting standards for all security audits (extracted from AGENTS.md 2026-07-22). | qa-verification sub-agent | 2026-07-22 |
 | 11 | **PM2 Health Monitor** | `LEARNED_PM2_HEALTH_MONITOR.md` | 22.8 KB | PM2 detection rules (D1–D9b), auto-repair playbooks (R1–R5), CLI wrapper policy, pmd-web auto-repair. **Write-protected** by `pm2-canon-drift-check.sh`. | ops sub-agent | 2026-07-22 |
 | 12 | **PMD (Property Management Dashboard)** | `LEARNED_PMD.md` | 6.8 KB | PMD architecture, basePath history, build/start commands, health expectations. | PMD sub-agent | 2026-07-22 |

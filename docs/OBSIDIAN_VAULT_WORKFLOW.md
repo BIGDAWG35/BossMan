@@ -1,4 +1,6 @@
 # Obsidian Vault Workflow — Permanent Operating Standard
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
 
 **Version:** 2.0
 **Date:** 2026-06-13
@@ -19,7 +21,9 @@ This document defines the **permanent operating standard** for all Obsidian vaul
 | Priority | Vault | Path | Status | Notes |
 |----------|-------|------|--------|-------|
 | **PRIMARY** | CLAW-Backup | `~/Desktop/CLAW-Backup/` | ✅ **Active — canonical** | Full agent brain, daily notes, learn/knowledge base, agents/, memory/, projects/ |
-| **SECONDARY** | Openclaw Brain | `~/Desktop/Openclaw Brain/Openclaw Brain/` | ⚠️ **Credential-sensitive** | Contains `bot-tokens.env` with live Telegram tokens. Read-only unless explicitly assigned. |
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 | **FALLBACK** | iCloud | `~/Library/Mobile Documents/iCloud~md~obsidian/Documents/` | ❌ Often empty | Sync-dependent. Not for active work. |
 
 **Verification:** A directory is a real Obsidian vault if it contains a `.obsidian/` subfolder.
@@ -222,7 +226,9 @@ Write to the vault immediately when:
 | Vault | Security Level | Policy |
 |-------|---------------|--------|
 | CLAW-Backup | **Public-facing** | All agent deliverables, operating docs, project knowledge go here |
-| Openclaw Brain | **Credential-carrying** | Contains `bot-tokens.env` with live Telegram API tokens. NEVER write to this vault unless explicitly assigned. NEVER read credential file contents aloud in responses. |
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 
 ### 7.2 NEVER Write to Obsidian
 
@@ -317,7 +323,9 @@ Mirrors (kept in sync):
 | Version | Date | Change | Author |
 |---------|------|--------|--------|
 | 2.0 | 2026-06-13 | Complete rewrite as permanent operating standard. Supersedes OBSIDIAN_RULES.md v1.0 (2026-03-24). | BossMan |
-| 1.0 | 2026-03-24 | Initial OBSIDIAN_RULES.md created (now deprecated). | OpenClaw |
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 
 ---
 

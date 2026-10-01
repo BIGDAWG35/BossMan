@@ -1,3 +1,5 @@
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
 ---
 id: PROJ-2026-06-crypto-trading-intelligence
 name: Crypto Trading Intelligence (CSDAWG 2.0)
@@ -38,7 +40,9 @@ This project **unifies** them: the live engine stays where it is, the design can
 ## What's explicitly out of scope
 
 - Coinbase bot (archived 2026-06-13 — see `~/archive/2026-06-13-projects/coinbase-bot/`).
-- OpenClaw legacy crypto work (frozen since April 2026, superseded).
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 - New trading strategies or pair additions (handled by the Binance bot project, not here).
 - Real-time trade execution (engine is advisory, execution lives in the bot).
 

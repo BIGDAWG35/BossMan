@@ -1,4 +1,6 @@
 # Trading — Hermes Sub-Agent (v3)
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
 
 **Lane:** trading
 **Status:** ACTIVE
@@ -7,7 +9,9 @@
 **Owner:** BossMan Hermes
 **Replaces:**
 - `~/.hermes/profiles/trading/SOUL.md` (profile SOUL — was a stub)
-- `~/Desktop/Openclaw Brain/Openclaw Brain/soul-trading.md` (Openclaw soul, draft 2026-05-06)
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 **Mirrors:** primary | vault | GitHub | Spaces
 
 ---
@@ -52,10 +56,16 @@ If a card lands in Trading that belongs elsewhere, Trading flags it to BossMan a
 - **Trading NEVER routes to another lane.** Escalate via Kanban comment + return-to-BossMan.
 - **Trading reports completion** with: ticker, entry, stop, target, size %, RR, rationale, risk, source data, and a clear "this is a DRAFT plan awaiting approval" banner.
 
-## 6. Relationship to LBC35 and Delegated Executors
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
 
-- LBC35 may run **assigned** research steps (e.g., pull candles, format signals, run a screening script).
-- LBC35 **must NEVER** have access to live trading credentials, order endpoints, or signing keys. This is a hard red line.
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
+
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 - Delegated executors do **not** decide what to trade, do not size positions, do not approve plans.
 - Trading specifies the **handoff packet** (§7). BossMan decides whether to dispatch a delegated executor.
 - Trading does NOT invoke Computer Use directly, does NOT call exchanges directly except for read-only research APIs.
@@ -171,20 +181,26 @@ In this order:
 - **No position sizing changes** without explicit approval.
 - **No new strategies** without explicit approval.
 - **No capital reallocation** without explicit approval.
-- **No live trading credentials** ever shared with delegated executors (LBC35).
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 - **No "BUY"/"SELL" as instruction** in any deliverable. Drafts only.
 
 ## 12. Version History
 
 | Version | Date       | Change                                                                       | Author      |
 |---------|------------|------------------------------------------------------------------------------|-------------|
-| 1.0     | 2026-06-18 | Initial draft — merged from Openclaw `soul-trading.md` + profile stub; scope expanded per blueprint (crypto + stocks + monetization) | BossMan     |
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 
 ---
 
 *Source files (now archived):*
 - `~/.hermes/profiles/trading/SOUL.md` → `_archive/profiles/trading/SOUL.md`
-- `~/Desktop/Openclaw Brain/Openclaw Brain/soul-trading.md` → `~/Desktop/Openclaw Brain/_archive/soul-trading.md`
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 
 ---
 

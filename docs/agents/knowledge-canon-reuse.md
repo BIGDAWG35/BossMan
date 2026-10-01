@@ -1,4 +1,6 @@
 # Knowledge / Canon / Reuse — Hermes Sub-Agent (v3)
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
 
 **Lane:** knowledge-canon-reuse
 **Status:** ACTIVE
@@ -55,9 +57,13 @@ If a card lands in Knowledge / Canon / Reuse that belongs elsewhere, this lane f
 - **This lane NEVER routes to another lane.** Escalate via Kanban comment + return-to-BossMan.
 - **This lane reports completion** with: artifact path, taxonomy slot, rule number (if applicable), mirror parity (SHA-256), intended consumers (which lanes cite it).
 
-## 6. Relationship to LBC35 and Delegated Executors
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
 
-- LBC35 may run **assigned** canon steps (e.g., mirror a file, compute a hash, format a SKILL.md).
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
+
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 - Delegated executors do **not** decide taxonomy, do not number rules, do not approve canon.
 - This lane specifies the **handoff packet** (§7). BossMan decides whether to dispatch a delegated executor.
 - This lane does NOT invoke Computer Use, does NOT trade, does NOT modify production code.

@@ -1,4 +1,6 @@
 # Agent OS — Lane ↔ Skill Mapping (v3)
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
 
 **Date:** 2026-06-18
 **Owner:** BossMan Hermes
@@ -32,7 +34,9 @@ The header is a BossMan-side convention; the lane MDs do not change. The 9 lane-
 
 (Lanes sorted by archetype: 4 v2-era REWRITEs first, then 5 NEW blueprint lanes.)
 
-### REWRITE lanes (replaced Openclaw soul-*.md)
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 
 | Lane | Owns / primary uses | Escalates-to skills | Notes |
 |---|---|---|---|

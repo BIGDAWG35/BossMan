@@ -1,4 +1,6 @@
 # SquarePayouts — Permanent Ownership Rule
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
 
 **Source:** SOUL.md §"SquarePayouts — Permanent Ownership Rule" (moved 2026-07-22 per memory compaction canon)
 **Status:** Permanent
@@ -58,7 +60,9 @@ The risk-based gate is the model-selection floor for sensitive SquarePayouts cha
 - **BossMan ownership** of routing and model choice — BossMan is the sole routing authority; sub-agents do not pick models.
 - **Step-5 QA** for critical work (money-path/auth/PII/credentials/security/audit/public-financial).
 - **Local-only handling** for raw production credentials and secrets (no external model sees them; no mirror, no Spaces upload, no GitHub push containing raw secrets).
-- **LBC35 / OpenClaw** is the delegator/router only. It never implements, never touches secrets, never messages Marcelo directly.
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 
 **Public-exposure guardrail:** SquarePayouts remains private: LAN + Tailscale only. No change to public exposure, auth, payment behavior, secrets, PM2, port 8030, or production data from this canon update.
 

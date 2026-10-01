@@ -1,4 +1,6 @@
 # PHASEREPORT.md — Hermes Canon-Level Phase Report Log
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
 
 > **CANONICAL SOURCE OF TRUTH** for canon-level phase transitions.
 > Per-project phase reports live in the project folder (`PROJ-.../PHASEREPORT.md`). Per-incident postmortems live in `~/.hermes/logs/<incident-slug>.md` or the kanban card body.
@@ -31,12 +33,16 @@ This file is appended to (never rewritten). Each entry follows the same shape:
 
 **What changed:**
 
-- **NEW FILE:** `~/.hermes/knowledge/ROUTING-RULES.md` — the single canonical routing doc. Combines V3 model roles, Perplexity tiers, the new 7-stage closed-loop, what Marcelo is NOT, the 8 implementation details, drift signals, monthly audit. BossMan is the only orchestration authority; sub-agents stay in their lanes; LBC35 remains delegator/router only.
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 - **NEW FILE:** `~/.hermes/knowledge/LEARNED_SUB_AGENT_MASTER_BLUEPRINT.md` — lane roster + handoff contract + lane handoff examples + closed-loop audit. Codifies what each lane owns, what each lane MUST NOT do, and the handoff packet format that BossMan ↔ sub-agents ↔ Perplexity use.
 - **NEW FILE:** `~/.hermes/knowledge/PHASEREPORT.md` — this file. Canon-level change log.
 - **UPDATED:** `~/.hermes/knowledge/LEARNED_7_RULE_CONTRACT.md` — added Rule #0 (the closed-loop), Rule #0a (harness the loop in the 7-step default flow), and Rule #7a (drift signals for the new loop).
 - **UPDATED:** `~/.hermes/AGENTS.md` — added Layer-2 closed-loop rule section at the top (additive to V3); references `ROUTING-RULES.md` and `LEARNED_SUB_AGENT_MASTER_BLUEPRINT.md`.
-- **UNCHANGED:** V3 model roles, Perplexity Computer approval rules, LBC35 delegator-only role, all V3 carve-out triggers. The Layer-2 loop is additive.
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 
 **Where mirrored:**
 
@@ -72,7 +78,9 @@ This file is appended to (never rewritten). Each entry follows the same shape:
 
 - V3 model roles: unchanged
 - Perplexity Computer approval rules: unchanged
-- LBC35 delegator-only role: unchanged
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 - V3 carve-out triggers: unchanged
 - No hidden workstreams created
 - No existing routing broken
@@ -94,7 +102,9 @@ This file is appended to (never rewritten). Each entry follows the same shape:
 - **UPDATED:** `~/.hermes/spaces/agent-os/canon-v3-governance.md` — appended a clearly-delimited "Layer-2 Closed-Loop Autonomy" addendum. V3 governance text above unchanged.
 - **UPDATED:** `~/.hermes/spaces/agent-os/hermes-sub-agent-master-blueprint.md` — replaced with new mirror (md5 match).
 
-**Untouched (intentionally):** `canon-perplexity-first-rule.md`, `canon-autonomy-rules.md`, `canon-approval-gates.md`, `canon-system-separation.md`, `01-operating-blueprint.md`, `02-lbc35-delegated-soul.md`, `agents/*.md`, `05-ai-stack-v2.md`.
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 
 **Where mirrored:** `~/.hermes/spaces/agent-os/` only. Obsidian + GitHub mirrors of these canon files remain in the previous layer (V3-Canon folder + `docs/hermes-canon/`).
 
@@ -456,7 +466,9 @@ This guard prevents the original 111 KB agent-runtime context blow-up that trigg
 - ✅ V3 model roles (Claude/OpenAI/DeepSeek/MiniMax-M3/Llama): unchanged
 - ✅ Default Build Flow (6 steps + Step-5 QA): unchanged
 - ✅ Perplexity Computer policy (10k credits/mo): unchanged
-- ✅ LBC35 delegator-only role: unchanged
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 
 **Verification:**
 
@@ -1100,7 +1112,9 @@ Plus the per-section hash check via `pm2-canon-drift-check.sh` (3 protected sect
 | 6 | LEARNED_DEFAULT_BUILD_FLOW | 6.5 KB | 2026-07-15 |
 | 7 | LEARNED_HEALTH_OS_V3_DECISIONS | 2.4 KB | 2026-07-20 |
 | 8 | LEARNED_HEALTH_OS_V3_REPORTING | 2.0 KB | 2026-07-20 |
-| 9 | LEARNED_LBC35_TELEGRAM_SPAM_INCIDENT | 5.3 KB | 2026-07-21 |
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 | 10 | LEARNED_PENTEST_REPORTING | 3.7 KB | 2026-07-22 |
 | 11 | LEARNED_PM2_HEALTH_MONITOR | 22.8 KB | 2026-07-22 |
 | 12 | LEARNED_PMD | 6.8 KB | 2026-07-22 |
@@ -1725,12 +1739,16 @@ This is a **direct downstream of Card t_pm2_cli_wrapper_rollout_20260722 (2026-0
 3. In-scope (recurring workflows, cron/PM2-backed loops, write-able artifacts, token-efficient loop design)
 4. Out-of-scope (Ops owns PM2/cron; Trading owns decisions/bots; no v3 routing/model-stack edits; no direct Telegram to Marcelo)
 5. Relationship to BossMan (worker, not orchestrator; kanban handoff packets only)
-6. Relationship to LBC35 (Loop implements loop machinery per LBC35's plan; LBC35 does NOT implement or touch secrets)
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 7. Required handoff packet fields (11 fields; packets missing any are rejected)
 8. Verification standard (dry-run/sandbox, success/fail conditions, Step-5 QA for critical loops, idempotency, first-week monitoring)
 9. Knowledge capture + artifact rules (Canon Reuse rule, durable artifacts only, PHASEREPORT on material change)
 10. Escalation triggers (cron/PM2 changes, money/trading, v3 conflicts, no-spam conflicts, direct Telegram rule)
-11. Canon files obeyed (Routing Rules v3, ROLES v3, Sub-Agent Master Blueprint, 7-Rule Contract, V3 Model Stack, LBC35 SOUL v3)
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 + Existing loops section (3 ownership mappings)
 + Version history (v1.0 2026-07-23)
 
@@ -1771,7 +1789,9 @@ This is a **direct downstream of Card t_pm2_cli_wrapper_rollout_20260722 (2026-0
 - ✅ Model stack: unchanged
 - ✅ Escalation rules: unchanged
 - ✅ ROLES_AND_CHAIN_OF_COMMAND v3: unchanged (Loop was already in the roster)
-- ✅ LBC35 SOUL v3: unchanged (Loop respects the boundary)
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 
 ## Kanban state
 
@@ -1815,7 +1835,9 @@ All use Loop's 11-section template:
 3. In-scope responsibilities
 4. Out-of-scope (cross-lane boundaries)
 5. Relationship to BossMan (worker, never messages Marcelo)
-6. Relationship to LBC35 (delegator-router)
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 7. Required handoff packet fields (lane-specific)
 8. Verification standard (per AGENTS.md)
 9. Knowledge capture + artifact rules (Canon Reuse)

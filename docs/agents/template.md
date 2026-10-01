@@ -1,4 +1,6 @@
 # Sub-Agent MD Template — v3 (Hermes Agent OS)
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
 
 **Status:** Canonical template — used by all 9 sub-agent MDs
 **Date:** 2026-06-18
@@ -80,12 +82,18 @@ State explicitly:
 
 ---
 
-## Section 6 — Relationship to LBC35 and Delegated Executors
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 
 State explicitly:
-- LBC35 and other delegated executors may execute assigned tasks inside this lane's domain.
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 - Delegated executors do NOT make routing, scope, or strategic decisions inside this lane.
-- This lane specifies the handoff packet shape (see §7); LBC35 fills the packet; BossMan decides whether to dispatch.
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 - This lane does NOT invoke Computer Use, does NOT route to models, does NOT bypass BossMan.
 
 ---
@@ -187,7 +195,9 @@ Optional references (lane-specific):
 - Do NOT remove the "v3 unchanged" statements in §11. They are the safety belt.
 - Do NOT add project history. Project history goes in `~/.hermes/knowledge/PROJECTS_*.md` or kanban cards.
 - Every file must pass `shasum -a 256` parity across all 4 mirrors before being marked ACTIVE.
-- Old SOUL files (Openclaw `soul-*.md`, `profiles/<x>/SOUL.md`) move to `_archive/` after this MD goes ACTIVE.
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 
 ---
 

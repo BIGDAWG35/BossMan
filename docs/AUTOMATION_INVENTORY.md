@@ -1,4 +1,6 @@
 # Automation Inventory — Cron Jobs + LaunchAgents
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
 
 **Snapshot:** 2026-06-19 (updated: Browser QA / Perplexity via CDP restored, no new crons needed)
 **Owner:** BossMan Hermes
@@ -73,7 +75,9 @@ BossMan updates this file whenever the cron/LaunchAgent set changes. Every entry
 
 | Plist | Why disabled |
 |---|---|
-| `ai.openclaw.gateway.plist.disabled-2026-05-18` | LBC35 / OpenClaw violated Single Status Surface rule (2026-06-12 incident). Re-enable requires 3-bucket approval. |
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 | `com.local.pm2-watchdog.plist.disabled-2026-05-18` | Superseded by BossMan PM2 health monitor cron. Re-enable requires kanban card. |
 | `com.local.bakery.plist.disabled-2026-05-18` | BakeryOps now runs under PM2; LaunchAgent was redundant. Re-enable requires kanban card. |
 | `com.local.squarepayouts.plist.disabled-2026-05-18` | SquarePayouts now runs under PM2; LaunchAgent was redundant. Re-enable requires kanban card. |
@@ -159,3 +163,53 @@ Plus re-enabled cron: `PM2 Health Monitor` (`01dff7ff61e4`, was disabled).
 **Updated `ecosystem.config.cjs`** with 100% uptime hardening (min_uptime/max_restarts/restart_delay/kill_timeout/max_memory_restart).
 
 **Total cron count:** 30 → 32
+
+
+## 2026-07-25 — Routine monitors / grinders moved to Ollama local (t_monitoring_ollama_default_v1_20260725)
+
+**Driver**: DeepSeek inference cost rose due to repeated Anthropic stream-stale fallback on the PM2 Health Monitor cron (`01dff7ff61e4`). The cron was supposed to pin `claude-sonnet-4`, but every Anthropic 503/timeout fell through to DeepSeek at ~$0.80-$6.82/day just for that one job. Cumulative across routine cron = undesirable.
+
+**Action**: Per the routine-cron routing sub-policy in `LEARNED_V3_MODEL_STACK.md`, routine monitors default to Ollama local. Updated:
+
+- 14 PM2 / health / monitoring / scan crons switched to `provider=custom`, `base_url=http://localhost:11434/v1`, model `qwen2.5:3b` (or `qwen2.5:14b` for the PM2 monitor). See `jobs.json` for the per-job overrides.
+- `config.yaml` got: `model.context_length: 65536`, `model.ollama_num_ctx: 65536`. These satisfy Hermes' 64K-context floor when Ollama tags report <64K via /v1/models.
+- `config.yaml` `fallback_providers` chain trimmed from `[deepseek, anthropic, openai-codex]` to `[custom/qwen2.5:3b]` so routine cron jobs that fail Ollama inference FAIL LOUD instead of silently burning paid tokens.
+- Global `agent.reasoning_effort` cleared to `''` to avoid Ollama HTTP 400 ("model does not support thinking") on qwen2.5 family.
+
+**Untouched (safety-sensitive, stays on explicit/strategic model)**:
+- All `binance-*`, `money-pipeline-*`, `pmd-*`, `SquaresPayouts`, `BakeryOps` — money/PII paths untouched per operator scope.
+- `617757fbccff` (pmd-watchdog) still pinned to `haiku` per an earlier card.
+
+**Verified live**:
+- PM2 Health Monitor ran successfully on Ollama (api call: `provider=custom base_url=http://localhost:11434/v1 model=qwen2.5:14b in=16386 out=664 latency=66.6s`).
+- No fallback to DeepSeek fired (`Fallback activated: ... → deepseek` no longer appears in agent.log for these job IDs).
+
+**Caveats (NOT blocks)**:
+- Ollama `qwen2.5:14b` tool-use discipline is weaker than Claude Sonnet — the PM2 Health Monitor may summarize the skill rather than execute `pm2 jlist` on the first try. This is a model-quality question, not a routing question, and is left for a separate card if operational impact becomes evident. The "route is right" goal is met; "monitor emits more verbose alerts" optimization is future work.
+
+**No new crons added, no architecture drift outside the PM2/monitoring scope.**
+
+
+## 2026-07-25 — Follow-up: `reasoning_effort` mis-implementation + credential-pool fallback path (t_ollama_routing_verify_v1_20260725)
+
+**Driver**: Post-cutover runtime evidence in `~/.hermes/logs/agent.log` (09:25–09:37 PT) showed routine cron runs STILL falling through to DeepSeek (`Fallback activated: ... → deepseek-v4-flash (deepseek)`), even though `cron/jobs.json` per-job `provider=custom` and `config.yaml fallback_providers: [qwen2.5:3b]` were already correctly trimmed.
+
+**Root cause** (read-only code inspection of `hermes-agent`):
+1. **Reasoning config bug.** The 2026-07-25 entry above claimed `agent.reasoning_effort` was cleared to `''` to dodge Ollama's `"model does not support thinking"` HTTP 400. This was wrong — `hermes_constants.parse_reasoning_effort("")` returns `None`, which the agent loop treats as "use the default" (= `medium`, thinking enabled). qwen2.5 Ollama builds reject `thinking=true` regardless. **Correct value: YAML boolean `false`** (parse yields `{"enabled": False}` and the thinking parameter is suppressed on Ollama calls).
+2. **Credential-pool auto-attach.** When the configured `fallback_providers` chain exhausts (because Ollama rejected the request), the agent loop's `try_activate_fallback()` path attached a credential pool seeded from `~/.hermes/.env → DEEPSEEK_API_KEY` and silently fell back to `deepseek/deepseek-v4-flash` (paid). This is "fail-quiet-but-paid", not "fail-loud". The fix is preventing chain exhaustion in the first place via item 1.
+
+**Action** (operator-driven, NOT agent-edited; security guardrail blocks direct config.yaml writes):
+- Operator patch snippet at `~/.hermes/knowledge/LEARNED_CONFIG-PATCH-OLLAMA-ROUTING-20260725.md` flips `agent.reasoning_effort: ''` → `agent.reasoning_effort: false` at lines 43 and 496 of `~/.hermes/config.yaml`. Apply via `hermes config set agent.reasoning_effort false` and `hermes config set delegation.reasoning_effort false`.
+- **No change to `cron/jobs.json`** — 14 routine jobs already pinned to `provider=custom, base_url=http://localhost:11434/v1`. Correct.
+- **No change to `fallback_providers`** — already trimmed to `[custom/qwen2.5:3b]`. Correct (fail-loud semantics once item 1 lands).
+- **No change to `LEARNED_V3_MODEL_STACK.md`** — the routine-cron-Ollama sub-policy is already stated correctly (Permanent 2026-07-25 entry). Implementation detail (the YAML boolean value) belongs in AUTOMATION_INVENTORY, not in the policy doc.
+- **No change to `ROUTING-RULES.md`** — the routing parent policy stays silent on per-knob config mechanics.
+
+**Untouched (safety-sensitive, stays on explicit/strategic model)**: same list as 2026-07-25 entry above. `binance-*`, `money-pipeline-*`, `pmd-*`, `SquaresPayouts`, `BakeryOps`, Travel OS trip reminders, Morning Brief, Deep-Audit, `617757fbccff` (pmd-watchdog haiku) — all unaffected by this patch.
+
+**Verification (after operator patch lands)**:
+- `tail ~/.hermes/logs/agent.log | grep -E "qwen2.5|Fallback activated|deepseek|claude"` should show `qwen2.5:*` succeeded and zero `Fallback activated` lines for the 14 routine job IDs.
+- If Ollama errors persist, the chain should fail with `RuntimeError: HTTP 400 ... does not support thinking` (fail-loud) instead of silently attaching DeepSeek.
+- Drift check: `~/.hermes/scripts/hermes-canon-drift-check.sh` should report `md5 match` on `LEARNED_V3_MODEL_STACK.md` mirrors (Obsidian + GitHub) — policy unchanged, only this log entry is new.
+
+**No new crons, no architecture drift outside the PM2/monitoring/routing scope. Money/trading/PII/auth untouched.**

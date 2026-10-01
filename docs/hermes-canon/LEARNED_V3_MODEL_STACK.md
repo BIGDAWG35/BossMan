@@ -30,7 +30,13 @@ This is the **single canonical reference** for which model to use for which task
 - TTS, image gen, or simple transformations (no tool support)
 - Real-time market decisions under <5s (use pre-computed signals + MiniMax)
 
-### 2. OpenAI — `gpt-5.4` (default)
+### 2. OpenAI — `gpt-5.5` (default; reconciled 2026-09-17, card t_stack_f5_squarespayouts_exporter_fix_20260917)
+
+> **MODEL UPDATE 2026-09-17:** The Hermes ChatGPT account tier rejects `gpt-5.4` with HTTP 400
+> "The 'gpt-5.4' model is not supported when using Codex with a ChatGPT account". `gpt-5.5` is
+> supported by the same account and was verified to return HTTP 200 against the Codex Responses
+> endpoint (live test, 1.4s response). All references in this canon and all profile configs
+> have been aligned to `gpt-5.5` per card `t_stack_f5_routing_canon_reconciliation_20260917`.
 
 **When to use:**
 - General reasoning (broad-scope tasks, ambiguous requests)
@@ -254,15 +260,15 @@ global chain).
 ## Routing config (lives in `config.yaml` + per-profile overrides)
 
 **Default** (BossMan profile): `MiniMax-M3` — chatty bulk work.
-**Fallback chain** (global): `deepseek-v4-flash` → `claude-sonnet-4-6` → `openai-codex gpt-5.4`.
+**Fallback chain** (global): `deepseek-v4-flash` → `claude-sonnet-4-6` → `openai-codex gpt-5.5`.
 
 **Per-profile overrides** (apply on top of global default):
 - **builder**: default `MiniMax-M3`; for implementation tasks, override to `deepseek-v4-flash` (cheap coding); escalate to `claude-sonnet-4-6` for safety-sensitive (SquarePayouts, money paths).
 - **ops**: default `MiniMax-M3`; for PM2/cron/infra debugging, override to `deepseek-v4-flash`; escalate to `claude-sonnet-4-6` for cross-system debugging.
 - **trading**: default `MiniMax-M3`; for signal analysis, override to `deepseek-v4-flash`; for trade decisions touching live money, escalate to `claude-sonnet-4-6`.
-- **content**: default `MiniMax-M3`; for polished prose, override to `openai-codex gpt-5.4`; escalate to `claude-sonnet-4-6` for high-stakes voice/tone.
-- **qa-verification** (Step-5): default `claude-sonnet-4-6`; fallback `openai-codex gpt-5.4`; never MiniMax for safety audits.
-- **research-intel**: default `openai-codex gpt-5.4`; fallback `claude-sonnet-4-6`.
+- **content**: default `MiniMax-M3`; for polished prose, override to `openai-codex gpt-5.5`; escalate to `claude-sonnet-4-6` for high-stakes voice/tone.
+- **qa-verification** (Step-5): default `claude-sonnet-4-6`; fallback `openai-codex gpt-5.5`; never MiniMax for safety audits.
+- **research-intel**: default `openai-codex gpt-5.5`; fallback `claude-sonnet-4-6`.
 
 **SquarePayouts model routing (Permanent 2026-09-14, Marcelo policy — durable rule):** SquarePayouts model/tool routing is owned by BossMan. For every card, BossMan selects the best-fit tool and model using the V3 task-type routing ledger, current task risk, privacy constraints, and required quality. Money-path, auth, PII, credentials, security, audit, and public financial behavior remain critical work: use the strongest appropriate model, require Step-5 red-team QA, and do not mark Done until verification passes. Production secrets and raw credentials remain local-only. **No blanket categorical block by AI model or by tool, EXCEPT the standing safety-sensitive and secrets carve-outs in the V3 task-type ledger: Claude is mandatory for auth, encryption, money-path, PII, and audit-logging work; production secrets, credentials, tokens, and .env content are Llama/local only and must never leave the host. BossMan picks per task.** See `~/.hermes/knowledge/LEARNED_SQUAREPAYOUTS.md` § "Model Selection — Task-Fit Routing" + `~/.hermes/knowledge/ROUTING-RULES.md`.
 

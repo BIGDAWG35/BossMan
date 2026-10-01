@@ -1,4 +1,8 @@
-# PHASE 3 — LBC35 Demotion Activation & Test Handoff
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
 **Date:** 2026-05-07
 **Status:** ✅ COMPLETE
 
@@ -6,34 +10,46 @@
 
 ## What Was Done
 
-### 1. LBC35 SOUL.md Created ✅
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
 
-**File:** `~/.openclaw/agents/lbc35/SOUL.md`
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
+
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 **Size:** 2,147 bytes
 **Version:** 2.0 — "Delegated Executor Under BossMan"
 
 Key language (as approved):
 ```markdown
-You are LBC35 — a delegated execution sub-agent operating under
+# RETIRED 2026-09-30 — service removed
 BossMan, the Hermes and Hermes Kanban orchestrator.
 
 BossMan is the Hermes orchestrator — the primary manager and routing
 layer for all work. It owns the Kanban board, the operating policy,
 and the schedule of phases.
 - BossMan = orchestrator / router / planner
-- LBC35 = executor / implementer
+# RETIRED 2026-09-30 — service removed
 ```
 
-**Note:** The `role`, `reportsTo`, and `soul` fields were removed from `openclaw.json` because OpenClaw's schema does not support them. The SOUL.md file alone establishes the behavioral demotion.
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 
 ---
 
 ### 2. Gateway Reload ✅
 
-**Action:** `kill -HUP 35489` (OpenClaw gateway PID)
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 **Result:** Gateway restarted gracefully — new PID 6751
-**Config validation:** `openclaw agents list` ✅ accepted
-**SOUL.md:** Confirmed present at `~/.openclaw/agents/lbc35/SOUL.md`
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 
 ---
 
@@ -52,13 +68,15 @@ and the schedule of phases.
 
 **Task:** Read `SERVICES_MAP.md` and confirm port 3001 is Bakery (1 sentence reply)
 
-**Handoff Packet (BossMan → LBC35):**
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 
 ```
 ## Handoff Packet
 
 From: BossMan
-To: LBC35
+# RETIRED 2026-09-30 — service removed
 Task ID: t_8bde67d0_test01
 Priority: 3 (low — test)
 
@@ -77,11 +95,15 @@ sentence which service owns port 3001.
 Card receives a one-sentence reply identifying port 3001 owner.
 ```
 
-**LBC35 Reply (via Telegram lbc35 session):**
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 
 > "Port 3001 is owned by Bakery (Next.js, PID 2215, 6D uptime) — confirmed."
 
-**Completion Report (LBC35 → BossMan):**
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 
 ```
 Status: ✅ Complete
@@ -90,7 +112,9 @@ Reply: "Port 3001 is owned by Bakery."
 
 **BossMan Verification:** Reply received and correct. Card marked done.
 
-**Round-trip: SUCCESS** — LBC35 took the handoff, executed read-only task, reported back correctly.
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 
 ---
 
@@ -101,18 +125,24 @@ Reply: "Port 3001 is owned by Bakery."
 | No PM2 or cron changes | ✅ Confirmed |
 | No dashboard changes | ✅ Confirmed |
 | No Perplexity Space changes | ✅ Confirmed |
-| LBC35 takes work via handoff only | ✅ Verified via test |
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 
 ---
 
-## What Changes for LBC35 in Practice
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 
 | Before | After |
 |--------|-------|
 | Could self-assign tasks | Takes work via BossMan handoff packet only |
 | Implicit primary manager role | Explicit delegated executor |
 | No constraint on self-direction | SOUL.md prohibits self-assignment |
-| BossMan overlap unclear | BossMan = orchestrator + router, LBC35 = executor |
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 | No handoff protocol | Handoff packet format required for all tasks |
 
 ---
@@ -121,12 +151,18 @@ Reply: "Port 3001 is owned by Bakery."
 
 | File | Action |
 |------|--------|
-| `~/.openclaw/agents/lbc35/SOUL.md` | Created (2,147 bytes) |
-| `~/.openclaw/openclaw.json` | Removed invalid fields, config still valid |
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 | Kanban card `t_8bde67d0` | Marked done, completion comment added |
 | Kanban card `t_faa6d371` | Created — Phase 6 tracking |
 | `docs/PHASE2_PLANNING.md` | Updated with deferral note + Phase 6 card |
-| `docs/LBC35_SOUL_v2_delegated_executor.md` | Created in BossMan, Obsidian, Hermes knowledge |
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 | `PHASE3_PLANNING.md` | Created (this file) |
 
 ---
@@ -135,5 +171,7 @@ Reply: "Port 3001 is owned by Bakery."
 
 | Commit | Content |
 |--------|---------|
-| `58b5300` | Phase 3 — LBC35 demoted SOUL created, Phase 2 updated with deferral |
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 | `d20d508` | SERVICES_MAP confirmed port assignments, Binance stopped |

@@ -1,4 +1,6 @@
 # PM2 Status Commands — Quick Reference
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
 
 **Source:** Phase 1 audit, SERVICES_MAP.md
 **Status:** Active
@@ -48,7 +50,9 @@ pm2 resurrect
 | Bakery | `bakery` | 3001 |
 | SquarePayouts | `squarepayouts` | 3100 |
 | Fresh dashboard | `fresh-dashboard` | 5050 |
-| OpenClaw hub | `hub` | 8090 |
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 | Overview | `overview` | 8100 |
 | Health dashboard | `health-dashboard` | 8110 |
 | Binance bot | `binance-bot` | 8104 |

@@ -1,5 +1,6 @@
 # LEARNED_PM2_HEALTH_MONITOR.md — PM2 Health Monitor canon
-**Permanent 2026-05-28, refreshed 2026-07-22. Cron:** `01dff7ff61e4` (bossman, every 15 min) — silent healthy; alerts only on repair.
+**Permanent 2026-05-28, upd 2026-07-22, pruned 2026-09-23 (t_86e6d0f0): 5,065 → ~5 KB. Cron:** `01dff7ff61e4` (bossman, every 15 min) — silent healthy; alerts only on repair.
+**Pruned 2026-09-28 (t_481b94f8): 13,473 → ≤5 KB. Per-incident detail moved to `LEARNED_PM2_HEALTH_MONITOR_INCIDENTS.md`.**
 
 ## Skill: pm2-health-check
 Runbook: `~/.hermes/skills/devops/pm2-health-check/SKILL.md`.
@@ -22,71 +23,21 @@ pm2 stop <svc> && rm -rf .next && npm run build && pm2 start <svc>
 PM2 online ✓ · curl canonical route 200/307 ✓ · pm2 save ✓
 
 ### Drift Surfaces + Security Watch
-Non-trivial incidents require **2 of {Claude, DeepSeek, OpenAI}** to agree before executing. Goal loop card `t_e56d53cd` (`GOAL-LOOP-SECURITY_PM2.md`). **STOPs:** No PM2 deletes, port changes, service restarts, SOUL/AGENTS/ROUTING-RULES edits. P1+ → separate fix card.
+Non-trivial incidents require **2 of {Claude, DeepSeek, OpenAI}** to agree before executing. Card `t_e56d53cd` (`GOAL-LOOP-SECURITY_PM2.md`). **STOPs:** No PM2 deletes, port changes, service restarts, SOUL/AGENTS/ROUTING-RULES edits. P1+ → separate fix card.
 
----
+### Sibling Per-Incident Canon
+Full detail for the appended sections below lives in `LEARNED_PM2_HEALTH_MONITOR_INCIDENTS.md` (co-located). One-line pointers:
 
-## Zombie PM2 Daemon Cleanup (Permanent — 2026-07-22)
+| Section (was) | Card / topic |
+|---|---|
+| Zombie PM2 Daemon Cleanup | 2026-07-22 permanent |
+| PM2 CLI Usage Policy (two-mode wrapper) | `t_60a3ec59` (2026-09-28) |
+| pmd-web Auto-Repair Rule | 2026-07-22 permanent |
+| Drift-Check Write-Protection | 2026-07-22 permanent |
+| PM2 v5.4.2 jlist shape (`pm2_env`) | `t_d67b13db` (2026-09-28) |
+| travel-os Next.js cwd | `t_d67b13db` (2026-09-28) |
+| Concurrency Guard: heartbeat-mtime PRIMARY | `t_32ef5c9f` (2026-09-28) |
+| FINAL LOCK RELEASE on clean exit | `t_714b95d1` (2026-09-28) |
+| D16 RE-VERIFY DEDUP (calendar-day → 23h rolling window) | `t_c5b3e477` + `t_d304cf82` (2026-09-28/29) |
 
-**Symptom:** "N god daemons (expected 1)" + zombies at `~/.hermes/pro`.
-
-**Root cause:** Short-lived/concurrent PM2 CLI with non-canonical PM2_HOME leaves orphaned daemons (PIDs 10k–99k).
-
-**Detection:** `ps aux | grep "PM2.*God Daemon" | grep -v grep` — expect 1 line (canonical PID 133).
-
-**Cleanup:**
-1. Pre-check ports owned by canonical daemon: `for port in 7575 7576 8104 8121 8020 3535 8145 3537; do lsof -i :$port -P -n 2>/dev/null | grep LISTEN; done`
-2. Identify zombies (extra lines at `~/.hermes/pro`)
-3. `kill -TERM <zombie_pid>` → wait 5s → verify gone; SIGKILL if survive
-4. Verify canonical: `ps -p 133 && pgrep -P 133 | wc -l` (expect 8)
-5. Archive: `mkdir -p ~/.hermes/archive/pm2-zombie-cleanup-$(date +%Y%m%d) && cp ~/.hermes/pro/pm2.log ~/.hermes/archive/... && rm -rf ~/.hermes/pro/`
-6. Final: `ps aux | grep "PM2.*God Daemon" | grep -v grep` (canonical only) + `curl -sS -o /dev/null -w "HTTP %{http_code}\n" --max-time 5 http://localhost:7575/pmd/api/properties`
-
-**Automated:** Cron `01dff7ff61e4` checks every 15 min; on detection creates `t_drift_pm2_zombie_daemons_<date>` card.
-
----
-
-## PM2 CLI Usage Policy (Permanent — 2026-07-22)
-
-**All PM2 CLI calls → `~/.hermes/scripts/pm2-hermes.sh`** (isolation + kill-by-PID). Never `pm2 kill` (kills canonical daemon). Never call `pm2` directly.
-
-**Wrapper:** (1) `PM2_HOME=$(mktemp -d -t pm2-hermes-XXXXXX)` daemon in tmpdir; (2) `pm2 <subcommand>`; (3) find PID via `lsof $PM2_TMP/rpc.sock`, `kill -TERM <pid>` (never `pm2 kill`), wait 1s → SIGKILL → `rm -rf $PM2_TMP`.
-
-**Migration:** `pm2 <subcommand>` (any) → `~/.hermes/scripts/pm2-hermes.sh <subcommand>` · All active hermes scripts migrated (8 scripts + 4 cron prompts).
-
-**Forbidden (all create zombies or kill canonical):**
-```bash
-PM2_HOME=~/.hermes/pro pm2 list        # zombie at ~/.hermes/pro
-PM2_HOME=$(mktemp -d) pm2 kill       # kills canonical daemon
-PM2_HOME=$(mktemp -d) pm2 list       # zombie in tmpdir
-pm2 list / pm2 restart (direct)      # zombie daemon
-```
-
----
-
-## pmd-web Auto-Repair Rule (Permanent — 2026-07-22)
-
-**Canonical route:** `/pmd/api/properties` (200, real data). Root `/` + `/portfolio` = 404 (correct, not errors).
-
-**Triggers (ALL must hold):**
-1. `/pmd/api/properties` 5xx/non-200 for 3 consecutive probes
-2. PM2 jlist: `status: online`
-3. Last repair (`/tmp/pmd-web-auto-repair.state`) > 30 min ago
-4. Lock `/tmp/pmd-web-auto-repair.lock` absent
-
-**Repair script:** `~/.hermes/scripts/pmd-web-auto-repair.sh`
-```bash
-~/.hermes/scripts/pm2-hermes.sh stop pmd-web
-cd /Users/bigdawg/Projects/property-management-dashboard/web && rm -rf .next && npm run build
-~/.hermes/scripts/pm2-hermes.sh start ecosystem.config.cjs --only pmd-web
-# Wait up to 30s for /pmd/api/properties → 200
-```
-
-**Guardrails:** Rate limit 1/30min (`/tmp/pmd-web-auto-repair.state`; override: `PMD_REPAIR_RATE_LIMIT_MIN=0`) · mandatory lock (`/tmp/pmd-web-auto-repair.lock`) · exit 1 + ESCALATE if still down after 30s (no retry).
-
-**Escalation:** 3 probe failures + last repair <30 min ago · post-repair still failing 30s+ · PM2 status `errored`/`stopped`.
-
----
-
-## Drift-Check Write-Protection (Permanent — 2026-07-22)
-Script: `pm2-canon-drift-check.sh` (cron `c464124c759e`, ops), every 6h. Monitors full-file md5 + 3 section hashes. Baseline md5: `4abdb88570317c01dce2fd237eeb5567`. **Mirrors (all must match):** `~/.hermes/knowledge/LEARNED_PM2_HEALTH_MONITOR.md` · `~/Obsidian/Hermes/V3-Canon/` · `~/Repos/BossMan/docs/hermes-canon/`
+**When in doubt, treat `LEARNED_PM2_HEALTH_MONITOR.md` as the source of truth for *rules*; treat the INCIDENTS sibling as source of truth for *rationale + reproduction + command snippets*.** On-disk canon and cron-prompt canon MUST stay aligned — drift > 5 KB trips the cron guard and falls back to embedded job-prompt canon (degraded mode, not fatal).

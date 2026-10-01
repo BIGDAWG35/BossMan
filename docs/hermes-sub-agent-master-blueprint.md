@@ -1,4 +1,6 @@
 # Hermes Sub-Agent Master Blueprint
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
 
 **Status:** Approved v1.0 — Phase 0/1 complete, Phase 2 in progress
 **System:** BossMan / Hermes Agent OS
@@ -24,7 +26,9 @@
 
 This blueprint defines the approved sub-agent architecture for BossMan after the v3 AI stack cleanup. It is designed to expand operational lanes without breaking the current v3 routing model, model roles, delegation rules, or documentation hierarchy.
 
-The design keeps BossMan as the single orchestrator, preserves LBC35 as a delegated executor only, and introduces sub-agents as lane owners rather than competing managers or free-roaming bots. The goal is to improve control, reduce confusion, support 24/7 project operations, and turn more outputs into reusable knowledge, skills, and artifacts so token spend declines over time.
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 
 ## Non-breaking design
 
@@ -33,7 +37,9 @@ The new sub-agent layer does **not** replace the v3 AI stack. The v3 stack remai
 Implementation should follow these rules:
 
 - BossMan remains the only orchestrator, planner, approval surface, and final status surface.
-- LBC35 remains a delegated executor and does not create workstreams, choose models, or change architecture on its own.
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 - Sub-agents are lane definitions and operating profiles, not alternate orchestrators.
 - Model routing stays exactly as defined by v3: Research, Design, Build, Harden, QA, Docs.
 - Computer Use ownership stays with BossMan and does not move to sub-agents unless explicitly assigned in canon-compliant handoff packets.
@@ -123,7 +129,9 @@ Recommended file sections for every sub-agent MD:
 3. In-scope responsibilities.
 4. Out-of-scope responsibilities.
 5. Relationship to BossMan.
-6. Relationship to LBC35 and delegated executors.
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 7. Required handoff packet fields.
 8. Verification standard.
 9. Knowledge capture and artifact rules.

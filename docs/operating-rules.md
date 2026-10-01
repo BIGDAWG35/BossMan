@@ -1,4 +1,6 @@
 # BossMan Operating Rules
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
 
 ## Core Principle: BossMan First
 
@@ -31,7 +33,9 @@ Any task or question
 | Daily health check                           | Run `prompts/bossman-daily.md`                      |
 | Vault lookup                                 | Use `terminal` + `Obsidian vault` at `$OBSIDIAN_VAULT_PATH` |
 | GitHub review / PR check                     | Use `gh` CLI or `github-code-review` skill          |
-| Infrastructure / port status                 | Check `docs/services-map.md`, then `lbc35-infra.md` prompts |
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 | New automation to build                      | Design in BossMan prompts, build in terminal       |
 | Complex code task                            | Delegate to `claude-code` or `codex` subagent       |
 | Multi-step research                          | Delegate to `web` search + `delegate_task`          |
@@ -46,7 +50,9 @@ Any task or question
 
 Run every morning (recommended 08:00 local):
 
-1. **Health check** — probe all active ports on LBC35
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 2. **Vault query** — check for overnight notes, flagged items
 3. **GitHub review** — scan open PRs, recent commits on active repos
 4. **Log analysis** — check Hermes logs for errors or anomalies
@@ -110,7 +116,9 @@ Use `terminal` tool when:
 1. **Never commit real secrets** — tokens, keys, passwords go in `.env` only
 2. **Never commit runtime state** — no `logs/`, `runtime/`, `state/`, `*.db`
 3. **Always verify before push** — check `git status` and review diffs
-4. **Archive don't delete** — move deprecated docs to OpenClaw archive, don't remove
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 5. **BossMan owns the entry point** — don't skip BossMan when routing tasks
 
 ---
@@ -207,7 +215,9 @@ Fallback workflow for pinned guides:
 
 Daily digest includes unresolved Basecamp blockers until closed.
 
-See `openclaw-imports/basecamp/references/basecamp-automation-failure-modes.md` for full technical guide.
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 
 ---
 

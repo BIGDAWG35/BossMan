@@ -1,4 +1,6 @@
 # LEARNED.md — Cross-cutting durable rules
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
 
 **Status:** Index of cross-cutting rules that don't fit in a per-domain `LEARNED_*.md` file. Domain-specific learnings live in their own files (e.g. `LEARNED_BAKERY.md`, `LEARNED_TRADING.md`).
 
@@ -39,7 +41,9 @@
 
 **Rule:** Only BossMan (via `ai.hermes.gateway`) sends autonomous status messages to Marcelo. No other agent, script, cron, or LaunchAgent may send direct Telegram messages to Marcelo outside the BossMan routing layer.
 
-**Why:** LBC35 / OpenClaw violated this on 2026-06-12 with an unauthorized "morning digest" message. The `ai.openclaw.gateway` LaunchAgent was disabled, 7 crons with Telegram routing were disabled, and the incident was logged on kanban card `t_lbc35_tg_bypass_20260612`.
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 
 **Enforcement:** Any new LaunchAgent or cron that touches Telegram requires Marcelo's explicit approval per the 3-bucket rule.
 

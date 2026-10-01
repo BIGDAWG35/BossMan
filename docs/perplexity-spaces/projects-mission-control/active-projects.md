@@ -1,4 +1,6 @@
 # Active Projects — Full List
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
 
 **Source:** Phase 1 audit, Basecamp, SERVICES_MAP.md
 **Status:** Active
@@ -73,7 +75,9 @@
 | App | Port | PM2 Name | Status |
 |-----|------|----------|--------|
 | Fresh dashboard | 5050 | `fresh-dashboard` | ✅ Active |
-| OpenClaw hub | 8090 | `hub` | ✅ Active |
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 | Overview dashboard | 8100 | `overview` | ✅ Active |
 | Health dashboard | 8110 | `health-dashboard` | ✅ Active |
 | Trading control | 8130 | `trading-control` | ✅ Active |

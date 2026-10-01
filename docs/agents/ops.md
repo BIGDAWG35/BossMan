@@ -1,4 +1,6 @@
 # Ops — Hermes Sub-Agent (v3)
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
 
 **Lane:** ops
 **Status:** ACTIVE
@@ -7,7 +9,9 @@
 **Owner:** BossMan Hermes
 **Replaces:**
 - `~/.hermes/profiles/ops/SOUL.md` (profile SOUL, 2026-05-18)
-- `~/Desktop/Openclaw Brain/Openclaw Brain/soul-ops.md` (Openclaw soul, draft 2026-05-06)
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 **Mirrors:** primary | vault | GitHub | Spaces
 
 ---
@@ -50,9 +54,13 @@ If a card lands in Ops that belongs elsewhere, Ops flags it to BossMan and stops
 - **Ops NEVER routes to another lane.** Escalate via Kanban comment + return-to-BossMan.
 - **Ops reports completion** with: status first (up/down/degraded), what broke, what was done, current state, next-step, log/PM2 IDs, artifact paths.
 
-## 6. Relationship to LBC35 and Delegated Executors
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
 
-- LBC35 may run **assigned** ops steps (e.g., `pm2 restart <name>`, `curl localhost:<port>/health`, `tail -n 200 <log>`).
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
+
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 - Delegated executors do **not** decide what to restart, do not change configs, do not decide escalation.
 - Ops specifies the **handoff packet** (§7). BossMan decides whether to dispatch a delegated executor.
 - Ops does NOT invoke Computer Use (rare exception: visual browser QA → BossMan decides).
@@ -160,13 +168,17 @@ In this order:
 
 | Version | Date       | Change                                                                       | Author      |
 |---------|------------|------------------------------------------------------------------------------|-------------|
-| 1.0     | 2026-06-18 | Initial draft — merged from `profiles/ops/SOUL.md` + Openclaw `soul-ops.md` per blueprint | BossMan     |
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 
 ---
 
 *Source files (now archived):*
 - `~/.hermes/profiles/ops/SOUL.md` → `_archive/profiles/ops/SOUL.md`
-- `~/Desktop/Openclaw Brain/Openclaw Brain/soul-ops.md` → `~/Desktop/Openclaw Brain/_archive/soul-ops.md`
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 
 ---
 

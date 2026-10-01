@@ -1,4 +1,6 @@
 # MODEL_ROUTING_WORKFLOW.md
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
 **Version:** 3.0
 **Date:** 2026-06-03
 **Owner:** BossMan (Marcelo's Hermes orchestrator)
@@ -57,7 +59,9 @@ This document is the **single source of truth for model routing, cost management
 | **OpenAI** | Production finisher | Clean code, user-facing copy, polished style, final code finishing | Primary builder when output is user-facing or high-risk. Final polish only. |
 | **Claude** | Long-form documentation writer | Runbooks, handoff docs, multi-page explanations, architecture reviews | **Step 6 only** — after code is stable AND QA passes. |
 | **Perplexity Computer** | **Rare escalation tool** (NOT everyday default) | Multi-step Mac/browser workflows that span research, code, and deployment | Only on projects with `escalate_to_computer: yes` flag set by BossMan and approved by Marcelo. Budget: 10,000 credits/month. See §4 of `ROUTING-RULES.md`. |
-| **OpenClaw / LBC35** | Delegated executor | Execution under BossMan direction ONLY — **does not choose models, does not trigger Perplexity Computer** | Only when explicitly assigned via Kanban handoff packet. Reads `model_plan:`, `qa_required:`, and `escalate_to_computer:` flags. |
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 
 ### Paid Model Policy
 
@@ -86,7 +90,7 @@ This document is the **single source of truth for model routing, cost management
 
 ### SquarePayouts Model Restriction (Permanent)
 
-**M3 is BLOCKED for all SquarePayouts work.** Use Claude / DeepSeek / OpenAI / Perplexity / Llama for SquarePayouts. Perplexity Search, Llama, and Claude remain approved for SquarePayouts research and review. Perplexity Computer requires the same `escalate_to_computer: yes` approval as everywhere else.
+**SquarePayouts model routing (Permanent 2026-09-14, Marcelo durable rule):** SquarePayouts model/tool routing is owned by BossMan. BossMan selects the best-fit tool and model per task type, risk, privacy, cost, and required quality. No blanket categorical block by AI model or by tool, EXCEPT the standing safety-sensitive and secrets carve-outs in the V3 task-type ledger: Claude is mandatory for auth, encryption, money-path, PII, and audit-logging work; production secrets, credentials, tokens, and .env content are Llama/local only and must never leave the host. Money-path/auth/PII/credentials/security/audit/public-financial work requires Step-5 red-team QA + strongest appropriate model; card does NOT move to done until verification passes. Production secrets and raw credentials remain local-only. Perplexity Search, Llama, and Claude remain approved for SquarePayouts research and review. Perplexity Computer requires the same `escalate_to_computer: yes` approval as everywhere else.
 
 ---
 
@@ -278,10 +282,16 @@ BossMan pre-warns Marcelo before starting. If the monthly cap is
 reached, BossMan **stops** using Computer and falls back to the local
 stack (or waits for Marcelo's override).
 
-**LBC35 and Computer:** LBC35 **does not** trigger Perplexity Computer.
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 It reads the `escalate_to_computer:` flag on the handoff packet. If
-the flag is `yes` (and approved), LBC35 may use Computer for the
-assigned scope. If the flag is `no` (or missing), LBC35 must not
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 invoke Computer.
 
 ---
@@ -380,8 +390,12 @@ When Marcelo asks to continue or troubleshoot an existing project:
 2. **Set `work_type`** — `existing_build` or `troubleshooting`
 3. **Create/Update Blueprint** — use Continuation or Triage type
 4. **Fill Routing Ledger** — include `last_model_used` and `next_model_planned`
-5. **Only then assign** — assign to builder/ops/trading/content or LBC35 per routing rules
-6. **BossMan oversees handoff** — LBC35 receives work exclusively via Kanban handoff packet
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 
 ---
 

@@ -1,4 +1,6 @@
 # Self-Improvement / Curriculum — Hermes Sub-Agent (v3)
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
 
 **Lane:** self-improvement-curriculum
 **Status:** ACTIVE
@@ -47,9 +49,13 @@ If a card lands in Self-Improvement / Curriculum that belongs elsewhere, this la
 - **This lane NEVER routes to another lane.** Escalate via Kanban comment + return-to-BossMan.
 - **This lane reports completion** with: stage summary, harvested durable rules, sub-task status, next-stage trigger conditions.
 
-## 6. Relationship to LBC35 and Delegated Executors
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
 
-- LBC35 may run **assigned** curriculum sub-steps (e.g., read a doc, summarize a chapter, run a quiz).
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
+
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 - Delegated executors do **not** decide curriculum structure, do not promote sub-tasks, do not write `LEARNED_*.md` rules.
 - This lane specifies the **handoff packet** (§7). BossMan decides whether to dispatch a delegated executor.
 - This lane does NOT invoke Computer Use, does NOT trade, does NOT modify production code.

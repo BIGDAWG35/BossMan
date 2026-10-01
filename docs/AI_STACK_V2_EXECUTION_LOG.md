@@ -1,4 +1,6 @@
 # AI Stack v2 — Execution Log (Phase 5 + Migration)
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
 
 **Stack version:** AI Stack v2
 **Current hardware:** Mac Studio (Apple M4 Max, 16 cores, 64 GB RAM)
@@ -86,7 +88,9 @@ On the Mac Studio M4 Max, Ollama runs with **native Metal GPU acceleration** —
 | Ollama (Local) | ✅ OPERATIONAL | **Mac Studio M4 Max — Metal GPU, API responsive** ||
 | Perplexity Search | ✅ OPERATIONAL | Via Browser QA ||
 | Perplexity Computer | ✅ OPERATIONAL | Via CuaDriver ||
-| LBC35 | ✅ OPERATIONAL | Delegated executor only ||
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 
 ---
 

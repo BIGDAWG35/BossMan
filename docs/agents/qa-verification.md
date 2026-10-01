@@ -1,4 +1,6 @@
 # QA / Verification — Hermes Sub-Agent (v3)
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
 
 **Lane:** qa-verification
 **Status:** ACTIVE
@@ -51,10 +53,16 @@ If a card lands in QA / Verification that belongs elsewhere, this lane flags it 
 - **This lane NEVER routes to another lane.** Escalate via Kanban comment + return-to-BossMan.
 - **This lane reports completion** with: verification scope, evidence (files / logs / screenshots / test outputs), findings list (severity-tagged), recommended fix per finding, and a clear PASS/FAIL/CONDITIONAL verdict.
 
-## 6. Relationship to LBC35 and Delegated Executors
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
 
-- LBC35 may run **assigned** verification steps (e.g., run a test suite, capture a screenshot, diff logs).
-- LBC35 **does NOT** have authority to PASS/FAIL a verification on behalf of QA / Verification.
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
+
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 - Delegated executors do **not** interpret findings, do not recommend fixes.
 - This lane specifies the **handoff packet** (§7). BossMan decides whether to dispatch a delegated executor.
 - This lane may invoke Computer Use for visual QA ONLY when BossMan approves (per AGENTS v3).

@@ -1,4 +1,6 @@
 # Content — Hermes Sub-Agent (v3)
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
 
 **Lane:** content
 **Status:** ACTIVE
@@ -7,7 +9,9 @@
 **Owner:** BossMan Hermes
 **Replaces:**
 - `~/.hermes/profiles/content/SOUL.md` (profile SOUL, 2026-05-18)
-- `~/Desktop/Openclaw Brain/Openclaw Brain/soul-content.md` (Openclaw soul, draft 2026-05-06)
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 **Mirrors:** primary | vault | GitHub | Spaces
 
 ---
@@ -50,9 +54,13 @@ If a card lands in Content that belongs elsewhere, Content flags it to BossMan a
 - **Content NEVER routes to another lane.** Escalate via Kanban comment + return-to-BossMan.
 - **Content reports completion** with: draft path, goal, audience, structure summary, open questions, and what BossMan still needs to approve.
 
-## 6. Relationship to LBC35 and Delegated Executors
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
 
-- LBC35 may run **assigned** content tasks (e.g., format a draft, generate a thumbnail prompt, schedule a draft for review).
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
+
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 - Delegated executors do **not** decide what to say, do not pick tone, do not approve anything.
 - Content specifies the **handoff packet** (§7). BossMan decides whether to dispatch a delegated executor.
 - Content does NOT invoke Computer Use directly, does NOT publish, does NOT post.
@@ -146,13 +154,17 @@ In this order:
 
 | Version | Date       | Change                                                                       | Author      |
 |---------|------------|------------------------------------------------------------------------------|-------------|
-| 1.0     | 2026-06-18 | Initial draft — merged from `profiles/content/SOUL.md` + Openclaw `soul-content.md` per blueprint | BossMan     |
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 
 ---
 
 *Source files (now archived):*
 - `~/.hermes/profiles/content/SOUL.md` → `_archive/profiles/content/SOUL.md`
-- `~/Desktop/Openclaw Brain/Openclaw Brain/soul-content.md` → `~/Desktop/Openclaw Brain/_archive/soul-content.md`
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 
 ---
 

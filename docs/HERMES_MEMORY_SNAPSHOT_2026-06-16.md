@@ -1,4 +1,6 @@
 # MEMORY.md — curated long-term memory (max 2,200 chars)
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
 
 This file stores only durable, cross-session rules and facts.
 - Short, bullet-style entries.

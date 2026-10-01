@@ -1,4 +1,6 @@
 # Hermes Master Implementation Plan
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
 **Version:** 1.0
 **Date:** 2026-05-20
 **Owner:** BossMan (Marcelo's Hermes orchestrator)
@@ -41,8 +43,12 @@ Transform Hermes into the **primary control plane** for Marcelo's operations —
 
 ### Infrastructure Notes
 - PM2: 4 managed services, 6 unmanaged (PM2 list is unsynced — `pm2 save` not run recently)
-- Cron: 2 active jobs (OpenClaw-era, need migration review)
-- LaunchAgents: 1 active (`ai.openclaw.gateway` — disabled autonomous Telegram routing)
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 - Unknown ports must be identified before Phase 7
 
 ---
@@ -184,10 +190,16 @@ Paper trading, backtesting evidence, Marcelo approval required for live executio
 | Phase | Title | Status | Card |
 |-------|-------|--------|------|
 | Phase 0 | Save blueprint and freeze architecture | ✅ Done | t_a6cec443 |
-| Phase 1 | Audit OpenClaw assets, PM2, cron, bots, dashboards, ports | ✅ Done | t_6b1a49f4 |
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 | Phase 2 | Define Hermes as primary control plane | ✅ Done | t_c64ea8d3 |
-| Phase 3 | Demote LBC35 to delegated execution coordinator | ✅ Done | t_8bde67d0 |
-| Phase 4 | Implement Kanban schema + Hermes↔OpenClaw handoff model | ✅ Done | t_ba9edec2 |
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 | Phase 5 | Add Telegram mobile controls for Kanban through BossMan | ✅ Done | t_43dec590 |
 | Phase 6 | Pilot the new workflow using the money pipeline rebuild | 🔜 Active | t_71fdab1a |
 | Phase 7 | Retire old PM dashboard and rebuild Perplexity Spaces | 🔜 Next | t_c4766e61 |
@@ -204,9 +216,13 @@ Paper trading, backtesting evidence, Marcelo approval required for live executio
 | `ops` | PM2, runtime, ports, infra | Executes what bossman assigns | ✅ Active |
 | `trading` | Market research, signals | Executes what bossman assigns | ✅ Active |
 | `content` | YouTube, scripts, docs | Executes what bossman assigns | ✅ Active |
-| `lbc35` | Legacy executor | DEMOTED — delegated work only | ⚠️ Constrained |
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
 
-**LBC35 Constraint Checklist (Non-Negotiable):**
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
+
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 - Must NOT self-assign tasks — wait for BossMan handoff packet
 - Must NOT create new Kanban cards without BossMan approval
 - Must NOT modify PM2, cron, LaunchAgents, or system services
@@ -220,14 +236,14 @@ Paper trading, backtesting evidence, Marcelo approval required for live executio
 
 | Model | Role | Use Case |
 |-------|------|----------|
-| **MiniMax 2.7** | Primary brain | Everything, all day — BLOCKED for SquarePayouts |
+| **MiniMax-M3** | Primary brain | Everything, all day — **SquarePayouts model routing (Permanent 2026-09-14, Marcelo durable rule):** SquarePayouts model/tool routing is owned by BossMan. BossMan selects the best-fit tool and model per task type, risk, privacy, cost, and required quality. No blanket categorical block by AI model or by tool, EXCEPT the standing safety-sensitive and secrets carve-outs in the V3 task-type ledger: Claude is mandatory for auth, encryption, money-path, PII, and audit-logging work; production secrets, credentials, tokens, and .env content are Llama/local only and must never leave the host. Money-path/auth/PII/credentials/security/audit/public-financial work requires Step-5 red-team QA + strongest appropriate model; card does NOT move to done until verification passes. Production secrets and raw credentials remain local-only. |
 | **DeepSeek** | Analysis backup | Deep reasoning, technical validation, edge-case analysis |
 | **OpenAI** | Synthesis backup | Product framing, operational writing, summarization |
 | **Claude** | Architecture backup | Workflow design, prompt/agent design, structured planning |
 | **Perplexity** | Research | Live web research, Deep Research, Space content |
 
 ### SquarePayouts Model Restriction (Permanent — 2026-05-20)
-MiniMax 2.7 is **BLOCKED** for all SquarePayouts work. Use Claude/DeepSeek/OpenAI/Perplexity/Hermes Computer Use only.
+**SquarePayouts model routing (Permanent 2026-09-14, Marcelo durable rule):** SquarePayouts model/tool routing is owned by BossMan. BossMan selects the best-fit tool and model per task type, risk, privacy, cost, and required quality. No blanket categorical block by AI model or by tool, EXCEPT the standing safety-sensitive and secrets carve-outs in the V3 task-type ledger: Claude is mandatory for auth, encryption, money-path, PII, and audit-logging work; production secrets, credentials, tokens, and .env content are Llama/local only and must never leave the host. Money-path/auth/PII/credentials/security/audit/public-financial work requires Step-5 red-team QA + strongest appropriate model; card does NOT move to done until verification passes. Production secrets and raw credentials remain local-only.
 
 ### Tool Strategy
 | Task | Tool |
@@ -330,7 +346,9 @@ Review covers: PM2 health log → Kanban backlog → Cron jobs → Service ports
 | Phase 0 | Blueprint saved to Obsidian + GitHub |
 | Phase 1 | All 14 sub-cards complete, all 11 tracks defined |
 | Phase 2 | BossMan SOUL.md updated, routing rules in AGENTS.md |
-| Phase 3 | LBC35 demoted to delegated-only in all docs |
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 | Phase 4 | Kanban schema active, handoff packet format verified |
 | Phase 5 | Telegram commands working for Marcelo |
 | Phase 6 | Money Pipeline pilot running end-to-end |
@@ -376,14 +394,18 @@ Review covers: PM2 health log → Kanban backlog → Cron jobs → Service ports
 | **Local execution plane** | Ollama + Llama | Private, repeatable, cost-sensitive tasks |
 | **General cloud plane** | MiniMax 2.7 | Default general cloud model within reset window |
 | **Specialist cloud plane** | DeepSeek / OpenAI / Claude | Chosen by specialty, not as generic backups |
-| **Delegated execution plane** | LBC35 + bot team | **ONLY** on explicitly assigned tasks — never a router or manager |
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 | **Knowledge plane** | Hermes knowledge / Obsidian / GitHub | Durable artifacts, SOPs, code, templates |
 
 ### Core Invariants (Never Violated)
 
 1. **BossMan / Hermes is the ONLY orchestration authority** — no sub-agent, no external AI, no automation chain routes work without BossMan as the decision layer
 2. **Kanban is the single source of truth** — no work off-board
-3. **LBC35 is a delegated executor ONLY** — never a router, never a manager, never self-assigns tasks
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 4. **All model routing flows through BossMan** — no autonomous model calls outside BossMan's explicit assignment
 
 ---
@@ -431,10 +453,14 @@ Review covers: PM2 health log → Kanban backlog → Cron jobs → Service ports
 - Long-form structured reasoning
 - Situations where output quality clearly justifies higher cost
 
-**LBC35** — activated only when:
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 - BossMan explicitly assigns a scoped, defined task
 - Task is well-bounded (not open-ended research or strategy)
-- LBC35 confirms completion back to BossMan Kanban card
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 - **Never:** self-routes, sets priorities, creates Kanban cards, modifies services
 
 ---
@@ -481,7 +507,7 @@ Review covers: PM2 health log → Kanban backlog → Cron jobs → Service ports
 
 ### SquarePayouts Model Restriction (Permanent — Updated 2026-05-27)
 
-- MiniMax 2.7 is **BLOCKED** for all SquarePayouts work
+- **SquarePayouts model routing (Permanent 2026-09-14, Marcelo durable rule):** SquarePayouts model/tool routing is owned by BossMan. BossMan selects the best-fit tool and model per task type, risk, privacy, cost, and required quality. No blanket categorical block by AI model or by tool, EXCEPT the standing safety-sensitive and secrets carve-outs in the V3 task-type ledger: Claude is mandatory for auth, encryption, money-path, PII, and audit-logging work; production secrets, credentials, tokens, and .env content are Llama/local only and must never leave the host. Money-path/auth/PII/credentials/security/audit/public-financial work requires Step-5 red-team QA + strongest appropriate model; card does NOT move to done until verification passes. Production secrets and raw credentials remain local-only.
 - Use: Ollama (local), DeepSeek, OpenAI, Claude, Perplexity Search
 - This restriction applies to all sub-agents and delegated executors
 

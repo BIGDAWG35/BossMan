@@ -1,4 +1,6 @@
 # AI Orchestration Blueprint
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
 **Version:** 1.1
 **Date:** 2026-05-22
 **Owner:** BossMan (Hermes orchestrator)
@@ -10,7 +12,9 @@
 
 - **BossMan** is the only top-level orchestrator.
 - **Marcelo** is the approver/strategist — not a relay between tools.
-- **LBC35 / OpenClaw / subagents** are the execution layer only.
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 
 ---
 
@@ -75,7 +79,9 @@ Use Hermes Computer Use on the Perplexity Mac app for visual verification when n
 **Do NOT use Computer for simple one-off queries or routine tasks.**
 
 **Fallback if Perplexity limits are hit:**
-- Internal stack (BossMan + LBC35 + subagents)
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 - Local Spaces files for maintenance (Priority 1 path)
 - Brave CDP browser automation for web research
 
@@ -179,7 +185,9 @@ rewrite_scope: none | minor | major
 - Allowed only on projects matching the §4 patterns: (1) greenfield full-stack SaaS builds, (2) large cross-service refactors/migrations, (3) complex multi-domain research
 - Requires `escalate_to_computer: yes` flag on the main project card, approved by Marcelo
 - Hard cap: **10,000 credits/month.** BossMan pre-warns if a project would consume more than ~3,000
-- LBC35 does NOT trigger Perplexity Computer; it only follows the flag in the handoff packet
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 
 ---
 
@@ -212,7 +220,9 @@ Important prompts, workflows, debug patterns, architecture decisions, and resear
 ## Spaces Maintenance
 
 - Daily sync via `sync_perplexity_spaces.sh` (cron job `7203f2330d92`, 6 AM daily)
-- Monitors: `~/.hermes/knowledge/` + OpenClaw Brain files
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 - Syncs to: `~/.hermes/spaces/[space]/` → Obsidian + GitHub
 - Telegram notification only if changes detected; silent if clean
 - Event-driven audits after major system/project/blueprint changes

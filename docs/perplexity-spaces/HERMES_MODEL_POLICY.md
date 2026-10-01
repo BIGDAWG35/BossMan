@@ -1,7 +1,11 @@
 # Hermes Model Policy
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
 
 > **System:** Hermes (primary AI), powered by MiniMax 2.7
-> This is Hermes's model policy — NOT OpenClaw's. Every Space references this.
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 > Last updated: 2026-05-07
 
 ---
@@ -12,7 +16,9 @@ Hermes is Marcelo's primary AI agent. Its primary brain is **MiniMax 2.7**, runn
 The other models — DeepSeek, OpenAI, Claude — are **backup layers** used only when MiniMax 2.7 is
 insufficient for a specific task.
 
-**Never confuse Hermes with OpenClaw.** They are separate systems with separate model stacks,
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 separate docs, and separate Spaces.
 
 ---
@@ -99,18 +105,32 @@ When working inside a Perplexity Space for Hermes:
 
 ---
 
-## OpenClaw Separation
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
 
-> ⚠️ **CRITICAL: Do not confuse Hermes with OpenClaw.**
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 
-| | Hermes | OpenClaw |
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
+
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 |--|-------|---------|
 | Primary brain | MiniMax 2.7 | Claude / OpenAI |
-| Docs location | `perplexity-spaces Hermes/` | `Openclaw Brain/` |
-| Perplexity Spaces | Hermes-branded Spaces | OpenClaw-branded Spaces |
-| Model policy | HERMES_MODEL_POLICY.md | OpenClaw's own policy |
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
 
-**When working in Hermes Spaces:** Only read Hermes docs. Never pull OpenClaw prompts or
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
+
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 instructions into Hermes unless explicitly migrated and rewritten.
 
 ---

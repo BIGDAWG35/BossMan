@@ -1,4 +1,6 @@
 # MODEL-STACK-WORKFLOWS.md
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
 
 **Version:** 3.0
 **Date:** 2026-06-03
@@ -421,7 +423,7 @@ so we can see how many trivial cards vs critical cards we ship.
 ├──────────────────────────────────────────────────────────────┤
 │ Perplexity Computer: rare escalation, 10k credits/month,    │
 │   escalate_to_computer: yes flag, Marcelo approval.         │
-│   LBC35 does not choose models. LBC35 does not trigger       │
+# RETIRED 2026-09-30 — service removed
 │   Perplexity Computer.                                       │
 └──────────────────────────────────────────────────────────────┘
 ```

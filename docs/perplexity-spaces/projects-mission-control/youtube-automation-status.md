@@ -1,4 +1,6 @@
 # YouTube Automation Pipeline — Status
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
 
 **Source:** Phase 1 audit, SERVICES_MAP.md, YouTube dashboard
 **Status:** ✅ Active — YouTube dashboard running
@@ -29,7 +31,9 @@ Based on Phase 1 audit, YouTube automation likely includes:
 
 ## Bot
 
-**YTDAWGBOT** is the OpenClaw bot for YouTube: setup, optimization, strategy, ops.
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 
 ---
 
@@ -39,7 +43,9 @@ Based on Phase 1 audit, YouTube automation likely includes:
 |---------|------|---------|
 | YouTube dashboard | 8140 | Analytics and control |
 | YTDAWGBOT | — | YouTube automation bot |
-| YouTube Telegram bot | — | OpenClaw youtube bot (token: `8382029348:AAF...`) |
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 
 ---
 
@@ -66,5 +72,7 @@ The YouTube automation pipeline should be reviewed during Phase 6 to:
 
 ## Related Files
 
-- `~/.hermes/knowledge/PHASE1_AUDIT_REPORT.md` — OpenClaw Telegram bots (youtube bot)
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 - `~/.hermes/knowledge/SERVICES_MAP.md` — YouTube dashboard port 8140

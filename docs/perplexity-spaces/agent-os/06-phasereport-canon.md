@@ -1,4 +1,6 @@
 # PHASEREPORT.md — Hermes Canon-Level Phase Report Log
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
 
 > **CANONICAL SOURCE OF TRUTH** for canon-level phase transitions.
 > Per-project phase reports live in the project folder (`PROJ-.../PHASEREPORT.md`). Per-incident postmortems live in `~/.hermes/logs/<incident-slug>.md` or the kanban card body.
@@ -31,12 +33,16 @@ This file is appended to (never rewritten). Each entry follows the same shape:
 
 **What changed:**
 
-- **NEW FILE:** `~/.hermes/knowledge/ROUTING-RULES.md` — the single canonical routing doc. Combines V3 model roles, Perplexity tiers, the new 7-stage closed-loop, what Marcelo is NOT, the 8 implementation details, drift signals, monthly audit. BossMan is the only orchestration authority; sub-agents stay in their lanes; LBC35 remains delegator/router only.
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 - **NEW FILE:** `~/.hermes/knowledge/LEARNED_SUB_AGENT_MASTER_BLUEPRINT.md` — lane roster + handoff contract + lane handoff examples + closed-loop audit. Codifies what each lane owns, what each lane MUST NOT do, and the handoff packet format that BossMan ↔ sub-agents ↔ Perplexity use.
 - **NEW FILE:** `~/.hermes/knowledge/PHASEREPORT.md` — this file. Canon-level change log.
 - **UPDATED:** `~/.hermes/knowledge/LEARNED_7_RULE_CONTRACT.md` — added Rule #0 (the closed-loop), Rule #0a (harness the loop in the 7-step default flow), and Rule #7a (drift signals for the new loop).
 - **UPDATED:** `~/.hermes/AGENTS.md` — added Layer-2 closed-loop rule section at the top (additive to V3); references `ROUTING-RULES.md` and `LEARNED_SUB_AGENT_MASTER_BLUEPRINT.md`.
-- **UNCHANGED:** V3 model roles, Perplexity Computer approval rules, LBC35 delegator-only role, all V3 carve-out triggers. The Layer-2 loop is additive.
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 
 **Where mirrored:**
 
@@ -72,7 +78,9 @@ This file is appended to (never rewritten). Each entry follows the same shape:
 
 - V3 model roles: unchanged
 - Perplexity Computer approval rules: unchanged
-- LBC35 delegator-only role: unchanged
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 - V3 carve-out triggers: unchanged
 - No hidden workstreams created
 - No existing routing broken

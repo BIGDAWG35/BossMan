@@ -1,4 +1,6 @@
 # Phase 5 — Telegram Mobile Controls for Kanban
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
 **Date:** 2026-05-08
 **Status:** ✅ COMPLETE
 
@@ -163,20 +165,20 @@ hermes kanban comment t_43dec590 "Phase 5 complete, all Telegram commands docume
 **Telegram message:**
 ```
 assign [id] to [profile]
-assign [id] to lbc35
+# RETIRED 2026-09-30 — service removed
 assign [id] to builder
 ```
 
 **Examples:**
 ```
 assign t_71fdab1a to builder
-assign t_0b722ed8 to lbc35
+# RETIRED 2026-09-30 — service removed
 ```
 
 **What BossMan does:**
 ```bash
 hermes kanban assign t_71fdab1a builder --board bossman
-hermes kanban assign t_0b722ed8 lbc35 --board bossman
+# RETIRED 2026-09-30 — service removed
 ```
 
 **BossMan replies:** Confirmation with assignee.
@@ -257,7 +259,7 @@ UNBLOCK: unblock [id]
 APPROVAL: move [id] to awaiting approval
 ═══════════════════════════════════════
 Statuses: todo | planned | running | blocked | done
-Profiles: bossman | builder | ops | trading | content | lbc35
+# RETIRED 2026-09-30 — service removed
 ═══════════════════════════════════════
 ```
 
@@ -299,20 +301,22 @@ BossMan → Marcelo (Telegram):
   • t_a821d42a — Bakery testing — waiting on bakery PR
 ```
 
-### Workflow 3 — LBC35 Handoff
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 
 ```
 Marcelo → BossMan (Telegram):
-  "new card Review OpenClaw cron scripts — assign to lbc35 — priority 2"
+  # RETIRED 2026-09-30 — service removed
 
 BossMan → Kanban:
-  hermes kanban create "Review OpenClaw cron scripts" --assignee lbc35 --priority 2
+  # RETIRED 2026-09-30 — service removed
 
 BossMan → Marcelo (Telegram):
   ✅ Card created: t_newid
-  Assignee: lbc35 (delegated executor)
-  Handoff packet will be sent when lbc35 picks it up.
-  Remember: lbc35 cannot self-assign — BossMan routes the work.
+  # RETIRED 2026-09-30 — service removed
+  # RETIRED 2026-09-30 — service removed
+  # RETIRED 2026-09-30 — service removed
 ```
 
 ### Workflow 4 — Approve and Move

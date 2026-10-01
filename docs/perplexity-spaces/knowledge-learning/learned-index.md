@@ -1,4 +1,6 @@
 # LEARNED_*.md Files — Full Index
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
 
 **Source:** `~/.hermes/knowledge/`
 **Status:** Active — 60 files
@@ -32,7 +34,9 @@
 | `LEARNED_IDEA_TO_PRODUCT.md` | LEARNED_IDEA_TO_PRODUCT.md — Idea-to-Product Engine v2 (Permanent 2026-09-15) |
 | `LEARNED_INDEX.md` | LEARNED_INDEX.md — Master Index of All `LEARNED_<DOMAIN>.md` Canon Files |
 | `LEARNED_KALSHI.md` | LEARNED_KALSHI.md — Kalshi Sports +EV Edge System |
-| `LEARNED_LBC35_TELEGRAM_SPAM_INCIDENT.md` | LBC35 Telegram Spam Incident — 2026-07-20 (LEARNED) |
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 | `LEARNED_MD_FILE_DRIFT_RUBRIC.md` | LEARNED_MD_FILE_DRIFT_RUBRIC.md — Classify Before Trim |
 | `LEARNED_N8N_INTEGRATION_REFERENCE.md` | n8n Integration Reference for TicketFlow |
 | `LEARNED_OPS_SELF_HEALING_POLICY.md` | LEARNED_OPS_SELF_HEALING_POLICY.md — PM2/cron Self-Healing Without Marcelo |

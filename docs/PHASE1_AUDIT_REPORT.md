@@ -1,4 +1,6 @@
 # Phase 1 Audit Report
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
 **Hermes Primary Control Migration**
 **Date:** 2026-05-07
 **Scope:** Full discovery of OpenClaw/LBC35 ecosystem, PM2, cron, ports, dashboards, data sources, repos, and configs

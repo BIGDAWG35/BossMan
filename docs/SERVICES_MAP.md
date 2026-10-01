@@ -1,4 +1,6 @@
 # Services Map — Updated 2026-05-28 (Mac Studio Migration)
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
 
 ## Hardware Context
 - **Primary host:** Mac Studio (Apple M4 Max, 16 cores, 64 GB RAM)
@@ -17,7 +19,9 @@
 
 | Container | Image | Port | Status | Notes |
 |---|---|---|---|---|
-| searxng-core | searxng/searxng:latest | 127.0.0.1:8080 | ✅ running | LBC35 SearXNG search |
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 | searxng-valkey | valkey/valkey:9-alpine | 6379/tcp | ✅ running | Cache for SearXNG |
 
 - Docker Desktop 4.67.0 — Linux VM architecture (x86_64, standard for Docker Desktop on Mac)
@@ -32,7 +36,9 @@
 | ai.hermes.gateway | — | Hermes Gateway | ✅ running (PID 31271) | 0 | **KEEP** — core Hermes |
 | com.local.quickstats | 8102 | QuickStats (Ops Briefing) | ✅ running (PID 47491) | exit -15 | **KEEP** — internal ops dashboard |
 | com.local.teamstandup | 8003 | Team Standup Bot | ✅ running (PID 2781) | exit -15 | **NEEDS DECISION** — Marcelo to decide |
-| ai.openclaw.gateway | — | OpenClaw Gateway | 🚫 disabled | — | Previously sent autonomous Telegram — disabled 2026-05-18 |
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 | ai.hermes.gateway-health | — | Gateway Health Monitor | 🚫 DISABLED | — | Caused restart loop; replaced by gateway-health-check.sh (one-shot) |
 
 ## Hermes Cron Jobs (12 active)

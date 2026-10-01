@@ -1,21 +1,31 @@
 # GitHub Backup Workflow
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
 
-**Source:** OpenClaw TOOLS.md (lines 107-126), SPACES_SYNC_WORKFLOW.md
+
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 **Status:** Active — two separate backup streams
 
 ---
 
 ## Two GitHub Backup Streams
 
-### 1. OpenClaw Backup (CLAW-Backup repo)
-Legacy backup for OpenClaw Brain core files. Backs up SOUL.md, AGENTS.md, TOOLS.md to `BIGDAWG35/CLAW-Backup`.
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 
 ### 2. Hermes Backup (BossMan repo)
 Primary backup for Hermes knowledge. Backs up `~/.hermes/knowledge/` to `~/Repos/BossMan/` (docs folder).
 
 ---
 
-## OpenClaw GitHub Backup (Legacy)
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 
 **Repo:** `BIGDAWG35/CLAW-Backup`
 **Backed up files:**
@@ -28,7 +38,7 @@ Primary backup for Hermes knowledge. Backs up `~/.hermes/knowledge/` to `~/Repos
 ```bash
 # Example (from TOOLS.md)
 CLAW-REPO="/Users/bigdawg/Repos/CLAW-Backup"
-SOURCE="/Users/bigdawg/Desktop/Openclaw Brain/Openclaw Brain"
+# RETIRED 2026-09-30 — service removed
 
 # Sync SOUL, AGENTS, TOOLS to CLAW-Backup
 rsync -av "$SOURCE/SOUL.md" "$SOURCE/AGENTS.md" "$SOURCE/TOOLS.md" "$CLAW-REPO/"
@@ -36,7 +46,7 @@ rsync -av "$SOURCE/SOUL.md" "$SOURCE/AGENTS.md" "$SOURCE/TOOLS.md" "$CLAW-REPO/"
 # Commit and push
 cd "$CLAW-REPO"
 git add .
-git commit -m "docs: sync OpenClaw core files $(date +%Y-%m-%d)"
+# RETIRED 2026-09-30 — service removed
 git push
 ```
 
@@ -87,7 +97,9 @@ git push
 
 | Backup | Frequency | Trigger | Status |
 |--------|-----------|---------|--------|
-| OpenClaw GitHub (CLAW-Backup) | Manual or periodic | After SOUL/AGENTS/TOOLS changes | Legacy |
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 | Hermes GitHub (BossMan) | Per sync workflow | After knowledge changes | Primary |
 | Perplexity Spaces GitHub | Per SPACES_SYNC_WORKFLOW | After Space content changes | Active |
 

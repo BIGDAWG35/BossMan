@@ -1,4 +1,6 @@
 # LEARNED: Docker on Mac Studio M4 Max
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
 
 **Date:** 2026-05-28
 **Hardware:** Mac Studio (Apple M4 Max, 64 GB RAM)
@@ -39,7 +41,9 @@ a0cd4d51db14   valkey/valkey:9-alpine   Up 3 hours   6379/tcp
 
 Both containers are **amd64** (x86_64) Linux containers — they run transparently inside the Linux VM.
 
-## SearXNG (LBC35 Search)
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 
 - **Port:** 127.0.0.1:8080
 - **Status:** ✅ Running, responding

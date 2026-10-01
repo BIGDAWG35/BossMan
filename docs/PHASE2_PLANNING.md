@@ -1,4 +1,6 @@
 # Phase 2 Planning Document
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
 **Hermes Primary Control Migration**
 **Date:** 2026-05-07
 **Phase:** Planning only — no live changes
@@ -11,27 +13,41 @@ This document captures all Phase 2 planning artifacts for review before Phase 3 
 
 ---
 
-## PART 1 — Proposed New LBC35 SOUL (Demoted Role)
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 
 **Status:** DRAFT — not applied. For review only.
 
-### Where to Find Current LBC35 Config
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
 
-LBC35 is defined in `~/.openclaw/openclaw.json` under `agents.list`. It has:
-- Workspace: `/Users/bigdawg/.openclaw/workspace-lbc35/`
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
+
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 - Model: `minimax-portal/MiniMax-M2.1`
 - Tools: exec, read, write, image_generate, video_generate, music_generate, tts, image, subagents, cron, sessions
 
-There is **no SOUL.md file** for LBC35. The "SOUL" concept for OpenClaw maps to the agent's `prompt.md` or `instructions.md` in the agent dir, neither of which exists for lbc35.
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
 
-The demotion is a **role/configuration change** — the new behavior is expressed through a new SOUL.md file to be placed at `~/.openclaw/agents/lbc35/SOUL.md`, paired with an updated openclaw.json entry.
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
+
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 
 ---
 
-### PROPOSED NEW LBC35 SOUL.md
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 
 ```markdown
-# LBC35 — Delegated Executor Under BossMan
+# RETIRED 2026-09-30 — service removed
 
 **Version:** 2.0
 **Date:** 2026-05-07
@@ -41,7 +57,7 @@ The demotion is a **role/configuration change** — the new behavior is expresse
 
 ## Role
 
-You are LBC35 — a delegated execution sub-agent operating under BossMan (the Hermes orchestrator).
+# RETIRED 2026-09-30 — service removed
 
 **You are NOT the primary manager.** BossMan routes work to you. You execute and report back. You do not initiate new workstreams, assign tasks, or manage other agents without being asked.
 
@@ -60,22 +76,22 @@ When in doubt, escalate to BossMan.
 
 - Do NOT create new projects or change architecture without BossMan approval
 - Do NOT modify PM2, cron, dashboards, or system services unless BossMan explicitly assigns it
-- Do NOT access OpenClaw workspace files for tasks that belong in the Hermes workspace
+# RETIRED 2026-09-30 — service removed
 - Do NOT override BossMan decisions
 - If a task conflicts with a BossMan directive, flag it and wait for resolution
 
 ## Relationship to BossMan
 
-- BossMan is the orchestrator — LBC35 is the executor
+# RETIRED 2026-09-30 — service removed
 - BossMan owns routing, planning, and escalation
-- LBC35 owns implementation of assigned tasks
-- Communication flows through BossMan — LBC35 does not directly manage other agents
+# RETIRED 2026-09-30 — service removed
+# RETIRED 2026-09-30 — service removed
 
 ## Workspace
 
-Work in: `/Users/bigdawg/.openclaw/workspace-lbc35/`
+# RETIRED 2026-09-30 — service removed
 
-Use Hermes docs only when BossMan explicitly directs you to. Otherwise use OpenClaw workspace for OpenClaw tasks.
+# RETIRED 2026-09-30 — service removed
 
 ## Model
 
@@ -84,19 +100,21 @@ Fallbacks: BossMan-approved escalation path only when MiniMax-M2.1 is unavailabl
 
 ---
 
-*This SOUL replaces any prior role definition that characterized LBC35 as primary manager or orchestrator.*
+# RETIRED 2026-09-30 — service removed
 ```
 
 ---
 
-### OpenClaw.json Agent Config Update (proposed)
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 
 ```json
 {
-  "id": "lbc35",
-  "name": "lbc35",
-  "workspace": "/Users/bigdawg/.openclaw/workspace-lbc35/",
-  "agentDir": "/Users/bigdawg/.openclaw/agents/lbc35/agent",
+  # RETIRED 2026-09-30 — service removed
+  # RETIRED 2026-09-30 — service removed
+  # RETIRED 2026-09-30 — service removed
+  # RETIRED 2026-09-30 — service removed
   "model": "minimax-portal/MiniMax-M2.1",
   "tools": {
     "allow": [
@@ -119,7 +137,9 @@ Fallbacks: BossMan-approved escalation path only when MiniMax-M2.1 is unavailabl
 }
 ```
 
-**Note:** The `role` and `reportsTo` fields are proposed additions — verify OpenClaw supports these fields before applying. If not supported, the SOUL.md file alone establishes the behavioral contract.
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 
 ---
 
@@ -167,15 +187,19 @@ todo → in_progress → done
 | 2 | Normal | Standard work items |
 | 3 | Low | Backlog, nice-to-haves |
 
-### Handoff Packet Format (Hermes → OpenClaw / LBC35)
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
 
-When BossMan delegates a task to LBC35, the handoff packet follows this structure:
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
+
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 
 ```markdown
 ## Handoff Packet
 
 **From:** BossMan (Hermes orchestrator)
-**To:** LBC35
+# RETIRED 2026-09-30 — service removed
 **Task ID:** [Kanban card ID]
 **Priority:** [1-3]
 **Created:** [ISO timestamp]
@@ -183,7 +207,7 @@ When BossMan delegates a task to LBC35, the handoff packet follows this structur
 ---
 
 ### Task Summary
-[1-2 sentence description of what LBC35 should do]
+# RETIRED 2026-09-30 — service removed
 
 ### Deliverables
 - [ ] [Specific deliverable 1]
@@ -206,15 +230,17 @@ Do not wait more than [X hours] before escalating.
 
 ---
 
-*This packet was generated by BossMan. LBC35 executes and reports to this card.*
+# RETIRED 2026-09-30 — service removed
 ```
 
-### Handoff Packet Format (LBC35 → BossMan Completion Report)
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 
 ```markdown
 ## Completion Report
 
-**From:** LBC35
+# RETIRED 2026-09-30 — service removed
 **To:** BossMan
 **Task ID:** [Kanban card ID]
 **Completed:** [ISO timestamp]
@@ -242,18 +268,28 @@ Do not wait more than [X hours] before escalating.
 
 ---
 
-*Reported by LBC35 to BossMan via Kanban card [card ID].*
+# RETIRED 2026-09-30 — service removed
 ```
 
-### Hermes ↔ OpenClaw Document Handoff Rules
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 
 | Document Type | Owner | Access |
 |-------------|-------|--------|
-| Operating policy, routing decisions | Hermes — `~/.hermes/knowledge/` | Hermes reads; OpenClaw receives excerpts only |
-| Task cards, Kanban | Hermes — `~/.hermes/kanban/` | BossMan owns; LBC35 receives packet summaries |
-| OpenClaw agent configs, SOULs | OpenClaw — `~/.openclaw/` | LBC35 owns; BossMan can read for oversight |
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 | Implementation code, scripts | Project repos | Both can access; BossMan approves structural changes |
-| Perplexity Spaces | Hermes — `~/Desktop/perplexity-spaces Hermes/` | Hermes only — OpenClaw does not reference |
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 
 ---
 
@@ -296,7 +332,9 @@ Do not wait more than [X hours] before escalating.
 - Schedule: 5:00 AM daily
 - Script: `run_morning_research.sh`
 - Project: `money-making-dashboard`
-- Owner: OpenClaw (legacy)
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 
 **Job 2 — Trading Poller**
 ```
@@ -305,7 +343,9 @@ Do not wait more than [X hours] before escalating.
 - Schedule: Every 5 minutes
 - Script: `poller.js`
 - Project: `trading-monitor`
-- Owner: OpenClaw (legacy)
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 - ⚠️ **BROKEN:** `trading-monitor` project directory does not exist on disk. This job runs every 5 minutes and fails silently.
 
 ---
@@ -328,7 +368,7 @@ Prompt for new Hermes cron job:
 
 Log output to ~/.hermes/logs/cron-morning-research.log
 If either script fails, add a comment to the money-pipeline Kanban card and alert BossMan.
-This cron is Hermes-owned. The underlying scripts are OpenClaw-owned but Hermes manages execution and oversight."
+# RETIRED 2026-09-30 — service removed
 ```
 
 **Original crontab line to remove after migration:**
@@ -385,16 +425,22 @@ Phase 6:  Address Job 2 (trading poller) as part of trading system rebuild
 
 ## PART 5 — Hermes/Systems Docs Migration
 
-### What Exists in the OpenClaw Workspace (to migrate to Hermes)
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
 
-The following docs live in the OpenClaw workspace under `Hermes/Systems/`:
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
+
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 
 | File | Purpose | Migrate? | Destination |
 |------|---------|---------|-------------|
 | `Hermes/Systems/Hermes/SERVICES_MAP.md` | Port and service inventory | ✅ Already migrated | `~/.hermes/knowledge/SERVICES_MAP.md` |
 | `Hermes/Systems/Hermes/PROFILES.md` | Hermes profiles and configuration | ✅ Migrate | `~/.hermes/knowledge/PROFILES.md` |
 | `Hermes/Systems/Hermes/ARCHITECTURE.md` | System architecture notes | ✅ Migrate | `~/.hermes/knowledge/ARCHITECTURE.md` |
-| `Hermes/Systems/Hermes/OPENCLAW_SOUL.md` | LBC35 SOUL reference | ✅ Migrate (archived) | `~/.hermes/knowledge/OPENCLAW_SOUL_archive.md` |
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 
 ### Files Already Migrated
 
@@ -409,7 +455,9 @@ The following docs live in the OpenClaw workspace under `Hermes/Systems/`:
 
 1. Copy `PROFILES.md` to `~/.hermes/knowledge/PROFILES.md`
 2. Copy `ARCHITECTURE.md` to `~/.hermes/knowledge/ARCHITECTURE.md`
-3. Archive original `OPENCLAW_SOUL.md` to `~/.hermes/knowledge/OPENCLAW_SOUL_archive.md`
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 4. Add `docs/MIGRATED_SYSTEMS.md` tracking all migrated files with dates
 5. Sync all to BossMan GitHub and Obsidian
 
@@ -421,10 +469,16 @@ The following docs live in the OpenClaw workspace under `Hermes/Systems/`:
 
 | Item | Finding |
 |------|---------|
-| LBC35 current role | Defined in `openclaw.json` — workspace executor, but no SOUL.md; prior behavior was primary manager |
-| LBC35 SOUL | No SOUL.md exists — demotion can be established by creating a new SOUL.md + updating openclaw.json |
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 | Trading poller cron | **Broken** — `trading-monitor` project doesn't exist; job has been silently failing |
-| Morning research cron | Working but OpenClaw-owned; needs Hermes migration |
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 | Port 8102 | `quick-stats` server — active, not PM2-managed |
 | Port 8003 | `team-standup-bot` — active, not PM2-managed |
 | Port 9119 | Hermes `hermes dashboard` CLI tool — active on-demand |
@@ -436,10 +490,16 @@ The following docs live in the OpenClaw workspace under `Hermes/Systems/`:
 | # | Blocker | Severity | Resolution needed |
 |---|---------|---------|-----------------|
 | 1 | **Trading poller cron is broken** — `trading-monitor` project missing | Medium | Decide: restore (Phase 6), remove now, or leave broken temporarily |
-| 2 | **OpenClaw.json field support** — proposed `role: "delegated_executor"` and `reportsTo: "bossman"` fields in LBC35 agent config | Low | Verify OpenClaw supports these fields before applying; if not, SOUL.md alone is sufficient |
-| 3 | **Morning research cron** — currently OpenClaw-owned | Low | Migrate to Hermes cron in Phase 3 — no approval needed, just confirmation |
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 
 **No critical blockers.** Phase 3 can proceed with Marcelo's approval on:
-1. New LBC35 SOUL.md content (review draft above)
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 2. Decision on trading poller (restore / remove / defer)
 3. Confirmation to begin applying SOUL changes and cron migrations

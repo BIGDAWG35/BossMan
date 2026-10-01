@@ -1,4 +1,6 @@
 # AI Orchestration Blueprint
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
 **Version:** 1.1
 **Date:** 2026-05-22
 **Owner:** BossMan (Hermes orchestrator)
@@ -10,7 +12,9 @@
 
 - **BossMan** is the only top-level orchestrator.
 - **Marcelo** is the approver/strategist — not a relay between tools.
-- **LBC35 / OpenClaw / subagents** are the execution layer only.
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 
 ---
 
@@ -75,7 +79,9 @@ Use Hermes Computer Use on the Perplexity Mac app for visual verification when n
 **Do NOT use Computer for simple one-off queries or routine tasks.**
 
 **Fallback if Perplexity limits are hit:**
-- Internal stack (BossMan + LBC35 + subagents)
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 - Local Spaces files for maintenance (Priority 1 path)
 - Brave CDP browser automation for web research
 
@@ -86,7 +92,7 @@ Use Hermes Computer Use on the Perplexity Mac app for visual verification when n
 | Model | Role | Notes |
 |-------|------|-------|
 | **Perplexity Search (Pro)** | First-step research | Step 1 of every non-trivial build. Current docs, API references, gotchas. |
-| **M3 (MiniMax M3)** | Primary thinking and planning brain | Step 2 design + Step 3 routing/architecture. Default for routine work. BLOCKED for SquarePayouts. |
+| **M3 (MiniMax M3)** | Primary thinking and planning brain | Step 2 design + Step 3 routing/architecture. Default for routine work. **SquarePayouts model routing (Permanent 2026-09-14, Marcelo durable rule):** SquarePayouts model/tool routing is owned by BossMan. BossMan selects the best-fit tool and model per task type, risk, privacy, cost, and required quality. No blanket categorical block by AI model or by tool, EXCEPT the standing safety-sensitive and secrets carve-outs in the V3 task-type ledger: Claude is mandatory for auth, encryption, money-path, PII, and audit-logging work; production secrets, credentials, tokens, and .env content are Llama/local only and must never leave the host. Money-path/auth/PII/credentials/security/audit/public-financial work requires Step-5 red-team QA + strongest appropriate model; card does NOT move to done until verification passes. Production secrets and raw credentials remain local-only. |
 | **DeepSeek** | Heavy-duty coder, reasoning engine, **and Step 5 QA (red-team)** | Primary builder for complex or critical backend logic, data, or debugging. **Default Step-5 QA model.** |
 | **Llama (Ollama local)** | Cheap grinder | Step 4 harden and clean up. Bulk transforms, scaffolding, refactors, tests, cleanup. |
 | **OpenAI** | Production finisher | Primary builder when output is user-facing or high-risk. Final polish only. **Step 5 QA fallback** (after DeepSeek). |
@@ -96,7 +102,7 @@ Use Hermes Computer Use on the Perplexity Mac app for visual verification when n
 
 ### SquarePayouts Model Restriction (Permanent)
 
-**M3 is BLOCKED for all SquarePayouts work.** Use Claude, DeepSeek, or OpenAI only. Perplexity Search, Llama, and Claude remain approved for SquarePayouts research and review. Perplexity Computer requires the same `escalate_to_computer: yes` approval as everywhere else.
+**SquarePayouts model routing (Permanent 2026-09-14, Marcelo durable rule):** SquarePayouts model/tool routing is owned by BossMan. BossMan selects the best-fit tool and model per task type, risk, privacy, cost, and required quality. No blanket categorical block by AI model or by tool, EXCEPT the standing safety-sensitive and secrets carve-outs in the V3 task-type ledger: Claude is mandatory for auth, encryption, money-path, PII, and audit-logging work; production secrets, credentials, tokens, and .env content are Llama/local only and must never leave the host. Money-path/auth/PII/credentials/security/audit/public-financial work requires Step-5 red-team QA + strongest appropriate model; card does NOT move to done until verification passes. Production secrets and raw credentials remain local-only. Perplexity Search, Llama, and Claude remain approved for SquarePayouts research and review. Perplexity Computer requires the same `escalate_to_computer: yes` approval as everywhere else.
 
 ### Full policy
 
@@ -179,7 +185,9 @@ rewrite_scope: none | minor | major
 - Allowed only on projects matching the §4 patterns: (1) greenfield full-stack SaaS builds, (2) large cross-service refactors/migrations, (3) complex multi-domain research
 - Requires `escalate_to_computer: yes` flag on the main project card, approved by Marcelo
 - Hard cap: **10,000 credits/month.** BossMan pre-warns if a project would consume more than ~3,000
-- LBC35 does NOT trigger Perplexity Computer; it only follows the flag in the handoff packet
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 
 ---
 
@@ -212,7 +220,9 @@ Important prompts, workflows, debug patterns, architecture decisions, and resear
 ## Spaces Maintenance
 
 - Daily sync via `sync_perplexity_spaces.sh` (cron job `7203f2330d92`, 6 AM daily)
-- Monitors: `~/.hermes/knowledge/` + OpenClaw Brain files
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 - Syncs to: `~/.hermes/spaces/[space]/` → Obsidian + GitHub
 - Telegram notification only if changes detected; silent if clean
 - Event-driven audits after major system/project/blueprint changes

@@ -1,4 +1,6 @@
 # Mac Studio M4 Max — System Health Check Report
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
 
 **Date:** 2026-05-28
 **Hardware:** Mac Studio (Apple M4 Max, 16 cores, 64 GB RAM)

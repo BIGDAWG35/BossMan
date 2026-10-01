@@ -1,4 +1,6 @@
 # Health Monitoring Procedures
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
 
 **Source:** SERVICES_MAP.md, Phase 1 audit
 **Status:** Active
@@ -27,13 +29,17 @@
 | SquarePayouts | 3100 | `curl -s localhost:3100` | HTML response | Timeout | No response |
 | Money Pipeline | 8020 | `curl -s localhost:8020` | HTML response | Timeout or errors | No response |
 | Fresh dashboard | 5050 | `curl -s localhost:5050` | HTML response | Timeout | No response |
-| OpenClaw hub | 8090 | `curl -s localhost:8090` | HTML response | Timeout | No response |
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 | Overview | 8100 | `curl -s localhost:8100` | HTML response | Timeout | No response |
 | Binance bot | 8104 | `pm2 list \| grep binance-bot` | STOPPED | online | — |
 | Health dashboard | 8110 | `curl -s localhost:8110` | HTML response | Timeout | No response |
 | Trading control | 8130 | `curl -s localhost:8130` | HTML response | Timeout | No response |
 | YouTube dashboard | 8140 | `curl -s localhost:8140` | HTML response | Timeout | No response |
-| OpenClaw gateway | 18789 | `curl -s localhost:18789/health` | `{"ok":true}` or similar | Error | No response |
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 
 ---
 

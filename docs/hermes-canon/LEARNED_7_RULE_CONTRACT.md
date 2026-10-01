@@ -1,4 +1,6 @@
 # The 7-Rule Contract — Marcelo's Operating Preferences for BossMan + Sub-agents
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
 
 > **CANONICAL SOURCE OF TRUTH** for the 7-rule contract.
 > All mirrors (Obsidian `Hermes/V3-Canon/V3 – 7-Rule Contract.md`, GitHub `BIGDAWG35/BossMan` → `docs/hermes-canon/LEARNED_7_RULE_CONTRACT.md`) are read-only views of this content.
@@ -26,7 +28,9 @@ This is the **numbered contract** that Marcelo's stack operates under. It's enfo
 
 ## Rule #0 — Closed-loop autonomy (Layer-2, Permanent 2026-07-22)
 
-**Sits on top of V3. Additive. Does NOT change V3 model roles, Perplexity Computer approval, or LBC35's delegator-only role.**
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 
 Every non-trivial request from Marcelo (or auto-triggered by the stack) MUST run the 7-stage closed loop. BossMan enforces it; sub-agents inherit it; no stage may be skipped unless the work is genuinely trivial (a direct question or a one-line patch).
 
@@ -134,7 +138,9 @@ If a `t_*` Kanban card `summary` or `comments` contains any of these, the agent 
 
 ### 8. GitHub backup before any non-trivial troubleshoot / fix (Permanent 2026-08-06)
 
-**Sits on top of Rule #3 (real verification) and Rule #4 (single verdict). Additive. Does NOT change V3 model roles, Perplexity Computer approval, or LBC35's delegator-only role.**
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 
 For every non-trivial mutation — config.yaml edits, `~/.hermes/SOUL.md` / `~/.hermes/AGENTS.md` patches, `cron/jobs.json` changes, PM2 service definitions, infra manifests (Caddy / Tailscale / Nginx / systemd / LaunchAgent), important scripts in `~/.hermes/scripts/`, or any change that will fail loud if broken — BossMan and the executing sub-agent MUST run the snap-first loop:
 
@@ -208,7 +214,9 @@ The whole point of this rule is so Marcelo is never asked to "go re-apply the pr
 
 ### 9. Snapshot + classify + extract before any MD-file trim/dedup/shave (Permanent 2026-08-06)
 
-**Sits on top of Rule #3 (real verification), Rule #6 (reports in order), and Rule #8 (snap-before-fix). Additive. Does NOT change V3 model roles, Perplexity Computer approval, or LBC35's delegator-only role.**
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 
 For every trim, dedup, or shave operation on a canon MD file — `LEARNED_*.md`, `~/.hermes/SOUL.md`, `~/.hermes/AGENTS.md`, profile SOUL/AGENTS/MEMORY, `OPERATINGBLUEPRINT.md`, `PHASEREPORT.md`, audit docs, or any other important MD in `~/.hermes/knowledge/` or under a profile — BossMan and the executing sub-agent MUST run the snapshot + classify + extract loop:
 
@@ -298,7 +306,9 @@ This prevents the canonical failure: deleting a section because it "looks redund
 
 - **BossMan** owns this contract. BossMan enforces it on itself and on all sub-agents.
 - **Sub-agents** follow it as workers under BossMan. They never pull Marcelo into the loop; they escalate via BossMan.
-- **LBC35/OpenClaw** does NOT become a worker; it's a delegator/router. When it produces plans, the plans must reference these 7 rules.
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 
 ### Default 7-step flow (Permanent 2026-07-20)
 

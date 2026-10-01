@@ -1,6 +1,10 @@
 # CSDAWG Review Cycle Manager
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
 
-**Owner:** LBC35 | **Managed for:** Marcelo
+
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 **Purpose:** Never miss a scheduled review. Never let CSDAWG operate without structured oversight.
 
 ---
@@ -15,7 +19,9 @@
 | **Strategy Refinement** | Monthly | 1st of month | C1, C2, G |
 | **Risk Review** | Event-driven | On trigger events | D1, D2, D3, H (if drawdown trigger) |
 | **Exit Effectiveness** | Every 10 closed trades | Trade-count trigger | C2 |
-| **Ad-hoc Analysis** | As-needed | LBC35 or Marcelo requests | E1, E2, E3 |
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 
 ---
 
@@ -109,7 +115,9 @@ Last updated: 2026-04-04
 
 ---
 
-## How LBC35 Runs This
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 
 1. **Every Sunday morning:** Run A1 + A2 + F (leading indicators) + B2 (pair ranking), surface findings to Marcelo
 2. **1st and 15th of month:** Run B1 (regime) + B3 (exposure calibration), surface findings to Marcelo
@@ -119,7 +127,9 @@ Last updated: 2026-04-04
 6. **On drawdown >10% from cycle peak:** Run H (drawdown recovery readiness) alongside D-series
 7. **On Marcelo request:** Run E-series, deliver within same session
 
-**LBC35 always:**
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 - Chooses the most relevant prompt based on timing + conditions
 - Collects CSDAWG output
 - Delivers summary: key findings + recommended changes + risk warnings + approval required Y/N
@@ -129,8 +139,12 @@ Last updated: 2026-04-04
 
 ## Guardrails
 
-- CSDAWG runs the analysis — LBC35 coordinates and surfaces
-- LBC35 never lets CSDAWG touch production code or risk parameters directly
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 - Material changes (pairs, risk rules, strategy) always require Marcelo's explicit approval
 - Event-driven reviews happen immediately — no waiting for the calendar
 

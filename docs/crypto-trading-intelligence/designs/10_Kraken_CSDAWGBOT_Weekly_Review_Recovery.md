@@ -1,4 +1,6 @@
 # Kraken + CSDAWGBOT Weekly Review Recovery
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
 
 ## Purpose
 This document captures the full recovery of Kraken private API authentication and stabilization of the CSDAWGBOT Weekly Strategy Review workflow. The work was done to fix repeated "EAPI:Invalid key" errors, stabilize the Saturday weekly review cron, and lock in a standardized Telegram output format with baseline settings preserved.

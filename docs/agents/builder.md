@@ -1,4 +1,6 @@
 # Builder — Hermes Sub-Agent (v3)
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
 
 **Lane:** builder
 **Status:** ACTIVE
@@ -7,7 +9,9 @@
 **Owner:** BossMan Hermes
 **Replaces:**
 - `~/.hermes/profiles/builder/SOUL.md` (profile SOUL, 2026-05-18)
-- `~/Desktop/Openclaw Brain/Openclaw Brain/soul-builder.md` (Openclaw soul, draft 2026-05-06)
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 **Mirrors:** primary | vault | GitHub | Spaces
 
 ---
@@ -49,9 +53,13 @@ If a card lands in Builder that belongs elsewhere, Builder flags it to BossMan a
 - **Builder NEVER routes to another lane.** Escalate via Kanban comment + return-to-BossMan.
 - **Builder reports completion** with: build-status, files-changed (diffs, not full files), test-results, next-step, artifact paths.
 
-## 6. Relationship to LBC35 and Delegated Executors
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
 
-- LBC35 and other delegated executors may run **assigned** build steps inside Builder's lane (e.g., run a script, edit a file, run tests).
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
+
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 - Delegated executors do **not** decide scope, do not pick tooling, do not write commit messages.
 - Builder specifies the **handoff packet** (§7). BossMan decides whether to dispatch a delegated executor.
 - Builder does NOT invoke Computer Use, does NOT call `claude`/`codex`/`opencode` directly except inside a card's approved step.
@@ -112,7 +120,7 @@ ESCALATE TO BOSSMAN WHEN:
 - A build keeps failing after the obvious fix (call `systematic-debugging` first).
 - BossMan approval is needed for: production config, secrets/credentials, billing, infra install/upgrade, public port/domain changes, auth/security behavior.
 - Any change to Binance bot / money-pipeline / trading logic → trading lane + BossMan.
-- Delegated executor (LBC35) reported an unclear result.
+# RETIRED 2026-09-30 — service removed
 
 ESCALATE TO ops WHEN:
 - The error is runtime (PM2 crash loop, port conflict, disk full, OOM).
@@ -148,13 +156,17 @@ In this order:
 
 | Version | Date       | Change                                                                       | Author      |
 |---------|------------|------------------------------------------------------------------------------|-------------|
-| 1.0     | 2026-06-18 | Initial draft — merged from `profiles/builder/SOUL.md` + Openclaw `soul-builder.md` per blueprint | BossMan     |
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 
 ---
 
 *Source files (now archived):*
 - `~/.hermes/profiles/builder/SOUL.md` → `_archive/profiles/builder/SOUL.md`
-- `~/Desktop/Openclaw Brain/Openclaw Brain/soul-builder.md` → `~/Desktop/Openclaw Brain/_archive/soul-builder.md`
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 
 ---
 

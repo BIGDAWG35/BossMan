@@ -1,4 +1,6 @@
 # Trading — CSDAWGBOT Weekly Strategy Review
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
 
 ## Purpose
 Automated weekly strategy review for crypto trading bots (Binance + Kraken). Gathers metrics, runs structured questions, feeds to DeepSeek/OpenAI for analysis, surfaces recommendations to Marcelo for approval.
@@ -18,7 +20,9 @@ Automated weekly strategy review for crypto trading bots (Binance + Kraken). Gat
 | CSDAWGBOT | N/A | Agent | Questions & notes |
 | DeepSeek | N/A | Model | Trade quality analysis |
 | GPT-5.4 | N/A | Model | Synthesis & recommendation |
-| LBC35 | N/A | Orchestrator | Surface to user |
+> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+- LBC35/OpenClaw (RETIRED 2026-09-30) — was delegator/router; delegation now done by BossMan via kanban + route-card.sh.
 
 ## Step-by-Step Workflow
 
@@ -99,12 +103,12 @@ Produce weekly summary:
 
 ### How to Verify Job is Registered
 ```bash
-openclaw cron list | grep CSDAWGBOT-Weekly
+# RETIRED 2026-09-30 — service removed
 ```
 
 ### How to Check Last Run
 ```bash
-openclaw cron runs CSDAWGBOT-Weekly-Strategy-Review
+# RETIRED 2026-09-30 — service removed
 ```
 
 ### What to Look For
