@@ -113,7 +113,9 @@ Sources: https://platform.minimax.io/docs/guides/text-generation · https://plat
 - Offline tasks (Perplexity unreachable, no internet)
 - Cheap experiments / background helpers (bulk pre-summaries, pattern scans)
 - Pre-summary step before sending logs to Claude/DeepSeek for final diagnosis
-- Mac Studio M4 Max available models: `qwen2.5:3b`, `qwen2.5:7b` (native arm64 Ollama.app since 2026-09-30; `qwen2.5:14b` is NOT installed)
+- Mac Studio M4 Max available models (stack-013, 2026-09-30): `qwen2.5:3b`, `qwen2.5:7b`, **`qwen3.8:27b`** (Q4, ~17-18 GB, num_ctx 32768 cap; PENDING benchmark PASS to swap profile fallbacks).
+- Ollama server tunings (stack-013, 2026-09-30, via `launchctl setenv` + Ollama.app env): `OLLAMA_MAX_LOADED_MODELS=1`, `OLLAMA_NUM_PARALLEL=1`, `OLLAMA_KEEP_ALIVE=10m`, `OLLAMA_FLASH_ATTENTION=1`, `OLLAMA_KV_CACHE_TYPE=q8_0`.
+- Light app jobs (binance-bot daily_memo.js, altus-forensic, some cron prompts) keep `qwen2.5:7b` / `qwen2.5:3b`; bulk/deep jobs use `qwen3.8:27b`.
 
 **Avoid for:**
 - Anything requiring precision (small models hallucinate more)
@@ -344,6 +346,28 @@ This file is the **canonical source of truth** for V3 model stack + routing. To 
 - A sub-agent uses M3 on a SquarePayouts code path
 - A `config.yaml` `fallback_providers` chain omits a model that this file says must be in the chain
 - An Obsidian mirror has a stale copy older than the canonical file (mtime check)
+
+---
+
+### 6. Google Gemini (native, free tier only) — `gemini-3.1-flash-lite-preview` (default) (added 2026-09-30, stack-013)
+
+**When to use:**
+- Public, non-sensitive bulk research: news/YouTube transcripts, daily/weekly market-news digests for trading research, long public documents, public image/screenshot read.
+- Anything that hits the body-pattern guard (`API_KEY=`, `sk-`, `password`, `secret`, `token=`) routes to a paid lane instead.
+- Approved by Marcelo 2026-09-30 23:50 ("Gemini ... of course, you would have to use a free tier. I don't wanna pay for anything else").
+
+**Avoid for:**
+- ANY data marked confidential, internal, or client-related.
+- Secrets, .env, logs with keys, personal/financial account data, SquarePayouts data, client data.
+- Anything in LEARNED canon or with PII.
+
+**Caps & routing:**
+- `route-card.sh research-public` → provider `gemini`, model `gemini-3.1-flash-lite-preview`, fallback MiniMax-M3.
+- Budget gate: $0 USD (free tier), 400 requests/day per `PROVIDER_REQUEST_CAPS["gemini"]`. Above 400 → downgrade to M3.
+- env: `GEMINI_API_KEY` (no-billing Google AI Studio project; **NOT YET SET** by Marcelo).
+- Free tier limits (Google): Flash ~20 RPD, Flash-Lite ~500 RPD. We cap at 400.
+
+**Why free** (replaces gap-analysis #4 Grok REJECTED): Grok rejected by Marcelo ("let's go ahead and skip grok"); Gemini picked because free tier covers public research work that MiniMax-M3 cannot, and is free.
 
 ---
 
