@@ -1,5 +1,8 @@
 # The 7-Rule Contract — Marcelo's Operating Preferences for BossMan + Sub-agents
 
+> **2026-10-02 (MD audit Phase 3):** this file holds rules #0–#9. Rules **#10, #11, #12** (effective 2026-09-01) are in `LEARNED_7_RULE_CONTRACT_RULES_10_11_12_ADDENDUM_2026-09-01.md` — read both; together they are the 12-rule contract.
+
+
 > **CANONICAL SOURCE OF TRUTH** for the 7-rule contract.
 > All mirrors (Obsidian `Hermes/V3-Canon/V3 – 7-Rule Contract.md`, GitHub `BIGDAWG35/BossMan` → `docs/hermes-canon/LEARNED_7_RULE_CONTRACT.md`) are read-only views of this content.
 > **Edit this file in `~/.hermes/knowledge/` only.**

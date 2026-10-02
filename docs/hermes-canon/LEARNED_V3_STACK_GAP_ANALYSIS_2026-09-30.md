@@ -1,5 +1,8 @@
 # LEARNED: V3 AI Stack Gap Analysis (2026-09-30)
 
+> **[HISTORICAL — 2026-10-02, MD audit Phase 3]** Dated record kept for history. Do not follow it as current rules. Current canon for this topic: `LEARNED_V3_MODEL_STACK.md` (2026-10-02 section).
+
+
 Author: Perplexity Computer, with BossMan. Requested by Marcelo, 22:03: "do we need to add any other modules like Gemini, Grok, or any other AI tools ... to make our stack stronger."
 Goal: keep pushing work toward free (local plus MiniMax), and use paid models only for builds.
 

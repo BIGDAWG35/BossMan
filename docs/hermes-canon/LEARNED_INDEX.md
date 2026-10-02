@@ -1,5 +1,8 @@
 # LEARNED_INDEX.md — Master Index of All `LEARNED_<DOMAIN>.md` Canon Files
 
+> **2026-10-02 (MD audit Phase 3):** the table below covers ~40 domain files. The full catalog of all 149 root docs — grouped by topic, with the ONE winning file per topic and HIST/SUP/GEN flags — is `LEARNED_INDEX_CATALOG.md`. Corrections: rows 7–8 (Health OS V3 decisions/reporting) point to files that no longer exist; the 7-Rule Contract has 12 rules (rules #10–#12 are in `LEARNED_7_RULE_CONTRACT_RULES_10_11_12_ADDENDUM_2026-09-01.md`); local models changed 2026-10-02 (see `LEARNED_V3_MODEL_STACK.md`).
+
+
 **Status:** Permanent (refreshed 2026-07-31, Card `t_video_layout_refspec_20260731` — added entry #35 (`LEARNED_VIDEO_LAYOUT_REFERENCES.md`, the 3-reference visual layout canon: Hermes Agent Masterclass / CryptoMetric / AI Labs). File count 34→35. Earlier 2026-07-31 patches on entries #31/#32/#33/#34 added v18 PiP overlay sections. Refresher 2026-07-30 entries #30–34: DaVinci Resolve Studio, Four-Tool Video Stack v17, Video Rendering ffmpeg, YouTube Workflow, YouTube Automation Authority; file count 29→34).
 **Purpose:** Single map of all per-system / per-domain canon files. Kernel-docs (SOUL.md, AGENTS.md, ROUTING-RULES v3) point into `LEARNED_*` for ownership/architecture/repair details. This index is the map of all domains.
 

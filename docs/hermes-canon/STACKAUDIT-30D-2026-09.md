@@ -1,5 +1,6 @@
 # STACK AUDIT — 30-DAY READ-ONLY WINDOW
-> **RETIRED 2026-09-30, removed.** LBC35/OpenClaw is no longer part of the stack. Delegation is now done by BossMan via kanban + route-card.sh. This reference is retained as historical record only.
+
+> **[HISTORICAL — 2026-10-02, MD audit Phase 3]** Dated record kept for history. Do not follow it as current rules. Current canon for this topic: `LEARNED_V3_MODEL_STACK.md` (2026-10-02 section).
 
 
 **Window:** 2026-08-18 00:00:00 UTC → 2026-09-17 23:59:59 UTC (inclusive)
