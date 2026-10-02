@@ -401,7 +401,31 @@ Every canon-MD trim, dedup, or shave — including this file, `LEARNED_7_LAYER_A
 
 ---
 
+## 2026-10-02 — Local fallback switch + 529 resilience (supersedes any qwen3.8:27b / 32K fallback text above)
+
+**Layout (all 9 configs: default + 8 profiles)**
+1. **Primary:** MiniMax-M3 (`api.minimax.io/anthropic`, 262K). Unchanged.
+2. **Retry before falling back:** `agent.api_max_retries: 5` (was 3) plus the built-in `auto_recovery_cycles: 5`. A short MiniMax 529 burst is retried instead of dropping the whole turn to local.
+3. **Local fallback:** `custom / qwen3.5:35b-a3b-nvfp4` (MoE, 3B active, MLX build) on `localhost:11434`, `context_length: 131072`, `ollama_num_ctx: 131072`. This is above the Hermes 64K floor.
+4. **Next turn:** Hermes goes back to M3 automatically (`_restore_primary_runtime`).
+5. **Compression:** `auxiliary.compression: auto` uses the session's main model. Every agent path is now ≥128K, so the 64K `ValueError` cannot recur. The 9 agent crons that were pinned to `qwen2.5:7b` (32K) were moved to the new model. no_agent crons were left alone.
+
+**Benchmark (Mac Studio M4 Max 64GB, 56K-token prompt, 2026-10-02, /tmp/llm-bench/)**
+| Model | Prefill | Cold 56K | Warm | Decode | Tool call | RAM |
+|---|---|---|---|---|---|---|
+| qwen3.5:35b-a3b-nvfp4 | 1,110 tok/s | 55 s | 1.9 s | 113 tok/s | OK | 24 GB, 56% free |
+| qwen3.8:27b (old) | 182 tok/s | 325 s | 8 s | 12.5 tok/s | OK | 19 GB |
+
+The old 27B was more accurate on the doc-reading question. The 35B-A3B is 6–9x faster, which is what an outage fallback needs.
+
+**Live proof:** cron `binance-health-check-pm` (it failed on 10/01 with the compression `ValueError`) ran at 10:12 on qwen3.5:35b-a3b-nvfp4. Status ok, per-call latency 1–20 s.
+
+**Why M3 returned 529:** MiniMax server-side cluster overload, error `(2064)` "server cluster is currently under high load". Their docs call it retryable. It is not a quota or plan limit; those come back as 1002 (rate limit) or 2056 (usage limit). Bursts were logged on 08-30/31 and 10-01 19:00–22:30 PT.
+
+**Still on disk, on purpose:** `qwen2.5:7b` / `qwen2.5:3b`, which binance-bot `daily_memo.js` and altus-forensic call directly. `qwen3.8:27b` stays until binance-bot `_llm_free.js` (PIPELINE_OLLAMA_PRIMARY) is repointed. That change needs a bot restart, which needs Marcelo's yes.
+
+Backups: `~/Backups/model-switch-20261002/`. Card t_de03a430.
+
+---
+
 *This file replaces any prior model routing description in SOUL/AGENTS/OPERATINGBLUEPRINT. If config.yaml or a profile yaml diverges, this file wins until config catches up.*
-
-
-
