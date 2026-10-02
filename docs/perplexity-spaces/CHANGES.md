@@ -23,3 +23,11 @@
 - The 9 agent crons that were on qwen2.5:7b (32K, below the 64K compression minimum) now run on `qwen3.5:35b-a3b-nvfp4`.
 - Binance free-LLM chain (`scripts/_llm_free.js`): MiniMax-M3 -> `qwen3.5:35b-a3b-nvfp4` -> qwen2.5:7b.
 - Every "Fallback chain" row in the 00 - Current State files, Model Stack, Services Map, Paid Model Routing and Token Economics was updated, with a dated note.
+
+## v4.2 — 2026-10-02 (MD audit Phase 4)
+- One pipeline now: canon `~/.hermes/knowledge/` → this folder (`build_spaces_v4.py`, daily 06:00) → read-only mirrors `~/.hermes/spaces/`, Obsidian `Perplexity Spaces/`, repo `docs/perplexity-spaces/`. Map: `~/.hermes/config/spaces_v4_map.json`. Guide: `~/.hermes/knowledge/LEARNED_DOC_PIPELINE.md`.
+- Each file's first line now says either "auto-built from canon" (edit the source) or "space-only doc: this copy is the canon" (edit here).
+- 50 files rebuilt from current canon. 8 copies re-pointed to their real canon source: Blocker Resolutions, Error Escalation (×3), Health Monitoring (×2), User Preferences, PMD Valuation Integration. Both AGENTS.md copies now come from `AGENTS_ROSTER.md`. "Perplexity Spaces Sync Workflow" now comes from `LEARNED_DOC_PIPELINE.md`.
+- 208 wording fixes from two review sub-agents: retired LBC35/OpenClaw, Health OS and Basecamp no longer described as live; paid models removed as automatic fallbacks; `binance-bot` → `binance-bot-live` (live since 2026-10-01); SquarePayouts model routing is task-fit (no blanket M3 block); ports corrected (budgeting 8145, Money Pipeline 8020, BakeryOps 3002); text damaged by the 2026-10-01 bulk LBC35 replace was repaired; self-contradicting status lines fixed. PHASEREPORT copies are marked as history.
+- Models row: MiniMax-M3 in 7 profiles; content + qa-verification use M2.7 (M2.7 → M3 → Ollama).
+- The old v3 sync script, its mapping and the weekly v3 refresh job are retired; the old v3 copies were moved to `~/.hermes/archive/spaces-v3-20261002/` and Obsidian `_Archive/`.

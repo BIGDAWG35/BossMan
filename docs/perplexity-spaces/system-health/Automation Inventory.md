@@ -1,4 +1,4 @@
-**Version:** v4 · **Date:** 2026-09-30 · **Source:** `~/.hermes/knowledge/AUTOMATION_INVENTORY.md` · **Status:** Current — auto-built from canon by build_spaces_v4.py; edit the source, not this copy
+**Version:** v4 · **Date:** 2026-10-02 · **Source:** `~/.hermes/knowledge/AUTOMATION_INVENTORY.md` · **Status:** Current — auto-built from canon by build_spaces_v4.py; edit the source, not this copy
 
 > Note: any LBC35/OpenClaw mention in this file is historical (retired 2026-09-30; BossMan does all delegation via kanban + route-card.sh). Health OS was deleted 2026-09-30. Where this file conflicts with "00 - Current State (2026-10-01).md", the Current State file wins.
 
@@ -136,3 +136,27 @@ After the cron registry migration to Option B:
 V3.3 drafting remains BLOCKED pending:
 - `t_6ae3e7a9` (4 absent baseline jobs + FREESCOUT cadence) execution + disposition
 - Rule #9 recovery items (per sub-agent Option C)
+
+
+## A.5 Profile-scoped jobs (added 2026-10-02, MD audit Phase 5)
+
+`hermes cron list` shows only the **main** scheduler (`~/.hermes/cron/jobs.json`). These jobs live in **profile** schedulers and were missing from this inventory. They are enabled and running (last runs verified 2026-10-02).
+
+| Profile | Job id | Name | Schedule | Script |
+|---|---|---|---|---|
+| bossman | `96518f888d12` | money-pipeline-morning-research | `0 5 * * *` | agent |
+| bossman | `5cdaa136eb80` | money-pipeline-health-monitor | `*/30 * * * *` | agent |
+| bossman | `c331052b5e39` | Hermes Log Review | `0 8 * * *` | agent |
+| bossman | `e579c271698f` | daily-radar-census | `0 15 * * 1-5` | agent |
+| bossman | `46f51d79c3df` | artifact-save-weekly-scan | `0 9 * * 1` | agent |
+| bossman | `31c52ad43a70` | routing-ledger-scan | `0 9 * * 1` | agent |
+| bossman | `b482d97cb8ac` | t1-step5-weekly-scan | `0 8 * * 1` | agent |
+| bossman | `9d4d2a337fd4` | weekly-offboard-audit | `0 9 * * 3` | agent |
+| bossman | `01dff7ff61e4` | PM2 Health Monitor | `*/15 * * * *` | pm2-health-monitor.py |
+| bossman | `91a183768d91` | security-drift-watch-hourly | `0 * * * *` | security-drift-watch.sh |
+| builder | `ea0157d715fa` | Crypto Weekly Learning & Intel Review — Sunday 6pm PT | `0 18 * * 0` | agent |
+| ops | `bb715beaf832` | daily-9am-health-check | `0 9 * * *` | agent |
+
+Disabled clone entries left in profile files (copies of main jobs, all `enabled: false`): bossman 3, builder 35, content 36, ops 42. **Never enable one** — it would double-run the main job. Edit jobs only in the main scheduler.
+
+Main scheduler active jobs at this check: 42. New on 2026-10-02: `remote-access-check` (1f157a7eefd5, every 15 min, no-agent) — see `LEARNED_REMOTE_ACCESS.md`; `canon-mirror-sync`, `hermes-canon-drift-check-weekly` — see `LEARNED_DOC_PIPELINE.md`.

@@ -35,6 +35,7 @@
 | 3 | **Basecamp Workflow** | `LEARNED_BASECAMP_WORKFLOW.md` | 4.0 KB | Basecamp autonomous workflow + retirement rule (extracted from SOUL.md 2026-07-22). | Basecamp sub-agent | 2026-07-22 |
 | 4 | **Brave-Perplexity Bridge** | `LEARNED_BRAVE_PERPLEXITY_BRIDGE.md` | 4.6 KB | Brave browser ↔ Perplexity.ai integration (Cloudflare-bypass patterns). | research-intel sub-agent | 2026-06-24 |
 | 4b | **Tailscale + Next.js Proxy** | `LEARNED_TAILSCALE_SERVE_NEXTJS_PROXY.md` | 2.6 KB | Tailscale Serve `/_next/static/*` 404 trap + Caddy fix (extracted 2026-07-27 from SNS-401K incident). | BossMan (kernel) | 2026-07-27 |
+| 4c | **Remote access (Mac Studio)** | `LEARNED_REMOTE_ACCESS.md` | 4.4 KB | Screen Sharing over Tailscale = primary (vnc://100.92.223.82), SSH = terminal, AnyDesk = backup; session-limit + Allow-prompt causes; remote-access-check cron. | BossMan (ops) | 2026-10-02 |
 | 5 | **Client Review Portal** | `LEARNED_CLIENT_REVIEW_PORTAL.md` | 2.2 KB | Client review portal + helpdesk ticket system operating model. | client-hub sub-agent | 2026-07-22 |
 | 6 | **Default Build Flow** | `LEARNED_DEFAULT_BUILD_FLOW.md` | 6.5 KB | V3 default build flow: research → design → build → harden → QA → docs. | BossMan (kernel) | 2026-07-15 |
 | 7 | **Health OS V3 Decisions** | `LEARNED_HEALTH_OS_V3_DECISIONS.md` | 2.4 KB | Health OS V3 architectural decisions + decision logic. | health-os sub-agent | 2026-07-20 |
