@@ -21,8 +21,8 @@ This file used to be 433 lines. On 2026-08-06 it was split into 4 sibling files 
 - **7-Rule Contract + Layer-2 loop** → `~/.hermes/knowledge/LEARNED_7_RULE_CONTRACT.md`
 - **Model routing / Token economics** → `~/.hermes/knowledge/LEARNED_V3_MODEL_STACK.md` + `LEARNED_V3_TOKEN_ECONOMICS.md`
 - **Sub-agent lane roster + handoff contracts** → `~/.hermes/knowledge/LEARNED_SUB_AGENT_MASTER_BLUEPRINT.md`
-- **Perplexity workflow** → `~/.hermes/knowledge/LEARNED_PERPLEXITY_SPACES_WORKFLOW.md`
-- **Memory automation** → `~/.hermes/skills/memory-automation/SKILL.md`
+- **Perplexity workflow** → `~/.hermes/knowledge/LEARNED_PERPLEXITY_SPACES_WORKFLOW.md` [missing 2026-10-01 — current Perplexity canon: LEARNED_BRAVE_PERPLEXITY_BRIDGE.md]
+- **Memory automation** → `~/.hermes/skills/hermes/memory-automation/SKILL.md`
 
 ## Card reference
 
