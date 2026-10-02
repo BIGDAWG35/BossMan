@@ -19,13 +19,13 @@ This doc defines what each sub-agent lane **owns**, what each lane **must NOT do
 
 | Lane | Owner of | May NOT do | Default model |
 |---|---|---|---|
-| **builder** | Code implementation, schema migration, test scaffolding, dependency updates, refactors | Run live trades, approve scope pivots, modify PM2/cron/LaunchAgent, send Telegram to Marcelo | DeepSeek |
-| **ops** | PM2 / cron / LaunchAgent / Tailscale / Caddy / service health, incident response, log triage | Write user-facing code, modify trading bots, send Telegram outside BossMan | DeepSeek |
-| **trading** | Binance/Kraken bot config, regime detection, position management, risk rules, PII safety | Modify PM2/cron without BossMan, disable safety hooks, enable PAPER_MODE=false without Marcelo | Claude (mandatory) + DeepSeek (secondary) |
-| **content** | YouTube channel, AI/crypto content pipeline, TTS, media gen, ElevenLabs, publishing ops | Modify billing, sign contracts, change brand positioning | OpenAI |
+| **builder** | Code implementation, schema migration, test scaffolding, dependency updates, refactors | Run live trades, approve scope pivots, modify PM2/cron/LaunchAgent, send Telegram to Marcelo | MiniMax-M3 (builds via route-card build-impl → gpt-5.5) |
+| **ops** | PM2 / cron / LaunchAgent / Tailscale / Caddy / service health, incident response, log triage | Write user-facing code, modify trading bots, send Telegram outside BossMan | MiniMax-M3 (escalation via route-card troubleshoot-escalate → DeepSeek v4-pro) |
+| **trading** | Binance/Kraken bot config, regime detection, position management, risk rules, PII safety | Modify PM2/cron without BossMan, disable safety hooks, enable PAPER_MODE=false without Marcelo | MiniMax-M3 (live-money changes via route-card money-path → Claude Sonnet 4.6) |
+| **content** | YouTube channel, AI/crypto content pipeline, TTS, media gen, ElevenLabs, publishing ops | Modify billing, sign contracts, change brand positioning | MiniMax-M2.7 |
 | **travel** | Travel OS sub-routes, itinerary features, PDF/PPTX export pipeline, closeout workflow | Touch other apps' DBs, modify shared PM2 processes | MiniMax-M3 |
-| **qa-verification** | Step-5 verifier verdict, cross-system regression tests, browser QA, evidence collection | Implement features, modify source code outside test files | Claude (sensitive work) / MiniMax-M3 (cosmetic) |
-| **research-intel** | Perplexity-first research, vendor comparisons, best-practice discovery, market intel | Implement code, make product decisions, save facts to memory | DeepSeek |
+| **qa-verification** | Step-5 verifier verdict, cross-system regression tests, browser QA, evidence collection | Implement features, modify source code outside test files | MiniMax-M2.7 (paid QA via route-card qa-review → DeepSeek v4-pro) |
+| **research-intel** | Perplexity-first research, vendor comparisons, best-practice discovery, market intel | Implement code, make product decisions, save facts to memory | MiniMax-M3 (public research may use route-card research-public → Gemini free tier) |
 | **knowledge-canon** | `~/.hermes/knowledge/` curation, LEARNED_* doc authoring, Obsidian mirroring, doc-hygiene cron | Implement features, send notifications to Marcelo | MiniMax-M3 |
 | **self-improvement** | Skill authoring, memory hygiene, MEMORY.md pruning, weekly health checks | Modify routing rules, change model assignments | MiniMax-M3 |
 | **loop-engineering** | Goal-loop pattern (`intake → decompose → execute → review → done`), cron-driven loops, recurring workflows | Define new model routing, change governance | MiniMax-M3 |

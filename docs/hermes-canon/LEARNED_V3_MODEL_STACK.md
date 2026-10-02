@@ -14,7 +14,7 @@ This is the **single canonical reference** for which model to use for which task
 
 ## MiniMax family lane map (Marcelo directive 2026-09-30)
 
-**Roles (locked):** BossMan / Hermes = manager + orchestrator. LBC35 / OpenClaw = delegator (designs the plan, routes work; never implements, never messages Marcelo). Sub-agents = workers.
+**Roles (locked, current as of 2026-10-01):** BossMan / Hermes = manager + orchestrator + sole status surface. LBC35 / OpenClaw = RETIRED 2026-09-30 (backups delete 2026-10-30); there is no delegator layer. BossMan routes work directly via kanban + `~/.hermes/bin/route-card.sh`. Sub-agents = workers.
 
 **MiniMax-M3 is the default everywhere.** How Hermes actually enforces models: each lane is a profile with its own `model.default` + `fallback_providers`; BossMan picks the model by picking the lane. (The old per-task routing table that sat under `terminal:` in config.yaml was never read by Hermes and was removed 2026-09-30; the policy lives here.)
 
@@ -27,9 +27,9 @@ This is the **single canonical reference** for which model to use for which task
 | travel | MiniMax-M3 | Search-heavy + native image input for listing screenshots |
 | content | MiniMax-M2.7 | Best MiniMax model for professional office delivery (Word/PPT/Excel, GDPval-AA ELO 1495) and character-rich writing |
 | qa-verification | MiniMax-M2.7 | Independent QA: a different model from the builder avoids shared blind spots; M2.7 is strong at log analysis, bug hunting and code security |
-| LBC35 / OpenClaw (delegator) | MiniMax-M2.7 | MiniMax reports M2.7 is markedly better inside OpenClaw than M2.5 and keeps 97% skill adherence across 40 complex skills, which fits a plan-and-route role |
-| Automatic fallback | M3 lanes -> Ollama qwen2.5:7b; M2.7 lanes -> M3 -> Ollama qwen2.5:7b | DeepSeek and Claude are NOT automatic fallbacks (cost control) |
-| **All crons + PM2 automated runs** | **MiniMax-M3 or Ollama only** | Marcelo directive 2026-09-30. `cron.model: MiniMax-M3` is set in every profile; per-job pins may only be M3 or Ollama (qwen2.5:3b/7b). PM2 apps that call Claude/OpenAI/DeepSeek on a schedule must be moved to M3 (MiniMax exposes an Anthropic-compatible API at https://api.minimax.io/anthropic) |
+| LBC35 / OpenClaw (delegator) *[RETIRED 2026-09-30]* | MiniMax-M2.7 | Historical note: MiniMax reported M2.7 markedly better than M2.5 inside OpenClaw, with 97% skill adherence across 40 complex skills. This lane no longer exists; the delegator role is retired and there is no automatic replacement. |
+| Automatic fallback | M3 lanes -> Ollama qwen3.8:27b; M2.7 lanes -> M3 -> Ollama qwen3.8:27b | DeepSeek and Claude are NOT automatic fallbacks (cost control). qwen2.5:7b/3b are reserved for light app jobs only (not the silent fallback). |
+| **All crons + PM2 automated runs** | **MiniMax-M3 or Ollama only** | Marcelo directive 2026-09-30. `cron.model: MiniMax-M3` is set in every profile; per-job pins may be M3, Ollama qwen3.8:27b (standard fallback), or Ollama qwen2.5:7b/3b (light app jobs). PM2 apps that call Claude/OpenAI/DeepSeek on a schedule must be moved to M3 (MiniMax exposes an Anthropic-compatible API at https://api.minimax.io/anthropic) |
 
 **Not used:** MiniMax-M2.5 and M2.1 are listed as Legacy by MiniMax; neither beats M3 at anything we run and the price is the same. `-highspeed` variants cost 2x and are slower than M3. Revisit when MiniMax-M3.1 leaves preview.
 
@@ -113,7 +113,7 @@ Sources: https://platform.minimax.io/docs/guides/text-generation · https://plat
 - Offline tasks (Perplexity unreachable, no internet)
 - Cheap experiments / background helpers (bulk pre-summaries, pattern scans)
 - Pre-summary step before sending logs to Claude/DeepSeek for final diagnosis
-- Mac Studio M4 Max available models (stack-013, 2026-09-30): `qwen2.5:3b`, `qwen2.5:7b`, **`qwen3.8:27b`** (Q4, ~17-18 GB, num_ctx 32768 cap; PENDING benchmark PASS to swap profile fallbacks).
+- Mac Studio M4 Max available models (stack-013, 2026-09-30; activated as standard fallback 2026-10-01, card spaces-001): `qwen2.5:3b`, `qwen2.5:7b`, **`qwen3.8:27b`** (Q4, ~17-18 GB, num_ctx 32768 cap; profile fallbacks swapped to qwen3.8:27b on 2026-10-01).
 - Ollama server tunings (stack-013, 2026-09-30, via `launchctl setenv` + Ollama.app env): `OLLAMA_MAX_LOADED_MODELS=1`, `OLLAMA_NUM_PARALLEL=1`, `OLLAMA_KEEP_ALIVE=10m`, `OLLAMA_FLASH_ATTENTION=1`, `OLLAMA_KV_CACHE_TYPE=q8_0`.
 - Light app jobs (binance-bot daily_memo.js, altus-forensic, some cron prompts) keep `qwen2.5:7b` / `qwen2.5:3b`; bulk/deep jobs use `qwen3.8:27b`.
 
@@ -179,12 +179,13 @@ If the issue requires external knowledge (new error pattern, vendor API change),
 
 ---
 
-## Routine cron routing — Ollama/local by default (Permanent 2026-07-25, card t_monitoring_ollama_default_v1_20260725)
+## Routine cron routing — Ollama/local by default (Permanent 2026-07-25, card t_monitoring_ollama_default_v1_20260725; updated 2026-10-01, card spaces-001)
 
 This sub-policy is **additive** to the V3 model stack above. Routine monitors,
 grinders, bulk-cleanup, and PM2/cron infra checks **default to Ollama/local**
-(`provider: custom`, `base_url: http://localhost:11434/v1`, model `qwen2.5:3b`
-or `qwen2.5:14b`) instead of falling through to Claude / DeepSeek.
+(`provider: custom`, `base_url: http://localhost:11434/v1`, model `qwen3.8:27b`
+for the standard fallback, `qwen2.5:7b` / `qwen2.5:3b` reserved for light app
+jobs only) instead of falling through to Claude / DeepSeek.
 
 ### Drift Closure 2026-09-15 (BossMan run, card `t_drift_closure_runtime_routing_v1_20260915`)
 
@@ -199,7 +200,7 @@ runtime defaults. Payment, auth, PII, security, audit-logging, and
 customer-facing financial work retain mandatory risk-based QA gates and must
 fail loudly or escalate if the approved route is unavailable.
 
-**Implementation (applied 2026-09-15):**
+**Implementation (applied 2026-09-15; updated 2026-10-01):**
 1. Every job in `~/.hermes/cron/jobs.json` has an **explicit** `provider` +
    `model`. No job may inherit the global `fallback_providers` chain.
 2. Every job's `fallback_chain` is `[]`. Unapproved / unavailable routes fail
@@ -210,14 +211,16 @@ fail loudly or escalate if the approved route is unavailable.
    support thinking") → silent paid fallback.
 4. Legacy non-approved pins are removed: the `pmd-watchdog` job was pinned to
    `minimax/haiku` (haiku is not in the approved M3/Ollama set) and is now
-   `custom/qwen2.5:7b`.
+   `custom/qwen3.8:27b`.
 
 **Routing ledger for cron jobs:**
 - Routine cron (bulk, monitors, watchdog, scans, audits, sync, freshness):
-  `custom/qwen2.5:7b` (Ollama).
+  `custom/qwen3.8:27b` (Ollama) — standard fallback, M3 primary.
+- Light app jobs (compact summaries, tiny transformations, no long context):
+  `custom/qwen2.5:7b` (Ollama) — only when qwen3.8:27b would be overkill.
 - Chatty / brief jobs explicitly approved for M3: `minimax/MiniMax-M3`.
 - Risk-gated jobs (money paths, security, SquarePayouts state exporters,
-  Binance, MoneyPipeline): `custom/qwen2.5:7b` (Ollama) — Ollama never goes
+  Binance, MoneyPipeline): `custom/qwen3.8:27b` (Ollama) — Ollama never goes
   down, so failure means true infrastructure failure, not silent paid
   fallback. BossMan surfaces the failure via kanban alert.
 
@@ -285,15 +288,16 @@ global chain).
 ## Routing config (lives in `config.yaml` + per-profile overrides)
 
 **Default** (BossMan profile): `MiniMax-M3` — chatty bulk work.
-**Fallback chain** (SUPERSEDED 2026-09-30 — see MiniMax lane map at top: M3 lanes → Ollama qwen2.5:7b; M2.7 lanes → M3 → Ollama. No DeepSeek/Claude/OpenAI silent fallback.)
+**Fallback chain** (SUPERSEDED 2026-09-30 — see MiniMax lane map at top: M3 lanes → Ollama qwen3.8:27b (updated 2026-10-01); M2.7 lanes → M3 → Ollama. No DeepSeek/Claude/OpenAI silent fallback.)
 
 **Per-profile overrides** (apply on top of global default):
-- **builder**: default `MiniMax-M3`; for implementation tasks, override to `deepseek-v4-flash` (cheap coding); escalate to `claude-sonnet-4-6` for safety-sensitive (SquarePayouts, money paths).
-- **ops**: default `MiniMax-M3`; for PM2/cron/infra debugging, override to `deepseek-v4-flash`; escalate to `claude-sonnet-4-6` for cross-system debugging.
-- **trading**: default `MiniMax-M3`; for signal analysis, override to `deepseek-v4-flash`; for trade decisions touching live money, escalate to `claude-sonnet-4-6`.
-- **content**: default `MiniMax-M3`; for polished prose, override to `openai-codex gpt-5.4`; escalate to `claude-sonnet-4-6` for high-stakes voice/tone.
-- **qa-verification** (Step-5): default `claude-sonnet-4-6`; fallback `openai-codex gpt-5.4`; never MiniMax for safety audits.
-- **research-intel**: default `openai-codex gpt-5.4`; fallback `claude-sonnet-4-6`.
+(Rewritten 2026-10-01 — paid models are reachable ONLY through `~/.hermes/bin/route-card.sh` cards; there are no per-profile paid overrides. `deepseek-v4-flash` does not exist on the DeepSeek API.)
+- **builder**: default `MiniMax-M3`; real builds → `route-card.sh build-impl` (OpenAI `gpt-5.5`); safety-sensitive (SquarePayouts, auth, money paths) → `build-arch` / `money-path` (Claude `claude-sonnet-4-6`).
+- **ops**: default `MiniMax-M3` (all PM2/cron/infra debugging); stuck → `route-card.sh troubleshoot-escalate` (DeepSeek `deepseek-v4-pro`).
+- **trading**: default `MiniMax-M3`; local bulk → Ollama `qwen3.8:27b`; changes touching live money → `route-card.sh money-path` (Claude `claude-sonnet-4-6`, mandatory review).
+- **content**: default `MiniMax-M2.7`; drafts on M3; public research → `research-public` (Gemini free tier).
+- **qa-verification** (Step-5): default `MiniMax-M2.7`; paid review → `route-card.sh qa-review` (DeepSeek `deepseek-v4-pro`); money/auth audits → `money-path` (Claude).
+- **research-intel**: default `MiniMax-M3` + Perplexity; public-source digests → `research-public` (Gemini free tier).
 
 **SquarePayouts model routing (Permanent 2026-09-14, Marcelo policy — durable rule):** SquarePayouts model/tool routing is owned by BossMan. For every card, BossMan selects the best-fit tool and model using the V3 task-type routing ledger, current task risk, privacy constraints, and required quality. Money-path, auth, PII, credentials, security, audit, and public financial behavior remain critical work: use the strongest appropriate model, require Step-5 red-team QA, and do not mark Done until verification passes. Production secrets and raw credentials remain local-only. **No blanket categorical block by AI model or by tool, EXCEPT the standing safety-sensitive and secrets carve-outs in the V3 task-type ledger: Claude is mandatory for auth, encryption, money-path, PII, and audit-logging work; production secrets, credentials, tokens, and .env content are Llama/local only and must never leave the host. BossMan picks per task.** See `~/.hermes/knowledge/LEARNED_SQUAREPAYOUTS.md` § "Model Selection — Task-Fit Routing" + `~/.hermes/knowledge/ROUTING-RULES.md`.
 
