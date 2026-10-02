@@ -253,3 +253,5 @@ Companion to `LEARNED_INDEX.md` (the domain table). Regenerate this file when ro
 
 ### Subfolders (not individually listed)
 - `incidents/` (132), `crypto-intel/` (100), `memory/` (48 — older weekly reviews + May audits), `projects/` (11), plus small folders. These are records; current rules live in the root files above. Folder-level duplicate/archive work is Phase 4–5 of the MD audit.
+
+- **Remote access (Mac Studio)** → `LEARNED_REMOTE_ACCESS.md` wins (2026-10-02). Screen Sharing over Tailscale first; AnyDesk is backup.
