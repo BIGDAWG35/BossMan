@@ -15,7 +15,7 @@
 - **Status:** Approved v1.0, under BossMan management
 - **Active since:** 2026-07-23
 - **Lane owner:** `builder` (per `LEARNED_SUB_AGENT_MASTER_BLUEPRINT.md` §1)
-- **Default model:** DeepSeek (per master blueprint; Lane does not pick — BossMan selects per task type via `LEARNED_V3_MODEL_STACK.md`).
+- **Default model:** MiniMax-M3; builds via `route-card.sh build-impl` (gpt-5.5) (per master blueprint; Lane does not pick — BossMan selects per task type via `LEARNED_V3_MODEL_STACK.md`).
 - **Canonical file:** `~/.hermes/knowledge/builder.md`
 - **Mirrors:**
   - `~/Obsidian/Hermes/10-Operating-Blueprint/builder.md`

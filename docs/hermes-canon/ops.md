@@ -15,7 +15,7 @@
 - **Status:** Approved v1.0, under BossMan management
 - **Active since:** 2026-07-23
 - **Lane owner:** `ops` (per `LEARNED_SUB_AGENT_MASTER_BLUEPRINT.md` §1)
-- **Default model:** DeepSeek (per master blueprint; Lane does not pick — BossMan selects per task type via `LEARNED_V3_MODEL_STACK.md`).
+- **Default model:** MiniMax-M3; escalation via `route-card.sh troubleshoot-escalate` (DeepSeek v4-pro) (per master blueprint; Lane does not pick — BossMan selects per task type via `LEARNED_V3_MODEL_STACK.md`).
 - **Canonical file:** `~/.hermes/knowledge/ops.md`
 - **Mirrors:**
   - `~/Obsidian/Hermes/10-Operating-Blueprint/ops.md`

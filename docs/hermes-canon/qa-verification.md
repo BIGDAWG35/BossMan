@@ -15,7 +15,7 @@
 - **Status:** Approved v1.0, under BossMan management
 - **Active since:** 2026-07-23
 - **Lane owner:** `qa-verification` (per `LEARNED_SUB_AGENT_MASTER_BLUEPRINT.md` §1)
-- **Default model:** Claude (sensitive) / MiniMax-M3 (cosmetic) (per master blueprint; Lane does not pick — BossMan selects per task type via `LEARNED_V3_MODEL_STACK.md`).
+- **Default model:** MiniMax-M2.7; paid QA via `route-card.sh qa-review` (DeepSeek v4-pro); money/auth via `money-path` (Claude) (per master blueprint; Lane does not pick — BossMan selects per task type via `LEARNED_V3_MODEL_STACK.md`).
 - **Canonical file:** `~/.hermes/knowledge/qa-verification.md`
 - **Mirrors:**
   - `~/Obsidian/Hermes/10-Operating-Blueprint/qa-verification.md`

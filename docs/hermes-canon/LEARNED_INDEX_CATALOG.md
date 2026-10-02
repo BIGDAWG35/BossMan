@@ -12,6 +12,10 @@ Companion to `LEARNED_INDEX.md` (the domain table). Regenerate this file when ro
 - `SERVICES_MAP.md` (generated) still says the full inventory is `SERVICES_MAP_SNAPSHOT_2026-08-06.md`; that file is gone. Use the newest `SERVICES_MAP_SNAPSHOT_<date>.md` or the Boss Hub registry yaml.
 - Local models changed 2026-10-02: fallback = `qwen3.5:35b-a3b-nvfp4`; `qwen3.8:27b` and `qwen2.5:14b` are not installed. Any doc naming them is history. Canon: `LEARNED_V3_MODEL_STACK.md` 2026-10-02 section.
 
+### Start here for "which copy wins"
+
+- `LEARNED_DOC_PIPELINE.md` (2026-10-02) — every doc layer (kernel, canon, mirrors, Perplexity Projects folder), which copy wins, and the jobs that keep copies in sync.
+
 ### Topic map — which file wins
 
 #### Operating contract & owner rules

@@ -1,5 +1,7 @@
 # LEARNED_INDEX.md — Master Index of All `LEARNED_<DOMAIN>.md` Canon Files
 
+> **2026-10-02 (MD audit Phase 4):** which copy of a doc wins, and how mirrors + Perplexity Projects files are kept in sync: `LEARNED_DOC_PIPELINE.md`.
+
 > **2026-10-02 (MD audit Phase 3):** the table below covers ~40 domain files. The full catalog of all 149 root docs — grouped by topic, with the ONE winning file per topic and HIST/SUP/GEN flags — is `LEARNED_INDEX_CATALOG.md`. Corrections: rows 7–8 (Health OS V3 decisions/reporting) point to files that no longer exist; the 7-Rule Contract has 12 rules (rules #10–#12 are in `LEARNED_7_RULE_CONTRACT_RULES_10_11_12_ADDENDUM_2026-09-01.md`); local models changed 2026-10-02 (see `LEARNED_V3_MODEL_STACK.md`).
 
 

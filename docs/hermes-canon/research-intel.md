@@ -15,7 +15,7 @@
 - **Status:** Approved v1.0, under BossMan management
 - **Active since:** 2026-07-23
 - **Lane owner:** `research-intel` (per `LEARNED_SUB_AGENT_MASTER_BLUEPRINT.md` §1)
-- **Default model:** DeepSeek (per master blueprint; Lane does not pick — BossMan selects per task type via `LEARNED_V3_MODEL_STACK.md`).
+- **Default model:** MiniMax-M3 + Perplexity; public digests via `route-card.sh research-public` (Gemini free tier) (per master blueprint; Lane does not pick — BossMan selects per task type via `LEARNED_V3_MODEL_STACK.md`).
 - **Canonical file:** `~/.hermes/knowledge/research-intel.md`
 - **Mirrors:**
   - `~/Obsidian/Hermes/10-Operating-Blueprint/research-intel.md`

@@ -15,7 +15,7 @@
 - **Status:** Approved v1.0, under BossMan management
 - **Active since:** 2026-07-23
 - **Lane owner:** `trading` (per `LEARNED_SUB_AGENT_MASTER_BLUEPRINT.md` §1)
-- **Default model:** Claude (mandatory) (per master blueprint; Lane does not pick — BossMan selects per task type via `LEARNED_V3_MODEL_STACK.md`).
+- **Default model:** MiniMax-M3; live-money logic changes via `route-card.sh money-path` (Claude Sonnet 4.6, mandatory) (per master blueprint; Lane does not pick — BossMan selects per task type via `LEARNED_V3_MODEL_STACK.md`).
 - **Canonical file:** `~/.hermes/knowledge/trading.md`
 - **Mirrors:**
   - `~/Obsidian/Hermes/10-Operating-Blueprint/trading.md`
