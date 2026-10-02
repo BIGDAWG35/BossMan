@@ -1,235 +1,193 @@
-**Version:** v4 · **Date:** 2026-10-01 · **Source:** `~/Desktop/spaces (2026-09-30 copy)/trading-ops/Crypto Trading Intelligence — Learned Rules — v3.md` · **Status:** Current — space-only doc: this copy is the canon (edit here)
+**Version:** v4 · **Date:** 2026-10-02 · **Source:** `~/.hermes/knowledge/LEARNED_CRYPTO_INTELLIGENCE.md` · **Status:** Current — auto-built from canon by build_spaces_v4.py; edit the source, not this copy
 
-> Note (2026-10-01): any LBC35/OpenClaw mention in this file is historical. LBC35/OpenClaw was retired and removed 2026-09-30; BossMan does all delegation via kanban + route-card.sh. Where this file conflicts with "00 - Current State (2026-10-01).md", the Current State file wins. Health OS (V3/V4) was deleted 2026-09-30, so any Health OS row is history.
+> Note: any LBC35/OpenClaw mention in this file is historical (retired 2026-09-30; BossMan does all delegation via kanban + route-card.sh). Health OS was deleted 2026-09-30. Where this file conflicts with "00 - Current State (2026-10-01).md", the Current State file wins.
 
-# Crypto Trading Intelligence — Learned Rules
+**Version:** v5 (rebuild) · **Date:** 2026-10-02 · **Owner:** BossMan (edits via knowledge-canon lane; rule content from Trading lane) · **Status:** Canon — the single source for crypto trading intelligence. Space copies are built from this file; do not edit them directly.
 
-> **2026-10-02 correction:** This file and `knowledge-learning/Crypto Intelligence LEARNED.md` are both copies of LEARNED_CRYPTO_INTELLIGENCE.md and disagree on L-CRYPTO-10 (one says LIVE since 2026-06-15, the other PAPER). Neither is current: binance-bot-live (Binance.US SPOT, port 8104) went LIVE 2026-10-01 02:01 PT with Marcelo's written approval, $250.59 free USDT at start; see Trading Ops 'Binance Bot - Current State.md'. `~/.hermes/knowledge/LEARNED_CRYPTO_INTELLIGENCE.md` is not present in current canon (V3 pointers list `~/Repos/BossMan/docs/crypto-trading-intelligence/LEARNED_CRYPTO_INTELLIGENCE.md`); restore one canon source and build both Project copies from it.
-**Version:** v3.1 (refined 2026-07-20 to reflect current Binance bot state, Risk-OS V3, and Phase 6 Track B health-monitoring changes)
-**Date:** 2026-07-20
-**Owner:** BossMan Hermes
-**Status:** Canonical — v3-aligned
-## Original title
+# LEARNED_CRYPTO_INTELLIGENCE.md
 
-_LEARNED_CRYPTO_INTELLIGENCE.md_
+Home path (Mac): `~/.hermes/knowledge/LEARNED_CRYPTO_INTELLIGENCE.md`. Backup mirror: `~/Repos/BossMan/docs/crypto-trading-intelligence/LEARNED_CRYPTO_INTELLIGENCE.md`.
 
-**Date:** 2026-06-13
-**Status:** Permanent — durable rules learned from the CSDAWG 2.0 / Binance bot integration
-**Source:** `CRYPTO_TRADING_KNOWLEDGE_AUDIT_2026-06-13.md` + Marcelo's unification decisions
-
-This file encodes patterns that survive individual projects. It is referenced by `OBSIDIAN_VAULT_WORKFLOW.md` as the canonical entry on the crypto / trading domain.
+**How numbers are marked**
+- **[code]** checked in `binance-bot` source (copy dated 2026-10-02).
+- **[data]** checked in `binance-bot/data/*` or `crypto-intel/*`.
+- **[env]** a 2026-10-02 operator fact about `.env` / PM2. The `.env` file is not in the copy, so the code default is shown next to it.
+- **[unverified]** claimed in docs, but no code or data proves it.
 
 ---
 
-## How to add new rules (L-CRYPTO-13+)
+## 1. Purpose
 
-The weekly trading-learning review (`weekly-review-template.md` in the project folder) **must** use this file as its reference. When a new lesson is learned:
+This file holds the rules for how Marcelo's crypto intelligence feeds the live Binance.US spot bot. It also says who owns each part and where each part lives. Intelligence gives advice and the bot executes trades. Only gates that read files connect the two. Intelligence never sends orders.
 
-1. **Threshold test:** Would this lesson still be true in 6 months? If yes, it's a rule. If no, it's a journal entry in `trade-journal/` instead.
-2. **Append here** with a new L-CRYPTO-NN number, following the existing format (rule, source, why, verification, anti-pattern where applicable).
-3. **Mirror to project folder:** add the same rule to `LEARNED_CRYPTO_INTELLIGENCE.md` in `~/Obsidian/Hermes/40_Projects/Active/PROJ-2026-06_crypto-trading-intelligence/`.
-4. **Sync to GitHub backup:** commit to `~/Repos/BossMan/docs/crypto-trading-intelligence/LEARNED_CRYPTO_INTELLIGENCE.md`.
-5. **Reference the goal:** tag the new rule with `goal_id: t_goal_crypto_swing_trader_20260613` if it advances the curriculum.
+**Current state (2026-10-02):** `binance-bot-live` has been LIVE on Binance.US SPOT since 2026-10-01 02:01 PT, with Marcelo's written approval. It started with $250.59 free USDT [unverified: from docs; balance_log shows $248.47 after the first trade, data]. It runs on port 8104 [code default] and binds 127.0.0.1 [code]. PM2 autorestart is off on purpose [code: `autorestart:false`, `max_restarts:0`]. The pipeline uses only free models: MiniMax-M3 → Ollama qwen3.5:35b-a3b-nvfp4 → qwen2.5:7b [code: `scripts/_llm_free.js`]. LBC35/OpenClaw was retired on 2026-09-30.
 
-**Current goal:** `t_goal_crypto_swing_trader_20260613` — Become a competent crypto swing trader (12 months).
-**Active curriculum stage:** Stage 1 — Chart literacy (4 sub-tasks).
-- Stage 1.1 — Chart basics: `done` (2026-06-13)
-- Stage 1.2 — Bull/bear structure: `running` (auto-advanced)
-- Stage 1.3 — Support/resistance: `todo`
-- Stage 1.4 — Moving averages: `todo`
+## 2. Pipeline (daily)
 
-## Current L-CRYPTO rule count
+```
+weekly engine (regime) ─┐
+daily radar (census) ───┼─> pair briefs ─> research ─> memo ─> daily decision ─> BossMan decision artifact ─> bot gates ─> order
+                        └─ learning_adjustments (weekly, from closed trades) ─────────┘
+```
 
-13 (L-CRYPTO-01 through L-CRYPTO-13).
+| Step | What it does | Script / file | Model |
+|---|---|---|---|
+| 0. Weekly engine | BTC regime + coin bands + predictions | `~/.hermes/scripts/crypto-intel-weekly.js` → `~/.hermes/knowledge/crypto-intel/weekly/latest/intelligence.json` (+ `history/YYYY/`) | mechanical; analyst view must be free models only |
+| 1. Daily radar (census) | Scores Binance.US USDT pairs. Bands: HOT ≥0.80, WARM 0.55–0.79, WATCH 0.40–0.54, COLD <0.40 | `scripts/daily_census.js` → `data/daily_radar.json`, `crypto-intel/daily/DAILY_RADAR_10_<date>.json` | none |
+| 2. Pair briefs | One brief per bot pair (15) | `scripts/daily_pair_brief.js` → `data/pair_briefs.json` | free chain |
+| 3. Research | Free news (Google News RSS + Fear & Greed). Perplexity browser only if `PERPLEXITY_BROWSERQA_ENABLED=1`. Quality is OK, PARTIAL or MISSING | `scripts/daily_research.js` | none / opt-in |
+| 4. Memo | Daily synthesis | `scripts/daily_memo.js` → `crypto-intel/daily/DAILY_MEMO_<date>.md/.json` | free chain [code] |
+| 5. Daily decision | Watchlist ≤3, do-not-touch ≤3 | `scripts/daily_decision.js` | none |
+| 6. BossMan decision | Gives each coin QUALIFY / WATCH_ONLY / DENY, plus tier and class. Applies the learning blocks | `scripts/bossman_decision.js` via `bossman-cron.sh` → `data/bossman_decision.json` + dated copy | none |
+| 7. Bot gates (each 5-min cycle) | Intel gate (price window + regime + band) → BossMan gate (fail-closed) → qualify gate (class×tier, regime×tier) → pre-trade hook → sizing → $75 execution floor | `server.js`, `scripts/_intel_price_window.js`, `scripts/_bossman_decision.js`, `scripts/_qualify_integration.js`, `~/Projects/trading-review/pre-trade-hook` | none |
 
----
+Runner: `scripts/daily_pipeline.sh`. It dates every run in UTC [code], and stage 6 calls `bossman-cron.sh` [code]. If a stage fails, the pipeline logs it and keeps going. MISSING research means the coin is watch-only.
 
-## Change log (v3.0 → v3.1, 2026-07-20)
+Low-confidence pilot: clean WARM/HOT coins with real research can still QUALIFY at Tier 1 (`low_conf_pilot:T1`). It is on by default, and `LOW_CONFIDENCE_PILOT=0` turns it off [code].
 
-| Area | Before (v3.0, 2026-06-16) | After (v3.1, 2026-07-20) |
-|------|---------------------------|--------------------------|
-| Frontmatter | v3.0 / 2026-06-16 | v3.1 (refined) / 2026-07-20 |
-| L-CRYPTO-10 | Bot in PAPER mode; L-CRYPTO-10 framed PAPER as safety default | Bot **LIVE since 2026-06-15** (Marcelo carve-out); L-CRYPTO-10 reframed to say "don't auto-flip back to PAPER and don't auto-revert the carve-out" |
-| Risk rules | (Implicit $75 floor via L-CRYPTO-04 / decisions) | $75 floor is **`MIN_TRADE_NOTIONAL=75`** enforced at `calculatePositionSize()` line 840 — explicit cross-link to `memory-trading-intelligence.md` |
-| 7-Rule Contract mirror | Not referenced | Now cross-links to `LEARNED_7_RULE_CONTRACT.md` (Date locked 2026-07-20). Body of L-rules is unchanged — only the carve-out status of L-CRYPTO-10 changed |
-| Curriculum stage status | Stage 1.1 done, 1.2 running (2026-06-13 snapshot) | Unchanged — no curriculum sub-task cards appeared in the kanban search; stage state is preserved as-is |
+## 3. Learned rules (one current wording each)
 
----
+**L-CRYPTO-01 — The live engine is the truth, not the design docs.** For questions like "what's the regime?" or "can the bot trade?", read `weekly/latest/intelligence.json` and `data/bossman_decision.json`. The CLAW-Backup design docs are frozen history from 2026-05-20.
 
-## Stage 1 – Chart Basics  [TRADING][CRYPTO][CSDAWG]
+**L-CRYPTO-02 — Intelligence reaches the bot only through read-only gates.** The bot reads `regime` and `coin_rankings[].band` from `intelligence.json` [code: `regime_confidence` is *not* read]. It also reads `data/daily_radar.json`, `data/pair_briefs.json` and `data/bossman_decision.json`. The bot never writes to `crypto-intel/`.
 
-**Sub-task:** `t_crypto_learn_s1_01_chart_basics` — CSDAWGBOT: Stage 1.1 — Chart basics (candles, timeframes, volume)
-**Completed:** 2026-06-13 (status `done`, completed_at set)
-**Source material covered (per deliverable spec):**
-- Investopedia / Babypips chart basics
-- BTCUSDT 1D chart, 7-day observation log
-- Vocabulary: OHLC, wick, body, timeframes (1m / 5m / 15m / 1H / 4H / 1D / 1W), volume, divergence
+**L-CRYPTO-03 — Advisory-only.** Engine and pipeline output never places, sizes or changes a trade, and never edits `.env`, PM2 or bot config. A gate may only *block*. The engine's one outbound message, a once-per-report Telegram alert digest (`alert-delivery.js`), is the only exception [unverified whether still active].
 
-**Lessons (inferred from deliverable spec; Marcelo to correct/augment on next weekly review):**
+**L-CRYPTO-04 — Predictions need a track record before they carry weight.** Treat engine predictions as exploratory until there are ≥10 *scorable* resolved predictions over ≥6 weeks with accuracy >0%, and `regime_confidence` >0.6 on ≥50% of reports. Status on 2026-09-28 [data]: 52 tracked, 36 scored, **3 hits, 1 miss, 32 unscorable**, 16 pending. **Not met.** The engine stays at v1.8.
 
-- **S1-CHART-01 — Pick one pair, one timeframe, one week.** The done-criteria explicitly said "Pick ONE pair to study, watch it for 1 week, log observations." Multi-pair, multi-timeframe observation produces noise that masquerades as insight. Single-pair focus forces pattern recognition depth over breadth.
-- **S1-CHART-02 — Candle vocabulary is the lock; indicators come later.** OHLC + wick + body is the irreducible vocabulary. Every indicator (MA, RSI, MACD) is a derived view of OHLC. Reading candles directly builds the substrate that makes indicator readings meaningful.
-- **S1-CHART-03 — Timeframe hierarchy: 1m/5m/15m noise, 1H/4H signal, 1D/1W structure.** Same candle, different context. A bullish engulfing on 1m is different from one on 4H. The spec calls out 1D as the primary study timeframe for swing trading, with 4H as the entry-timing frame.
-- **S1-CHART-04 — Volume divergence is the first falsifiable signal.** "Price up, volume down" is the simplest divergence and the first signal that separates price action from conviction. Without volume, every price move is unfalsifiable.
-- **S1-CHART-05 — The self-test gate (explain to a non-trader without jargon) is a real filter, not a formality.** If you can't translate "bullish engulfing" into "buyers took control and pushed price above yesterday's high" for a non-trader, you don't understand it yet. The deliverable treats this as a done criterion for a reason.
+**L-CRYPTO-05 — The CSDAWG engine runs weekly.** Do not make the regime engine daily or hourly. Daily work belongs in a separate engine, which today is the daily radar pipeline (section 2). Observed engine run: Mondays about 15:00 PT (22:00 UTC) [data: `history/2026/*` `generated_at`].
 
-**Open questions for weekly review:**
-- Did Marcelo write the summary to `01-chart-basics.md`? (not seen in vault — flag for review)
-- Did the 7-day observation log get started? (should be in `trade-journal/` or `stage-1/`)
-- What was the most surprising candle pattern he saw on BTCUSDT 1D?
+**L-CRYPTO-06 — Tag crypto memory with [TRADING][CRYPTO][CSDAWG].** Use all three tags, every time.
 
----
+**L-CRYPTO-07 — Use the A–H question bank, not ad-hoc questions.** A weekly, B twice-monthly, C monthly, D event, E ad-hoc, F leading indicators, G strategy, H risk. Bank file: `designs/06_CSDAWG_QUESTION_BANK.md` [unverified path].
 
-## L-CRYPTO-13: Curriculum auto-advance contract — "done" triggers the next task
+**L-CRYPTO-08 — Cold storage never destroys anything.** Archive to `~/archive/<date>-<reason>/` and leave a redirect note. Never run `rm -rf` without Marcelo's approval.
 
-When a curriculum sub-task is marked `done`, the system must:
+**L-CRYPTO-09 — Two parallel systems is a failure.** When two systems cover the same domain, merge them into the live one. Use the 8-step pattern: audit → pick the live one → harvest with SHA-256 checks → move → sync to GitHub → cold-storage the orphan → write LEARNED → open a parent card. *This rebuild applies L-09 to the doc copies of this file.*
 
-1. Set `status='done'`, `completed_at=now`
-2. Harvest key lessons to LEARNED under a stage section
-3. Mirror to Obsidian project + BossMan repo, commit + push
-4. Auto-advance the **next sibling** (same parent, next-by-ordinal) from `todo` → `running`
-5. Confirm back to Marcelo with: task moved, lessons harvested, next task running
+**L-CRYPTO-10 — Only Marcelo changes the bot's money mode.** LIVE↔PAPER changes only on Marcelo's written directive. That means an approval record in `~/.hermes/knowledge/approvals/binance-live-approval-*.md` [code: 7-signal LIVE gate in `pre-start.js`]. No agent flips the mode on its own, in either direction (code enforcement is L-CRYPTO-20). The prediction track record (L-04) is advisory input only. Marcelo waived it for the 2026-10-01 go-live. **Current: LIVE since 2026-10-01 02:01 PT.** The standing approval (2026-10-01 07:00 PT, `STANDING: YES-MARCELO`) lets BossMan and sub-agents buy, sell and restart without asking, as long as no trade is under $75. It does not expire [code: `isStandingApproval`]. Deleting the record revokes it.
+> *Conflict resolved 2026-10-02.* The trading-ops copy said "LIVE since 2026-06-15 carve-out, balance $0.18". The knowledge-learning copy said "PAPER". The evidence supports neither as current state:
+> - `bot.db` has no trades between 2026-05-12 and 2026-10-01 [data].
+> - `mode_transitions` is empty [data].
+> - The first LIVE signal-journal row is 2026-08-23 [data].
+> - `balance_log` jumps from $127.08 (2026-05-12) to $248.47 (2026-10-01) [data].
+>
+> So the 06-15 "LIVE" was a config flag with no funded trading. The $0.18 figure cannot be checked against bot data. Real-money trading started 2026-10-01. The wording above keeps the part both copies agreed on (Marcelo-only mode change) and drops the dated state.
 
-**Rule:** The auto-advance keeps Marcelo's learning loop tight. Finish → write down what you learned → next task ready. Latency between finish and next-task-running should be under 30 seconds (measured from "done" message to Telegram confirmation).
+**L-CRYPTO-11 — Every live PM2 service needs git.** The check is `git log --oneline -1`. The BossMan repo is the home. Current compliance for `binance-bot`, `csdawg-dashboard` and `trading-control` is [unverified].
 
-**Trigger phrases** (encoded in `~/.hermes/skills/curriculum-auto-advance/SKILL.md`):
-- "X.Y is done" / "X.Y is complete" / "I finished X.Y"
-- "<topic> is done" (where topic matches a running sub-task title)
-- "stage X is done" / "I finished stage X"
-- "move on to the next one" / "what's next"
-
-**Anti-pattern to avoid:** Asking "which task are you referring to?" when there's a single running sub-task. That breaks the latency advantage. The skill resolves ambiguity by finding the single running sub-task under the curriculum parent and acting.
-
-**Verification:** This contract was first executed 2026-06-13 with 1.1 → 1.2 transition. Subsequent sub-tasks should follow the same path.
-
----
-
-## L-CRYPTO-01: The live engine is canonical, not the design docs
-
-`~/.hermes/knowledge/crypto-intel/` is the source of truth for **what crypto intelligence Marcelo's systems are doing right now**. The 12 design docs harvested from `~/Desktop/CLAW-Backup/` describe **how the engine was designed**, but they are frozen at 2026-05-20. The engine has been running and evolving since.
-
-**Rule:** When asked "what's the regime?", "is the bot allowed to trade?", "what did the engine say this week?" — read the live `weekly/latest/intelligence.json`, not the design docs.
-
-**Anti-pattern:** Treating `CRYPTO_INTEL_ENGINE_SPEC.md` as the live spec. It's the *original* spec. The *current* spec is `weekly/latest/intelligence.json` + the schema documented in the audit.
-
-## L-CRYPTO-02: INTEL_GATE is the only integration point
-
-The engine produces advisory output. The bot reads only the **`regime`** and **`regime_confidence`** fields of `intelligence.json`. Intelligence never receives execution data.
-
-**Rule:** Engine is research, bot is execution. One-way data flow. No feedback from bot → engine.
-
-**Why:** Two-way data flow corrupts intelligence history (execution noise = polluted predictions). One-way is auditable and reversible.
-
-**Verification:** `intelligence.json` schema has no trade/balance/position fields. `binance-bot` writes nothing to `crypto-intel/`.
-
-## L-CRYPTO-03: Advisory-only contract is durable
-
-Every output of the engine is labeled "Advisory Only", "Observation Only", "Shadow Mode", or "Non-Binding". The engine never sends a Telegram message, never triggers a trade, never modifies bot config.
-
-**Rule:** Engine output is research, not control. Even after the prediction track record improves, the contract stays one-way.
-
-**Why:** The engine is a research instrument, not a control system. Auto-trading from intelligence would skip the human review step that's the whole point.
-
-**Exception:** The only place where the engine *can* influence behavior is `INTEL_GATE` (the bot's own filter), which is the operator's explicit choice to wire them together.
-
-## L-CRYPTO-04: Predictions need a track record before they're load-bearing
-
-The engine logs predictions with `horizon_days`. The grader (`csdawg-prediction-grader.js`) runs 7 days later and scores the outcome. As of 2026-06-08: **10 predictions logged, 0 resolved.**
-
-**Rule:** Don't weight engine output by prediction accuracy until you have at least 6 weeks of resolved predictions (10+) with non-zero accuracy. Below that threshold, treat all output as exploratory.
-
-**Bump criterion for engine version 2.0:** 6+ weeks of resolved predictions, accuracy > 0%, AND `regime_confidence` > 0.6 on at least 50% of reports.
-
-## L-CRYPTO-05: Weekly cadence, not daily or hourly
-
-The engine runs once a week. Daily produces noise. Hourly is unmaintainable. Weekly is the right cadence for "regime + sector + ranking" thinking.
-
-**Rule:** Don't add daily intelligence. Don't add hourly. The weekly cadence is part of the contract. If a sub-cadence is needed, it's a separate engine (e.g. an hourly volatility tracker, separate from CSDAWG 2.0).
-
-## L-CRYPTO-06: Memory tagging uses [TRADING][CRYPTO][CSDAWG] triple
-
-Every memory chunk related to crypto is triple-tagged. Three orthogonal axes: domain (trading), asset class (crypto), project (CSDAWG).
-
-**Rule:** Single-axis tags lose context. Always use all three when writing memory.
-
-**Example:** The 2026-05-21 LIVE go-live decision: tag `[TRADING][DECISION][PROJECT:BinanceBot]` AND `[CRYPTO]` AND `[CSDAWG]` (where applicable).
-
-## L-CRYPTO-07: Question bank is A-H time-boxed, not ad-hoc
-
-A = weekly, B = twice-monthly, C = monthly, D = event-driven, E = ad-hoc, F = leading indicators, G = strategy, H = risk events. See `designs/06_CSDAWG_QUESTION_BANK.md`.
-
-**Rule:** Don't ask crypto questions ad-hoc. Check the bank first. If your question is A1 but it's Tuesday, defer to Sunday. If it's C1 but the 1st of the month just passed, wait for next month.
-
-**Why:** Time-boxing prevents analysis paralysis and makes review completion measurable.
-
-## L-CRYPTO-08: Cold storage is non-destructive
-
-When a vault or project is no longer active:
-1. Move it to `~/archive/<date>-<reason>/<original-path>/`
-2. Leave a redirect note at the original location
-3. If filesystem blocks the move (APFS clones, etc.), keep the original in place and add an index explaining the situation
-4. **Never `rm -rf` without explicit Marcelo approval** (destructive admin)
-
-**Rule:** Recovery is more important than tidiness. A 7.8 MB cold-storage folder on the desktop is fine. A deleted folder that was needed is not.
-
-**Workaround for APFS `Resource deadlock avoided`:** Use `cat file > dest` from a Python script that doesn't trigger SEEK_HOLE. Or accept that the cold storage stays in place.
-
-## L-CRYPTO-09: Two parallel systems is a failure mode
-
-Before 2026-06-13, there were two crypto knowledge systems: the **live engine** and the **orphaned CLAW-Backup vault**. Both contained crypto content. Neither referenced the other. New work was ambiguous about which to update.
-
-**Rule:** When you discover two parallel systems for the same domain, unify. Don't keep them in parallel "just in case". The cognitive cost of choosing between two systems exceeds the storage cost of consolidation.
-
-**Unification pattern (8 steps):**
-1. **Audit** — list both systems, identify the unique content of each
-2. **Pick the live one** — the one actually being read by other systems
-3. **Harvest the unique content** — copy, verify byte-for-byte (SHA-256)
-4. **Move into the live system's project folder** — per `OBSIDIAN_VAULT_WORKFLOW.md`
-5. **Sync to the GitHub backup stream** — `~/Repos/BossMan/docs/<project>/`
-6. **Cold-storage the orphan** — original location keeps the original, with a redirect note
-7. **Add a `LEARNED_<domain>.md`** — encode the patterns that survive
-8. **Add a parent kanban card** — for the next-phase triage (e.g., 6 blocked cards under "Unify crypto knowledge")
-
-## L-CRYPTO-10: Two-gate approval for security-sensitive operations
-
-The binance bot transitioned from PAPER → LIVE on **2026-06-15** as a **Marcelo explicit carve-out**. `PAPER_MODE=false` is now the active state. The historical two-gate approval requirement still applies to any **future** PAPER → LIVE flips (i.e., after a future STOP → restart, or after a code path that reverts the carve-out).
-
-**Gate 1:** 6+ weeks of resolved predictions with track record (L-CRYPTO-04)
-**Gate 2:** Explicit Marcelo directive
-
-**Rule:** Don't auto-flip the bot back to PAPER mode without a Marcelo directive. Don't auto-flip it to LIVE either (the carve-out was one-time). The 985-ReferenceError TDZ bug post-go-live shows that even with INTEL_GATE on, the live code path has failure modes that paper mode masks.
-
-**Note 2026-07-20:** Bot has been in LIVE mode continuously since 2026-06-15. The $75 hard floor (`MIN_TRADE_NOTIONAL=75`) is enforced globally at `calculatePositionSize()`. Balance as of 2026-07-13: $0.18 — LIVE mode active but no trades can fire (balance < floor). (history — superseded 2026-10-02: binance-bot-live (Binance.US SPOT, port 8104) went LIVE 2026-10-01 02:01 PT with Marcelo's written approval, $250.59 free USDT at start; see Trading Ops 'Binance Bot - Current State.md') See `Binance Bot Decision Gap — 2026-06-15 — v3.md` for the upstream decision context.
-
-## L-CRYPTO-11: Git is required for live operational services
-
-`csdawg-dashboard/` and `trading-control/` were running PM2-managed Node services with **no git history** until 2026-06-13. This is a violation of the BossMan backup rule.
-
-**Rule:** Any service in PM2 that is `online` and serving requests must have a git repo with at least one commit. The BossMan repo is the canonical home; a sub-path is acceptable.
-
-**Verification:** Run `cd <project> && git log --oneline -1` — if it errors with "not a git repository", the project is in violation.
-
-## L-CRYPTO-12: The 6 blocked cards are the "stalled crypto learning system"
-
-Before 2026-06-13, the actual strategic work for the crypto learning system was scattered across 6 `blocked` kanban cards:
-- Regime Identification Framework
-- Signal Classification System
-- 4-Cycle Historical Analysis
-- Crypto Education Curriculum
-- Pre-Trade Hook Restoration
-- trading-monitor rebuild
-
-**Rule:** When you find strategic work in `blocked` state, it's not abandoned — it's awaiting triage. Surface it to Marcelo as a single decision (e.g., parent card "Unify crypto knowledge").
-
-## Related files
-
-- `~/.hermes/knowledge/crypto-intel/` — the live engine (canonical, integrated)
-- `~/.hermes/knowledge/CRYPTO_TRADING_KNOWLEDGE_AUDIT_2026-06-13.md` — the audit that triggered this
-- `~/Obsidian/Hermes/40_Projects/Active/PROJ-2026-06_crypto-trading-intelligence/` — the project folder
-- `~/Repos/BossMan/docs/crypto-trading-intelligence/` — the GitHub backup
-- `~/archive/2026-06-13/` — cold storage (CLAW-Backup + 3 archived projects)
-- `~/.hermes/knowledge/OBSIDIAN_VAULT_WORKFLOW.md` — vault layout standard
-
-## Cardinal rule
-
-**The loop is closed:** engine produces → engine archives → dashboard serves → bot reads → predictions logged → predictions graded → back to engine. Anything that breaks the loop needs explicit operator intervention.
+**L-CRYPTO-12 — Blocked strategic cards are waiting for triage, not abandoned.** Bring them to Marcelo as one decision. These are the 6 crypto-track cards under `t_unify_crypto_knowledge_20260613`. *Note: `bossman_decision.js` cites "L-CRYPTO-12" for the fixed strategy-class set. That is a mis-cite. The class set belongs to L-CRYPTO-15.*
+
+**L-CRYPTO-13 — In the curriculum, "done" starts the next task.** When a sub-task is marked done: set done, harvest lessons, mirror, start the next sibling, and confirm to Marcelo within about 30 s. Don't ask "which task?" when only one is running. Stage state after 2026-06-13 is [unverified].
+
+**L-CRYPTO-14 — Each day starts from one BossMan decision artifact, and it never holds a sub-$75 coin.** `data/bossman_decision.json` is the only per-coin daily decision. The artifact carries `l_crypto_rule: "L-CRYPTO-14"` and `floor_audit.min_notional_usd: 75` [code + data]. *(Rebuilt from code; no earlier doc text exists.)*
+
+**L-CRYPTO-15 — The artifact is valid or it is not written.** All of these must hold:
+- universe = the 15 bot PAIRS
+- watchlist ≤3 and do-not-touch ≤3, with no overlap; do-not-touch only from PAIRS
+- tier ∈ {T1 conservative, T2 base, T3 aggressive}
+- regime ∈ the valid set
+- strategy class ∈ {scalper, swing, position, hedge}
+- the schema validates
+
+On any failure, nothing is written and the previous file stays [code].
+
+**L-CRYPTO-16 — The bot reads the decision fail-closed.** It blocks a coin when:
+- the file is missing (BOSSMAN_FILE_MISSING)
+- the schema is bad (BOSSMAN_SCHEMA_INVALID)
+- the date is not today in UTC, or the file is more than 24 h old (BOSSMAN_STALE)
+- the coin is not in the artifact (SYMBOL_MISMATCH)
+- the decision is DENY or WATCH_ONLY
+
+It allows only QUALIFY [code].
+
+**L-CRYPTO-17 — The $75 floor is enforced at execution too.** `executeTrade` rejects any final rounded order under $75 (EXECUTION_FLOOR_BELOW_75). It never rounds a small trade up to $75. Exits are always allowed [code].
+
+**L-CRYPTO-18 — Strategy class × tier must be legal.** Legal pairs: scalper T1/T2; swing T1/T2/T3; position T1; hedge T1 [code: `_qualify_integration.js`].
+
+**L-CRYPTO-19 — Regime × tier must be legal, and gates only read.** T3 is legal only in MID_CYCLE. RISK_OFF, DISTRIBUTION and UNKNOWN allow T1 only. LATE_CYCLE, EARLY_CYCLE and RECOVERY allow T1/T2 [code]. Gate modules never change the artifact.
+
+**L-CRYPTO-20 — No autonomous PAPER↔LIVE flip, enforced in code.** This is binding only while the qualify gate is wired into `server.js`. If that gate is removed, file a new rule [code comment].
+
+## 4. Risk limits (live, 2026-10-02)
+
+| Limit | Value | Proof |
+|---|---|---|
+| Minimum trade | $75 floor, not a cap. No entry if free cash < $75 | [code] `MIN_TRADE_NOTIONAL=75`; [env] `LIVE_PILOT_MIN_NOTIONAL=75` (code default 75) |
+| Risk per trade | 3% of equity at the stop (stop = support × 0.99) | [code] `MAX_RISK_PCT=0.03` |
+| Max exposure | 100% of equity (free USDT + open cost) | [code] default 1.0, hard cap 1.0 |
+| **Max single position** | **$200** — the external pre-trade hook rejected 124 signals on 2026-10-01 16:32–23:57 UTC ("exceeds max $200") | [data] signal_journal; hook code not in copy [unverified value today] |
+| Open positions | 4 | [env] `MAX_OPEN_POSITIONS=4` (code default 4; the code's display constant still says 3) |
+| Per symbol | 1 open position | [code] |
+| New trades per UTC day | 8 | [env]/[code] default 8 |
+| Daily loss stop | 6% of live equity → no new entries until next UTC day | [code] |
+| Loss streak breaker | 3 straight losing closes → pause new entries; auto-resets after 16 h | [code] (the alert text wrongly says "24HR") |
+| Equity kill-floor | $190: when free USDT + open *cost basis* < $190, no new entries and an alert; open positions are still managed | [env] `EQUITY_KILL_FLOOR_USD=190`; [code] default 0 = OFF |
+| Profit floor | Expected net profit at +6% ≥ min($15, 4% of equity) | [unverified] `.env` 15 / 0.04; [code] default 0 = OFF |
+| Exits | Trailing: +5% → stop to entry +0.5%; +9% → +5%; +15% → hard take-profit. Initial stop at support × 0.99 | [code]. **The +6% "target" is only used for R:R and the profit floor. It is not an exit order.** |
+| Entry | 1H uptrend + 15m pullback, RSI 32–74 (hard block >80), R:R ≥1.5, price window $0.00000001–$25, BTC/ETH excluded | [code] |
+| Fees | 0% maker / 0.02% taker | [code] `TAKER_FEE_PCT` |
+| Intel gate | Blocks regime BEAR/EXTREME and bands WATCH/COLD. **Lets trades through when `intelligence.json` is missing (fail-open), and does not check how old it is** | [code] |
+| Learning block | ≥3 closes in 30 d, win rate <34% and net loss → coin blocked 7 d. ≥6 closes with negative expectancy → advisory flag only | [code] `weekly_learning_review.js` |
+| Universe | 15 PAIRS: XRP DOGE ADA LINK VET AVAX HBAR DOT XLM SUI CAKE PEPE HYPE FET NEAR (all USDT). HYPE is always blocked by the $25 window | [code] |
+
+## 5. Who owns what
+
+| Owner | Owns |
+|---|---|
+| Marcelo | LIVE/PAPER mode, approval records (standing or revoke), funding, raising or clearing the kill-floor, risk-limit changes |
+| BossMan | Only orchestrator and only status surface to Marcelo. Owns the decision artifact contract (L-14..16), the restart monitor, card routing (`route-card.sh`) |
+| Trading lane | Bot config and strategy content, Crypto Weekly review content. Money-path code changes go through a paid card (Claude Sonnet 4.6) only |
+| Ops lane | PM2 and cron registration |
+| Loop-engineering | Cadence, no-spam rules, brief format for recurring loops |
+| knowledge-canon | Edits this file and rebuilds the space copies |
+| qa-verification | Step-5 verdicts on T1 money-lane cards |
+| Builder | Code outside the lanes above. Hosts the Crypto Weekly cron |
+
+## 6. Files and paths (Mac)
+
+- Bot: `/Users/bigdawg/Projects/binance-bot/`. Files: `server.js` (loop, every 5 min), `pre-start.js` (4 modes, 7-signal LIVE gate), `ecosystem.config.cjs` (only `binance-bot-live`), `.env`, `RUNBOOK.md`, `data/bot.db`, `data/*.json`, `scripts/`.
+- Pre-trade hook: `/Users/bigdawg/Projects/trading-review/pre-trade-hook`.
+- Intelligence: `~/.hermes/knowledge/crypto-intel/` with `weekly/`, `history/`, `daily/`, `learning/`, `alerts/` and the `*.db` files.
+- Approvals: `~/.hermes/knowledge/approvals/binance-live-approval-*.md` (standing record: `...-1790863361.md`).
+- Related canon: `LEARNED_BINANCE_BOT.md` (safe-start/PM2), `LEARNED_BINANCE_SIZING_V2.md` (sizing), `LEARNED_V3_MODEL_STACK.md` (models), `trading.md` (lane).
+- Go-live backups: `~/backups/binance-golive-20261001/before/`.
+
+## 7. Crons
+
+| Job | Schedule | Proof |
+|---|---|---|
+| Daily pipeline, Hermes `2141a756a0aa` | 17:10 PT | [unverified]: in 2026-06-19 it was `0 12 * * *`. **No 2026-10-02 pipeline output exists. The bot logged 664 BOSSMAN_STALE blocks from 00:02 to 18:02 UTC on 10-02, so it could not trade all day** [data] |
+| `bossman-cron.sh` (decision artifact) | about 14:00 PT (21:00 UTC) daily, also run by pipeline stage 6 | [data] cron log (the script comment says `0 14 * * *` = 07:00 PDT, which is wrong) |
+| `daily-radar-census` `e579c271698f` (bossman profile) | `0 15 * * 1-5` | inventory; [data] radar written 2026-10-01 22:00 UTC |
+| `crypto-intel-weekly.js` | Mondays about 15:00 PT | [data] history timestamps; cron ID [unverified] |
+| `csdawg-prediction-grader.js` | weekly | [unverified] |
+| Crypto Weekly Learning & Intel Review `ea0157d715fa` (builder) | Sun 18:00 PT, agent | inventory |
+| `scripts/weekly_learning_review.js` | Sun 18:00 PT, script only | **pending registration**. Only output so far is the 2026-10-01 manual run [data] |
+| Bot health `health-cron-wrapper.sh` | 09:00 / 21:00 PT | [data] 2026-10-02 09:00 PASS. IDs `fed3553cf244` / `4d4552dc85c9` [unverified] |
+| PM2 Health Monitor `01dff7ff61e4` (bossman) | every 15 min | inventory. Assumed to be "BossMan's monitor" [unverified] |
+
+## 8. History
+
+| Date | Event |
+|---|---|
+| 2026-04-22 | First trades in `bot.db` |
+| 2026-05-04 | Duplicate-entry race incident (`INCIDENT.md`) |
+| 2026-05-20/21 | CLAW-Backup design docs frozen. First weekly engine report (MID_CYCLE 0.45) |
+| 2026-05-30 | Reliability package. PAPER_MODE reset to true |
+| 2026-06-13 | Merge of the live engine and the design canon. This file created with L-01..13 |
+| 2026-06-15 | PAPER_MODE=false "carve-out" in docs. No funded trading followed (see L-10 note) |
+| 2026-06-16 | Phase 6 Track B "24/7 online, autostart" policy (later replaced) |
+| 2026-06-19 | Daily radar pipeline and Stage 5–7 gates. L-14..20 written into code, never into docs |
+| 2026-07-20 | Space docs v3.1 (claimed LIVE / $0.18) |
+| 2026-08-24/25 | Safe-start: `binance-bot-live` became the only PM2 app, and the legacy `binance-bot` name was retired |
+| 2026-09-27/28 | B-2/B-3/B-7 patches (3% risk, $75 floor not cap, schema compat). 144 signals blocked BOSSMAN_SCHEMA_INVALID |
+| 2026-09-30 | LBC35/OpenClaw retired. Health OS deleted |
+| 2026-10-01 | LIVE 02:01 PT. Fixes: research, qualify list/map, UTC dating, 30% cap, trades/day, float bug, closeTrade never sold. Sizing v2. First live trade AVAX −$1.85, orphan liquidated. Standing approval 07:00 PT. Kill-floor $190 |
+| 2026-10-02 | Ollama fallback moved to qwen3.5:35b-a3b-nvfp4. This canon rebuilt (v5). Rules 14–20 written down |
+
+**Adding a rule:**
+1. Check it would still be true in 6 months.
+2. Append the next L-CRYPTO-NN (now 21) with rule, why, proof and anti-pattern.
+3. Commit the mirror.
+4. Rebuild the space copies from this file.

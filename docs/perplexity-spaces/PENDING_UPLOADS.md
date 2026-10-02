@@ -16,3 +16,11 @@ Phase 4 corrected wording in almost every file (210 fixes from two review sub-ag
 - Finance & Money Ops = finance-money-ops/
 
 From now on, this file lists only the files that changed since the last build.
+
+## 2026-10-02 12:33 — re-upload these in Perplexity
+- **Finance & Money Ops:** Automation Inventory.md
+- **Knowledge & Learning:** LEARNED Index.md
+- **Ops Processes:** Automation Inventory.md, Remote Access (Mac Studio).md
+- **Shared:** Automation Inventory.md
+- **System Health:** Automation Inventory.md, Remote Access (Mac Studio).md
+- **Trading Ops:** Automation Inventory.md

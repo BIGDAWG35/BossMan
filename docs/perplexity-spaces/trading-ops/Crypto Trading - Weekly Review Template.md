@@ -6,6 +6,7 @@
 
 > **2026-10-02 correction:** Bot is LIVE since 2026-10-01 (`binance-bot-live`, $250.59 start); PAPER-vs-LIVE and funding questions in Section F are answered. `~/.hermes/knowledge/LEARNED_CRYPTO_INTELLIGENCE.md` is not in current canon (V3 pointers list `~/Repos/BossMan/docs/crypto-trading-intelligence/LEARNED_CRYPTO_INTELLIGENCE.md`); a script-only weekly learning review (Sun 18:00 PT, `scripts/weekly_learning_review.js`) now writes `crypto-intel/learning/LEARNING_REVIEW_<date>.md`.
 **Version:** v3.1 (refined 2026-07-20 to reflect current Binance bot state, Risk-OS V3, and Phase 6 Track B health-monitoring changes)
+> **2026-10-02 (rules):** the rule set is L-CRYPTO-01..20 (14–20 were enforced in code but undocumented until today); proposed L-21..26 await approval. Single canon: `~/.hermes/knowledge/LEARNED_CRYPTO_INTELLIGENCE.md`. The +6% "target" is planning-only; real exits = trailing stops + hard TP +15% + 72h time stop.
 **Date:** 2026-07-20
 **Owner:** BossMan Hermes
 **Status:** Canonical — v3-aligned
