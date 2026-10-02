@@ -98,7 +98,7 @@ Canon: `ROLES_AND_CHAIN_OF_COMMAND.md` · `LEARNED_7_RULE_CONTRACT.md` · `LEARN
 |---|---|
 | **MiniMax-M3** | DEFAULT: orchestration, planning, routine work, ALL crons/PM2/monitors/routine troubleshooting |
 | **MiniMax-M2.7** | Content and QA |
-| **Ollama qwen3.8:27b** (local) | Fallback after M3; bulk/local. qwen2.5:7b/3b for light app jobs |
+| **Ollama qwen3.5:35b-a3b-nvfp4** (local) | Fallback after M3; bulk/local. qwen2.5:7b/3b for light app jobs |
 | **OpenAI gpt-5.5** | `build-impl` cards only (OpenAI API key until Codex OAuth quota resets ~2026-10-16, then Codex OAuth) |
 | **Claude Sonnet 4.6** | `build-arch` + `money-path` cards only |
 | **DeepSeek v4-pro** | `qa-review` + `troubleshoot-escalate` cards only |
@@ -106,7 +106,7 @@ Canon: `ROLES_AND_CHAIN_OF_COMMAND.md` · `LEARNED_7_RULE_CONTRACT.md` · `LEARN
 
 - Paid models ONLY via `~/.hermes/bin/route-card.sh <task_type> <assignee> <title> <body-file>` (never raw `hermes kanban create`, never per-call paid overrides, never a new task_type without updating `LEARNED_V3_PAID_MODEL_ROUTING.md`).
 - Budget caps: Claude $5/day, DeepSeek $1/day, OpenAI API $1/day — enforced by `~/.hermes/scripts/paid-model-guard.py` (no LLM, 20:30 daily → Telegram).
-- Paid provider out of credit/quota/cap → card downgrades to MiniMax-M3, then Ollama `qwen3.8:27b`, and keeps going. Work never stops.
+- Paid provider out of credit/quota/cap → card downgrades to MiniMax-M3, then Ollama `qwen3.5:35b-a3b-nvfp4`, and keeps going. Work never stops.
 - Checkpoint every 50 tool calls on tasks >~60; use subagents for deep dives. Full policy: `LEARNED_V3_MODEL_STACK.md`.
 
 ---

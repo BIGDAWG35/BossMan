@@ -16,17 +16,17 @@ Companion to LEARNED_V3_MODEL_STACK.md, which still defines the MiniMax lanes. T
 - DeepSeek spend comes from the binance-bot app (direct API), not from Hermes. Claude is also called directly by the ticketflow and money-making-dashboard apps.
 
 ## The rule
-1. Free tier (MiniMax M3, MiniMax M2.7 content/QA, Ollama qwen3.8:27b local-fallback) handles all routine work: chat, orchestration, triage, crons, PM2, watchdogs, summaries, bulk text and first-pass troubleshooting. The default is M3; M2.7 is content/QA (not default); qwen3.8:27b is the local-fallback after M3. qwen2.5:7b/3b are reserved for explicit light-app jobs.
+1. Free tier (MiniMax M3, MiniMax M2.7 content/QA, Ollama qwen3.5:35b-a3b-nvfp4 local-fallback) handles all routine work: chat, orchestration, triage, crons, PM2, watchdogs, summaries, bulk text and first-pass troubleshooting. The default is M3; M2.7 is content/QA (not default); qwen3.5:35b-a3b-nvfp4 is the local-fallback after M3. qwen2.5:7b/3b are reserved for explicit light-app jobs.
 2. Paid models are used only through a kanban card that carries `--model` and `--provider` (kanban_db model_override/provider_override). Never through a cron, a fallback chain, or a scheduled PM2 call. That makes every paid call traceable to a card.
 3. BossMan sets the override when creating the card, using the table below. A build, QA or architecture card with no override is a routing defect.
 
 ## Routing table
 | Work | Use | Escalate to | Notes |
 |---|---|---|---|
-| Crons, PM2, heartbeats, monitors, digests | MiniMax-M3 / Ollama qwen3.8:27b | never paid | hard rule; qwen2.5:7b/3b pinned only for explicit light-app jobs |
+| Crons, PM2, heartbeats, monitors, digests | MiniMax-M3 / Ollama qwen3.5:35b-a3b-nvfp4 | never paid | hard rule; qwen2.5:7b/3b pinned only for explicit light-app jobs |
 | Orchestration, planning, triage, status | MiniMax-M3 | — | BossMan default |
 | Content, marketing, docs that are not canon | MiniMax-M2.7 | — | content + qa lanes (M2.7 is content/QA, NOT default) |
-| Bulk extraction, classification, dedupe | Ollama qwen3.8:27b (deep) / qwen2.5:7b (light), then M3 | — | local-first |
+| Bulk extraction, classification, dedupe | Ollama qwen3.5:35b-a3b-nvfp4 (deep) / qwen2.5:7b (light), then M3 | — | local-first |
 | Research-public: public web summaries, news/YouTube transcripts, long public docs, public image read | Gemini Flash-Lite (gemini-3.1-flash-lite-preview) free tier | M3 | route-card.sh task_type=`research-public`; body-pattern guard; 400 req/day budget cap; 0 USD |
 | Troubleshooting, attempts 1-2 | MiniMax-M3 | DeepSeek v4-pro after 2 failed attempts or 30 min | |
 | Troubleshooting with production down or a money path | DeepSeek v4-pro | Claude sonnet after DeepSeek fails | log on card |
@@ -44,3 +44,5 @@ Companion to LEARNED_V3_MODEL_STACK.md, which still defines the MiniMax lanes. T
   - any build or QA card created without an override;
   - any budget being exceeded.
 - PM2 apps that call paid APIs on a schedule move to M3. User-triggered product features, such as the ticketflow brief generator, may keep a paid model but are counted in the report.
+
+> **2026-10-02 update:** the local Ollama fallback is now `qwen3.5:35b-a3b-nvfp4` (128K context, ~113 tok/s). It replaced `qwen3.8:27b`, which was removed from disk. `qwen2.5:7b` / `qwen2.5:3b` stay for light pinned jobs only. Canon: ~/.hermes/knowledge/LEARNED_V3_MODEL_STACK.md (2026-10-02 section).

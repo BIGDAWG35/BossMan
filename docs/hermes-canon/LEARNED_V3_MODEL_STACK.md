@@ -28,8 +28,8 @@ This is the **single canonical reference** for which model to use for which task
 | content | MiniMax-M2.7 | Best MiniMax model for professional office delivery (Word/PPT/Excel, GDPval-AA ELO 1495) and character-rich writing |
 | qa-verification | MiniMax-M2.7 | Independent QA: a different model from the builder avoids shared blind spots; M2.7 is strong at log analysis, bug hunting and code security |
 | LBC35 / OpenClaw (delegator) *[RETIRED 2026-09-30]* | MiniMax-M2.7 | Historical note: MiniMax reported M2.7 markedly better than M2.5 inside OpenClaw, with 97% skill adherence across 40 complex skills. This lane no longer exists; the delegator role is retired and there is no automatic replacement. |
-| Automatic fallback | M3 lanes -> Ollama qwen3.8:27b; M2.7 lanes -> M3 -> Ollama qwen3.8:27b | DeepSeek and Claude are NOT automatic fallbacks (cost control). qwen2.5:7b/3b are reserved for light app jobs only (not the silent fallback). |
-| **All crons + PM2 automated runs** | **MiniMax-M3 or Ollama only** | Marcelo directive 2026-09-30. `cron.model: MiniMax-M3` is set in every profile; per-job pins may be M3, Ollama qwen3.8:27b (standard fallback), or Ollama qwen2.5:7b/3b (light app jobs). PM2 apps that call Claude/OpenAI/DeepSeek on a schedule must be moved to M3 (MiniMax exposes an Anthropic-compatible API at https://api.minimax.io/anthropic) |
+| Automatic fallback | M3 lanes -> Ollama qwen3.5:35b-a3b-nvfp4; M2.7 lanes -> M3 -> Ollama qwen3.5:35b-a3b-nvfp4 | DeepSeek and Claude are NOT automatic fallbacks (cost control). qwen2.5:7b/3b are reserved for light app jobs only (not the silent fallback). |
+| **All crons + PM2 automated runs** | **MiniMax-M3 or Ollama only** | Marcelo directive 2026-09-30. `cron.model: MiniMax-M3` is set in every profile; per-job pins may be M3, Ollama qwen3.5:35b-a3b-nvfp4 (standard fallback), or Ollama qwen2.5:7b/3b (light app jobs). PM2 apps that call Claude/OpenAI/DeepSeek on a schedule must be moved to M3 (MiniMax exposes an Anthropic-compatible API at https://api.minimax.io/anthropic) |
 
 **Not used:** MiniMax-M2.5 and M2.1 are listed as Legacy by MiniMax; neither beats M3 at anything we run and the price is the same. `-highspeed` variants cost 2x and are slower than M3. Revisit when MiniMax-M3.1 leaves preview.
 
@@ -113,9 +113,9 @@ Sources: https://platform.minimax.io/docs/guides/text-generation · https://plat
 - Offline tasks (Perplexity unreachable, no internet)
 - Cheap experiments / background helpers (bulk pre-summaries, pattern scans)
 - Pre-summary step before sending logs to Claude/DeepSeek for final diagnosis
-- Mac Studio M4 Max available models (stack-013, 2026-09-30; activated as standard fallback 2026-10-01, card spaces-001): `qwen2.5:3b`, `qwen2.5:7b`, **`qwen3.8:27b`** (Q4, ~17-18 GB, num_ctx 32768 cap; profile fallbacks swapped to qwen3.8:27b on 2026-10-01).
+- Mac Studio M4 Max available models (stack-013, 2026-09-30; activated as standard fallback 2026-10-01, card spaces-001): `qwen2.5:3b`, `qwen2.5:7b`, **`qwen3.5:35b-a3b-nvfp4`** (NVFP4 MoE, ~24 GB, num_ctx 131072; replaced qwen3.8:27b as the standard fallback on 2026-10-02).
 - Ollama server tunings (stack-013, 2026-09-30, via `launchctl setenv` + Ollama.app env): `OLLAMA_MAX_LOADED_MODELS=1`, `OLLAMA_NUM_PARALLEL=1`, `OLLAMA_KEEP_ALIVE=10m`, `OLLAMA_FLASH_ATTENTION=1`, `OLLAMA_KV_CACHE_TYPE=q8_0`.
-- Light app jobs (binance-bot daily_memo.js, altus-forensic, some cron prompts) keep `qwen2.5:7b` / `qwen2.5:3b`; bulk/deep jobs use `qwen3.8:27b`.
+- Light app jobs (binance-bot daily_memo.js, altus-forensic, some cron prompts) keep `qwen2.5:7b` / `qwen2.5:3b`; bulk/deep jobs use `qwen3.5:35b-a3b-nvfp4`.
 
 **Avoid for:**
 - Anything requiring precision (small models hallucinate more)
@@ -183,7 +183,7 @@ If the issue requires external knowledge (new error pattern, vendor API change),
 
 This sub-policy is **additive** to the V3 model stack above. Routine monitors,
 grinders, bulk-cleanup, and PM2/cron infra checks **default to Ollama/local**
-(`provider: custom`, `base_url: http://localhost:11434/v1`, model `qwen3.8:27b`
+(`provider: custom`, `base_url: http://localhost:11434/v1`, model `qwen3.5:35b-a3b-nvfp4`
 for the standard fallback, `qwen2.5:7b` / `qwen2.5:3b` reserved for light app
 jobs only) instead of falling through to Claude / DeepSeek.
 
@@ -211,16 +211,16 @@ fail loudly or escalate if the approved route is unavailable.
    support thinking") → silent paid fallback.
 4. Legacy non-approved pins are removed: the `pmd-watchdog` job was pinned to
    `minimax/haiku` (haiku is not in the approved M3/Ollama set) and is now
-   `custom/qwen3.8:27b`.
+   `custom/qwen3.5:35b-a3b-nvfp4`.
 
 **Routing ledger for cron jobs:**
 - Routine cron (bulk, monitors, watchdog, scans, audits, sync, freshness):
-  `custom/qwen3.8:27b` (Ollama) — standard fallback, M3 primary.
+  `custom/qwen3.5:35b-a3b-nvfp4` (Ollama) — standard fallback, M3 primary.
 - Light app jobs (compact summaries, tiny transformations, no long context):
-  `custom/qwen2.5:7b` (Ollama) — only when qwen3.8:27b would be overkill.
+  `custom/qwen2.5:7b` (Ollama) — only when qwen3.5:35b-a3b-nvfp4 would be overkill.
 - Chatty / brief jobs explicitly approved for M3: `minimax/MiniMax-M3`.
 - Risk-gated jobs (money paths, security, SquarePayouts state exporters,
-  Binance, MoneyPipeline): `custom/qwen3.8:27b` (Ollama) — Ollama never goes
+  Binance, MoneyPipeline): `custom/qwen3.5:35b-a3b-nvfp4` (Ollama) — Ollama never goes
   down, so failure means true infrastructure failure, not silent paid
   fallback. BossMan surfaces the failure via kanban alert.
 
@@ -288,13 +288,13 @@ global chain).
 ## Routing config (lives in `config.yaml` + per-profile overrides)
 
 **Default** (BossMan profile): `MiniMax-M3` — chatty bulk work.
-**Fallback chain** (SUPERSEDED 2026-09-30 — see MiniMax lane map at top: M3 lanes → Ollama qwen3.8:27b (updated 2026-10-01); M2.7 lanes → M3 → Ollama. No DeepSeek/Claude/OpenAI silent fallback.)
+**Fallback chain** (SUPERSEDED 2026-09-30 — see MiniMax lane map at top: M3 lanes → Ollama qwen3.5:35b-a3b-nvfp4 (updated 2026-10-01); M2.7 lanes → M3 → Ollama. No DeepSeek/Claude/OpenAI silent fallback.)
 
 **Per-profile overrides** (apply on top of global default):
 (Rewritten 2026-10-01 — paid models are reachable ONLY through `~/.hermes/bin/route-card.sh` cards; there are no per-profile paid overrides. `deepseek-v4-flash` does not exist on the DeepSeek API.)
 - **builder**: default `MiniMax-M3`; real builds → `route-card.sh build-impl` (OpenAI `gpt-5.5`); safety-sensitive (SquarePayouts, auth, money paths) → `build-arch` / `money-path` (Claude `claude-sonnet-4-6`).
 - **ops**: default `MiniMax-M3` (all PM2/cron/infra debugging); stuck → `route-card.sh troubleshoot-escalate` (DeepSeek `deepseek-v4-pro`).
-- **trading**: default `MiniMax-M3`; local bulk → Ollama `qwen3.8:27b`; changes touching live money → `route-card.sh money-path` (Claude `claude-sonnet-4-6`, mandatory review).
+- **trading**: default `MiniMax-M3`; local bulk → Ollama `qwen3.5:35b-a3b-nvfp4`; changes touching live money → `route-card.sh money-path` (Claude `claude-sonnet-4-6`, mandatory review).
 - **content**: default `MiniMax-M2.7`; drafts on M3; public research → `research-public` (Gemini free tier).
 - **qa-verification** (Step-5): default `MiniMax-M2.7`; paid review → `route-card.sh qa-review` (DeepSeek `deepseek-v4-pro`); money/auth audits → `money-path` (Claude).
 - **research-intel**: default `MiniMax-M3` + Perplexity; public-source digests → `research-public` (Gemini free tier).
@@ -429,3 +429,5 @@ Backups: `~/Backups/model-switch-20261002/`. Card t_de03a430.
 ---
 
 *This file replaces any prior model routing description in SOUL/AGENTS/OPERATINGBLUEPRINT. If config.yaml or a profile yaml diverges, this file wins until config catches up.*
+
+**Update 2026-10-02 (later, sweep 20261002-105903):** binance-bot `scripts/_llm_free.js` now uses `qwen3.5:35b-a3b-nvfp4` after MiniMax-M3 (then qwen2.5:7b). No bot restart was needed: the daily pipeline runs as cron child processes, not inside PM2 `binance-bot-live`. `qwen3.8:27b` was removed with `ollama rm` (frees ~17 GB). All current-state docs, Desktop/spaces and the 9 Perplexity Projects were updated the same day.
