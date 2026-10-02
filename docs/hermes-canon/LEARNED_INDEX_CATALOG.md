@@ -255,3 +255,5 @@ Companion to `LEARNED_INDEX.md` (the domain table). Regenerate this file when ro
 - `incidents/` (132), `crypto-intel/` (100), `memory/` (48 — older weekly reviews + May audits), `projects/` (11), plus small folders. These are records; current rules live in the root files above. Folder-level duplicate/archive work is Phase 4–5 of the MD audit.
 
 - **Remote access (Mac Studio)** → `LEARNED_REMOTE_ACCESS.md` wins (2026-10-02). Screen Sharing over Tailscale first; AnyDesk is backup.
+
+- **Crypto trading intelligence** → `LEARNED_CRYPTO_INTELLIGENCE.md` wins (rebuilt 2026-10-02). Space copies "Crypto Trading Intelligence - Learned Rules/Overview" and "Crypto Intelligence LEARNED" are auto-built from it. Live bot state: trading-ops "Binance Bot - Current State". Audit: `crypto-intel/BINANCE_BOT_AUDIT_2026-10-02.md`.

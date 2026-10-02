@@ -36,6 +36,7 @@ Own trading-related systems: Binance bot configs, regime detection, position man
 - Regime detection (bull/bear/sideways) + position sizing changes.
 - PII safety on trade data (redact account IDs in logs).
 - PAPER_MODE default (no real money without Marcelo explicit approval).
+  > **2026-10-02 note:** `binance-bot-live` is LIVE since 2026-10-01 under Marcelo's standing approval (LIVE_TRADING_ACK + STANDING approval record). PAPER stays the default only for NEW bots/strategies or patch soak tests. Canon: `LEARNED_CRYPTO_INTELLIGENCE.md`.
 
 ---
 
@@ -69,7 +70,7 @@ If the work would touch any of the above, escalate to BossMan per §10.
 
 ---
 
-## 6. Relationship to LBC35 (delegator-router)
+## 6. Relationship to LBC35 (delegator-router) — HISTORICAL (LBC35 retired 2026-09-30; BossMan delegates via kanban + route-card.sh)
 
 - LBC35 designs multi-step plans that may include the Trading lane.
 - Trading **implements** within its lane per LBC35's plan.
