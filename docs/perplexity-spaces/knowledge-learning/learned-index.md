@@ -1,8 +1,8 @@
 # LEARNED_*.md Files — Full Index
 
 **Source:** `~/.hermes/knowledge/`
-**Status:** Active — 62 files
-**Regenerated:** 2026-10-01 06:00
+**Status:** Active — 63 files
+**Regenerated:** 2026-10-02 06:01
 
 ---
 
@@ -18,6 +18,7 @@
 | `LEARNED_APPLE_MOTION.md` | LEARNED_APPLE_MOTION.md — Apple Motion 6.3 in the Hermes Stack |
 | `LEARNED_BASECAMP_WORKFLOW.md` | Basecamp Workflow — Permanent Operating Rules |
 | `LEARNED_BINANCE_BOT.md` | LEARNED_BINANCE_BOT.md |
+| `LEARNED_BINANCE_SIZING_V2.md` | Binance Sizing v2 (2026-10-01, binance-005) |
 | `LEARNED_BLENDER_LTS.md` | LEARNED_BLENDER_LTS.md |
 | `LEARNED_BOSSMAN_TELEGRAM_BRIDGE.md` | LEARNED — BossMan ↔ Perplexity Telegram Bridge (Phase 1 + Phase 2) |
 | `LEARNED_BRAVE_PERPLEXITY_BRIDGE.md` | LEARNED — Brave Perplexity Bridge |
