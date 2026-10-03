@@ -57,3 +57,7 @@ Use the **100.92.223.82** IP rather than the MagicDNS name. The Mac Studio runs 
 ## Do not
 - Don't open port 5900 or 22 to the internet. Use them only over Tailscale.
 - Don't turn on FileVault, Mac sleep or Tailscale "Shields Up" without updating this doc. Each of these breaks remote access.
+
+## Notes
+
+- 2026-10-03: Perplexity Mac app = Perplexity Computer's device link; watchdog cron `perplexity-app-watchdog` (`301b3b099a7d`, every 10 min, no-agent script `perplexity_app_watchdog.sh`) relaunches it. Relaunch directive was MARCELO-APPROVED for `ai.perplexity.macv3` only — do NOT touch Brave, the CDP bridge, the Perplexity intake bridge, the binance bot, or PM2 from this watchdog.
