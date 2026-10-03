@@ -191,3 +191,8 @@ It allows only QUALIFY [code].
 2. Append the next L-CRYPTO-NN (now 21) with rule, why, proof and anti-pattern.
 3. Commit the mirror.
 4. Rebuild the space copies from this file.
+
+
+## Live strategy update — Phase 6E (2026-10-02)
+
+> Added 2026-10-02 (Marcelo-approved). `STRATEGY_MODE=wave` is live: BTC daily close > EMA50 regime gate; coin impulse >= 12% on 1h, then a 23.6-78.6% pullback holding a higher low; entry on the first green 1h turn-up with rising MACD histogram; stop under the pullback low; sell 50% at the prior high and move the stop to breakeven; trail the rest 2xATR; take the remainder at the 1.618 extension; 120h time stop. Universe (`PAIRS_OVERRIDE`): PUMP, PENGU, SUI, AVAX, HBAR, ADA, LINK, DOGE, XRP. Sizing fully dynamic: 1 slot, up to 100% of current equity, $75 floor, 3% risk, kill floor $190. Evidence: `crypto-intel/WAVE_STRATEGY_2026-10-02.md`; QA: `crypto-intel/WAVE_PATCH_QA_2026-10-02.md`. Revert: `STRATEGY_MODE=legacy`.

@@ -24,3 +24,8 @@ From now on, this file lists only the files that changed since the last build.
 - **Shared:** Automation Inventory.md
 - **System Health:** Automation Inventory.md, Remote Access (Mac Studio).md
 - **Trading Ops:** Automation Inventory.md
+
+## 2026-10-02 14:26 — re-upload these in Perplexity
+- **Knowledge & Learning:** Crypto Intelligence LEARNED.md, LEARNED Index.md
+- **Projects & Mission Control:** Crypto Trading Intelligence - Overview.md
+- **Trading Ops:** Crypto Trading Intelligence - Learned Rules.md, Crypto Trading Intelligence - Overview.md
