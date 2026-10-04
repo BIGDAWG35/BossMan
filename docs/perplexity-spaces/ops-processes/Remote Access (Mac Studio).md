@@ -1,4 +1,4 @@
-**Version:** v4 · **Date:** 2026-10-02 · **Source:** `~/.hermes/knowledge/LEARNED_REMOTE_ACCESS.md` · **Status:** Current — auto-built from canon by build_spaces_v4.py; edit the source, not this copy
+**Version:** v4 · **Date:** 2026-10-03 · **Source:** `~/.hermes/knowledge/LEARNED_REMOTE_ACCESS.md` · **Status:** Current — auto-built from canon by build_spaces_v4.py; edit the source, not this copy
 
 > Note: any LBC35/OpenClaw mention in this file is historical (retired 2026-09-30; BossMan does all delegation via kanban + route-card.sh). Health OS was deleted 2026-09-30. Where this file conflicts with "00 - Current State (2026-10-01).md", the Current State file wins.
 
@@ -61,3 +61,7 @@ Use the **100.92.223.82** IP rather than the MagicDNS name. The Mac Studio runs 
 ## Do not
 - Don't open port 5900 or 22 to the internet. Use them only over Tailscale.
 - Don't turn on FileVault, Mac sleep or Tailscale "Shields Up" without updating this doc. Each of these breaks remote access.
+
+## Notes
+
+- 2026-10-03: Perplexity Mac app = Perplexity Computer's device link; watchdog cron `perplexity-app-watchdog` (`301b3b099a7d`, every 10 min, no-agent script `perplexity_app_watchdog.sh`) relaunches it. Relaunch directive was MARCELO-APPROVED for `ai.perplexity.macv3` only — do NOT touch Brave, the CDP bridge, the Perplexity intake bridge, the binance bot, or PM2 from this watchdog.
