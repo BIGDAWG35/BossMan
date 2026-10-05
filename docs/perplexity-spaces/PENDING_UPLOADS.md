@@ -34,3 +34,7 @@ From now on, this file lists only the files that changed since the last build.
 - **Knowledge & Learning:** Crypto Intelligence LEARNED.md
 - **Projects & Mission Control:** Crypto Trading Intelligence - Overview.md
 - **Trading Ops:** Crypto Trading Intelligence - Learned Rules.md, Crypto Trading Intelligence - Overview.md
+
+## 2026-10-04 06:00 — re-upload these in Perplexity
+- **Ops Processes:** Remote Access (Mac Studio).md
+- **System Health:** Remote Access (Mac Studio).md
