@@ -1,4 +1,4 @@
-# LEARNED_INDEX_CATALOG.md — Complete Knowledge Catalog (2026-10-02, MD audit Phase 3)
+# LEARNED_INDEX_CATALOG.md — Complete Knowledge Catalog (2026-10-14, +LAETT/IBEW11 KB)
 
 Companion to `LEARNED_INDEX.md` (the domain table). Regenerate this file when root docs are added or retired.
 
@@ -257,3 +257,17 @@ Companion to `LEARNED_INDEX.md` (the domain table). Regenerate this file when ro
 - **Remote access (Mac Studio)** → `LEARNED_REMOTE_ACCESS.md` wins (2026-10-02). Screen Sharing over Tailscale first; AnyDesk is backup.
 
 - **Crypto trading intelligence** → `LEARNED_CRYPTO_INTELLIGENCE.md` wins (rebuilt 2026-10-02). Space copies "Crypto Trading Intelligence - Learned Rules/Overview" and "Crypto Intelligence LEARNED" are auto-built from it. Live bot state: trading-ops "Binance Bot - Current State". Audit: `crypto-intel/BINANCE_BOT_AUDIT_2026-10-02.md`.
+
+#### LAETT / IBEW Local 11 / LA Electrical JATC — apprenticeship canon
+**Wins:** LEARNED_LAETT_IBEW11_APPRENTICESHIP.md (overview + 12-stage lifecycle + layoff/dispatch + state law summary) + LEARNED_LAETT_IBEW11_FAQ.md (17 FAQs)
+
+| File | Status | Size | Title |
+|---|---|---|---|
+| `LEARNED_LAETT_IBEW11_APPRENTICESHIP.md` | CANON | ~7 KB | LAETT / IBEW 11 / LA Electrical JATC Apprenticeship — Canonical Reference |
+| `LEARNED_LAETT_IBEW11_ENTITIES.md` | CANON | ~8 KB | LAETT / IBEW 11 — Entity Profiles (8) |
+| `LEARNED_LAETT_IBEW11_PROGRAMS.md` | CANON | ~7 KB | LAETT / IBEW 11 — Program Catalog + Credential Map |
+| `LEARNED_LAETT_IBEW11_FAQ.md` | CANON | ~13 KB | LAETT / IBEW 11 — 17 Common Questions |
+| `LEARNED_LAETT_IBEW11_APPRENTICESHIP_LIFECYCLE.md` | CANON | ~8 KB | LAETT / IBEW 11 — 12-Stage Lifecycle Playbook |
+| `LAETT_IBEW11_OPEN_QUESTIONS.md` | SIDE | ~2 KB | LAETT / IBEW 11 — Open Questions & Gaps |
+
+**Note (2026-10-14):** These 5 files are read-only research canon. They were compiled from public sources (laett.com, ibew11.org, dir.ca.gov Title 8 + Labor Code, apprenticeship.gov). They contain no private data. They were produced for a specific student-advisor use case and are not project-specific. M6 — the underlying law/regulation sub-research — is documented as partial: §230.1 + §224 of Title 8 are weak, and Labor Code §207/§207.1/§3081/§3075-3077/§3078(g) verbatim text is from a Justia.com mirror (leginfo.legislature.ca.gov is Cloudflare-blocked). See `LEARNED_LAETT_IBEW11_APPRENTICESHIP.md` §14 for the full confidence and gap roll-up.
