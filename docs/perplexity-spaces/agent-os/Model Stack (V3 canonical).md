@@ -1,4 +1,4 @@
-**Version:** v4 · **Date:** 2026-10-02 · **Source:** `~/.hermes/knowledge/LEARNED_V3_MODEL_STACK.md` · **Status:** Current — auto-built from canon by build_spaces_v4.py; edit the source, not this copy
+**Version:** v4 · **Date:** 2026-10-16 · **Source:** `~/.hermes/knowledge/LEARNED_V3_MODEL_STACK.md` · **Status:** Current — auto-built from canon by build_spaces_v4.py; edit the source, not this copy
 
 > Note: any LBC35/OpenClaw mention in this file is historical (retired 2026-09-30; BossMan does all delegation via kanban + route-card.sh). Health OS was deleted 2026-09-30. Where this file conflicts with "00 - Current State (2026-10-01).md", the Current State file wins.
 
@@ -288,6 +288,27 @@ override (the cron scheduler prefers job-level settings over the
 global chain).
 
 ---
+
+## Routing discipline (Permanent 2026-10-16, card t_d28f5fc6)
+
+`route-card.sh` is the single paid-model entry point for kanban cards. To prevent the build work from landing on the wrong profile (the 2026-10-16 incident where `route-card.sh build-impl bossman "..."` produced a card assigned to `bossman` instead of `builder`), every task_type now has a canonical default-assignee. An explicit profile name in the caller's positional arg still wins (so the override pattern `route-card.sh ops bossman "..."` keeps working). Pass `auto` (or empty) to use the default.
+
+| task_type          | default_assignee | provider/model override |
+|--------------------|------------------|--------------------------|
+| build-impl         | builder          | openai / gpt-5.5         |
+| build-arch         | builder          | anthropic / claude-sonnet-4-6 |
+| qa-review          | qa-verification  | deepseek / deepseek-v4-pro |
+| troubleshoot-escalate | ops           | deepseek / deepseek-v4-pro |
+| ops                | ops              | (free; M3 default)       |
+| money-path         | builder          | anthropic / claude-sonnet-4-6 |
+| content            | content          | minimax / MiniMax-M2.7   |
+| bulk               | bossman          | (free; M3 default)       |
+| research-public    | research-intel   | gemini / gemini-3.1-flash-lite-preview |
+| (default)          | bossman          | (free; M3 default)       |
+
+The table lives in `bin/route-card.sh` next to the existing `task_type → model` table. Mirror it exactly here when canon changes. The two tables are coupled: a new task_type MUST have both a model and a default_assignee, otherwise the script falls back to `bossman` for the assignee (safe default) and the model the case statement recognizes (or rejects).
+
+**Drift guard:** any future change to the default-assignee table MUST update both `bin/route-card.sh` and this section in the same commit. A task_type without a default_assignee row falls through to `bossman` and emits a `[route-card.sh] assignee=auto -> bossman` trace on stderr so the operator sees the fallback.
 
 ## Routing config (lives in `config.yaml` + per-profile overrides)
 

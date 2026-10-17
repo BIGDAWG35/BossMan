@@ -1,4 +1,4 @@
-**Version:** v4 · **Date:** 2026-07-23 · **Source:** `~/.hermes/knowledge/LEARNED_TRAVEL_OS.md` · **Status:** Current — auto-built from canon by build_spaces_v4.py; edit the source, not this copy
+**Version:** v4 · **Date:** 2026-10-16 · **Source:** `~/.hermes/knowledge/LEARNED_TRAVEL_OS.md` · **Status:** Current — auto-built from canon by build_spaces_v4.py; edit the source, not this copy
 
 > Note: any LBC35/OpenClaw mention in this file is historical (retired 2026-09-30; BossMan does all delegation via kanban + route-card.sh). Health OS was deleted 2026-09-30. Where this file conflicts with "00 - Current State (2026-10-01).md", the Current State file wins.
 
@@ -95,3 +95,21 @@ Travel OS is now Loop-owned for **loop design**. The Travel lane owns trip data 
 - `t_travelos_loop_b_prompt_update_20260723` — tighten Trip Reminder prompt (12h send window + per-trip-per-day lock).
 
 **Lane profile reference (Travel):** `~/.hermes/knowledge/LEARNED_TRAVEL_OS.md` (this file). Per-lane Loop-integration note: see Travel lane profile after Loop-Engineering rollout card `t_subagent_loop_rollout_v1_20260723` creates it.
+
+---
+
+## Guerrero Travel Advisory — Level 4 (verified 2026-10-16, card t_eee88b81)
+
+**State of Guerrero (incl. Ixtapa, Zihuatanejo, Acapulco, Taxco) is currently Level 4 — DO NOT TRAVEL** per U.S. State Dept, advisory issued 2025-08-12 (live re-confirmed 2026-10-16 via web extract of `travel.state.gov/en/international-travel/travel-advisories/mexico.html`).
+
+**Key language:** "U.S. government employees may not travel to any area in the state of Guerrero, including tourist areas Acapulco, Zihuatanejo, Taxco, and Ixtapa." Cause: terrorism + crime. Armed groups operate independently of the government in many areas.
+
+**Required for any Ixtapa/Zihuatanejo/Guerrero trip in Travel OS:**
+- `advisoryLevel: 4` in trip record (DB default is `1` — STALE, must patch on trip creation)
+- Compliance checklist must include: travel insurance WITH MEDICAL EVACUATION (mandatory), residual-risk acceptance, T-30/T-14/T-7/T-48h advisory recheck cadence
+- Per V3 routing: any booking action (flights, hotels, transfers) is BLOCKED-ON-MARCELO until explicit Level 4 residual-risk acceptance
+- Reuse protocol from 2026-08-15 group-trip acceptance flow (insurance quote, dispatched taxis, no after-dark travel, no solo/remote excursions, WhatsApp live-location)
+
+**Common bug to watch:** A Travel OS trip record created before the Level 4 update (or from template reuse) may have `advisoryLevel: 1` baked in. Always check `advisorySource` + `advisoryDate` — if missing or older than 2025-08-12, patch the trip immediately.
+
+**Where this applies:** any trip record with `destination` containing "Ixtapa", "Zihuatanejo", "Acapulco", "Taxco", or "Guerrero". Run the patch via `PATCH /api/travel-os/trips/<id>` with the body pattern from the ixtapa-guerrero-mexico-2027-06 example (see card t_eee88b81 comment 21370).
