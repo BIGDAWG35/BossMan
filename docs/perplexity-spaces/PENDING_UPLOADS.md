@@ -38,3 +38,8 @@ From now on, this file lists only the files that changed since the last build.
 ## 2026-10-04 06:00 — re-upload these in Perplexity
 - **Ops Processes:** Remote Access (Mac Studio).md
 - **System Health:** Remote Access (Mac Studio).md
+
+## 2026-10-17 06:00 — re-upload these in Perplexity
+- **Agent OS:** Model Stack (V3 canonical).md
+- **Projects & Mission Control:** Travel OS - LEARNED.md
+- **Shared:** Model Stack (V3 canonical).md
