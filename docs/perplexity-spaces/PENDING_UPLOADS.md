@@ -43,3 +43,6 @@ From now on, this file lists only the files that changed since the last build.
 - **Agent OS:** Model Stack (V3 canonical).md
 - **Projects & Mission Control:** Travel OS - LEARNED.md
 - **Shared:** Model Stack (V3 canonical).md
+
+## 2026-10-27 06:00 — re-upload these in Perplexity
+- **Knowledge & Learning:** LEARNED Index.md
