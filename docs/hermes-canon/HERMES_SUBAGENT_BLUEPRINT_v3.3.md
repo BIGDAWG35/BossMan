@@ -41,12 +41,12 @@ The Hermes subsystem has **10 sub-agent lanes**, established 2026-07-22 and veri
 | 2 | content | OpenAI | `~/.hermes/knowledge/content.md` |
 | 3 | ops | DeepSeek | `~/.hermes/knowledge/ops.md` |
 | 4 | trading | Claude (mandatory) + DeepSeek (secondary) | `~/.hermes/knowledge/trading.md` |
-| 5 | travel | MiniMax-M3 | `~/.hermes/knowledge/LEARNED_TRAVEL_OS.md` |
-| 6 | qa-verification | Claude (sensitive) / MiniMax-M3 (cosmetic) | `~/.hermes/knowledge/qa-verification.md` |
+| 5 | travel | MiniMax-M3.1-Flash | `~/.hermes/knowledge/LEARNED_TRAVEL_OS.md` |
+| 6 | qa-verification | Claude (sensitive) / MiniMax-M2.7 (cosmetic) | `~/.hermes/knowledge/qa-verification.md` |
 | 7 | research-intel | DeepSeek | `~/.hermes/knowledge/research-intel.md` |
-| 8 | knowledge-canon | MiniMax-M3 | `~/.hermes/knowledge/knowledge-canon.md` |
-| 9 | self-improvement | MiniMax-M3 | `~/.hermes/knowledge/self-improvement.md` |
-| 10 | loop-engineering | MiniMax-M3 | `~/.hermes/knowledge/loop-engineering-goals.md` |
+| 8 | knowledge-canon | MiniMax-M3.1-Flash | `~/.hermes/knowledge/knowledge-canon.md` |
+| 9 | self-improvement | MiniMax-M3.1-Flash | `~/.hermes/knowledge/self-improvement.md` |
+| 10 | loop-engineering | MiniMax-M3.1-Flash | `~/.hermes/knowledge/loop-engineering-goals.md` |
 
 **Default model is overridden by `LEARNED_V3_MODEL_STACK.md` per task type.** Lane owners do not pick models — they inherit the routing.
 
