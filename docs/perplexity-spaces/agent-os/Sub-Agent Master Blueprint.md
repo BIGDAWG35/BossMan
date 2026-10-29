@@ -1,4 +1,4 @@
-**Version:** v4 · **Date:** 2026-10-01 · **Source:** `~/.hermes/knowledge/LEARNED_SUB_AGENT_MASTER_BLUEPRINT.md` · **Status:** Current — auto-built from canon by build_spaces_v4.py; edit the source, not this copy
+**Version:** v4 · **Date:** 2026-10-28 · **Source:** `~/.hermes/knowledge/LEARNED_SUB_AGENT_MASTER_BLUEPRINT.md` · **Status:** Current — auto-built from canon by build_spaces_v4.py; edit the source, not this copy
 
 > Note: any LBC35/OpenClaw mention in this file is historical (retired 2026-09-30; BossMan does all delegation via kanban + route-card.sh). Health OS was deleted 2026-09-30. Where this file conflicts with "00 - Current State (2026-10-01).md", the Current State file wins.
 
@@ -23,16 +23,16 @@ This doc defines what each sub-agent lane **owns**, what each lane **must NOT do
 
 | Lane | Owner of | May NOT do | Default model |
 |---|---|---|---|
-| **builder** | Code implementation, schema migration, test scaffolding, dependency updates, refactors | Run live trades, approve scope pivots, modify PM2/cron/LaunchAgent, send Telegram to Marcelo | MiniMax-M3 (builds via route-card build-impl → gpt-5.5) |
-| **ops** | PM2 / cron / LaunchAgent / Tailscale / Caddy / service health, incident response, log triage | Write user-facing code, modify trading bots, send Telegram outside BossMan | MiniMax-M3 (escalation via route-card troubleshoot-escalate → DeepSeek v4-pro) |
-| **trading** | Binance/Kraken bot config, regime detection, position management, risk rules, PII safety | Modify PM2/cron without BossMan, disable safety hooks, enable PAPER_MODE=false without Marcelo | MiniMax-M3 (live-money changes via route-card money-path → Claude Sonnet 4.6) |
-| **content** | YouTube channel, AI/crypto content pipeline, TTS, media gen, ElevenLabs, publishing ops | Modify billing, sign contracts, change brand positioning | MiniMax-M2.7 |
-| **travel** | Travel OS sub-routes, itinerary features, PDF/PPTX export pipeline, closeout workflow | Touch other apps' DBs, modify shared PM2 processes | MiniMax-M3 |
-| **qa-verification** | Step-5 verifier verdict, cross-system regression tests, browser QA, evidence collection | Implement features, modify source code outside test files | MiniMax-M2.7 (paid QA via route-card qa-review → DeepSeek v4-pro) |
-| **research-intel** | Perplexity-first research, vendor comparisons, best-practice discovery, market intel | Implement code, make product decisions, save facts to memory | MiniMax-M3 (public research may use route-card research-public → Gemini free tier) |
-| **knowledge-canon** | `~/.hermes/knowledge/` curation, LEARNED_* doc authoring, Obsidian mirroring, doc-hygiene cron | Implement features, send notifications to Marcelo | MiniMax-M3 |
-| **self-improvement** | Skill authoring, memory hygiene, MEMORY.md pruning, weekly health checks | Modify routing rules, change model assignments | MiniMax-M3 |
-| **loop-engineering** | Goal-loop pattern (`intake → decompose → execute → review → done`), cron-driven loops, recurring workflows | Define new model routing, change governance | MiniMax-M3 |
+| **builder** | Code implementation, schema migration, test scaffolding, dependency updates, refactors | Run live trades, approve scope pivots, modify PM2/cron/LaunchAgent, send Telegram to Marcelo | MiniMax-M3.1-Flash (builds via route-card build-impl → gpt-5.5) |
+| **ops** | PM2 / cron / LaunchAgent / Tailscale / Caddy / service health, incident response, log triage | Write user-facing code, modify trading bots, send Telegram outside BossMan | MiniMax-M3.1-Flash (escalation via route-card troubleshoot-escalate → DeepSeek v4-pro) |
+| **trading** | Binance/Kraken bot config, regime detection, position management, risk rules, PII safety | Modify PM2/cron without BossMan, disable safety hooks, enable PAPER_MODE=false without Marcelo | MiniMax-M3.1-Flash (live-money changes via route-card money-path → Claude Sonnet 4.6) |
+| **content** | YouTube channel, AI/crypto content pipeline, TTS, media gen, ElevenLabs, publishing ops | Modify billing, sign contracts, change brand positioning | MiniMax-M3.1-Flash |
+| **travel** | Travel OS sub-routes, itinerary features, PDF/PPTX export pipeline, closeout workflow | Touch other apps' DBs, modify shared PM2 processes | MiniMax-M3.1-Flash |
+| **qa-verification** | Step-5 verifier verdict, cross-system regression tests, browser QA, evidence collection | Implement features, modify source code outside test files | MiniMax-M3.1-Flash (paid QA via route-card qa-review → DeepSeek v4-pro) |
+| **research-intel** | Perplexity-first research, vendor comparisons, best-practice discovery, market intel | Implement code, make product decisions, save facts to memory | MiniMax-M3.1-Flash (public research may use route-card research-public → Gemini free tier) |
+| **knowledge-canon** | `~/.hermes/knowledge/` curation, LEARNED_* doc authoring, Obsidian mirroring, doc-hygiene cron | Implement features, send notifications to Marcelo | MiniMax-M3.1-Flash |
+| **self-improvement** | Skill authoring, memory hygiene, MEMORY.md pruning, weekly health checks | Modify routing rules, change model assignments | MiniMax-M3.1-Flash |
+| **loop-engineering** | Goal-loop pattern (`intake → decompose → execute → review → done`), cron-driven loops, recurring workflows | Define new model routing, change governance | MiniMax-M3.1-Flash |
 
 **Default model** is overridden by `LEARNED_V3_MODEL_STACK.md` per task type. Lane lane owners don't pick models — they inherit the routing.
 

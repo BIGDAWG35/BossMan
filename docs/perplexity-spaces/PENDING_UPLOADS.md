@@ -46,3 +46,7 @@ From now on, this file lists only the files that changed since the last build.
 
 ## 2026-10-27 06:00 — re-upload these in Perplexity
 - **Knowledge & Learning:** LEARNED Index.md
+
+## 2026-10-28 06:00 — re-upload these in Perplexity
+- **Agent OS:** Model Stack (V3 canonical).md
+- **Shared:** Model Stack (V3 canonical).md

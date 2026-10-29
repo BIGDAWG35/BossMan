@@ -1,4 +1,4 @@
-**Version:** v4 · **Date:** 2026-09-29 · **Source:** `~/.hermes/knowledge/LEARNED_HERMES_SELF_UPGRADE_STRUCTURAL_MIGRATION.md` · **Status:** Current — auto-built from canon by build_spaces_v4.py; edit the source, not this copy
+**Version:** v4 · **Date:** 2026-10-28 · **Source:** `~/.hermes/knowledge/LEARNED_HERMES_SELF_UPGRADE_STRUCTURAL_MIGRATION.md` · **Status:** Current — auto-built from canon by build_spaces_v4.py; edit the source, not this copy
 
 > Note: any LBC35/OpenClaw mention in this file is historical (retired 2026-09-30; BossMan does all delegation via kanban + route-card.sh). Health OS was deleted 2026-09-30. Where this file conflicts with "00 - Current State (2026-10-01).md", the Current State file wins.
 
@@ -148,8 +148,8 @@ Capture routing/authority/scope as JSON, not prose, so the post-upgrade comparis
 mechanical.
 
 Doing this surfaced drift that had nothing to do with any upgrade: four profiles
-(`bossman`, `builder`, `content`, `trading`) running `MiniMax-M2.7` while the routing
-ledger specified `MiniMax-M3` — including the **orchestrator** profile; and config schema
+(`bossman`, `builder`, `content`, `trading`) running a then-current MiniMax-M2.x model while the routing
+ledger specified a different MiniMax generation — including the **orchestrator** profile; and config schema
 applied non-uniformly (`ops` at v45, root and 7 profiles at v39).
 
 **Rule: run the baseline audit before the upgrade and report pre-existing drift

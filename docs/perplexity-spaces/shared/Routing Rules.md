@@ -1,4 +1,4 @@
-**Version:** v4 · **Date:** 2026-09-30 · **Source:** `~/.hermes/knowledge/ROUTING-RULES.md` · **Status:** Current — auto-built from canon by build_spaces_v4.py; edit the source, not this copy
+**Version:** v4 · **Date:** 2026-10-28 · **Source:** `~/.hermes/knowledge/ROUTING-RULES.md` · **Status:** Current — auto-built from canon by build_spaces_v4.py; edit the source, not this copy
 
 > Note: any LBC35/OpenClaw mention in this file is historical (retired 2026-09-30; BossMan does all delegation via kanban + route-card.sh). Health OS was deleted 2026-09-30. Where this file conflicts with "00 - Current State (2026-10-01).md", the Current State file wins.
 
@@ -40,7 +40,7 @@ This is the **single canonical reference** for routing in Hermes. BossMan, every
 | **Claude** (Anthropic, default + deep) | Deep architectural reasoning, complex cross-system troubleshooting, safety-sensitive work (auth / encryption / audit logging / PII), Step-5 QA on non-trivial changes touching money paths. **Mandatory for live-trade enablement and auth flows.** |
 | **OpenAI** (GPT) | General reasoning, UI/marketing copy, polished prose, multi-modal tasks, Next.js/React/TypeScript code generation. |
 | **DeepSeek** | Low-cost deep reasoning, technical validation, edge-case analysis, coding assistance, math/SQL, second opinion on architecture. **Mandatory for money paths and PII as secondary.** |
-| **MiniMax-M3** | Default orchestrator + planner + router. Cheap bulk orchestration. SquarePayouts model/tool routing is owned by BossMan (see `LEARNED_SQUAREPAYOUTS.md` § "Model Selection — Task-Fit Routing", Permanent 2026-09-14): BossMan selects best-fit per task type, risk, privacy, cost, and quality; money-path/auth/PII/credentials/security/audit/public-financial work uses strongest appropriate model + Step-5 red-team QA. |
+| **MiniMax-M3.1-Flash** | Default orchestrator + planner + router. Cheap bulk orchestration. SquarePayouts model/tool routing is owned by BossMan (see `LEARNED_SQUAREPAYOUTS.md` § "Model Selection — Task-Fit Routing", Permanent 2026-09-14): BossMan selects best-fit per task type, risk, privacy, cost, and quality; money-path/auth/PII/credentials/security/audit/public-financial work uses strongest appropriate model + Step-5 red-team QA. |
 | **Llama / local (Ollama)** | Privacy-sensitive tasks, repeatable bulk work, summaries, first-pass code. Native Metal GPU acceleration on M4 Max. |
 
 Detailed policy lives in `LEARNED_V3_MODEL_STACK.md`. This doc references it.
@@ -53,7 +53,7 @@ Detailed policy lives in `LEARNED_V3_MODEL_STACK.md`. This doc references it.
 |---|---|---|---|
 | Tier 1 — Cache & Reuse | `session_search`, `~/.hermes/knowledge/`, Obsidian, GitHub | Always check first. Reuse existing artifacts before any new model call. | Zero |
 | Tier 2 — Local | Ollama + Llama | Summaries, drafts, extraction, cleanup, formatting, first-pass code | Zero |
-| Tier 3 — General cloud | MiniMax-M3 | Orchestration, routing, routine ops | MiniMax budget |
+| Tier 3 — General cloud | MiniMax-M3.1-Flash | Orchestration, routing, routine ops | MiniMax budget |
 | Tier 4 — Specialist cloud | DeepSeek / OpenAI / Claude | When Tier 2/3 won't do (specialty work) | Pay-per-call |
 | Tier 5 — Perplexity Computer | Computer Use / MCP | Multi-step browser workflows that genuinely justify credits. Requires `escalate_to_computer: yes` flag + 10k credits/mo budget. | Credits — track per use in kanban |
 
