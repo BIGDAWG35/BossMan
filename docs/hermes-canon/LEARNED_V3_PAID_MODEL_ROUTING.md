@@ -1,6 +1,6 @@
 # LEARNED — V3 Paid-Model Routing (permanent, 2026-09-30)
 
-Owner: BossMan. Approved by Marcelo, 2026-09-30 19:27 (Perplexity chat): "use them only when we need to build and not to use them for nonsense ... MiniMax M3 and Ollama are pretty much free ... make sure we properly use DeepSeek, OpenAI and Claude."
+Owner: BossMan. Approved by Marcelo, 2026-09-30 19:27 (Perplexity chat): "use them only when we need to build and not to use them for nonsense ... MiniMax M3 and Ollama are pretty much free ... make sure we properly use DeepSeek, OpenAI and Claude." (2026-09-30 wording; the MiniMax lane is now MiniMax-M3.1-Flash)
 Companion to LEARNED_V3_MODEL_STACK.md, which still defines the MiniMax lanes. This file governs PAID models and wins on conflict.
 
 ## Why this exists (evidence: every profile's state.db, all time, source=cron)
@@ -16,24 +16,24 @@ Companion to LEARNED_V3_MODEL_STACK.md, which still defines the MiniMax lanes. T
 - DeepSeek spend comes from the binance-bot app (direct API), not from Hermes. Claude is also called directly by the ticketflow and money-making-dashboard apps.
 
 ## The rule
-1. Free tier (MiniMax M3, MiniMax M2.7 content/QA, Ollama qwen3.5:35b-a3b-nvfp4 local-fallback) handles all routine work: chat, orchestration, triage, crons, PM2, watchdogs, summaries, bulk text and first-pass troubleshooting. The default is M3; M2.7 is content/QA (not default); qwen3.5:35b-a3b-nvfp4 is the local-fallback after M3. qwen2.5:7b/3b are reserved for explicit light-app jobs.
+1. Free tier (MiniMax-M3.1-Flash, Ollama qwen3.5:35b-a3b-nvfp4 local-fallback) handles all routine work: chat, orchestration, triage, crons, PM2, watchdogs, summaries, bulk text and first-pass troubleshooting. The default is MiniMax-M3.1-Flash for every lane; qwen3.5:35b-a3b-nvfp4 is the local-fallback after it. qwen2.5:7b/3b are reserved for explicit light-app jobs.
 2. Paid models are used only through a kanban card that carries `--model` and `--provider` (kanban_db model_override/provider_override). Never through a cron, a fallback chain, or a scheduled PM2 call. That makes every paid call traceable to a card.
 3. BossMan sets the override when creating the card, using the table below. A build, QA or architecture card with no override is a routing defect.
 
 ## Routing table
 | Work | Use | Escalate to | Notes |
 |---|---|---|---|
-| Crons, PM2, heartbeats, monitors, digests | MiniMax-M3 / Ollama qwen3.5:35b-a3b-nvfp4 | never paid | hard rule; qwen2.5:7b/3b pinned only for explicit light-app jobs |
-| Orchestration, planning, triage, status | MiniMax-M3 | — | BossMan default |
-| Content, marketing, docs that are not canon | MiniMax-M2.7 | — | content + qa lanes (M2.7 is content/QA, NOT default) |
+| Crons, PM2, heartbeats, monitors, digests | MiniMax-M3.1-Flash / Ollama qwen3.5:35b-a3b-nvfp4 | never paid | hard rule; qwen2.5:7b/3b pinned only for explicit light-app jobs |
+| Orchestration, planning, triage, status | MiniMax-M3.1-Flash | — | BossMan default |
+| Content, marketing, docs that are not canon | MiniMax-M3.1-Flash | — | content + qa lanes (same fleet default) |
 | Bulk extraction, classification, dedupe | Ollama qwen3.5:35b-a3b-nvfp4 (deep) / qwen2.5:7b (light), then M3 | — | local-first |
 | Research-public: public web summaries, news/YouTube transcripts, long public docs, public image read | Gemini Flash-Lite (gemini-3.1-flash-lite-preview) free tier | M3 | route-card.sh task_type=`research-public`; body-pattern guard; 400 req/day budget cap; 0 USD |
-| Troubleshooting, attempts 1-2 | MiniMax-M3 | DeepSeek v4-pro after 2 failed attempts or 30 min | |
+| Troubleshooting, attempts 1-2 | MiniMax-M3.1-Flash | DeepSeek v4-pro after 2 failed attempts or 30 min | |
 | Troubleshooting with production down or a money path | DeepSeek v4-pro | Claude sonnet after DeepSeek fails | log on card |
 | BUILD: implementation (code, features, refactors, tests) | OpenAI Codex (openai-codex OAuth, flat-rate plan) | Claude sonnet after 2 failed Codex passes | uses OpenAI instead of leaving it idle |
 | BUILD: architecture, security, money paths (SquarePayouts, trading logic), canon docs | Claude sonnet (claude-sonnet-4-6) | Claude top tier only when Marcelo tags the card `deep` | |
 | QA / code review of a build | DeepSeek v4-pro, which must be a different vendor from the builder | Claude for money paths | independent second opinion |
-| Final Step-5 verifier | qa-verification lane (M2.7) plus live evidence | DeepSeek for code diffs | |
+| Final Step-5 verifier | qa-verification lane (MiniMax-M3.1-Flash) plus live evidence | DeepSeek for code diffs | |
 
 ## Budgets and guard
 - Claude: $5/day, $60/month. DeepSeek: $1/day. OpenAI API key (pay-per-token): $1/day. Codex OAuth runs on the flat plan, so it has no per-call cost.

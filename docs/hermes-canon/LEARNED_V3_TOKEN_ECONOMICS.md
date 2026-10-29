@@ -57,7 +57,7 @@ When the same prompt would be sent to a model twice:
 These settings minimize token re-spend automatically:
 
 **Prompt caching** (provider-side):
-- `MiniMax-M3` — Anthropic-compatible prompt caching: ON by default for repeated prefixes
+- `MiniMax-M3.1-Flash` — Anthropic-compatible prompt caching: ON by default for repeated prefixes
 - `claude-sonnet-4-6` — Anthropic prompt caching: ON by default
 - `openai-codex gpt-5.4` — OpenAI automatic caching: ON by default
 - `deepseek-v4-flash` — DeepSeek has cache hits on repeated prefixes: ON by default
@@ -81,7 +81,8 @@ BossMan and all sub-agents benefit from these automatically. **Don't break the c
 
 | Tier | Model | Cost per 1M tokens (input/output) | When to use |
 |---|---|---|---|
-| Cheap | MiniMax-M3 / Llama-3B | $0.05–0.50 / $0.20–1.50 | Bulk, formatting, chatty |
+| Cheap | MiniMax-M3.1-Flash / Llama-3B | $0.05–0.50 / $0.20–1.50 | Bulk, formatting, chatty |
+| Cheap | MiniMax-M3.1-Flash | $0.15 / $0.60 (cache-read $0.015) | Default model, all 9 profiles + MiniMax cron jobs (card t_54c7dc11, 2026-10-28) |
 | Mid | deepseek-v4-pro | $0.30 / $1.20 | Coding, mathy, SQL, infra (qa, troubleshoot) |
 | Mid-High | openai gpt-5.5 | $2.50 / $10.00 | BUILD: implementation, refactors |
 | High | claude-sonnet-4-6 | $3.00 / $15.00 | Architecture, safety, money-path, audits |

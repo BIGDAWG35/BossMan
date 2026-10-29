@@ -89,7 +89,7 @@ Use Hermes Computer Use on the Perplexity Mac app for visual verification when n
 | Model | Role | Notes |
 |-------|------|-------|
 | **Perplexity Search (Pro)** | First-step research | Step 1 of every non-trivial build. Current docs, API references, gotchas. |
-| **M3 (MiniMax M3)** | Primary thinking and planning brain | Step 2 design + Step 3 routing/architecture. Default for routine work. BLOCKED for SquarePayouts. |
+| **MiniMax-M3.1-Flash** | Primary thinking and planning brain | Step 2 design + Step 3 routing/architecture. Default for routine work. BLOCKED for SquarePayouts. |
 | **DeepSeek** | Heavy-duty coder, reasoning engine, **and Step 5 QA (red-team)** | Primary builder for complex or critical backend logic, data, or debugging. **Default Step-5 QA model.** |
 | **Llama (Ollama local)** | Cheap grinder | Step 4 harden and clean up. Bulk transforms, scaffolding, refactors, tests, cleanup. |
 | **OpenAI** | Production finisher | Primary builder when output is user-facing or high-risk. Final polish only. **Step 5 QA fallback** (after DeepSeek). |

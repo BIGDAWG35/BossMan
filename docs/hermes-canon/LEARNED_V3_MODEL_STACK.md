@@ -16,26 +16,26 @@ This is the **single canonical reference** for which model to use for which task
 
 **Roles (locked, current as of 2026-10-01):** BossMan / Hermes = manager + orchestrator + sole status surface. LBC35 / OpenClaw = RETIRED 2026-09-30 (backups delete 2026-10-30); there is no delegator layer. BossMan routes work directly via kanban + `~/.hermes/bin/route-card.sh`. Sub-agents = workers.
 
-**MiniMax-M3.1-Flash is the default everywhere** (updated 2026-10-28, card `t_e5ef887c` + `t_5064b31a`; was MiniMax-M3). How Hermes actually enforces models: each lane is a profile with its own `model.default` + `fallback_providers`; BossMan picks the model by picking the lane. (The old per-task routing table that sat under `terminal:` in config.yaml was never read by Hermes and was removed 2026-09-30; the policy lives here.)
+**MiniMax-M3.1-Flash is the default everywhere** (updated 2026-10-28, cards `t_e5ef887c` + `t_5064b31a`; prior-generation naming history archived). How Hermes actually enforces models: each lane is a profile with its own `model.default` + `fallback_providers`; BossMan picks the model by picking the lane. (The old per-task routing table that sat under `terminal:` in config.yaml was never read by Hermes and was removed 2026-09-30; the policy lives here.)
 
 | Lane | Model | Why (MiniMax official docs / Artificial Analysis) |
 |---|---|---|
-| default / BossMan (orchestrator) | MiniMax-M3.1-Flash | Highest MiniMax intelligence (AA index 29 vs 23 for M2.7/M2.5), best agentic tool use (MCP Atlas 74.2%), 1M context, ~108 tok/s. M3.1-Flash is the current MiniMax flagship; M3 remains served but is no longer the pinned default |
+| default / BossMan (orchestrator) | MiniMax-M3.1-Flash | Highest MiniMax intelligence (AA index 29), best agentic tool use (MCP Atlas 74.2%), 1M context, ~108 tok/s. MiniMax-M3.1-Flash is the only MiniMax model in use on this stack |
 | builder | MiniMax-M3.1-Flash | Frontier coding: SWE-Bench Pro 59.0%, Terminal-Bench 2.1 66.0% |
 | ops, loop-engineering | MiniMax-M3.1-Flash | Terminal + multi-step agentic work, long logs fit in 1M context |
 | trading | MiniMax-M3.1-Flash | Strongest reasoning in the family; numeric work stays on-provider (no DeepSeek spend) |
 | travel | MiniMax-M3.1-Flash | Search-heavy + native image input for listing screenshots |
-| content | MiniMax-M2.7 | Best MiniMax model for professional office delivery (Word/PPT/Excel, GDPval-AA ELO 1495) and character-rich writing. **Stays on M2.7 by canon** (M2.7 = content + QA lanes) |
-| qa-verification | MiniMax-M2.7 | Independent QA: a different model from the builder avoids shared blind spots; M2.7 is strong at log analysis, bug hunting and code security. **Stays on M2.7 by canon** |
-| LBC35 / OpenClaw (delegator) *[RETIRED 2026-09-30]* | MiniMax-M2.7 | Historical note: MiniMax reported M2.7 markedly better than M2.5 inside OpenClaw, with 97% skill adherence across 40 complex skills. This lane no longer exists; the delegator role is retired and there is no automatic replacement. |
-| Automatic fallback | M3.1 lanes -> Ollama qwen3.5:35b-a3b-nvfp4; M2.7 lanes -> M3.1-Flash -> Ollama qwen3.5:35b-a3b-nvfp4 | DeepSeek and Claude are NOT automatic fallbacks (cost control). qwen2.5:7b/3b are reserved for light app jobs only (not the silent fallback). |
+| content | MiniMax-M3.1-Flash | M3.1-Flash for professional office delivery (Word/PPT/Excel) and character-rich writing. **Migrated 2026-10-28** to MiniMax-M3.1-Flash (Flash = content + QA lanes). Lineage: professional office delivery / GDPval-AA ELO 1495 / character-rich writing |
+| qa-verification | MiniMax-M3.1-Flash | Independent QA: a different model from the builder avoids shared blind spots; Flash is strong at log analysis, bug hunting and code security. **Migrated 2026-10-28** to MiniMax-M3.1-Flash (Flash = content + QA lanes) |
+| LBC35 / OpenClaw (delegator) *[RETIRED 2026-09-30]* | MiniMax-M3.1-Flash | Historical note (MiniMax model-comparison history): archived at ~/.hermes/archive/knowledge-history/minimax-m2-m3-history-20261029.md. This lane no longer exists; the delegator role is retired and there is no automatic replacement. |
+| Automatic fallback | MiniMax-M3.1-Flash -> Ollama qwen3.5:35b-a3b-nvfp4 (all lanes) | DeepSeek and Claude are NOT automatic fallbacks (cost control). qwen2.5:7b/3b are reserved for light app jobs only (not the silent fallback). |
 | **All crons + PM2 automated runs** | **MiniMax-M3.1-Flash or Ollama only** | Marcelo directive 2026-09-30, amended 2026-10-28 (card `t_5064b31a`): `cron.model: MiniMax-M3.1-Flash` is set in every profile; per-job pins may be MiniMax-M3.1-Flash, Ollama qwen3.5:35b-a3b-nvfp4 (standard fallback), or Ollama qwen2.5:7b/3b (light app jobs). PM2 apps that call Claude/OpenAI/DeepSeek on a schedule must be moved to the MiniMax family (MiniMax exposes an Anthropic-compatible API at https://api.minimax.io/anthropic) |
 
-**Not used:** MiniMax-M2.5 and M2.1 are listed as Legacy by MiniMax; neither beats M3 at anything we run and the price is the same. `-highspeed` variants cost 2x and are slower than M3. **MiniMax-M3** is still served by the provider and remains a valid per-job pin / manual override, but it is no longer the fleet default anywhere (config or cron registry).
+**Not used:** MiniMax-M3.1-Flash is the ONLY MiniMax model in use on this stack (config, cron, PM2, docs). The retired MiniMax names (M2.x, M3) are no longer valid per-job pins or manual overrides; their history is archived at `~/.hermes/archive/knowledge-history/minimax-m2-m3-history-20261029.md`.
 
 **Task-based model choice still applies to project work (build / review / troubleshoot):** BossMan classifies every card and writes a `model_plan:` using the per-model sections below, and sub-agents use the model named there. Claude = architecture, safety-sensitive, money paths, code audits. OpenAI gpt-5.4 (ChatGPT sign-in) = general reasoning, UI copy. DeepSeek = heavy math / numeric / trading-signal analysis. Llama/Ollama = privacy-sensitive + bulk pre-summaries. MiniMax-M3.1-Flash = default, Telegram/Discord chat, orchestration, everything else. These premium models are chosen on purpose per task; they are never silent fallbacks and never run from crons or PM2.
 
-Sources: https://platform.minimax.io/docs/guides/text-generation · https://platform.minimax.io/docs/guides/pricing-paygo · https://www.minimax.io/blog/minimax-m3 · https://www.minimax.io/models/text/m27 · https://artificialanalysis.ai/providers/minimax
+Sources: https://platform.minimax.io/docs/guides/text-generation · https://platform.minimax.io/docs/guides/pricing-paygo · https://artificialanalysis.ai/providers/minimax
 
 ---
 
@@ -218,7 +218,7 @@ fail loudly or escalate if the approved route is unavailable.
   `custom/qwen3.5:35b-a3b-nvfp4` (Ollama) — standard fallback, MiniMax-M3.1-Flash primary.
 - Light app jobs (compact summaries, tiny transformations, no long context):
   `custom/qwen2.5:7b` (Ollama) — only when qwen3.5:35b-a3b-nvfp4 would be overkill.
-- Chatty / brief jobs explicitly approved for the MiniMax family: `minimax/MiniMax-M3.1-Flash` (or `minimax/MiniMax-M3` where a job is deliberately held on M3).
+- Chatty / brief jobs explicitly approved for the MiniMax family: `minimax/MiniMax-M3.1-Flash` (no other MiniMax model is pinned).
 - Risk-gated jobs (money paths, security, SquarePayouts state exporters,
   Binance, MoneyPipeline): `custom/qwen3.5:35b-a3b-nvfp4` (Ollama) — Ollama never goes
   down, so failure means true infrastructure failure, not silent paid
@@ -297,7 +297,7 @@ global chain).
 | troubleshoot-escalate | ops           | deepseek / deepseek-v4-pro |
 | ops                | ops              | (free; M3 default)       |
 | money-path         | builder          | anthropic / claude-sonnet-4-6 |
-| content            | content          | minimax / MiniMax-M2.7   |
+| content            | content          | minimax / MiniMax-M3.1-Flash   |
 | bulk               | bossman          | (free; M3 default)       |
 | research-public    | research-intel   | gemini / gemini-3.1-flash-lite-preview |
 | (default)          | bossman          | (free; M3 default)       |
@@ -308,16 +308,16 @@ The table lives in `bin/route-card.sh` next to the existing `task_type → model
 
 ## Routing config (lives in `config.yaml` + per-profile overrides)
 
-**Default** (BossMan profile): `MiniMax-M3.1-Flash` — chatty bulk work (updated 2026-10-28; was `MiniMax-M3`).
-**Fallback chain** (SUPERSEDED 2026-09-30 — see MiniMax lane map at top: M3.1 lanes → Ollama qwen3.5:35b-a3b-nvfp4 (updated 2026-10-01); M2.7 lanes → MiniMax-M3.1-Flash → Ollama (updated 2026-10-28). No DeepSeek/Claude/OpenAI silent fallback.)
+**Default** (BossMan profile): `MiniMax-M3.1-Flash` — chatty bulk work (updated 2026-10-28).
+**Fallback chain** (SUPERSEDED 2026-09-30 — see MiniMax lane map at top: MiniMax-M3.1-Flash → Ollama qwen3.5:35b-a3b-nvfp4, all lanes (updated 2026-10-29). No DeepSeek/Claude/OpenAI silent fallback.)
 
 **Per-profile overrides** (apply on top of global default):
 (Rewritten 2026-10-01 — paid models are reachable ONLY through `~/.hermes/bin/route-card.sh` cards; there are no per-profile paid overrides. `deepseek-v4-flash` does not exist on the DeepSeek API.)
 - **builder**: default `MiniMax-M3.1-Flash`; real builds → `route-card.sh build-impl` (OpenAI `gpt-5.5`); safety-sensitive (SquarePayouts, auth, money paths) → `build-arch` / `money-path` (Claude `claude-sonnet-4-6`).
 - **ops**: default `MiniMax-M3.1-Flash` (all PM2/cron/infra debugging); stuck → `route-card.sh troubleshoot-escalate` (DeepSeek `deepseek-v4-pro`).
 - **trading**: default `MiniMax-M3.1-Flash`; local bulk → Ollama `qwen3.5:35b-a3b-nvfp4`; changes touching live money → `route-card.sh money-path` (Claude `claude-sonnet-4-6`, mandatory review).
-- **content**: default `MiniMax-M2.7`; drafts on MiniMax-M3.1-Flash; public research → `research-public` (Gemini free tier).
-- **qa-verification** (Step-5): default `MiniMax-M2.7`; paid review → `route-card.sh qa-review` (DeepSeek `deepseek-v4-pro`); money/auth audits → `money-path` (Claude).
+- **content**: default `MiniMax-M3.1-Flash`; public research → `research-public` (Gemini free tier).
+- **qa-verification** (Step-5): default `MiniMax-M3.1-Flash`; paid review → `route-card.sh qa-review` (DeepSeek `deepseek-v4-pro`); money/auth audits → `money-path` (Claude).
 - **research-intel**: default `MiniMax-M3.1-Flash` + Perplexity; public-source digests → `research-public` (Gemini free tier).
 
 **SquarePayouts model routing (Permanent 2026-09-14, Marcelo policy — durable rule):** SquarePayouts model/tool routing is owned by BossMan. For every card, BossMan selects the best-fit tool and model using the V3 task-type routing ledger, current task risk, privacy constraints, and required quality. Money-path, auth, PII, credentials, security, audit, and public financial behavior remain critical work: use the strongest appropriate model, require Step-5 red-team QA, and do not mark Done until verification passes. Production secrets and raw credentials remain local-only. **No blanket categorical block by AI model or by tool, EXCEPT the standing safety-sensitive and secrets carve-outs in the V3 task-type ledger: Claude is mandatory for auth, encryption, money-path, PII, and audit-logging work; production secrets, credentials, tokens, and .env content are Llama/local only and must never leave the host. BossMan picks per task.** See `~/.hermes/knowledge/LEARNED_SQUAREPAYOUTS.md` § "Model Selection — Task-Fit Routing" + `~/.hermes/knowledge/ROUTING-RULES.md`.
@@ -392,7 +392,7 @@ This file is the **canonical source of truth** for V3 model stack + routing. To 
 - env: `GEMINI_API_KEY` (no-billing Google AI Studio project; **NOT YET SET** by Marcelo).
 - Free tier limits (Google): Flash ~20 RPD, Flash-Lite ~500 RPD. We cap at 400.
 
-**Why free** (replaces gap-analysis #4 Grok REJECTED): Grok rejected by Marcelo ("let's go ahead and skip grok"); Gemini picked because free tier covers public research work that MiniMax-M3 cannot, and is free.
+**Why free** (replaces gap-analysis #4 Grok REJECTED): Grok rejected by Marcelo ("let's go ahead and skip grok"); Gemini picked because free tier covers public research work that MiniMax-M3.1-Flash cannot, and is free.
 
 ---
 
@@ -425,7 +425,7 @@ Every canon-MD trim, dedup, or shave — including this file, `LEARNED_7_LAYER_A
 ## 2026-10-02 — Local fallback switch + 529 resilience (supersedes any qwen3.8:27b / 32K fallback text above)
 
 **Layout (all 9 configs: default + 8 profiles)**
-1. **Primary:** MiniMax-M3.1-Flash (`api.minimax.io/anthropic`, 262K). Updated 2026-10-28 from MiniMax-M3 (card `t_5064b31a`); the rest of the 2026-10-02 layout is unchanged.
+1. **Primary:** MiniMax-M3.1-Flash (`api.minimax.io/anthropic`, 262K). Updated 2026-10-28 to MiniMax-M3.1-Flash (card `t_5064b31a`); the rest of the 2026-10-02 layout is unchanged.
 2. **Retry before falling back:** `agent.api_max_retries: 5` (was 3) plus the built-in `auto_recovery_cycles: 5`. A short MiniMax 529 burst is retried instead of dropping the whole turn to local.
 3. **Local fallback:** `custom / qwen3.5:35b-a3b-nvfp4` (MoE, 3B active, MLX build) on `localhost:11434`, `context_length: 131072`, `ollama_num_ctx: 131072`. This is above the Hermes 64K floor.
 4. **Next turn:** Hermes goes back to M3 automatically (`_restore_primary_runtime`).
@@ -451,4 +451,4 @@ Backups: `~/Backups/model-switch-20261002/`. Card t_de03a430.
 
 *This file replaces any prior model routing description in SOUL/AGENTS/OPERATINGBLUEPRINT. If config.yaml or a profile yaml diverges, this file wins until config catches up.*
 
-**Update 2026-10-02 (later, sweep 20261002-105903):** binance-bot `scripts/_llm_free.js` now uses `qwen3.5:35b-a3b-nvfp4` after MiniMax-M3 (then qwen2.5:7b). No bot restart was needed: the daily pipeline runs as cron child processes, not inside PM2 `binance-bot-live`. `qwen3.8:27b` was removed with `ollama rm` (frees ~17 GB). All current-state docs, Desktop/spaces and the 9 Perplexity Projects were updated the same day.
+**Update 2026-10-02 (later, sweep 20261002-105903):** binance-bot `scripts/_llm_free.js` now uses `qwen3.5:35b-a3b-nvfp4` after MiniMax-M3.1-Flash (then qwen2.5:7b). No bot restart was needed: the daily pipeline runs as cron child processes, not inside PM2 `binance-bot-live`. `qwen3.8:27b` was removed with `ollama rm` (frees ~17 GB). All current-state docs, Desktop/spaces and the 9 Perplexity Projects were updated the same day.

@@ -285,7 +285,7 @@ Internal agent limits are NOT blockers. Iteration exhaustion is NOT a reason to 
 **Scope: ALL projects and services — permanently.**
 
 **When BossMan or the AI stack detects an issue — ANY issue — BossMan must:**
-1. **Diagnose** — reason with MiniMax-M3 (or local qwen3.5:35b-a3b-nvfp4) first; escalate to a paid model ONLY via `route-card.sh troubleshoot-escalate` when M3 is stuck
+1. **Diagnose** — reason with MiniMax-M3.1-Flash (or local qwen3.5:35b-a3b-nvfp4) first; escalate to a paid model ONLY via `route-card.sh troubleshoot-escalate` when MiniMax-M3.1-Flash is stuck
 2. **Fix** — use BossMan-owned tools to restart, rebuild, patch, redeploy, or reroute
 3. **Verify** — confirm the fix in the correct runtime environment
 4. **Report** — give Marcelo a concise incident report ONLY after the fix is confirmed
@@ -363,18 +363,18 @@ For any system you build, modify, repair, or configure on Marcelo's Mac mini —
 #### Standing rule
 
 BossMan never reports "done" on non-trivial work without:
-1. A **Step-5 verifier PASS** — M2.7/M3 QA by default; DeepSeek v4-pro QA only via a `route-card.sh qa-review` card
+1. A **Step-5 verifier PASS** — M3.1-Flash/M3 QA by default; DeepSeek v4-pro QA only via a `route-card.sh qa-review` card
 2. A **P5 self-verify card checked off** — `localhost + Tailscale + DB + PM2 + (whatever the change touches)` all green
 
 #### 5-Child Structure (P1–P5)
 
 | # | Card | Owner | Output | Model |
 |---|------|-------|--------|-------|
-| P1 | Schema / UI | bossman | decision.md (options + evidence + recommended choice) | MiniMax-M3 |
-| P2 | Decision | bossman | decision.md finalized; Marcelo may override | MiniMax-M3 |
+| P1 | Schema / UI | bossman | decision.md (options + evidence + recommended choice) | MiniMax-M3.1-Flash |
+| P2 | Decision | bossman | decision.md finalized; Marcelo may override | MiniMax-M3.1-Flash |
 | P3 | Implementation | builder | The actual change (code, config, doc, dashboard) | M3; gpt-5.5 via `route-card.sh build-impl` for real builds |
-| P4 | Honest Recompute / Verification | builder | Re-derive every number from source-of-truth | M3 / M2.7; DeepSeek v4-pro via `route-card.sh qa-review` |
-| P5 | Self-Verify Card | bossman | localhost 200 + tailscale + pm2 list + db integrity | MiniMax-M3 |
+| P4 | Honest Recompute / Verification | builder | Re-derive every number from source-of-truth | M3 / M3.1-Flash; DeepSeek v4-pro via `route-card.sh qa-review` |
+| P5 | Self-Verify Card | bossman | localhost 200 + tailscale + pm2 list + db integrity | MiniMax-M3.1-Flash |
 
 #### When BossMan STOPS and asks Marcelo (carve-outs)
 
@@ -620,14 +620,14 @@ Marcelo receives operational updates from BossMan ONLY. Sub-agents NEVER message
 
 #### Paid-model routing (Permanent — 2026-10-01)
 
-For every build/QA/architecture/escalation card, use `~/.hermes/bin/route-card.sh <task_type> <assignee> <title> <body-file>` instead of raw `hermes kanban create`. It maps task_type to `--model`/`--provider` per the table in `~/.hermes/knowledge/LEARNED_V3_PAID_MODEL_ROUTING.md`. Free task types set no override. Budget caps: Claude $5/day, DeepSeek $1/day, OpenAI API $1/day. `~/.hermes/scripts/paid-model-guard.py` (no LLM, cron at 20:30 daily → Telegram) enforces them. Do NOT introduce per-call paid overrides outside this script; do NOT add a new task_type without updating the canon. build-impl uses the OpenAI API key (model `gpt-5.5`) until the Codex OAuth plan quota resets (~2026-10-16), then returns to Codex OAuth. If any paid provider is out of credit/quota/cap, the card downgrades to MiniMax-M3, then local Ollama `qwen3.5:35b-a3b-nvfp4`, and keeps going — work never stops. Gemini (free tier) is reachable ONLY via task_type `research-public` (public data only) and is never a fallback. Crons, PM2 jobs, monitors and routine troubleshooting run on M3/Ollama only.
+For every build/QA/architecture/escalation card, use `~/.hermes/bin/route-card.sh <task_type> <assignee> <title> <body-file>` instead of raw `hermes kanban create`. It maps task_type to `--model`/`--provider` per the table in `~/.hermes/knowledge/LEARNED_V3_PAID_MODEL_ROUTING.md`. Free task types set no override. Budget caps: Claude $5/day, DeepSeek $1/day, OpenAI API $1/day. `~/.hermes/scripts/paid-model-guard.py` (no LLM, cron at 20:30 daily → Telegram) enforces them. Do NOT introduce per-call paid overrides outside this script; do NOT add a new task_type without updating the canon. build-impl uses the OpenAI API key (model `gpt-5.5`) until the Codex OAuth plan quota resets (~2026-10-16), then returns to Codex OAuth. If any paid provider is out of credit/quota/cap, the card downgrades to MiniMax-M3.1-Flash, then local Ollama `qwen3.5:35b-a3b-nvfp4`, and keeps going — work never stops. Gemini (free tier) is reachable ONLY via task_type `research-public` (public data only) and is never a fallback. Crons, PM2 jobs, monitors and routine troubleshooting run on MiniMax-M3.1-Flash/Ollama only.
 
 #### Default flow for every request from Marcelo
 
 BossMan follows this 7-step flow for ANY real work:
 1. **Kanban card** — create or update on the bossman board. No off-board work.
 2. **Classify** — task type = build / review / troubleshoot / other.
-3. **Model** — default MiniMax-M3 (M2.7 for content/QA, Ollama qwen3.5:35b-a3b-nvfp4 for local/bulk). Paid models ONLY through `route-card.sh` task types: build-impl → OpenAI gpt-5.5; build-arch / money-path → Claude Sonnet 4.6; qa-review / troubleshoot-escalate → DeepSeek v4-pro. Before any paid card, the reuse pre-flight (LEARNED_*, BUILD_LIBRARY.md, past cards) must run. External unknowns → Perplexity.
+3. **Model** — default MiniMax-M3.1-Flash (Ollama qwen3.5:35b-a3b-nvfp4 for local/bulk). Paid models ONLY through `route-card.sh` task types: build-impl → OpenAI gpt-5.5; build-arch / money-path → Claude Sonnet 4.6; qa-review / troubleshoot-escalate → DeepSeek v4-pro. Before any paid card, the reuse pre-flight (LEARNED_*, BUILD_LIBRARY.md, past cards) must run. External unknowns → Perplexity.
 4. **Agent** — pick the sub-agent lane.
 5. **Execute** — sub-agent runs autonomously with Perplexity as the default external research tool. NEVER asks Marcelo to research/debug.
 6. **Verify** — Step-5 QA + P5 self-verify before marking done.
@@ -638,8 +638,8 @@ BossMan follows this 7-step flow for ANY real work:
 
 | Model | When to Use |
 |---|---|
-| **MiniMax-M3** | DEFAULT for everything: orchestration, planning, routine work, all crons/PM2/monitors |
-| **MiniMax-M2.7** | Content and QA |
+| **MiniMax-M3.1-Flash** | DEFAULT for everything: orchestration, planning, routine work, all crons/PM2/monitors |
+| **MiniMax-M3.1-Flash** | Content and QA |
 | **Ollama qwen3.5:35b-a3b-nvfp4** (local, free) | Fallback after M3; bulk/local work. qwen2.5:7b/3b for light app jobs |
 | **OpenAI gpt-5.5** | build-impl cards only (route-card.sh) |
 | **Claude Sonnet 4.6** | build-arch + money-path cards only (route-card.sh) |

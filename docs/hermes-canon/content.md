@@ -15,7 +15,7 @@
 - **Status:** Approved v1.0, under BossMan management
 - **Active since:** 2026-07-23
 - **Lane owner:** `content` (per `LEARNED_SUB_AGENT_MASTER_BLUEPRINT.md` §1)
-- **Default model:** MiniMax-M2.7 (per master blueprint; Lane does not pick — BossMan selects per task type via `LEARNED_V3_MODEL_STACK.md`).
+- **Default model:** MiniMax-M3.1-Flash (per master blueprint; Lane does not pick — BossMan selects per task type via `LEARNED_V3_MODEL_STACK.md`).
 - **Canonical file:** `~/.hermes/knowledge/content.md`
 - **Mirrors:**
   - `~/Obsidian/Hermes/10-Operating-Blueprint/content.md`
@@ -88,7 +88,7 @@ Handoff packets to Content must include all of the following. Content rejects pa
 | ``tone` (technical / casual / persuasive)` | description |
 | ``quotas_or_budget` (ElevenLabs chars, MiniMax images, etc.)` | description |
 | ``publish_target` (URL / channel id / scheduled time)` | description |
-| ``model` (`openai` for polished copy; `minimax-m3` for bulk drafts)` | description |
+| ``model` (`openai` for polished copy; `minimax-m3.1-flash` for bulk drafts)` | description |
 
 Bonus fields for safety-sensitive work (Trading, security-relevant Ops changes): add `marcelo_approval_ref` (card id) and `risk_impact` (PAPER vs LIVE, etc.).
 

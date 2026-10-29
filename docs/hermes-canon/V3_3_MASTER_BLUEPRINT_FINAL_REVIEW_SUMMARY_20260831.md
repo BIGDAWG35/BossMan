@@ -77,7 +77,7 @@ V3.3 is a **canon-consolidation + architecture-documentation project** that abso
 
 V3.3 preserves verbatim and does not modify:
 
-- **Model stack.** 5 models (Claude, OpenAI, DeepSeek, MiniMax-M3, Llama/local). Per-task-type matrix. Routine cron Ollama-default sub-policy. All preserved per `LEARNED_V3_MODEL_STACK.md`.
+- **Model stack.** 5 models (Claude, OpenAI, DeepSeek, MiniMax-M3.1-Flash, Llama/local). Per-task-type matrix. Routine cron Ollama-default sub-policy. All preserved per `LEARNED_V3_MODEL_STACK.md`.
 - **Routing Rules.** Layer-2 closed-loop autonomy rule, V3 routing, lane-vs-model independence. All preserved per `ROUTING-RULES.md` + `LEARNED_V3_MODEL_STACK.md`.
 - **SquarePayouts M3 block.** Permanent carve-out. M3 BLOCKED for SquarePayouts code paths; use Claude → OpenAI → DeepSeek.
 - **Computer Use escalation requirements.** Mandatory `escalate_to_computer: yes` flag + 10k credits/mo budget. BossMan-only ownership. LBC35 may not operate Computer Use without explicit assignment.

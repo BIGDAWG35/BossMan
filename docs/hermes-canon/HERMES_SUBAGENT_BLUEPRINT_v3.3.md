@@ -42,7 +42,7 @@ The Hermes subsystem has **10 sub-agent lanes**, established 2026-07-22 and veri
 | 3 | ops | DeepSeek | `~/.hermes/knowledge/ops.md` |
 | 4 | trading | Claude (mandatory) + DeepSeek (secondary) | `~/.hermes/knowledge/trading.md` |
 | 5 | travel | MiniMax-M3.1-Flash | `~/.hermes/knowledge/LEARNED_TRAVEL_OS.md` |
-| 6 | qa-verification | Claude (sensitive) / MiniMax-M2.7 (cosmetic) | `~/.hermes/knowledge/qa-verification.md` |
+| 6 | qa-verification | Claude (sensitive) / MiniMax-M3.1-Flash (cosmetic) | `~/.hermes/knowledge/qa-verification.md` |
 | 7 | research-intel | DeepSeek | `~/.hermes/knowledge/research-intel.md` |
 | 8 | knowledge-canon | MiniMax-M3.1-Flash | `~/.hermes/knowledge/knowledge-canon.md` |
 | 9 | self-improvement | MiniMax-M3.1-Flash | `~/.hermes/knowledge/self-improvement.md` |

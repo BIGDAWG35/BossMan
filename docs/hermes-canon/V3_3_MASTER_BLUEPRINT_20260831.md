@@ -99,7 +99,7 @@ V3.3 inherits V3 + Layer-2 without modification. The operating model is:
 |---|---|---|
 | **V3 governance** | `SOUL.md` | Identity, governance rules, single-status-surface, autonomous-remediation, approval policy |
 | **Layer-2 closed-loop autonomy** | `ROUTING-RULES.md` § 4 | The 7-stage loop: INTAKE → RESEARCH → DESIGN/PLAN → EXECUTE → STEP-5 VERIFY → KNOWLEDGE CAPTURE → FINAL DELIVERY |
-| **Model routing** | `LEARNED_V3_MODEL_STACK.md` | Per-task-type model selection (5 models: Claude, OpenAI, DeepSeek, MiniMax-M3, Llama/local) |
+| **Model routing** | `LEARNED_V3_MODEL_STACK.md` | Per-task-type model selection (5 models: Claude, OpenAI, DeepSeek, MiniMax-M3.1-Flash, Llama/local) |
 | **Token economics** | `LEARNED_V3_TOKEN_ECONOMICS.md` | Reuse, don't re-pay (LEARNED_* + cache + compression) |
 | **Sub-agent discipline** | `LEARNED_SUB_AGENT_MASTER_BLUEPRINT.md` | Lane roster + handoff packet contract |
 | **Verification standard** | `LEARNED_7_RULE_CONTRACT.md` | 7-rule contract (Perplexity-first, real verification, single verdict, report order, escalation discipline) |
@@ -267,7 +267,7 @@ V3.3 absorbs Tier 2 by reference (pointers + role summaries). Bodies remain in t
 #### III.5.2 `LEARNED_V3_MODEL_STACK.md`
 
 - **Role:** Single canonical reference for which model to use for which task
-- **5 models in stack:** Claude (Anthropic), OpenAI (gpt-5.4), DeepSeek, MiniMax-M3, Llama/local (Ollama)
+- **5 models in stack:** Claude (Anthropic), OpenAI (gpt-5.4), DeepSeek, MiniMax-M3.1-Flash, Llama/local (Ollama)
 - **SquarePayouts hard restriction:** M3 BLOCKED permanently for SquarePayouts code paths
 - **Routine cron routing:** Ollama/local default for routine monitors (Permanent 2026-07-25, card `t_monitoring_ollama_default_v1_20260725`)
 - **Drift guards:** Per `LEARNED_V3_MODEL_STACK.md` § "Drift Guards" — every routing change updates this doc FIRST, then config.yaml, then per-profile MEMORY, then mirrors sync
@@ -335,12 +335,12 @@ V3.3 absorbs Tier 3 by reference. Bodies remain in their canonical files. V3.3 e
 | **ops** | `~/.hermes/knowledge/ops.md` | DeepSeek | Infra hygiene, PM2/cron cleanliness, incident response | Write user-facing code, modify trading bots, send Telegram outside BossMan |
 | **trading** | `~/.hermes/knowledge/trading.md` | **Claude (mandatory)** + DeepSeek | Trading decisions, bot configs, regime detection | Modify PM2/cron without BossMan, disable safety hooks, enable PAPER_MODE=false without Marcelo |
 | **content** | `~/.hermes/knowledge/content.md` | OpenAI | Content pipeline, YouTube, TTS, media | Modify billing, sign contracts, change brand positioning |
-| **travel** | `~/.hermes/knowledge/LEARNED_TRAVEL_OS.md` | MiniMax-M3 | Travel OS sub-routes, itinerary, PDF/PPTX export | Touch other apps' DBs, modify shared PM2 processes |
-| **qa-verification** | `~/.hermes/knowledge/qa-verification.md` | Claude (sensitive) / MiniMax-M3 (cosmetic) | Step-5 verifier, cross-system regression, browser QA | Implement features, modify source code outside test files |
+| **travel** | `~/.hermes/knowledge/LEARNED_TRAVEL_OS.md` | MiniMax-M3.1-Flash | Travel OS sub-routes, itinerary, PDF/PPTX export | Touch other apps' DBs, modify shared PM2 processes |
+| **qa-verification** | `~/.hermes/knowledge/qa-verification.md` | Claude (sensitive) / MiniMax-M3.1-Flash (cosmetic) | Step-5 verifier, cross-system regression, browser QA | Implement features, modify source code outside test files |
 | **research-intel** | `~/.hermes/knowledge/research-intel.md` | DeepSeek | Perplexity research, vendor comparisons, market intel | Implement code, make product decisions, save facts to memory |
-| **knowledge-canon** | `~/.hermes/knowledge/knowledge-canon.md` | MiniMax-M3 | `~/.hermes/knowledge/` curation, LEARNED_* authoring, mirror sync | Implement features, send notifications to Marcelo |
-| **self-improvement** | `~/.hermes/knowledge/self-improvement.md` | MiniMax-M3 | Skill authoring, MEMORY hygiene, weekly health checks | Modify routing rules, change model assignments |
-| **loop-engineering** | `~/.hermes/knowledge/loop-engineering-goals.md` | MiniMax-M3 | Goal-loop pattern, cron-driven loops, recurring workflows | Define new model routing, change governance |
+| **knowledge-canon** | `~/.hermes/knowledge/knowledge-canon.md` | MiniMax-M3.1-Flash | `~/.hermes/knowledge/` curation, LEARNED_* authoring, mirror sync | Implement features, send notifications to Marcelo |
+| **self-improvement** | `~/.hermes/knowledge/self-improvement.md` | MiniMax-M3.1-Flash | Skill authoring, MEMORY hygiene, weekly health checks | Modify routing rules, change model assignments |
+| **loop-engineering** | `~/.hermes/knowledge/loop-engineering-goals.md` | MiniMax-M3.1-Flash | Goal-loop pattern, cron-driven loops, recurring workflows | Define new model routing, change governance |
 
 **Default model is overridden by `LEARNED_V3_MODEL_STACK.md` per task type.** Lane owners don't pick models — they inherit the routing.
 
@@ -405,7 +405,7 @@ V3.3 absorbs the five-model stack by reference to `LEARNED_V3_MODEL_STACK.md`. T
 1. **Claude** (Anthropic) — `claude-sonnet-4-6` (default) / `claude-opus-4-7` (deep)
 2. **OpenAI** — `gpt-5.4` (default)
 3. **DeepSeek** — `deepseek-v4-flash` (default) / `deepseek-v4-thinking` (deep)
-4. **MiniMax-M3** (current default) — chatty / bulk / cheap
+4. **MiniMax-M3.1-Flash** (current default) — chatty / bulk / cheap
 5. **Llama / local** (Ollama on `localhost:11434`) — privacy-sensitive, offline, cheap experiments
 
 ### IV.2 Per-task-type model matrix (Permanent)
@@ -467,7 +467,7 @@ Layer 7 ──► Perplexity Computer (browser workflows, escalated only; 10k cr
 
 ### IV.5 Routing config (lives in `config.yaml` + per-profile overrides)
 
-**Default (BossMan profile):** `MiniMax-M3` — chatty bulk work
+**Default (BossMan profile):** `MiniMax-M3.1-Flash` — chatty bulk work
 **Fallback chain (global):** `deepseek-v4-flash` → `claude-sonnet-4-6` → `openai-codex gpt-5.4`
 
 **Per-profile overrides:**
