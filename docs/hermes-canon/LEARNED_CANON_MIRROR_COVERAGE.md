@@ -28,10 +28,30 @@ A file can be in the drift-check's `CANON_FILES` and still be absent from `canon
 
 ## Rules
 
-1. **Adding a file to a drift-check list is not enough.** The same file must get a `canon_mirrors.json` pair for every mirror the drift-check compares it against. This has already bitten twice — `LEARNED_INDEX.md` and `LEARNED_BLENDER_LTS.md` (both, 2026-07-22 / 2026-07-30) — and again for `SOUL.md` / `AGENTS.md` (2026-10-30).
+1. **Adding a file to a drift-check list is not enough.** The same file must get a `canon_mirrors.json` pair for **every mirror the drift-check compares it against** — GitHub *and* Obsidian. This has already bitten twice — `LEARNED_INDEX.md` and `LEARNED_BLENDER_LTS.md` (both, 2026-07-22 / 2026-07-30) — and again for `SOUL.md` / `AGENTS.md` (2026-10-30).
 2. **`canon_mirrors.json` is the single source of truth for what gets mirrored.** `hermes-canon-sync.sh` is legacy and unscheduled. Do not use it as the remediation for a drift card.
 3. **The drift-check now enforces rule 1.** It cross-checks every tracked file against `canon_mirrors.json` and reports `MIRROR-PAIR MISSING` as drift, so a missing pair surfaces as a card *before* the mirror rots, instead of after.
 4. **Canon always wins.** Mirrors are one-way copies. Never hand-edit a mirror to "fix" drift — the mirror is wrong, the canon is right, and the fix is to re-run `canon_mirror_sync.py`.
+
+## The four-lists rule (Card `t_drift_fix_v3_canon_20261030_140005`)
+
+The drift class above exists because **three independent file lists** disagree. There was a risk of a **fourth** list re-introducing the same bug, and it nearly did:
+
+| # | Mechanism | Script | File list source | Scheduled |
+|---|---|---|---|---|
+| 1 | Mirror **sync** (writes) | `canon_mirror_sync.py` | `canon_mirrors.json` → `pairs` | daily (`canon-mirror-sync`) |
+| 2 | Mirror **drift-check** (detects) | `hermes-canon-drift-check.sh` | inline `CANON_FILES` array | weekly (`hermes-canon-drift-check-weekly`) |
+| 3 | Legacy **canon sync** | `hermes-canon-sync.sh` | inline `CANON_FILES` array | **not scheduled** |
+| 4 | ~~Guard's own tracked list~~ | `hermes-canon-drift-check.sh` | ~~hardcoded `tracked` array~~ | **REMOVED 2026-10-30** |
+
+**Rule 5 (Permanent 2026-10-30):** the coverage guard derives its tracked set **from `CANON_FILES` plus the kernel-file list** — it carries no list of its own. When you add a file to `CANON_FILES`, coverage follows automatically. The guard checks **both** the GitHub and the Obsidian mirror pair, because `canon_mirrors.json` drives both and an Obsidian-side gap rots the Obsidian copy exactly the way the GitHub copy rotted.
+
+**Rule 6 (Permanent 2026-10-30):** the drift card must state the **accurate** finding count and point at the **scheduled** writer. Two defects were fixed in the card generator:
+
+- It said `detected {drift.count('-')} file(s)` — `str.count('-')` counts **hyphens in the report text**, so one finding was announced as "4 file(s)". The count is now a dedicated `DRIFT_ITEMS` counter.
+- It told the operator to re-run `hermes-canon-sync.sh`, which is unscheduled and cannot fix the drift it reported. The card now points at `canon_mirror_sync.py` and explains the `canon_mirrors.json` fix for `MIRROR-PAIR MISSING` findings.
+
+A drift card that names the wrong remedy is a dead-end card — the operator "does the action" and the drift survives. The remedy in the card body must be the remedy that actually works.
 
 ## Verification
 
