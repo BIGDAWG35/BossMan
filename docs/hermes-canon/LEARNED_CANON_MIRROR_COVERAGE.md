@@ -53,6 +53,15 @@ The drift class above exists because **three independent file lists** disagree. 
 
 A drift card that names the wrong remedy is a dead-end card — the operator "does the action" and the drift survives. The remedy in the card body must be the remedy that actually works.
 
+**Rule 7 (Permanent 2026-10-30):** the drift-check writes to the **live board** via a raw `INSERT OR REPLACE INTO tasks`. Two consequences, both verified on 2026-10-30:
+
+- The card id is timestamp-based (`t_drift_fix_v3_canon_<unix-ts>`), so the **same finding spawns a new card on every firing**. On 2026-10-30 the identical SOUL.md mirror-pair finding produced two cards (`…_135346` and `…_140005`).
+- A **negative test** cannot be aimed at a specific card — it fires whatever the guard finds at that moment, including another worker's live in-flight card. On 2026-10-30 a sibling card's negative test deleted this card's `tasks` row mid-run; `kanban_comment` / `kanban_complete` then failed with `unknown task`, stranding the run in `running` with its events intact and no summary.
+
+**Therefore: always dry-run the drift-check with `--no-card` before testing it.** The flag is honoured by **both** card writers (the canon-drift section and the Layer-2 loop-health section) — the Layer-2 half was originally missed and was closed on 2026-10-30. Do not assume a dry run is safe because "the finding is unrelated": the guard fires on whatever is broken right now.
+
+Open follow-up (card `t_308831b9`): deterministic card ids derived from the drift signature, and routing card writes through the kanban kernel API instead of raw SQL, so a claimed/owned card can never be overwritten out from under a live worker. `--no-card` prevents accidental card creation but does **not** prevent an accidental overwrite — the deterministic-id + kernel-write fix is the real remedy.
+
 ## Verification
 
 ```bash
@@ -62,9 +71,13 @@ A drift card that names the wrong remedy is a dead-end card — the operator "do
 # 2. Refresh mirrors from canon (one-way, backs up old copies)
 /Users/bigdawg/.hermes/hermes-agent/venv/bin/python3 ~/.hermes/scripts/canon_mirror_sync.py
 
-# 3. Authoritative drift verification (also writes a card on drift — expected to be silent)
-/bin/bash ~/.hermes/scripts/hermes-canon-drift-check.sh --verbose
+# 3. Authoritative drift verification — ALWAYS --no-card when probing/testing,
+#    because a normal run writes to the LIVE board.
+/bin/bash ~/.hermes/scripts/hermes-canon-drift-check.sh --no-card --verbose
 ```
+
+**Never** run the drift-check without `--no-card` as a probe or test. A normal run is for the
+scheduled cron, where writing a card is the intended behaviour.
 
 `canon_mirror_sync.py` backs up replaced mirror copies to `~/Backups/canon-mirror-sync/<ts>/` and auto-commits `docs/hermes-canon/` in `~/Repos/BossMan`. It does **not** push; `build_spaces_v4.py` (daily 06:00) owns the push to `origin/main`.
 
