@@ -23,7 +23,8 @@ A file can be in the drift-check's `CANON_FILES` and still be absent from `canon
 
 - `hermes-canon-drift-check.sh` tracks `SOUL.md` and `AGENTS.md` as kernel files (raw md5, no frontmatter stripping).
 - `canon_mirrors.json` had `SOUL.md` → Obsidian only. **No `SOUL.md` → GitHub pair.**
-- Result: `~/Repos/BossMan/docs/hermes-canon/SOUL.md` froze at the 2026-10-02 model-stack state (`MiniMax-M3` / `MiniMax-M2.7`) while canon moved to `MiniMax-M3.1-Flash` on 2026-10-28 (cards `t_e5ef887c`, `t_54c7dc11`). Obsidian tracked correctly the whole time because it *had* a pair.
+- Result: `~/Repos/BossMan/docs/hermes-canon/SOUL.md` froze at the 2026-10-02 model-stack state (`MiniMax-M3` / `MiniMax-M2.7`) while canon moved to `MiniMax-M3.1-Flash` on 2026-10-28 (cards `t_e5ef887c`, `t_54c7dc11`). Obsidian tracked correctly the whole time
+  because it *had* a pair.
 - Fix: added the two missing pairs (SOUL.md → gh, AGENTS.md → gh) to `canon_mirrors.json`, re-ran `canon_mirror_sync.py`, committed. Drift-check went to **0**.
 
 ## Rules
