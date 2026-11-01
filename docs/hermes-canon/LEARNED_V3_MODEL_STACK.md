@@ -449,6 +449,9 @@ Backups: `~/Backups/model-switch-20261002/`. Card t_de03a430.
 
 ---
 
+
+**Update 2026-10-31 (loose-ends closeout, job `pc-m31-looseends-cont-20261031`):** all 9 configs (main + 8 profiles) verified by YAML parse to carry exactly ONE `fallback_providers` entry (local Ollama `qwen3.5:35b-a3b-nvfp4`); `AUXILIARY_VISION_MODEL` is a documented-but-unimplemented knob with no code reader and absent from live PM2 env (harmless). Full record + commit hashes + rollback: `~/.hermes/knowledge/M31_LOOSE_ENDS_2026-10-31.md`.
+
 *This file replaces any prior model routing description in SOUL/AGENTS/OPERATINGBLUEPRINT. If config.yaml or a profile yaml diverges, this file wins until config catches up.*
 
 **Update 2026-10-02 (later, sweep 20261002-105903):** binance-bot `scripts/_llm_free.js` now uses `qwen3.5:35b-a3b-nvfp4` after MiniMax-M3.1-Flash (then qwen2.5:7b). No bot restart was needed: the daily pipeline runs as cron child processes, not inside PM2 `binance-bot-live`. `qwen3.8:27b` was removed with `ollama rm` (frees ~17 GB). All current-state docs, Desktop/spaces and the 9 Perplexity Projects were updated the same day.
