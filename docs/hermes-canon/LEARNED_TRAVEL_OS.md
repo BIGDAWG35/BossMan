@@ -9,12 +9,12 @@
 
 When Marcelo mentions a possible or planned trip with **destination and approximate dates**, BossMan defaults to **Travel OS first**:
 
-1. Create or open a Travel OS trip record (port 3537, dashboard at `localhost:3537`; public URL: `https://bigdawgs-mac--studio.tailed3212.ts.net/travel-os`).
+1. Create or open a Travel OS trip record (port 3537, dashboard at `localhost:3537`; public URL: `https://bigdawgs-mac--studio.tailed3212.ts.net/` — ROOT path).
 2. Make it the **active planning trip** in the Travel OS dashboard.
 3. Create/update the related Kanban card for planning work tied to that specific trip.
 4. Use Travel OS as the **system of record** for trip modules: Trip Details, Booking, Itinerary, Expenses, Safety, Compliance, Reminders. Past Trips when archived.
 
-**Data location:** Travel OS data lives in `/Users/bigdawg/Projects/travel-os-dashboard/data/sampleData.tsx` — trips are added by editing the static `sampleData.trips` array and rebuilding (the in-app `+ New Trip` button is a no-op stub; persistence requires source edit + `next build`).
+**Data location:** Travel OS trip data lives in a **file-backed JSON trip store** — `data/travel-os-trips.json` (seeded from `data/trip-export.json`), read/written by `lib/tripStore.ts` and exposed over the REST API `/api/travel-os/trips` (`GET`/`POST`/`PATCH`/`DELETE`) plus the `GET /trips` contract endpoint. You can also read/write trips directly in that JSON file. `data/sampleData.tsx` is now only the **type/seed source** (`Trip`, `weatherData`, `comparisonData` types imported by the dashboard modules) — it is NOT the live trip record. Note: the in-app `+ New Trip` button is still a no-op stub with no click handler, so create trips via the API or by editing `data/travel-os-trips.json`. (Verified live 2026-11-02: `GET /trips` and `GET /api/travel-os/trips` both return 200.)
 
 **This rule is a permanent standing directive, not a per-trip instruction.** When in doubt: Travel OS is the answer, Kanban is the planning backbone, Perplexity is the research engine.
 
@@ -41,26 +41,33 @@ This is the **canonical source** for cloning Travel OS onto any other machine (C
 - Local source of truth: `/Users/bigdawg/Projects/travel-os-dashboard/` on `main`
 - Push pattern that works on this host: `https://oauth2:$(gh auth token)@github.com/BIGDAWG35/Bossman-And-Cello-Travel-OS.git` (the `oauth2:` user prefix is what GitHub expects for `gho_` OAuth tokens; `x-access-token:` is for fine-grained PATs only)
 - Never push from inside the live PM2 process — only from the local working tree, and only when no in-progress build is running
-| **PM2 process** | `travel-os` (PM2 id 7), PM2_HOME=`~/.pm2`, daemon PID stable at canonical 1-daemon invariant |
-| **Localhost port** | `3537` (was `3535` pre-2026-07-22; health-os-v4 took 3535 silently) |
-| **Public URL** | `https://bigdawgs-mac--studio.tailed3212.ts.net/travel-os` (Tailscale Funnel strips `/travel-os` prefix when forwarding to `localhost:3537`) |
-| **basePath** | **NOT used.** Next.js serves at root `/`. Tailscale strips `/travel-os`; basePath would cause 404 on the public URL. |
-| **Health route** | `http://localhost:3537/` (HTTP 200, "Travel OS — Dashboard") + public `/travel-os` (HTTP 200 via Tailscale) |
-| **Watchdog** | `~/.hermes/scripts/travel-os-external-watchdog.sh` — pings public `/travel-os` every 5 min, 2-consecutive-failure auto-recovery (re-attaches Funnel) |
+| **PM2 process** | `travel-os` (PM2 id 8 as of 2026-11-02; PM2 ids are NOT stable across process re-adds — match on the name `travel-os`), PM2_HOME=`~/.pm2`, daemon PID stable at canonical 1-daemon invariant |
+| **Localhost port** | `3537` (was `3535` pre-2026-07-22; health-os-v4 took 3535 silently). **3535 is now DEAD** — health-os-v4 was deleted 2026-09-30 and nothing listens on 3535 (verified 2026-11-02). Do not reuse it. |
+| **Public URL** | `https://bigdawgs-mac--studio.tailed3212.ts.net/` (ROOT path). The Tailscale Funnel has exactly ONE handler — `/` → `http://localhost:3537`. There is **no** `/travel-os` handler and **no** prefix stripping: the funnel forwards the path as-is. Travel OS serves at root (no `basePath`), so `/travel-os` returns **HTTP 404** even when the app is perfectly healthy. |
+| **basePath** | **NOT used.** Next.js serves at root `/`. The funnel does **not** strip prefixes — it forwards the root path — so a `basePath: '/travel-os'` would make the app serve only under `/travel-os` while the funnel forwards `/`, causing 404 on the public URL. Do NOT reintroduce basePath. |
+| **Health route** | `http://localhost:3537/` (HTTP 200, "Travel OS — Dashboard") + public ROOT path `https://bigdawgs-mac--studio.tailed3212.ts.net/` (HTTP 200 via Tailscale). Public `/travel-os` is **404**, not a health route. |
+| **Watchdog** | `~/.hermes/scripts/travel-os-external-watchdog.sh` — probes the public ROOT path (`https://bigdawgs-mac--studio.tailed3212.ts.net/`) every **15 min** (cron `b858e01bd089`, `*/15 * * * *`). Healthy = HTTP 2xx/3xx AND body contains the "Travel OS" marker; network/TLS errors (HTTP 000) are retried up to 3× to tolerate transient funnel edge faults. Escalates after **2 consecutive failures**. **Detection only — no automatic recovery**: Tailscale Funnel/exposure changes are HUMAN_ONLY, so this monitor must never re-attach the Funnel. |
 | **Trip reminder cron** | `7f58cef97c80` — runs `scripts/process-trip-reminders.py` SIX times for T-14, T-7, T-3, T-1, trip-start, trip-end stages |
 | **Handoff sync cron** | `ab41f101c407` — weekly drift check against `github.com/BIGDAWG35/Bossman-And-Cello-Travel-OS` |
 | **Hostname** | `bigdawgs-mac--studio.tailed3212.ts.net` (canonical, 2026-07-22 drift-fix; legacy `bigdawgs-mac-mini-2` retired) |
+
+⚠️ **Why `/travel-os` is 404 — do not "fix" this back (verified live 2026-11-02, ops card t_f6a15d8e + this card):**
+- The Tailscale Funnel has **exactly ONE handler**: `/` → `http://localhost:3537`. `tailscale serve status --json` shows `Web."bigdawgs-mac--studio.tailed3212.ts.net:443".Handlers."/".Proxy = "http://localhost:3537"` and `AllowFunnel = true`. There is **no** `/travel-os` handler.
+- The Funnel does **NOT** strip prefixes. It forwards the request path as-is. (An earlier revision of this doc claimed it stripped `/travel-os`; that claim was false and has been removed.)
+- Travel OS's Next.js app sets **no `basePath`** (`next.config.js`), so it serves at root only.
+- Therefore `GET /travel-os` → **404** and `GET /` → **200** (`<title>Travel OS — Dashboard</title>`), even when the app is perfectly healthy. `/travel-os` is not a live route. Re-verified 8/8 samples each on 2026-11-02.
+- **Do not reintroduce `basePath: '/travel-os'`** — that was tried on 2026-07-22 and reverted for the same reason (app serves only under `/travel-os` while the funnel forwards `/`). The correct fix for a 404 here is to use the ROOT path, not to add a prefix.
 
 **Hardening (Layer 1, 2026-06-05):** `min_uptime: 60s`, `max_restarts: 10`, `max_memory_restart: 1536M`, `kill_timeout: 8000` — see `ecosystem.travel-os.js`.
 
 **Drift-fix history (2026-07-22, Card t_travel_os_tailscale_routes_cleanup_20260722):**
 - Legacy hostname `bigdawgs-mac-mini-2.tailed3212.ts.net` replaced with `bigdawgs-mac--studio.tailed3212.ts.net` in 3 crons + watchdog script
-- Watchdog URL changed from `/` (was probing Health OS V4 by mistake) to `/travel-os` (Travel OS canonical)
-- Recovery command changed from `http://localhost:3535` to `http://localhost:3537`
+- Watchdog URL changed from `/` (was probing Health OS V4 by mistake) to `/travel-os` (Travel OS canonical) — **SUPERSEDED, reverted 2026-09-06** (script header: "ops daily health check — PROBE PATH CORRECTED BACK TO /"). Do not read this as the current state. ⚠️ Drift trail: the watchdog run log (`~/.hermes/logs/travel-os-watchdog.log`) shows a stale copy still probing `/travel-os` and logging `FAIL: HTTP 404` + `AUTO-RECOVERY FAILED` every 15 min through **2026-10-23 13:13**, i.e. the 2026-09-06 correction was not effective in the running copy until the 2026-10-23 rewrite. ~7,090 false 404s and ~6,564 failed automatic-recovery attempts were logged in that window.
+- Recovery command changed from `http://localhost:3535` to `http://localhost:3537` — **SUPERSEDED: the recovery command NO LONGER EXISTS.** Automatic recovery was removed because Tailscale Funnel/exposure changes are HUMAN_ONLY. The watchdog is detect-only and must never re-attach the Funnel.
 - PM2 Health Monitor skill table corrected (was `3535 / Travel OS`, now `3537 / Travel OS`)
-- Tried `basePath: '/travel-os'` on Next.js → caused 404 on public URL (Tailscale strips prefix) → reverted
+- Tried `basePath: '/travel-os'` on Next.js → caused 404 on public URL → reverted. (The contemporary note blamed the funnel for rewriting the path prefix; that explanation was wrong — the funnel never rewrote prefixes. `/travel-os` simply was not routed. The basePath revert itself was correct.)
 
-See `~/.hermes/knowledge/TRAVEL_OS_HANDOFF_REPO.md` for full bootstrap instructions, identity rules, and handoff playbook.
+See `/Users/bigdawg/Projects/travel-os-dashboard/HANDOFF.md` (in the canonical repo `BIGDAWG35/Bossman-And-Cello-Travel-OS`) for full bootstrap instructions, identity rules, and handoff playbook.
 
 ---
 
