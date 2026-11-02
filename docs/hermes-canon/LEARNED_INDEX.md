@@ -47,7 +47,7 @@
 | 16 | **Standing Authorities** | `LEARNED_STANDING_AUTHORITIES.md` | 6.7 KB | Standing authorities + health monitors (PM2 Health Monitor, Gateway + CuaDriver). | BossMan (kernel) | 2026-07-22 |
 | 17 | **Storis API** | `LEARNED_STORIS_API.md` | 7.6 KB | Storis API durable takeaways (OpenAPI 3.0.4, 239 paths, 1179 schemas). | Altus sub-agent | 2026-06-24 |
 | 18 | **Sub-Agent Master Blueprint** | `LEARNED_SUB_AGENT_MASTER_BLUEPRINT.md` | 10.6 KB | Sub-agent lane discipline + handoff contracts. | BossMan (kernel) | 2026-07-22 |
-| 19 | **Travel OS** | `LEARNED_TRAVEL_OS.md` | 3.8 KB | Travel OS Tailscale/PM2/watchdogs canon + canonical handoff repo. | travel sub-agent | 2026-07-22 |
+| 19 | **Travel OS** | `LEARNED_TRAVEL_OS.md` | 13.0 KB | Travel OS Tailscale/PM2/watchdogs canon + canonical handoff repo. Public URL is the ROOT path (`https://bigdawgs-mac--studio.tailed3212.ts.net/`) — `/travel-os` is 404 by design (no funnel handler, no basePath). | travel sub-agent | 2026-11-02 |
 | 20 | **User Preferences — Autonomous Mode** | `LEARNED_USER_PREFERENCES_AUTONOMOUS_MODE.md` | 2.4 KB | Marcelo's autonomous-only operator preference (extended detail). | BossMan (kernel) | 2026-07-20 |
 | 21 | **V3 Baseline** | `LEARNED_V3_BASELINE.md` | 2.1 KB | V3 baseline: governance, model roles, escalation rules. | BossMan (kernel) | 2026-07-20 |
 | 22 | **V3 Model Stack** | `LEARNED_V3_MODEL_STACK.md` | 11.7 KB | V3 model roles + task-type routing (canonical model authority). | BossMan (kernel) | 2026-07-20 |
