@@ -1,6 +1,7 @@
 # PHASEREPORT_DOC_HYGIENE_2026-11_D3.md — D3 PHASEREPORT + Cross-Ref Scan (Correction Addendum)
 > **PATH-NOTE-2026-11-03 — path annotation** (added 2026-11-03 by kanban card `t_483f4239`): the mirror path written below is the **historical** GitHub-mirror location; it does not exist. The GitHub mirror now lives at `~/Repos/BossMan` (`https://github.com/BIGDAWG35/BossMan.git`, public). The original wording is preserved verbatim because this file is a dated report.
 
+## 2026-11-02 — Monthly Doc Hygiene: NEEDS-WORK (D1: 0, D2: 0, D3: 6)
 
 **Review Date:** 2026-11-02
 **Card:** t_be0e96d9 (D3 — Monthly review board, Nov 2026)
