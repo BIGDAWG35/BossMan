@@ -1,4 +1,6 @@
 # PHASEREPORT.md — ARCHIVED POINTER (NOT ACTIVE CANON)
+> **PATH-NOTE-2026-11-03 — path annotation** (added 2026-11-03 by kanban card `t_483f4239`): the mirror path recorded below is the **historical** GitHub-mirror location as of the 2026-08-31 archive of this file. That path does not exist; the GitHub mirror now lives at `~/Repos/BossMan` (`https://github.com/BIGDAWG35/BossMan.git`, public). The wording is preserved verbatim because this file is an archived pointer.
+
 
 **Status:** Historical archive pointer (2026-08-31).
 **Original location:** `~/.hermes/knowledge/PHASEREPORT.md` (now archived)
