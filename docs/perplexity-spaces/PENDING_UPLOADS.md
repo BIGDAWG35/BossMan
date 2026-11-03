@@ -58,3 +58,10 @@ From now on, this file lists only the files that changed since the last build.
 - **Ops Processes:** Routing Rules.md
 - **Shared:** Model Stack (V3 canonical).md, Paid Model Routing.md, Routing Rules.md, Token Economics.md
 - **Toolchain & Dev:** Hermes Self-Upgrade Structural Migration.md, Routing Rules.md
+
+## 2026-11-02 20:43 — re-upload these in Perplexity
+- **Agent OS:** LBC35-OpenClaw Retirement 2026-09-30.md, Model Stack (V3 canonical).md
+- **Finance & Money Ops:** SquarePayouts.md
+- **Knowledge & Learning:** LEARNED Index.md
+- **Projects & Mission Control:** Travel OS - LEARNED.md
+- **Shared:** Model Stack (V3 canonical).md
