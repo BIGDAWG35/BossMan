@@ -2,18 +2,33 @@
 
 > Note (2026-10-01): any LBC35/OpenClaw mention in this file is historical. LBC35/OpenClaw was retired and removed 2026-09-30; BossMan does all delegation via kanban + route-card.sh. Where this file conflicts with "00 - Current State (2026-10-01).md", the Current State file wins. Health OS (V3/V4) was deleted 2026-09-30, so any Health OS row is history.
 
-# Opp-65 — SquarePayouts — Project Status — v3.9
+# Opp-65 — SquarePayouts — Project Status — v4.0
+
+> **2026-11-02 update (card t_4cca087d):** PM2 `squarepayouts` is **online and serving**
+> (PID 37544, port 8030) — `GET /`, `/login`, `/api/health` all 200, `node_env: "production"`.
+> The recovery command `pm2 start ecosystem.config.js` is now **proven working**
+> (rehearsed end-to-end, isolated PM2 daemon, spare loopback port, own DB copy, repo
+> verified byte-identical afterwards), and the canonical config is reconciled with the live
+> runtime. The canonical config declares **no** tunnel, so the recovery command cannot
+> re-expose the service publicly. Evidence:
+> `~/Projects/squarepayouts/qa-evidence/2026-11-02/pm2-reactivation/EVIDENCE.md`.
+> Also: the persistent tunnel 404 is **not** Cloudflare edge-cache propagation — it is an
+> ingress-hostname mismatch (a `--url` quick tunnel's random hostname matches no ingress
+> rule, so the tunnel answers 404 itself via the catch-all). It will **not** heal on retry.
+> Exposure intent remains HUMAN_ONLY on `t_0716454e`.
 
 > **2026-10-02 correction:** SquarePayouts is an ACTIVE revenue project (LEARNED_SQUAREPAYOUTS_ACTIVE.md). The TL;DR is a 2026-08-17/18 snapshot; '00 - Current State' says 'private QA, not running' while the 2026-10-02 services registry lists `squarepayouts` (8030) as live — confirm with `pm2 list`. Model routing is task-fit since 2026-09-14 (no blanket M3 block). Version history below is out of order (empty v3.3 heading, v3.4→v3.5 changelog, two v3.7 sections, no v3.8).
 
 **Mode:** PRIVATE QA — LAN + Tailscale only
-**Date:** 2026-08-17
+**Date:** 2026-11-02
 **Owner:** BossMan
 **Live since:** 2026-08-17 reactivation
 
-## TL;DR (verified 2026-08-17 21:43 PDT)
+## TL;DR (re-verified 2026-11-02)
 
-- PM2 `squarepayouts` online (PID 58889, port 8030, ~53 MB)
+- PM2 `squarepayouts` online (PID 37544, port 8030) — HTTP 200 on `/`, `/login`, `/api/health`
+- Recovery command `pm2 start ecosystem.config.js` — PROVEN working (rehearsal exit 0)
+- Canonical `ecosystem.config.js` reconciled with the live runtime (drift check exit 0)
 - Port 8030 private — LAN + Tailscale only
 - LAN + Tailscale QA access approved
 - Public Cloudflare route intentionally disabled/deferred

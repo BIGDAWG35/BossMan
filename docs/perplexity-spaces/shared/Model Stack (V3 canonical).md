@@ -1,4 +1,4 @@
-**Version:** v4 · **Date:** 2026-10-28 · **Source:** `~/.hermes/knowledge/LEARNED_V3_MODEL_STACK.md` · **Status:** Current — auto-built from canon by build_spaces_v4.py; edit the source, not this copy
+**Version:** v4 · **Date:** 2026-10-31 · **Source:** `~/.hermes/knowledge/LEARNED_V3_MODEL_STACK.md` · **Status:** Current — auto-built from canon by build_spaces_v4.py; edit the source, not this copy
 
 > Note: any LBC35/OpenClaw mention in this file is historical (retired 2026-09-30; BossMan does all delegation via kanban + route-card.sh). Health OS was deleted 2026-09-30. Where this file conflicts with "00 - Current State (2026-10-01).md", the Current State file wins.
 
@@ -452,6 +452,9 @@ The old 27B was more accurate on the doc-reading question. The 35B-A3B is 6–9x
 Backups: `~/Backups/model-switch-20261002/`. Card t_de03a430.
 
 ---
+
+
+**Update 2026-10-31 (loose-ends closeout, job `pc-m31-looseends-cont-20261031`):** all 9 configs (main + 8 profiles) verified by YAML parse to carry exactly ONE `fallback_providers` entry (local Ollama `qwen3.5:35b-a3b-nvfp4`); `AUXILIARY_VISION_MODEL` is a documented-but-unimplemented knob with no code reader and absent from live PM2 env (harmless). Full record + commit hashes + rollback: `~/.hermes/knowledge/M31_LOOSE_ENDS_2026-10-31.md`.
 
 *This file replaces any prior model routing description in SOUL/AGENTS/OPERATINGBLUEPRINT. If config.yaml or a profile yaml diverges, this file wins until config catches up.*
 
