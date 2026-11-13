@@ -2,12 +2,18 @@
 
 ## What was deployed
 - Live repo: `/Users/bigdawg/.hermes/hermes-agent`
+- Branch: `feat/v0.23.1-local-adaptations`
+- Landed commit: `1dbce72e03865516bc94ce534b0ad2ca068777c5`
+  ("feat(v0.23.1): layer reviewed local adaptations over upstream v0.23.1")
 - Baseline: official `NousResearch/hermes-agent` `v0.23.1`, peeled commit
-  `3b421578588243f920886e6fe79a6faa87ea026e` (detached HEAD).
+  `3b421578588243f920886e6fe79a6faa87ea026e` (parent of the landed commit).
 - Adaptation patch (layered on top of that baseline), 66 files:
-  `/Users/bigdawg/.hermes/cache/scratch/upgrade-231-FINAL.patch`
-  sha256 `d48fe3f854772c8699cb5f1f37323773c5c40473b7e9464bcbe8fa25aae8ae41`
+  `/Users/bigdawg/.hermes/cache/scratch/upgrade-231-FINAL-v2.patch`
+  sha256 `e744e60834da968728aeb9434c54c14a8110f5fada227d7408ca522762e53ac9`
+  (independently reviewed = APPROVED for exactly these bytes).
 - Pre-upgrade HEAD: `bf0203a794a07aac3ff764972ab9087baa4e4f4e` (source-equivalent v0.22.5).
+- Runtime version after landing: `Hermes Agent v0.23.1+1.g1dbce72.dirty`, Python 3.14.9,
+  OpenAI SDK 2.54.0.
 
 ## Backups (never deleted)
 - `/Users/bigdawg/Backups/hermes-upgrade-20261112T045826Z`
@@ -19,13 +25,18 @@
   - `repo-state/superseded-untracked/` — untracked files the target tree tracks, MOVED aside
     (never deleted).
 - Patch artifact + reviewed trees: `/Users/bigdawg/.hermes/cache/scratch/`
-  (`upgrade-231-FINAL.patch`, `deploy-231/`, `wt-231/`, `verify-231/`).
+  (`upgrade-231-FINAL-v2.patch` = the approved artifact; `upgrade-231-FINAL.patch` =
+  superseded v1; `deploy-231/`, `wt-231/`, `verify-231/`).
+- Runner state/log/evidence: `/Users/bigdawg/.hermes/logs/hermes-upgrade-20261112.state`
+  (`5-complete`), `hermes-upgrade-20261112.log`, `hermes-upgrade-20261112-evidence.json`.
 
 ## Rollback procedure (out-of-process; never restart the gateway in-process)
 1. Snapshot current state:
    `git -C ~/.hermes/hermes-agent status --porcelain > /tmp/pre-rollback-status.txt`
-2. Restore the previous tree:
+2. Restore the previous tree (this drops the adaptation branch from HEAD):
    `git -C ~/.hermes/hermes-agent checkout --force --detach bf0203a794a07aac3ff764972ab9087baa4e4f4e`
+   (the adaptation branch/commit `1dbce72e` is retained in git history, so a forward
+   re-land is just `git checkout feat/v0.23.1-local-adaptations`)
 3. Re-apply any live local edits that upstream superseded:
    `git -C ~/.hermes/hermes-agent apply <backup>/repo-state/live-pre-231-<ts>/tracked-live.diff`
    (review the diff first; it may not apply cleanly onto bf0203a if the patch touched the same

@@ -137,3 +137,105 @@ symlink alias. Scoped alternative if needed: the arm64 python under
 `pytest ... | tail -30` returns tail's exit status. A failing suite reported `EXIT=0`.
 Always `set -o pipefail` and read pytest's OWN summary line ("N passed, M skipped"),
 never the shell's exit code alone.
+
+## 12. A review verdict is bound to the EXACT artifact bytes, not to the branch
+
+A delegated review approves a sha256, not a concept. Any post-review edit — even a
+mechanical Ruff autofix — produces new bytes and INVALIDATES that approval. The safe
+sequence is: land the lint fixes first, regenerate the patch (`git diff --cached --binary`),
+then re-dispatch the review against the new sha256. Never deploy an artifact whose hash
+differs from the reviewed hash, and never let a runner apply a patch that is not the
+approved file.
+
+Corollary: the deployed tree must be proven to equal the reviewed tree (byte-for-byte on
+every path the patch owns). If the live tree differs from the approved artifact, the
+verdict does not transfer — stop.
+
+## 13. `git clean` in the LIVE repo is a destructive-by-default mistake
+
+The runner's "reset the tree to the target" step originally ran `git clean -fdq` in the live
+repository. The live repo held unrelated untracked work (`BLUEPRINT_*.md`,
+`M31_CONSOLIDATED_VALIDATION.md`) that is NOT in the patch. `git clean` would have deleted
+it silently. Rule: `git clean` may run ONLY inside a throwaway scratch worktree. In the
+live repo, reset tracked content to the reviewed commit and leave untracked files alone.
+
+Corollary: the runner should land a REVIEWED COMMIT (`git checkout <commit>`), not
+re-apply a patch file — then a tree-identity guard proves the live tree equals the
+reviewed commit's tree.
+
+## 14. Autofix is a semantics change until you read the diff
+
+Ruff's fixers rewrite code, not just whitespace. Two classes bit during this upgrade:
+- `subprocess.run(...)` result handling — the fixer demanded an explicit `check=False`;
+  adding it preserved capture/encoding/error/timeout behaviour.
+- Test lambdas rewritten to builtins (`lambda **kw: dict(**kw)` → `dict`) — a behaviour
+  change if the original had any body.
+
+Rule: after any autofix, re-run the touched tests AND read the changed hunks. Lint-clean
+is not evidence of correctness.
+
+## 15. The gateway version string is the ground truth for "is the new code live"
+
+`hermes --version` reports the INSTALLED tree; `curl -s http://127.0.0.1:8642/health`
+reports the RUNNING process. A successful deploy with the old version in `/health` means
+the gateway has not restarted yet — the restart is a separate, out-of-process step
+(`~/.hermes/perplexity-intake/restart.request` → `ai.hermes.deferred-restart`).
+
+Gotcha: the deferred-restart script's `upgrade*` reason word runs the OLD 2026-10-26
+runner and then ABORTS the restart unless HEAD equals the old stable sha. For a layered
+upgrade, use a neutral reason string so the script takes the plain restart path.
+
+## 16. Vendored `just` is required for the repo's pre-commit hook
+
+The repo's `lefthook.yml` pre-commit hook shells out to `just lint-python`. `just` is not
+on the default PATH (it is vendored at `~/.hermes/tools/just-1.59.0-darwin-arm64`), so the
+commit fails with a confusing exit 1. Prefix the commit with
+`PATH="/Users/bigdawg/.hermes/tools/just-1.59.0-darwin-arm64:$PATH" git commit ...`.
+
+## 17. A gateway restart DRAINS the live chat turn that requested it
+
+The gateway lifecycle verb interrupts live turns, but first it DRAINS them: it waits for
+the running turn to finish before stopping the gateway. A restart requested from inside a
+chat turn therefore cannot complete until that turn ends — the classic self-deadlock.
+
+Rule: request the restart as the LAST action of the turn, from a script that runs OUTSIDE
+the gateway process tree (launchd), and let that script gather the post-restart evidence
+and post it. The launchd-run verifier survives the SIGTERM that the restart delivers to
+the gateway's children; a child of the gateway does not.
+
+Corollary: the deferred-restart helper refuses to act while live work exists. A plain
+reason string therefore yields a NO-OP restart on a busy gateway — the log shows the
+refusal and the health probe still answers from the OLD process. The v0.23.1 upgrade
+added a dedicated reason branch to that helper that runs the verifier script with the
+interrupt flag from launchd.
+
+Corollary 2: the "live session" gate is about turns, not about the code. The running
+gateway keeps serving the OLD code until it actually restarts; `/health` reporting the
+old base version is the proof that the new code is not live yet.
+
+## 18. A test venv on a DIFFERENT Python minor than the runtime is a fake regression
+
+After the v0.23.1 upgrade the repo's dev `venv/` was still Python **3.11**, while the pm-managed
+runtime environment `966380101a8a45a2a717faaf7baa6de8` is Python **3.14**. Hermes' bootstrap
+(`pm/environments.py: activate_dependencies`) puts the *selected* environment's site-packages on
+`sys.path`, so a 3.11 interpreter ended up importing a **cpython-314** `pydantic_core` extension:
+
+    ImportError: cannot import name 'ArgsKwargs' from 'pydantic_core._pydantic_core' (unknown location)
+
+That single ABI mismatch produced **284 collection errors** and looked exactly like a catastrophic
+upgrade regression. It was pure harness noise.
+
+**Rule:** run the suite with an interpreter whose minor version matches the runtime environment's
+(`uv venv --python <runtime venv>/bin/python` + `uv pip install pytest pytest-asyncio pytest-xdist
+pytest-timeout`), and pass the runtime site-packages via `PYTHONPATH`. Two more harness traps in the
+same area:
+- the suite's home-I/O guard rejects any `HERMES_HOME` under `~/.hermes` (it treats it as the REAL
+  home) — use `/tmp/...` for the isolated home, not `~/.hermes/cache/scratch/...`;
+- a test venv needs `pytest-asyncio` (and friends) installed or collection dies on
+  `ModuleNotFoundError: No module named 'pytest_asyncio'`.
+
+**A/B rule for upgrades:** compare the SAME test files on the patched tree and the pristine upstream
+tree with the SAME interpreter. Here: patched tree **331 passed / 6 skipped / 0 failed** on the 17
+patch-touched files that exist upstream; pristine upstream on those same files: **54 failed, 6 errors**
+— because upstream lacks the local adaptation behavior the tests assert. That is the correct signal:
+the local layer is real and load-bearing, and it is *absent* upstream.
