@@ -65,3 +65,6 @@ From now on, this file lists only the files that changed since the last build.
 - **Knowledge & Learning:** LEARNED Index.md
 - **Projects & Mission Control:** Travel OS - LEARNED.md
 - **Shared:** Model Stack (V3 canonical).md
+
+## 2026-11-13 06:00 — re-upload these in Perplexity
+- **Knowledge & Learning:** LEARNED Index.md
