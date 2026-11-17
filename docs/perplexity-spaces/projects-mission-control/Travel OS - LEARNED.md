@@ -1,4 +1,4 @@
-**Version:** v4 · **Date:** 2026-11-02 · **Source:** `~/.hermes/knowledge/LEARNED_TRAVEL_OS.md` · **Status:** Current — auto-built from canon by build_spaces_v4.py; edit the source, not this copy
+**Version:** v4 · **Date:** 2026-11-16 · **Source:** `~/.hermes/knowledge/LEARNED_TRAVEL_OS.md` · **Status:** Current — auto-built from canon by build_spaces_v4.py; edit the source, not this copy
 
 > Note: any LBC35/OpenClaw mention in this file is historical (retired 2026-09-30; BossMan does all delegation via kanban + route-card.sh). Health OS was deleted 2026-09-30. Where this file conflicts with "00 - Current State (2026-10-01).md", the Current State file wins.
 
@@ -72,6 +72,26 @@ This is the **canonical source** for cloning Travel OS onto any other machine (C
 - Tried `basePath: '/travel-os'` on Next.js → caused 404 on public URL → reverted. (The contemporary note blamed the funnel for rewriting the path prefix; that explanation was wrong — the funnel never rewrote prefixes. `/travel-os` simply was not routed. The basePath revert itself was correct.)
 
 See `/Users/bigdawg/Projects/travel-os-dashboard/HANDOFF.md` (in the canonical repo `BIGDAWG35/Bossman-And-Cello-Travel-OS`) for full bootstrap instructions, identity rules, and handoff playbook.
+
+---
+
+## Unknown Next-Action POST interceptor (added 2026-11-16, Card t_07bfccd2 — parent t_efcc6c95)
+
+**Deploy trap — `pm2 restart travel-os` does NOT rebuild.** The live PM2 process was added with `next start -p 3537` as its exec path, NOT the repo's `scripts/start-travel-os.sh` wrapper (the wrapper's `rm -rf .next && npm run build` never runs on restart). Verified 2026-11-16: `pm2 restart` came back "Ready in 3s" with an **unchanged `.next/BUILD_ID`** and an untouched `~/.pm2/logs/travel-os/build.log`. A deploy therefore requires an **explicit build** before the restart:
+```bash
+cd /Users/bigdawg/Projects/travel-os-dashboard
+mv .next <scratch-stash>   # clean slate — Next keeps stale server chunks otherwise
+npm run build              # prebuild hook regenerates data/trip-export.json
+pm2 restart travel-os --update-env
+```
+Always confirm the deploy took effect by checking that `.next/BUILD_ID` **changed** and that `.next/server/middleware.js` contains the expected code. A restart alone is a no-op for source changes.
+
+**`middleware.ts` — unknown Server Action interceptor.** travel-os registers **ZERO** server actions (source: 0 `"use server"`; build: `server-reference-manifest.json` → `node: {}`, `edge: {}`). Any request carrying a `Next-Action` header is therefore unresolvable by definition and used to reach Next's app-render action handler → HTTP 500 + a `Failed to find Server Action "<id>"` stack in `~/.pm2/logs/travel-os-error.log`. `middleware.ts` now intercepts page-route requests with that header and rewrites them to `app/api/travel-os/unknown-action-event/route.ts` (Node runtime → can write to disk), which records the offender and answers **204**. `/api/**` is never intercepted; requests with no `Next-Action` header pass straight through, so `/`, `/trips`, `/api/health` and RSC navigations are unchanged.
+
+- **Attribution log:** `data/travel-os-unknown-actions.jsonl` (gitignored) — action id, method, path, host, referer, user-agent, x-forwarded-for. Rate-limited to one record per action id per hour. Also printed to stdout as `[travel-os:next-action] UNKNOWN_ACTION_ID ...`. Read it with `curl http://localhost:3537/api/travel-os/unknown-action-event` (loopback-only: Host must be loopback AND X-Forwarded-For must not be public).
+- **Anti-forgery (2026-11-16):** the middleware strips every inbound `x-travel-os-*` header on every request and only sets them on requests it intercepted itself; the route 404s any POST arriving without them. Before this, a direct external POST could forge attribution rows and poison the log used to name the posting client.
+- ⚠️ **FORWARD-COMPAT:** this interceptor assumes travel-os has **zero** server actions. If a real `"use server"` action is ever added, the middleware **must** be updated or removed first — it would otherwise 204 the app's own legitimate action POSTs.
+- The observed action ids (`7b608f05…`, `83ea1e8d…`) exist nowhere on this host and lack the `40…` prefix Next ≥15 uses here, so they are foreign/stale-client traffic, not a travel-os build-staleness defect. A rebuild + restart was therefore not the original fix — the interceptor is.
 
 ---
 

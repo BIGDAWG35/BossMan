@@ -5,7 +5,10 @@
 ## Skill: pm2-health-check
 Runbook: `~/.hermes/skills/devops/pm2-health-check/SKILL.md`.
 
-**Detection:** EADDRINUSE · High restart count · PM2 daemon drift · Route-not-responding · Orphan process · 5xx rate · Next.js stale build · Unstable restart loop
+**Detection:** EADDRINUSE · High restart count · PM2 daemon drift · Route-not-responding · Orphan process · 5xx rate · Next.js stale build · Unstable restart loop · **Tunnel-no-ready-connection**
+
+### Long-Running Daemon Rule (Permanent — 2026-11-16, t_ab0a0c03)
+**A daemon's health endpoint must reflect FUNCTIONAL state, not mere process liveness.** A route that returns 200 whenever the process is alive (e.g. cloudflared `/metrics`) will report a functionally dead service as healthy forever. Every long-running daemon (tunnel, broker, queue worker) MUST declare a readiness/health path whose status encodes readiness — e.g. cloudflared `/ready` returns 200 only with ≥1 registered connection, 503 otherwise. **Probe the readiness path, never the liveness path.** If no readiness path exists, the service is classified DOWN by default, not "online/healthy".
 
 **Repair:** R1=PM2 drift · R2=EADDRINUSE orphan · R3=Next.js rebuild (stop→rm -rf .next→build→start→verify) · R4=unhealthy-online restart · R5=full daemon recovery
 
@@ -39,5 +42,6 @@ Full detail for the appended sections below lives in `LEARNED_PM2_HEALTH_MONITOR
 | Concurrency Guard: heartbeat-mtime PRIMARY | `t_32ef5c9f` (2026-09-28) |
 | FINAL LOCK RELEASE on clean exit | `t_714b95d1` (2026-09-28) |
 | D16 RE-VERIFY DEDUP (calendar-day → 23h rolling window) | `t_c5b3e477` + `t_d304cf82` (2026-09-28/29) |
+| Long-Running Daemon Rule (readiness path, not liveness path) | `t_ab0a0c03` (2026-11-16) |
 
 **When in doubt, treat `LEARNED_PM2_HEALTH_MONITOR.md` as the source of truth for *rules*; treat the INCIDENTS sibling as source of truth for *rationale + reproduction + command snippets*.** On-disk canon and cron-prompt canon MUST stay aligned — drift > 5 KB trips the cron guard and falls back to embedded job-prompt canon (degraded mode, not fatal).
