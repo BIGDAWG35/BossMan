@@ -68,3 +68,8 @@ From now on, this file lists only the files that changed since the last build.
 
 ## 2026-11-13 06:00 — re-upload these in Perplexity
 - **Knowledge & Learning:** LEARNED Index.md
+
+## 2026-11-17 06:00 — re-upload these in Perplexity
+- **Projects & Mission Control:** Travel OS - LEARNED.md
+- **System Health:** PM2 Health Monitor.md
+- **Trading Ops:** Kalshi.md
