@@ -1,6 +1,7 @@
 # LEARNED_PM2_HEALTH_MONITOR.md — PM2 Health Monitor canon
 **Permanent 2026-05-28, upd 2026-07-22, pruned 2026-09-23 (t_86e6d0f0): 5,065 → ~5 KB. Cron:** `01dff7ff61e4` (bossman, every 15 min) — silent healthy; alerts only on repair.
 **Pruned 2026-09-28 (t_481b94f8): 13,473 → ≤5 KB. Per-incident detail moved to `LEARNED_PM2_HEALTH_MONITOR_INCIDENTS.md`.**
+**Cron status 2026-11-19 (t_b56a0653):** `01dff7ff61e4` was retired/disabled 2026-08-25, so this doc's rules ran on NO short-interval cron until 2026-11-19. The **fleet-completeness** rules now run every 10 min as no-agent cron job `3fa6501e7535` (`*/10 * * * *`) → `pm2-fleet-completeness-alert.py` → `pm2-fleet-completeness-check.py`. Registry↔pm2↔dump.pm2 three-way comparison, silent on rc=0. The memory/restart/port rules below still run only via `daily-9am-health-check` (`0 9 * * *`) until separately wired. Canon: `LEARNED_PM2_FLEET_COMPLETENESS.md` §4.
 
 ## Skill: pm2-health-check
 Runbook: `~/.hermes/skills/devops/pm2-health-check/SKILL.md`.
