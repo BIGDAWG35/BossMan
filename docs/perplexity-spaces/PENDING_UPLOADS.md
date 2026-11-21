@@ -73,3 +73,6 @@ From now on, this file lists only the files that changed since the last build.
 - **Projects & Mission Control:** Travel OS - LEARNED.md
 - **System Health:** PM2 Health Monitor.md
 - **Trading Ops:** Kalshi.md
+
+## 2026-11-20 06:00 — re-upload these in Perplexity
+- **System Health:** PM2 Health Monitor.md
