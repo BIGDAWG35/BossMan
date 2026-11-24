@@ -2,7 +2,7 @@
 
 **Status:** CANON · research complete · **no production integration authorized**
 **Package built:** 2026-11-24 · **Kanban card:** `t_bfde1dee` (assignee `bossman`) · **Source snapshot date:** 2026-11-24
-**Independent verification:** auth / environment / requests / throttling lane **COMPLETE** (2026-11-24) — see `sources-and-change-log.md` §5. Webhook, work-order and financial lanes dispatched, results pending.
+**Independent verification:** auth / environment / requests / throttling lane **COMPLETE**; webhook lane **PARTIAL** (both 2026-11-24) — see `sources-and-change-log.md` §5. Webhook, work-order and financial lanes dispatched, results pending.
 **Canonical package:** `~/.hermes/knowledge/integrations/servicechannel/`
 **Spec snapshot:** `specs/servicechannel-swagger-v3.json` · Swagger `2.0` · API version `3` · 664 paths / 740 operations · 1,890,160 bytes · SHA-256 `d490d65968093cec2475ad278448f5f7c6654a3658130a21b56f60b4802fec98`
 
@@ -54,7 +54,7 @@ Applies to every lane (builder, ops, research-intel, qa-verification, knowledge-
 2. **No secrets in knowledge documents.** Use placeholders. Credentials live in the app's secret store, never in `~/.hermes/knowledge/`.
 3. **No `client_credentials` assumption.** The official authentication page documents exactly two OAuth grants: authorization code and resource owner password credentials. Do not design unattended access on an undocumented grant — see `open-questions.md` Q-AUTH-01.
 4. **Never invent schemas, endpoints, permissions, or limits.** Unknown = `open-questions.md`, not a guess.
-5. **Document conflicts, don't silently resolve them.** Nine are open today (C-1 … C-9 in `open-questions.md`) — including HTTP `406` carrying two official meanings, the documented verb set omitting PATCH while the spec contains PATCH operations, and `Retry-After` being specified as HTTP-date but exemplified as delta-seconds.
+5. **Document conflicts, don't silently resolve them.** Twelve are open today (C-1 … C-12 in `open-questions.md`) — including HTTP `406` carrying two official meanings, the documented verb set omitting PATCH while the spec contains PATCH operations, and `Retry-After` being specified as HTTP-date but exemplified as delta-seconds.
 6. **Financial writes require a human approval gate.** Invoice submission, proposal approval, NTE changes, and spending-limit changes are money actions → V3 carve-out path, plus a local pre-flight validation gate.
 7. **Snapshot is dated, not permanent.** Before any build: re-fetch the spec, diff against the stored SHA-256, recheck auth/permissions/endpoints/limits/webhooks, then test in an authorized sandbox (`testing-and-rollout.md` §5).
 
@@ -78,6 +78,9 @@ Applies to every lane (builder, ops, research-intel, qa-verification, knowledge-
 - **Error bodies:** `{"ErrorCodes":[…],"ErrorCode":<first>,"ErrorMessage":"…"}`; `gen_codes.md` holds 41 HTTP codes plus a 380-entry internal error-code catalogue.
 - **Impersonation is documented** (bearer `auth_type=Impersonate&ImpersonateInfo.UserName=…`; JWT `impersonate_info.username`; verify with `GET /users/current/profile`). It inherits the impersonated user's permissions **and data boundaries** → privileged, approval-gated, never in an automated pipeline.
 - **Sandbox2 → Production method replication lag:** a method proven in Sandbox2 is not automatically Production-ready.
+- **Webhook budgets:** 20 webhooks, 20 subscriptions per webhook, 400 total (VERIFIED). No payload-size or event-volume limit is documented.
+- **Webhook test path:** `POST /test/webhooks/notifications` → 201 + a `Source: "WebhookTest"` payload carrying real `Sign-Type`/`Sign-Data` headers — proves the full HMAC path before creating a real webhook.
+- **Webhook delivery guarantees are absent from the docs:** no ordering, no exactly-once, no duplicate/missed-event guidance, no replay API. Events are deleted after 3 failed deliveries → reconciliation is mandatory, not optional.
 
 Full detail, with source URL + verification date per claim, is in the package.
 
