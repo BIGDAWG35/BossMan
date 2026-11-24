@@ -187,4 +187,16 @@ Drift signal: a sub-agent applies a non-trivial routing-rule fix without first r
 
 ---
 
+## §Y. ServiceChannel integration routing (Permanent 2026-11-24, card `t_bfde1dee`)
+
+> **Before planning or implementing anything involving ServiceChannel, retrieve `~/.hermes/knowledge/integrations/servicechannel/README.md` and the relevant playbooks. Verify the current official operation schema and account permissions before making implementation decisions or executing writes.**
+
+- **Retrieval tags:** `ServiceChannel`, `maintenance`, `work orders`, `facilities management`, `CMMS`, `providers`, `assets`, `proposals`, `invoices`, `webhooks`, `OAuth`.
+- **Canon pointer:** `~/.hermes/knowledge/LEARNED_SERVICECHANNEL.md`. **Package:** `~/.hermes/knowledge/integrations/servicechannel/` (spec snapshot + 56 page snapshots + 12 documents + operation index).
+- **Discovery:** `LEARNED_INDEX.md` → ServiceChannel row → pointer → `README.md` routing table → skill `servicechannel-integration`.
+- **Scope guard (Permanent):** research-only until an authorized card exists. No app registration, no account creation, no authenticated call, no vendor-side mutation (work order, note, attachment, webhook, check-in/out, proposal approval, invoice) without Marcelo's explicit approval. Money actions (invoice submit, proposal approve, NTE/spending-limit change) are V3 carve-outs and additionally require a local pre-flight validation gate.
+- **Staleness:** the package is a dated snapshot (spec SHA-256 `d490d659…fec98`, sources retrieved 2026-11-24). Before any build: re-fetch the spec + guides, diff against the stored checksum, recheck auth/permissions/endpoints/limits/webhooks, then test in an authorized sandbox. Until that revalidation is recorded in `sources-and-change-log.md`, the package is **stale** and must not be cited as current.
+
+---
+
 *This is the routing rule. Every BossMan decision and every sub-agent handoff checks against it.*
