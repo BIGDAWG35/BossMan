@@ -2,6 +2,7 @@
 
 **Status:** CANON · research complete · **no production integration authorized**
 **Package built:** 2026-11-24 · **Kanban card:** `t_bfde1dee` (assignee `bossman`) · **Source snapshot date:** 2026-11-24
+**Independent verification:** auth / environment / requests / throttling lane **COMPLETE** (2026-11-24) — see `sources-and-change-log.md` §5. Webhook, work-order and financial lanes dispatched, results pending.
 **Canonical package:** `~/.hermes/knowledge/integrations/servicechannel/`
 **Spec snapshot:** `specs/servicechannel-swagger-v3.json` · Swagger `2.0` · API version `3` · 664 paths / 740 operations · 1,890,160 bytes · SHA-256 `d490d65968093cec2475ad278448f5f7c6654a3658130a21b56f60b4802fec98`
 
@@ -53,7 +54,7 @@ Applies to every lane (builder, ops, research-intel, qa-verification, knowledge-
 2. **No secrets in knowledge documents.** Use placeholders. Credentials live in the app's secret store, never in `~/.hermes/knowledge/`.
 3. **No `client_credentials` assumption.** The official authentication page documents exactly two OAuth grants: authorization code and resource owner password credentials. Do not design unattended access on an undocumented grant — see `open-questions.md` Q-AUTH-01.
 4. **Never invent schemas, endpoints, permissions, or limits.** Unknown = `open-questions.md`, not a guess.
-5. **Document conflicts, don't silently resolve them.** Four are open today (C-1 … C-4 in `open-questions.md`).
+5. **Document conflicts, don't silently resolve them.** Nine are open today (C-1 … C-9 in `open-questions.md`) — including HTTP `406` carrying two official meanings, the documented verb set omitting PATCH while the spec contains PATCH operations, and `Retry-After` being specified as HTTP-date but exemplified as delta-seconds.
 6. **Financial writes require a human approval gate.** Invoice submission, proposal approval, NTE changes, and spending-limit changes are money actions → V3 carve-out path, plus a local pre-flight validation gate.
 7. **Snapshot is dated, not permanent.** Before any build: re-fetch the spec, diff against the stored SHA-256, recheck auth/permissions/endpoints/limits/webhooks, then test in an authorized sandbox (`testing-and-rollout.md` §5).
 
@@ -71,6 +72,13 @@ Applies to every lane (builder, ops, research-intel, qa-verification, knowledge-
 - Invoices only from a work order in `Completed` / `Completed/Confirmed`; a submitted invoice cannot be edited and **there is no API method to void it** (UI only); invoice requirements must be obtained from the subscriber (not available via API).
 - Proposals cannot be approved if the work order is already invoiced, no work order is attached, or the amount exceeds the user's approval limit. Link with `PUT /proposals/{proposalId}/assignWO`.
 
+- **Child-subscriber scoping** is token-level: a second `POST /oauth/token` with `subsidiary_id` in the body (id from `GET /subscribers/current/subsidiaries`). Bind the tenant key to the token, never to request input.
+- **Duplicate recovery:** the `406` body carries `ProcessedRequestInfo` — the *first* request's response. Read it instead of re-posting.
+- **Production read-after-write can `404`:** production reads hit replica servers while writes hit the primary. A `404` right after a `2xx` write is not a failure — re-read with backoff, never re-post.
+- **Error bodies:** `{"ErrorCodes":[…],"ErrorCode":<first>,"ErrorMessage":"…"}`; `gen_codes.md` holds 41 HTTP codes plus a 380-entry internal error-code catalogue.
+- **Impersonation is documented** (bearer `auth_type=Impersonate&ImpersonateInfo.UserName=…`; JWT `impersonate_info.username`; verify with `GET /users/current/profile`). It inherits the impersonated user's permissions **and data boundaries** → privileged, approval-gated, never in an automated pipeline.
+- **Sandbox2 → Production method replication lag:** a method proven in Sandbox2 is not automatically Production-ready.
+
 Full detail, with source URL + verification date per claim, is in the package.
 
 ---
@@ -78,6 +86,6 @@ Full detail, with source URL + verification date per claim, is in the package.
 ## 5. Owner + change discipline
 
 - **Owner:** BossMan (kernel) · lane execution: builder + qa-verification.
-- **Change log:** every revalidation appends to `sources-and-change-log.md` §5 with date, new spec SHA-256, and what changed.
+- **Change log:** every revalidation appends to `sources-and-change-log.md` §4 (change-log discipline) with date, new spec SHA-256, and what changed; independent-verification results go in §5.
 - **Unresolved items:** `open-questions.md` is the single register; closing an item requires the evidence noted in its "Resolution" column.
 - Mirrors of this pointer: `Repos/BossMan/docs/hermes-canon/LEARNED_SERVICECHANNEL.md` and `Obsidian/Hermes/V3-Canon/V3 – ServiceChannel.md` (canon wins; mirrors are read-only views).
