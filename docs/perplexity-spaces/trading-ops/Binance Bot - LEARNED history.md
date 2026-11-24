@@ -1,4 +1,4 @@
-**Version:** v4 · **Date:** 2026-08-24 · **Source:** `~/.hermes/knowledge/LEARNED_BINANCE_BOT.md` · **Status:** Current — auto-built from canon by build_spaces_v4.py; edit the source, not this copy
+**Version:** v4 · **Date:** 2026-11-23 · **Source:** `~/.hermes/knowledge/LEARNED_BINANCE_BOT.md` · **Status:** Current — auto-built from canon by build_spaces_v4.py; edit the source, not this copy
 
 > Note: any LBC35/OpenClaw mention in this file is historical (retired 2026-09-30; BossMan does all delegation via kanban + route-card.sh). Health OS was deleted 2026-09-30. Where this file conflicts with "00 - Current State (2026-10-01).md", the Current State file wins.
 
@@ -174,3 +174,23 @@ cp ~/.hermes/backups/binance-safe-start-20260825/20260824_202633/ecosystem.confi
 pm2 delete binance-bot-live
 pm2 start /Users/bigdawg/Projects/binance-bot/ecosystem.config.cjs
 ```
+
+---
+
+## CSDAWG cron — never restart `binance-bot-live` (Permanent)
+
+**Rule: never `pm2 restart binance-bot-live` from a cron or any automated lane.**
+The bot is **INTENTIONALLY_STOPPED_SAFE_START_GATED** — that is a deliberate
+state, not a fault. The status classifier
+(`/Users/bigdawg/.hermes/profiles/ops/scripts/autonomy_guardrail.py`) emits
+`INTENTIONALLY_STOPPED_SAFE_START_GATED` when the process is simply absent
+from PM2 and no structural failure is detected.
+
+**Correct behavior when a cron sees the bot down:** skip it, log the skip, and
+let the `INTEL_GATE` expire naturally. Do not attempt recovery, do not start
+the bot, and do not treat the classifier output as a failure to remediate.
+
+**Why:** restarting the live bot from an automated lane bypasses the safe-start
+gates (`pre-start.js` → `safe-start.js`) that exist to prevent an unintended
+live-trading launch. The only sanctioned path to live is a deliberate,
+human-gated go-live decision.

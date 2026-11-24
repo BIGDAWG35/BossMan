@@ -1,4 +1,4 @@
-**Version:** v4 · **Date:** 2026-10-02 · **Source:** `~/.hermes/knowledge/LEARNED_7_RULE_CONTRACT.md` · **Status:** Current — auto-built from canon by build_spaces_v4.py; edit the source, not this copy
+**Version:** v4 · **Date:** 2026-11-23 · **Source:** `~/.hermes/knowledge/LEARNED_7_RULE_CONTRACT.md` · **Status:** Current — auto-built from canon by build_spaces_v4.py; edit the source, not this copy
 
 > Note: any LBC35/OpenClaw mention in this file is historical (retired 2026-09-30; BossMan does all delegation via kanban + route-card.sh). Health OS was deleted 2026-09-30. Where this file conflicts with "00 - Current State (2026-10-01).md", the Current State file wins.
 
@@ -112,6 +112,20 @@ If a `t_*` Kanban card `summary` or `comments` contains any of these, the agent 
 - For P5 self-verify: localhost + Tailscale + DB + PM2 + touch surfaces all green.
 - **Model choice is automatic** — BossMan picks from `LEARNED_V3_MODEL_STACK.md`. Safety-sensitive work (auth, money paths, encryption, audit logging) → Claude (mandatory). SquarePayouts work → Claude/OpenAI/DeepSeek only (M3 blocked).
 - **Token economics** — BossMan saves expensive analyses to `LEARNED_*` docs and reuses them. See `LEARNED_V3_TOKEN_ECONOMICS.md`.
+
+#### Never ask Marcelo for credentials (Permanent)
+
+**Verify before claiming, and resolve credentials yourself.** Credentials are
+read from the local environment (`~/.hermes/config.yaml`, `~/.hermes/.env`,
+provider credential stores, `~/.hermes/config/basecamp/credentials.json`).
+**Never ask Marcelo to paste a key, token, password, or secret into chat** —
+that both violates this contract and burns a round-trip that the agent can
+close itself.
+
+If a credential is genuinely missing, the correct move is: read the env/config
+paths above, check whether the key lives under a different provider name, and
+only then escalate — with the exact missing key **name** and the file it
+should be in, never the value.
 
 ### 4. Status messages: single verdict
 - **PASS** — work is verified and complete
