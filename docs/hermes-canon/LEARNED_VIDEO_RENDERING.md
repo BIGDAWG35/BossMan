@@ -155,3 +155,25 @@ If composite crashes mid-pipeline but all upstream artifacts (scene_3d.mp4, moti
 | ffmpeg | this doc | Composite + final encode (P5a/P5b) |
 
 **Single rule:** when in doubt about which tool, read `LEARNED_FOUR_TOOL_VIDEO_STACK.md` first.
+
+---
+
+## Love Song 001 — voice-conversion route (canonical, 2026-11-16)
+
+**Route = Seed-VC zero-shot singing voice conversion (SVC).** Full primary-source
+evidence: `~/Projects/love-song-001/docs/VOICE-ROUTE-ADDENDUM.md` (supersedes
+`docs/VOICE-ROUTE-COMPARISON.md`).
+
+**The GPT-SoVITS + ACE-Step route is WRONG for identity.** Neither stage
+supplies speaker-identity cloning *with* F0 conditioning: GPT-SoVITS has no
+F0/MIDI input, and ACE-Step's LoRA is *style*, not speaker. The missing stage
+is SVC with F0 conditioning (Seed-VC / RVC / so-vits-svc) — GPT-SoVITS's own
+maintainer points there rather than at GPT-SoVITS. Seed-VC does zero-shot
+singing SVC from a 1–30 s **speech** reference, natively on Apple Silicon.
+
+- SVC checkpoint: `DiT_seed_v2_uvit_whisper_base_f0_44k_bigvgan_pruned_ft_ema.pth` (820.9 MB, 200 M params, 44.1 kHz, BigVGAN); repo `Plachtaa/seed-vc`; entry point `app_svc.py`.
+- Footprint: ≈3.5–4 GB download, ≈7–9 GB disk. The GPT-SoVITS + ACE-Step route is ≈21–31 GB download / ≈35–55 GB disk.
+- 33.3 min of Marcelo's original **speech** enrollment audio is already on disk at `~/Projects/love-song-001/recordings/enrollment/` (48 kHz mono, no clipping). A new singing recording is **not** required for this route.
+- ElevenLabs PVCs cannot sing — so the enrollment is speech, which is exactly what Seed-VC wants. The existing voice clone is not touched, modified, or recreated.
+- Render + numeric-QA procedure: skill `song-demo-render-qa`. Always label output "guide vocal — not Marcelo"; nothing leaves the Mac (no upload, no credits).
+- Still UNVERIFIED: whether Seed-VC's SVC output actually sounds like Marcelo singing; the MPS-vs-CPU quality delta for Seed-VC inference; whether the −42 to −48 dBFS RMS enrollment files need normalization first.

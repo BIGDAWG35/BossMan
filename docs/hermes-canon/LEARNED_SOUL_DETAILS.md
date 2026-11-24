@@ -163,6 +163,25 @@ Curated subset (most-frequently referenced):
 
 ## F. Governance V3 — full text (Silent-execution, Perplexity-First, four rules, default workflows, escalation triggers, drift, Completion-Enforcement)
 
+### Gateway restart — the `restart.request` ENOENT race (Permanent)
+
+Per the Perplexity-Intake Trust Clause, a gateway restart is **never**
+performed in-process (gateway rails). The sanctioned flow is: write a one-line
+reason to `~/.hermes/perplexity-intake/restart.request`; the
+`ai.hermes.deferred-restart` LaunchAgent picks it up and restarts the gateway
+out-of-process, then posts health to Marcelo's Telegram.
+
+**The race:** a write-verify step on `restart.request` can observe `ENOENT`
+because the LaunchAgent consumes (removes or truncates) the file between the
+write and the verification read. The request file is therefore
+**single-consumption** — its absence right after writing does not mean the
+write failed.
+
+**Correct behavior:** on `ENOENT`, re-write the request fresh with `write_file`
+and move on. Do **not** loop on `patch`, and do not escalate the race as a
+failure — a repeated write-verify loop will never converge against a
+single-consumption file.
+
 <!-- from SOUL.md lines 9-84 -->
 ### Governance V3 — Operating Standard (Permanent, 2026-06-26)
 
