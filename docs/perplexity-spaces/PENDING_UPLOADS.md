@@ -76,3 +76,8 @@ From now on, this file lists only the files that changed since the last build.
 
 ## 2026-11-20 06:00 — re-upload these in Perplexity
 - **System Health:** PM2 Health Monitor.md
+
+## 2026-11-24 06:00 — re-upload these in Perplexity
+- **Agent OS:** 7-Rule Contract.md
+- **Knowledge & Learning:** 7-Rule Contract.md
+- **Trading Ops:** Binance Bot - LEARNED history.md

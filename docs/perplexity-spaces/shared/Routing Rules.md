@@ -1,4 +1,4 @@
-**Version:** v4 · **Date:** 2026-10-28 · **Source:** `~/.hermes/knowledge/ROUTING-RULES.md` · **Status:** Current — auto-built from canon by build_spaces_v4.py; edit the source, not this copy
+**Version:** v4 · **Date:** 2026-11-24 · **Source:** `~/.hermes/knowledge/ROUTING-RULES.md` · **Status:** Current — auto-built from canon by build_spaces_v4.py; edit the source, not this copy
 
 > Note: any LBC35/OpenClaw mention in this file is historical (retired 2026-09-30; BossMan does all delegation via kanban + route-card.sh). Health OS was deleted 2026-09-30. Where this file conflicts with "00 - Current State (2026-10-01).md", the Current State file wins.
 
@@ -188,6 +188,20 @@ Review output lands in `~/.hermes/logs/loop-enforcement-review-YYYY-MM.md` and i
 Every non-trivial mutation in this routing-rule's scope (config.yaml, cron/jobs.json, PM2 manifests, infra manifests, important scripts, governance canon) MUST be backed by a current git snapshot before the mutation. The full rule lives in `LEARNED_7_RULE_CONTRACT.md` Rule #8 and the executable form is the `troubleshooting-backup-and-revert` skill. Marcelo is never asked to retype configs or rerun commands — the git history is the source of truth.
 
 Drift signal: a sub-agent applies a non-trivial routing-rule fix without first running `git-snapshot-before-fix.sh` → `t_drift_snap_rule_violation_<date>` card.
+
+---
+
+## §Y. ServiceChannel integration routing (Permanent 2026-11-24, card `t_bfde1dee`)
+
+> **Before planning or implementing anything involving ServiceChannel, retrieve `~/.hermes/knowledge/integrations/servicechannel/README.md` and the relevant playbooks. Verify the current official operation schema and account permissions before making implementation decisions or executing writes.**
+
+- **Retrieval tags:** `ServiceChannel`, `maintenance`, `work orders`, `facilities management`, `CMMS`, `providers`, `assets`, `proposals`, `invoices`, `webhooks`, `OAuth`.
+- **Canon pointer:** `~/.hermes/knowledge/LEARNED_SERVICECHANNEL.md`. **Package:** `~/.hermes/knowledge/integrations/servicechannel/` (spec snapshot + 56 page snapshots + 14 documents + operation index).
+- **Discovery:** `LEARNED_INDEX.md` → ServiceChannel row → pointer → `README.md` routing table → skill `servicechannel-integration`.
+- **Scope guard (Permanent):** research-only until an authorized card exists. No app registration, no account creation, no authenticated call, no vendor-side mutation (work order, note, attachment, webhook, check-in/out, proposal approval, invoice) without Marcelo's explicit approval. Money actions (invoice submit, proposal approve, NTE/spending-limit change) are V3 carve-outs and additionally require a local pre-flight validation gate.
+- **Staleness:** the package is a dated snapshot (spec SHA-256 `d490d659…fec98`, sources retrieved 2026-11-24). Before any build: re-fetch the spec + guides, diff against the stored checksum, recheck auth/permissions/endpoints/limits/webhooks, then test in an authorized sandbox. Until that revalidation is recorded in `sources-and-change-log.md`, the package is **stale** and must not be cited as current.
+- **Known traps (read before quoting an endpoint):** invoice collection reads are `GET /odata/invoices` only (no `GET /invoices`, no invoice attachment endpoint); work-order attachments are **multipart/form-data**, not base64; the spec's priority lookup is `GET /priorities` (the guide's `GET /workorders/priorities` is absent from the spec — conflict C-18); the spec carries **three** conflicting work-order status vocabularies (C-20); error codes are overloaded — branch on the internal code + message family, never the HTTP status alone (C-21); a spec `required` array is **not** a runtime rule — check-in/out `required=['Latitude','Longitude']` is conditional on work type, XML permission and `ActionStatus=Cancel` (C-3); `UserId` (request) and `MechanicId` (response) are **distinct** identifiers for one connected check-in/out pair; notes paging is **SPEC-only**; the duplicate/recall filters differ between the guide and the spec (C-22). Full register: `open-questions.md` (**C-1 … C-23**).
+- **Verification state:** four read-only lanes (auth **COMPLETE**; webhooks / work orders / financial **PARTIAL**) plus **two** fresh-context retrieval probes (**PASSED**, `deleg_9918d0a5` and `deleg_4a4896f3`) plus a late work-order canonical amendment (card `t_ad9b23bc` → gates **WO9–WO15**, open questions **Q-WO-17…Q-WO-26**, conflict **C-23**). The lanes corrected real errors in our own drafts; see `sources-and-change-log.md` §7 (change log: §5).
 
 ---
 
