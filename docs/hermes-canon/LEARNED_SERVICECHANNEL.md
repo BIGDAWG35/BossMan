@@ -46,6 +46,7 @@ Applies to every lane (builder, ops, research-intel, qa-verification, knowledge-
 | `sources-and-change-log.md` | 56 official sources with URLs + dates + byte counts; spec checksum; change-log discipline |
 | `specs/` | Raw Swagger snapshot, generated operation index (JSON), schema extract, 56 page snapshots |
 | `BLUEPRINT.md` | Research scope, source authority, conflict policy, package layout |
+| `FUTURE-INTEGRATION-REFERENCE.md` | **Consolidated single-record reference for a future build** — overview, official links, verified endpoints, auth/sandbox, permissions/security/rate-limits/webhooks, recommended architecture, open questions, links to saved docs |
 
 ---
 
@@ -55,7 +56,7 @@ Applies to every lane (builder, ops, research-intel, qa-verification, knowledge-
 2. **No secrets in knowledge documents.** Use placeholders. Credentials live in the app's secret store, never in `~/.hermes/knowledge/`.
 3. **No `client_credentials` assumption.** The official authentication page documents exactly two OAuth grants: authorization code and resource owner password credentials. Do not design unattended access on an undocumented grant — see `open-questions.md` Q-AUTH-01.
 4. **Never invent schemas, endpoints, permissions, or limits.** Unknown = `open-questions.md`, not a guess.
-5. **Document conflicts, don't silently resolve them.** **Twenty-one are open today** (`C-1` … `C-21` in `open-questions.md`) — including HTTP `406` carrying two official meanings, the documented verb set omitting PATCH while the spec contains PATCH operations, `Retry-After` specified as HTTP-date but exemplified as delta-seconds, the guide's `GET /workorders/priorities` being absent from the spec, three conflicting work-order status vocabularies, and the invoice-requirements endpoint the guide says does not exist.
+5. **Document conflicts, don't silently resolve them.** **Twenty-three are open today** (`C-1` … `C-23` in `open-questions.md`) — including HTTP `406` carrying two official meanings, the documented verb set omitting PATCH while the spec contains PATCH operations, `Retry-After` specified as HTTP-date but exemplified as delta-seconds, the guide's `GET /workorders/priorities` being absent from the spec, three conflicting work-order status vocabularies, and the invoice-requirements endpoint the guide says does not exist.
 6. **Financial writes require a human approval gate.** Invoice submission, proposal approval, NTE changes, and spending-limit changes are money actions → V3 carve-out path, plus a local pre-flight validation gate.
 7. **Snapshot is dated, not permanent.** Before any build: re-fetch the spec, diff against the stored SHA-256, recheck auth/permissions/endpoints/limits/webhooks, then test in an authorized sandbox (`testing-and-rollout.md` §5).
 8. **Never hardcode a work-order status enum.** The captured spec carries **three** different primary-status vocabularies; read `GET /workorders/{workorderId}/statuses` for the calling role (`capabilities.md` §2, **C-20**).
