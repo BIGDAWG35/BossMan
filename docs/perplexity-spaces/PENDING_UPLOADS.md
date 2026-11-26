@@ -81,3 +81,10 @@ From now on, this file lists only the files that changed since the last build.
 - **Agent OS:** 7-Rule Contract.md
 - **Knowledge & Learning:** 7-Rule Contract.md
 - **Trading Ops:** Binance Bot - LEARNED history.md
+
+## 2026-11-25 06:00 — re-upload these in Perplexity
+- **Agent OS:** Routing Rules.md
+- **Knowledge & Learning:** LEARNED Index.md
+- **Ops Processes:** Routing Rules.md
+- **Shared:** Routing Rules.md
+- **Toolchain & Dev:** Routing Rules.md
