@@ -88,3 +88,6 @@ From now on, this file lists only the files that changed since the last build.
 - **Ops Processes:** Routing Rules.md
 - **Shared:** Routing Rules.md
 - **Toolchain & Dev:** Routing Rules.md
+
+## 2026-11-27 06:00 — re-upload these in Perplexity
+- **Knowledge & Learning:** LEARNED Index.md
